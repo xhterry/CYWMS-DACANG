@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txtTaskNo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:maxLines="1"
+            android:textSize="25sp"/>
+
+
+        <TextView
+            android:id="@+id/txtBatchNo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:maxLines="1"
+            android:textColor="@color/gray"
+            android:textSize="15sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/txtReportNum"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:maxLines="1"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/txtLastReportTime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:maxLines="1"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"/>
+
+        </LinearLayout>
+
+
+
+</LinearLayout>

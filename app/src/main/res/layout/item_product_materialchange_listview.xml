@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4">
+
+                <TextView
+                    android:id="@+id/list_SerialNo"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15sp"
+                    android:maxLines="1"
+                    android:textColor="@color/green" />
+
+
+
+                <TextView
+                    android:id="@+id/list_Batch"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.7"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15sp"
+                    android:maxLines="1"
+                    android:textColor="@color/chocolate" />
+        </LinearLayout>
+
+         <TextView
+            android:id="@+id/list_MaterialDesc"
+            android:layout_width="match_parent"
+            android:layout_weight="0.6"
+            android:layout_height="0dp"
+            android:gravity="left"
+            android:textSize="20sp"
+            android:maxLines="1"
+            android:textColor="@color/blue_66f" />
+
+</LinearLayout>

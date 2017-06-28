@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+                <TextView
+                    android:id="@+id/item_Barcode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:maxLines="1"
+                    android:textColor="@color/crimson"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/item_Batch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/goldenrod"
+                    android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/item_MattterialName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:maxLines="1"
+            android:textColor="@color/darkblue"
+            android:textSize="20sp" />
+
+
+
+</LinearLayout>

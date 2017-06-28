@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.xx.chinetek.Pallet.DismantlePallet">
+
+    <Button
+        android:id="@+id/btn_Config"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/bt_selector"
+        android:text="@string/config"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/conLay_DisPallet"
+        style="@style/EditTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_Barcode">
+
+
+        <include
+            android:id="@+id/include3"
+            layout="@layout/material_info"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView48"
+            style="@style/TextViewComminStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/activity_pallet_barcode"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include3" />
+
+        <TextView
+            android:id="@+id/txt_PalletNo"
+            style="@style/TextViewComminStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:text="P23"
+            android:textAlignment="viewStart"
+            app:layout_constraintBottom_toBottomOf="@+id/textView48"
+            app:layout_constraintLeft_toRightOf="@+id/textView48"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/edt_Barcode"
+        style="@style/EditTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:hint="@string/Hit_ScanBarcode"
+        app:layout_constraintBottom_toBottomOf="@+id/textView62"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline13"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <requestFocus />
+
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView62"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/barcode"
+        app:layout_constraintRight_toLeftOf="@+id/guideline13"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/SW_DisPallet"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <Switch
+        android:id="@+id/SW_DisPallet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:showText="true"
+        android:splitTrack="false"
+        android:switchPadding="32dp"
+        android:text="@string/activity_dispallet_combine"
+        android:textAllCaps="false"
+        android:textColor="@color/blue_66f"
+        android:textOff="@string/activity_dispallet_Off"
+        android:textOn="@string/activity_dispallet_On"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:checked="false"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="32dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline13"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.27"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="104dp" />
+
+    <ListView
+        android:id="@+id/lsv_DisPalletDetail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Config"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/conLay_DisPallet" />
+</android.support.constraint.ConstraintLayout>

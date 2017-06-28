@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.xx.chinetek.cywms">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name="com.xx.chinetek.base.BaseApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".Receiption.ReceiptBillChoice" />
+        <activity android:name=".Receiption.SupplierFilterActivity" />
+        <activity android:name=".Receiption.ReceiptionScan" />
+        <activity android:name=".Receiption.ReceiptionBillDetail" />
+        <activity android:name=".BillChoice" />
+        <activity android:name=".UpShelf.UpShelfScanActivity" />
+        <activity android:name=".UpShelf.UpShelfBillChoice" />
+        <activity android:name=".UpShelf.UpshelfBillDetail" />
+        <activity android:name=".OffShelf.OffshelfScan" />
+        <activity android:name=".OffShelf.OffShelfBillChoice" />
+        <activity android:name=".Review.ReviewScan" />
+        <activity android:name=".Review.ReviewBillChoice" />
+        <activity android:name="com.xx.chinetek.Pallet.CombinPalletDetail"/>
+        <activity android:name=".InnerMove.InnerMoveScan" />
+        <activity android:name=".Intentory.IntentoryScan" />
+        <activity android:name="com.xx.chinetek.Pallet.CombinPallet" />
+        <activity android:name=".Intentory.IntentoryDetial" />
+        <activity android:name="com.xx.chinetek.Pallet.DismantlePallet" />
+        <activity android:name="com.xx.chinetek.Box.Boxing" />
+        <activity android:name=".Stock.AdjustStock" />
+        <activity android:name=".Qc.QCScan" />
+        <activity android:name=".Query.Query" />
+        <activity android:name=".Query.QueryMain" />
+        <activity android:name=".MaterialChange.MaterialChange" />
+        <activity android:name=".Truck.TruckLoad" />
+        <activity android:name=".Qc.QCMaterialChoice" />
+        <activity android:name="com.xx.chinetek.Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 生产 -->
+        <activity android:name="com.xx.chinetek.cyproduct.MainActivity" />
+        <activity android:name="com.xx.chinetek.cyproduct.BillChoice" />
+        <activity android:name="com.xx.chinetek.cyproduct.MaterialChange.MaterialChange" />
+        <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutput" />
+        <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutputNum" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionScan" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceipyionBillDetail" />
+        <activity android:name="com.xx.chinetek.cyproduct.QC.TakeSample" />
+        <activity android:name="com.xx.chinetek.cyproduct.Review.ReviewScan" />
+        <activity android:name="com.xx.chinetek.cyproduct.Manage.ProductManageAdd" />
+        <activity android:name="com.xx.chinetek.cyproduct.Manage.LineManage" />
+        <activity android:name="com.xx.chinetek.cyproduct.Manage.ProductManage" />
+        <activity android:name="com.xx.chinetek.cyproduct.Manage.ProductComplete" />
+        <activity android:name="com.xx.chinetek.cyproduct.OffShelf.OffshelfScan" />
+        <activity android:name="com.xx.chinetek.cyproduct.Return.ProductReturn" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.CompleteProduct" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.TankIn" />
+        <activity android:name="com.xx.chinetek.cyproduct.Return.TankOut" />
+        <activity android:name="com.xx.chinetek.cyproduct.Manage.ProductMaterialConfig" />
+        <activity android:name="com.xx.chinetek.FillPrint.FillPrint" />
+        <activity android:name="com.xx.chinetek.cyproduct.OffShelf.DeliveryProduct" />
+        <activity android:name="com.xx.chinetek.cyproduct.OffShelf.SemiProductScan" />
+        <activity android:name="com.xx.chinetek.cyproduct.Return.SemiproductReturn" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptSemiProduct" />
+        <activity android:name="com.xx.chinetek.Setting"></activity>
+    </application>
+
+</manifest>
