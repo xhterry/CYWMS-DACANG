@@ -18,7 +18,7 @@ import org.xutils.x;
 public class OffshelfScan extends BaseActivity {
 
    Context context=OffshelfScan.this;
-@ViewInject(R.id.txtSendCount)
+@ViewInject(R.id.txt_Unboxing)
     TextView txtSendCount;
     @ViewInject(R.id.edtSendCount)
     EditText edtSendCount;

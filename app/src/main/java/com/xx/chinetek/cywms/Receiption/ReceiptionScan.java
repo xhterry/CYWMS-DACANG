@@ -172,7 +172,7 @@ public class ReceiptionScan extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
-            final Map<String, String> params = new HashMap<String, String>();
+                       final Map<String, String> params = new HashMap<String, String>();
             String ModelJson = GsonUtil.parseModelToJson(receiptDetailModels);
             String UserJson=GsonUtil.parseModelToJson(BaseApplication.userInfo);
             params.put("UserJson",UserJson );
@@ -221,10 +221,10 @@ public class ReceiptionScan extends BaseActivity {
                     }
                 BindListVIew(receiptDetailModels);
             } else {
-                show(returnMsgModel.getMessage());
+                MessageBox.Show(context,returnMsgModel.getMessage());
             }
         }catch (Exception ex) {
-            show(ex.getMessage());
+            MessageBox.Show(context,ex.getMessage());
         }
         CommonUtil.setEditFocus(edtRecScanBarcode);
     }

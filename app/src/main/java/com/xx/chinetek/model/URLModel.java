@@ -39,4 +39,9 @@ public class URLModel {
     public String SaveT_BarCodeToStockADF=GetWCFAdress()+"SaveT_BarCodeToStockADF";//装箱拆箱提交
     public String Get_PalletDetailByVoucherNo=GetWCFAdress()+"Get_PalletDetailByVoucherNo";//复核获取托盘信息
     public String Del_PalletOrSerialNo=GetWCFAdress()+"Del_PalletOrSerialNo";//复核删除托盘信息
+    public String GetT_QualityListADF=GetWCFAdress()+"GetT_QualityListADF";//获取质检表头信息
+    public String QualityDetailListByHeaderIDADF=GetWCFAdress()+"QualityDetailListByHeaderIDADF";//获取质检表体信息
+    public String GetT_OutBarCodeInfoForQuanADF=GetWCFAdress()+"GetT_OutBarCodeInfoForQuanADF";//获取质检扫描条码信息
+    public String SaveT_QuanlitySampADF=GetWCFAdress()+"SaveT_QuanlitySampADF";//提交质检明细
+    public String GetT_OutTaskDetailListByHeaderIDADF=GetWCFAdress()+"GetT_OutTaskDetailListByHeaderIDADF";//获取下架表头信息
 }

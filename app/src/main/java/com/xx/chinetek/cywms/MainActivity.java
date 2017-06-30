@@ -16,6 +16,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.InnerMove.InnerMoveScan;
 import com.xx.chinetek.cywms.OffShelf.OffShelfBillChoice;
+import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.Query.QueryMain;
 import com.xx.chinetek.cywms.Receiption.ReceiptBillChoice;
 import com.xx.chinetek.cywms.Review.ReviewBillChoice;
@@ -58,8 +59,7 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (position) {
             case 0://质检单
-                BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_title), false);
-                intent.setClass(context, BillChoice.class);
+                intent.setClass(context, QCBillChoice.class);
                 break;
             case 1://收货任务
                 intent.setClass(context, ReceiptBillChoice.class);

@@ -14,8 +14,8 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
 
     }
 
-    public StockInfo_Model(String SerialNo){
-        this.SerialNo=SerialNo;
+    public StockInfo_Model(String Barcode){
+        this.Barcode=Barcode;
     }
     private String Barcode;
     private String SerialNo;
@@ -58,6 +58,9 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private int AreaID;
     private int StockBarCodeStatus=0;//发货复核使用  0：未组托 1：已组托
     private String PartNo;
+    private int PickModel; //下架方式 1-整托 2-整箱 3-零数
+    private Float AmountQty;//零数
+
 
     public int getStockBarCodeStatus() {
         return StockBarCodeStatus;
@@ -65,6 +68,22 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
 
     public void setStockBarCodeStatus(int stockBarCodeStatus) {
         StockBarCodeStatus = stockBarCodeStatus;
+    }
+
+    public int getPickModel() {
+        return PickModel;
+    }
+
+    public void setPickModel(int pickModel) {
+        PickModel = pickModel;
+    }
+
+    public Float getAmountQty() {
+        return AmountQty;
+    }
+
+    public void setAmountQty(Float amountQty) {
+        AmountQty = amountQty;
     }
 
     public String getPartNo() {
@@ -456,6 +475,8 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeInt(this.AreaID);
         dest.writeInt(this.StockBarCodeStatus);
         dest.writeString(this.PartNo);
+        dest.writeInt(this.PickModel);
+        dest.writeValue(this.AmountQty);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -501,6 +522,8 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.AreaID = in.readInt();
         this.StockBarCodeStatus = in.readInt();
         this.PartNo = in.readString();
+        this.PickModel = in.readInt();
+        this.AmountQty = (Float) in.readValue(Float.class.getClassLoader());
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {

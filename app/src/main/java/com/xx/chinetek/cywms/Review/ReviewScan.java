@@ -157,7 +157,7 @@ public class ReviewScan extends BaseActivity {
                 return true;
             }
             final Map<String, String> params = new HashMap<String, String>();
-            params.put("Barcode", code);
+            params.put("BarCode", code);
 //            LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetT_PalletDetailByBarCode, code);
 //            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCode, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_PalletDetailByBarCode, null, URLModel.GetT_PalletDetailByBarCodeADF, params, null);
         }

@@ -34,6 +34,7 @@
         <activity android:name="com.xx.chinetek.Pallet.DismantlePallet" />
         <activity android:name="com.xx.chinetek.Box.Boxing" />
         <activity android:name=".Stock.AdjustStock" />
+        <activity android:name=".Qc.QCBillChoice" />
         <activity android:name=".Qc.QCScan" />
         <activity android:name=".Query.Query" />
         <activity android:name=".Query.QueryMain" />
