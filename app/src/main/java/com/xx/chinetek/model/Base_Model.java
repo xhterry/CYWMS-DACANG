@@ -31,7 +31,7 @@ public class Base_Model implements Parcelable {
     private String DisplayName;
     private String InitFlag;
     private String StrModifyTime;
-    private String VoucherType;
+    private int VoucherType;
     private String StrVoucherType;
     private int MaterialNoID;
     private String StrongHoldCode;
@@ -46,6 +46,16 @@ public class Base_Model implements Parcelable {
     private int ERPStatus ;
     private String ERPNote ;
     private int ErpLineStatus ;
+
+    private int StockType;
+
+    public int getStockType() {
+        return StockType;
+    }
+
+    public void setStockType(int stockType) {
+        StockType = stockType;
+    }
 
     public Date getEDate() {
         return EDate;
@@ -280,11 +290,11 @@ public class Base_Model implements Parcelable {
         TerminateReasonID = terminateReasonID;
     }
 
-    public String getVoucherType() {
+    public int getVoucherType() {
         return VoucherType;
     }
 
-    public void setVoucherType(String voucherType) {
+    public void setVoucherType(int voucherType) {
         VoucherType = voucherType;
     }
 
@@ -311,7 +321,7 @@ public class Base_Model implements Parcelable {
         dest.writeString(this.DisplayName);
         dest.writeString(this.InitFlag);
         dest.writeString(this.StrModifyTime);
-        dest.writeString(this.VoucherType);
+        dest.writeInt(this.VoucherType);
         dest.writeString(this.StrVoucherType);
         dest.writeInt(this.MaterialNoID);
         dest.writeString(this.StrongHoldCode);
@@ -326,6 +336,7 @@ public class Base_Model implements Parcelable {
         dest.writeInt(this.ERPStatus);
         dest.writeString(this.ERPNote);
         dest.writeInt(this.ErpLineStatus);
+        dest.writeInt(this.StockType);
     }
 
     protected Base_Model(Parcel in) {
@@ -344,7 +355,7 @@ public class Base_Model implements Parcelable {
         this.DisplayName = in.readString();
         this.InitFlag = in.readString();
         this.StrModifyTime = in.readString();
-        this.VoucherType = in.readString();
+        this.VoucherType = in.readInt();
         this.StrVoucherType = in.readString();
         this.MaterialNoID = in.readInt();
         this.StrongHoldCode = in.readString();
@@ -361,6 +372,7 @@ public class Base_Model implements Parcelable {
         this.ERPStatus = in.readInt();
         this.ERPNote = in.readString();
         this.ErpLineStatus = in.readInt();
+        this.StockType = in.readInt();
     }
 
 }

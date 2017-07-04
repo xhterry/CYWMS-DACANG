@@ -24,6 +24,7 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     private Float DesQty;
     private String WarehouseNo;
     private String BatchNo;
+
     /// <summary>
     /// ERP收货入库单
     /// </summary>
@@ -166,6 +167,13 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         QuanUserNo = quanUserNo;
     }
 
+    public QualityInfo_Model() {
+    }
+
+    public QualityInfo_Model(String ErpVoucherNo){
+        this.ErpVoucherNo=ErpVoucherNo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -187,16 +195,10 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         dest.writeValue(this.DesQty);
         dest.writeString(this.WarehouseNo);
         dest.writeString(this.BatchNo);
+        dest.writeString(this.QuanUserNo);
         dest.writeString(this.ErpInVoucherNo);
         dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.QuanUserNo);
-    }
-
-    public QualityInfo_Model() {
-    }
-
-    public QualityInfo_Model(String ErpVoucherNo){
-        this.ErpVoucherNo=ErpVoucherNo;
     }
 
     protected QualityInfo_Model(Parcel in) {
@@ -214,6 +216,7 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         this.DesQty = (Float) in.readValue(Float.class.getClassLoader());
         this.WarehouseNo = in.readString();
         this.BatchNo = in.readString();
+        this.QuanUserNo = in.readString();
         this.ErpInVoucherNo = in.readString();
         this.ErpVoucherNo = in.readString();
         this.QuanUserNo = in.readString();

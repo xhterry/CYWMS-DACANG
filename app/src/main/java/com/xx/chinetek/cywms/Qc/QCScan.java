@@ -233,7 +233,7 @@ public class QCScan extends BaseActivity {
     }
 
     void AnalysisGetT_OutBarCodeInfoForQuanADFJson(String result){
-        LogUtil.WriteLog(QCScan.class, TAG_GetT_QualityDetailListByHeaderIDADF,result);
+        LogUtil.WriteLog(QCScan.class, TAG_GetT_OutBarCodeInfoForQuanADF,result);
         ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             stockInfoModel=returnMsgModel.getModelJson();

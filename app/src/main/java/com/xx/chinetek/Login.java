@@ -126,6 +126,7 @@ public class Login extends BaseActivity {
             BaseApplication.userInfo=returnMsgModel.getModelJson();
             SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
             Intent intent=new Intent(context, MainActivity.class);
+           //  Intent intent=new Intent(context, com.xx.chinetek.cyproduct.MainActivity.class);
             startActivity(intent);
         }else
         {

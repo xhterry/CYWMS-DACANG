@@ -20,6 +20,7 @@ import com.xx.chinetek.adapter.Receiption.ReceiptBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cywms.Qc.QCMaterialChoice;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Receiption.Receipt_Model;
@@ -43,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xx.chinetek.cywms.R.id.action_filter;
 import static com.xx.chinetek.cywms.R.id.edt_filterContent;
 
 
@@ -142,7 +142,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == action_filter) {
+        if (item.getItemId() == R.id.action_filter) {
             if (receiptModels!=null && receiptModels.size() != 0) {
                 if(isCancelFilterButton){
                     isCancelFilterButton=false;
@@ -168,6 +168,12 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
                     startActivityForResult(intent, supplierRequestCode);
                 }
             }
+        }
+
+        if(item.getItemId() ==R.id.action_QCfilter){
+            Intent intent = new Intent(context, QCMaterialChoice.class);
+            intent.putExtra("ErpVourcherNo","");
+            startActivityLeft(intent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -119,9 +119,7 @@ public class CombinPallet extends BaseActivity {
     protected void initData() {
         super.initData();
         ShowPalletScan(SWPallet.isChecked());
-        palletDetailModels=new ArrayList<>();
-        palletDetailModels.add(new PalletDetail_Model());
-        palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());
+
     }
 
     /*
@@ -138,6 +136,7 @@ public class CombinPallet extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO 自动生成的方法
                             palletDetailModels.get(0).getLstBarCode().remove(position);
+                            txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
                             BindListVIew( palletDetailModels.get(0).getLstBarCode());
                         }
                     }).setNegativeButton("取消", null).show();
@@ -171,7 +170,7 @@ public class CombinPallet extends BaseActivity {
                                 CommonUtil.setEditFocus(edtPallet);
                             }
                         }).setNegativeButton("取消", null).show();
-                return true;
+                return false;
             }
         }
         return false;
@@ -185,6 +184,7 @@ public class CombinPallet extends BaseActivity {
             String barcode=edtPallet.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("Barcode", barcode);
+            params.put("PalletModel", SWPallet.isChecked()?"2":"1"); //1：新建托盘  2：插入组托
             LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF, barcode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_PalletADF), context, mHandler, RESULT_GetT_PalletDetailByNoADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
             return false;
@@ -215,13 +215,15 @@ public class CombinPallet extends BaseActivity {
      */
     void AnalysisGetT_SerialNoByPalletAD(String result){
         LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF,result);
-        ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            PalletDetail_Model  palletDetailModel=returnMsgModel.getModelJson().get(0);
+        try {
+            ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                PalletDetail_Model palletDetailModel = returnMsgModel.getModelJson().get(0);
                 //判断组托条件：批次、据点、库位、物料相同才能组托
-                if( palletDetailModels.get(0).getLstBarCode()!=null) {// &&
-                    for (BarCodeInfo  barCodeInfo: palletDetailModel.getLstBarCode()) {
-                        if(palletDetailModels.get(0).getLstBarCode().size()!=0) {
+                if (palletDetailModels.get(0).getLstBarCode() != null) {// &&
+                    for (BarCodeInfo barCodeInfo : palletDetailModel.getLstBarCode()) {
+                        if (palletDetailModels.get(0).getLstBarCode().size() != 0) {
                             String checkError = CheckPalletCondition(barCodeInfo);
                             if (!TextUtils.isEmpty(checkError)) {
                                 MessageBox.Show(context, checkError);
@@ -229,24 +231,29 @@ public class CombinPallet extends BaseActivity {
                             }
                             barCodeInfo.setPalletno(palletDetailModels.get(0).getLstBarCode().get(0).getPalletno());
                         }
-                        if(!palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)) {
+                        if (!palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)) {
                             palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
                             palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
                             palletDetailModels.get(0).getLstBarCode().add(0, barCodeInfo);
                             palletDetailModels.get(0).setVoucherType(999);
+                            palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
+                            palletDetailModels.get(0).setStrongHoldName(barCodeInfo.getStrongHoldName());
+                            palletDetailModels.get(0).setCompanyCode(barCodeInfo.getCompanyCode());
                         }
                     }
                 }
-                BarCodeInfo barCodeInfo=palletDetailModel.getLstBarCode().get(0);
+                BarCodeInfo barCodeInfo = palletDetailModel.getLstBarCode().get(0);
                 txtCompany.setText(barCodeInfo.getStrongHoldName());
                 txtBatch.setText(barCodeInfo.getBatchNo());
                 txtStatus.setText(barCodeInfo.getStrStatus());
                 txtMaterialName.setText(barCodeInfo.getMaterialDesc());
                 txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
                 BindListVIew(palletDetailModels.get(0).getLstBarCode());
-        }else
-        {
-            ToastUtil.show(returnMsgModel.getMessage());
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+            }
+        }catch (Exception e){
+            MessageBox.Show(context,e.toString());
         }
         CommonUtil.setEditFocus(edtBarcode);
     }
@@ -257,15 +264,14 @@ public class CombinPallet extends BaseActivity {
      */
     void AnalysisGetT_PalletAD(String result){
         LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF,result);
-        ReturnMsgModelList<PalletDetail_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {}.getType());
+        ReturnMsgModelList<PalletDetail_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             palletDetailModels=returnMsgModel.getModelJson();
             BindListVIew(palletDetailModels.get(0).getLstBarCode());
             edtPallet.setEnabled(false);
             CommonUtil.setEditFocus(edtBarcode);
-        }else
-        {
-            ToastUtil.show(returnMsgModel.getMessage());
+        }else{
+            MessageBox.Show(context,returnMsgModel.getMessage());
             edtPallet.setEnabled(true);
             CommonUtil.setEditFocus(edtPallet);
         }
@@ -281,6 +287,9 @@ public class CombinPallet extends BaseActivity {
             ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
             MessageBox.Show(context, returnMsgModel.getMessage());
+            if(returnMsgModel.getHeaderStatus().equals("S")) {
+                InitFrm();
+            }
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }
@@ -290,15 +299,7 @@ public class CombinPallet extends BaseActivity {
     显示隐藏Pallet输入
      */
     void ShowPalletScan(boolean check){
-        edtBarcode.setText("");
-        edtPallet.setText("");
-        txtCompany.setText("");
-        txtBatch.setText("");
-        txtStatus.setText("");
-        txtMaterialName.setText("");
-        txtCartonNum.setText("0");
-        palletDetailModels=new ArrayList<>();
-        BindListVIew(new ArrayList<BarCodeInfo>());
+        InitFrm();
         if(!check){
             txtPallet.setVisibility(View.GONE);
             edtPallet.setVisibility(View.GONE);
@@ -310,16 +311,28 @@ public class CombinPallet extends BaseActivity {
     }
 
     private void BindListVIew(List<BarCodeInfo> barCodeInfos) {
-
             palletItemAdapter = new PalletItemAdapter(context, barCodeInfos);
             lsvPalletDetail.setAdapter(palletItemAdapter);
 
+
+    }
+
+    void InitFrm(){
+        palletDetailModels=new ArrayList<>();
+        palletDetailModels.add(new PalletDetail_Model());
+        palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());
+        BindListVIew(palletDetailModels.get(0).getLstBarCode());
+        edtBarcode.setText("");
+        edtPallet.setText("");
+        txtCompany.setText("");
+        txtBatch.setText("");
+        txtStatus.setText("");
+        txtMaterialName.setText("");
+        txtCartonNum.setText("0");
     }
 
 
     String CheckPalletCondition(BarCodeInfo  barCodeInfo){
-
-
             //收货组托判断组托条件：批次、据点、物料、订单相同才能组托
             //在库组托判断库位相同才能组托
             //getPalletType为0：收货组托

@@ -73,8 +73,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private Float IsLock;
     private String ErpVoucherNo;
     private Float IsSmallBatch;
-    private String DepartmentCode;
-    private String DepartmentName;
     private String UnitName;
     private Float ScanQty;
     private String AreaNo;
@@ -88,6 +86,15 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private int IsSerial;
     private String PartNo;
     private String MoveType;
+    public String BatchNo;
+
+    public String getBatchNo() {
+        return BatchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        BatchNo = batchNo;
+    }
 
     public String getMoveType() {
         return MoveType;
@@ -168,22 +175,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
 
     public void setCurrentRemainStockQtySAP(Float currentRemainStockQtySAP) {
         CurrentRemainStockQtySAP = currentRemainStockQtySAP;
-    }
-
-    public String getDepartmentCode() {
-        return DepartmentCode;
-    }
-
-    public void setDepartmentCode(String departmentCode) {
-        DepartmentCode = departmentCode;
-    }
-
-    public String getDepartmentName() {
-        return DepartmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        DepartmentName = departmentName;
     }
 
     public String getFromStorageLoc() {
@@ -673,8 +664,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeValue(this.IsLock);
         dest.writeString(this.ErpVoucherNo);
         dest.writeValue(this.IsSmallBatch);
-        dest.writeString(this.DepartmentCode);
-        dest.writeString(this.DepartmentName);
         dest.writeString(this.UnitName);
         dest.writeValue(this.ScanQty);
         dest.writeString(this.AreaNo);
@@ -688,6 +677,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeInt(this.IsSerial);
         dest.writeString(this.PartNo);
         dest.writeString(this.MoveType);
+        dest.writeString(this.BatchNo);
     }
 
     protected OutStockTaskDetailsInfo_Model(Parcel in) {
@@ -743,8 +733,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.IsLock = (Float) in.readValue(Float.class.getClassLoader());
         this.ErpVoucherNo = in.readString();
         this.IsSmallBatch = (Float) in.readValue(Float.class.getClassLoader());
-        this.DepartmentCode = in.readString();
-        this.DepartmentName = in.readString();
         this.UnitName = in.readString();
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());
         this.AreaNo = in.readString();
@@ -758,6 +746,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.IsSerial = in.readInt();
         this.PartNo = in.readString();
         this.MoveType = in.readString();
+        this.BatchNo = in.readString();
     }
 
     public static final Creator<OutStockTaskDetailsInfo_Model> CREATOR = new Creator<OutStockTaskDetailsInfo_Model>() {

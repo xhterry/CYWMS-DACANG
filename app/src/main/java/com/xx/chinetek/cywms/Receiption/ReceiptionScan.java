@@ -34,6 +34,7 @@ import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
+import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -212,7 +213,6 @@ public class ReceiptionScan extends BaseActivity {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 receiptDetailModels = returnMsgModel.getModelJson();
-
                 //自动确认扫描箱号
                 if (palletDetailModel != null && palletDetailModel.getLstBarCode() != null)
                     for (BarCodeInfo barCodeInfo : palletDetailModel.getLstBarCode()) {
@@ -245,7 +245,6 @@ public class ReceiptionScan extends BaseActivity {
                             break;
                     }
                     InitFrm(palletDetailModels.get(0).getLstBarCode().get(0));
-
                 }
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
@@ -265,14 +264,17 @@ public class ReceiptionScan extends BaseActivity {
             ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
+                ToastUtil.show(returnMsgModel.getMessage());
                 Intent intent=new Intent(context, QCMaterialChoice.class);
                 //换入参数待定
+                String ErpVourcherNo=returnMsgModel.getMaterialDoc();
+                intent.putExtra("ErpVourcherNo",ErpVourcherNo);
                 startActivityLeft(intent);
+                closeActiviry();
             }else
             {
                 MessageBox.Show(context,returnMsgModel.getMessage());
             }
-
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }
@@ -296,7 +298,6 @@ public class ReceiptionScan extends BaseActivity {
             ReceiptDetail_Model receiptDetailModel=new ReceiptDetail_Model(barCodeInfo.getMaterialNo(),barCodeInfo.getRowNo(),barCodeInfo.getRowNoDel());
             int index=receiptDetailModels.indexOf(receiptDetailModel);
             if(index!=-1) {
-
                 if (receiptDetailModels.get(index).getLstBarCode() == null)
                     receiptDetailModels.get(index).setLstBarCode(new ArrayList<BarCodeInfo>());
                 if(receiptDetailModels.get(index).getLstBarCode().size()!=0){
@@ -338,6 +339,7 @@ public class ReceiptionScan extends BaseActivity {
         float qty=receiptDetailModels.get(index).getScanQty()+barCodeInfo.getQty();
         if(qty<=receiptDetailModels.get(index).getRemainQty()) {
             receiptDetailModels.get(index).getLstBarCode().add(0, barCodeInfo);
+            receiptDetailModels.get(index).setBatchNo(barCodeInfo.getBatchNo());
             receiptDetailModels.get(index).setScanQty(qty);
             RefeshFrm(index);
             return true;

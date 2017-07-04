@@ -93,7 +93,8 @@
     <string name="cancel">取消</string>
     <string name="hint">提示</string>
     <string name="config">确定</string>
-    <string name="filter">筛选</string>
+    <string name="filter">供应商筛选</string>
+    <string name="QCfilter">质检取样</string>
     <string name="ReportNum">报产量</string>
     <string name="ReportQC">完工报检</string>
     <string name="TaskAllcote">任务分配</string>
@@ -196,14 +197,18 @@
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
     <string name="Msg_SaveT_InStockDetailADF">保存收货明细列表...</string>
     <string name="Msg_SaveT_QuanlitySampADF">保存质检明细列表...</string>
+    <string name="Msg_SaveT_OutStockTaskDetailADF">保存下架明细列表...</string>
     <string name="Msg_SaveT_InStockTaskDetailADF">保存上架明细列表...</string>
+    <string name="Msg_UpadteT_QualityUserADF">提交取样物料信息...</string>
     <string name="Msg_GetT_SerialNoByPalletADF">获取条码信息...</string>
+    <string name="Msg_GetT_GetT_QualityListADF">获取质检物料信息...</string>
     <string name="Msg_GetT_PalletADF">获取托盘条码信息...</string>
     <string name="Msg_SaveT_PalletDetailADF">保存组托信息...</string>
     <string name="Msg_Get_PalletDetailByVoucherNo">获取托盘信息...</string>
     <string name="Msg_Del_PalletOrbarcode">托盘信息删除中...</string>
     <string name="Msg_GetT_QualityListADF">获取质检信息...</string>
-    <string name="Msg_GetT_OutTaskDetailListByHeaderIDADF">获取下架信息...</string>
+    <string name="Msg_GetT_OutTaskListADF">获取下架信息...</string>
+    <string name="Msg_GetT_OutTaskDetailListByHeaderIDADF">获取下架明细信息...</string>
 
     <string name="Hit_ScanBarcode">请扫描物料条码</string>
     <string name="Hit_ScanPallet">请扫描托盘条码</string>
@@ -228,8 +233,10 @@
     <string name="Error_isnotnum">请输入数字！</string>
     <string name="Error_QtyBiger">拆箱数量超过箱内物品数量！</string>
     <string name="Error_QCQtyBiger">数量已超过取样数量！</string>
-    <string name="Error_PackageQtyBiger">装箱数量超过包装数量！</string>
+    <string name="Error_offshelfQtyBiger">数量已超过下架数量！</string>
+    <string name="Error_PackageQtyBiger">数量超过包装数量！</string>
     <string name="Error_BarcodeNotInList">此物料不在列表中！</string>
+    <string name="Error_NotPickMaterial">此物料不是当前需要拣货物料！</string>
     <string name="Error_BarcodeScaned">该条码已扫描！</string>
     <string name="Error_ReceiveFinish">该物料已收货完毕！</string>
     <string name="Error_ReviewFinish">该物料已复核完毕！</string>

@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:layout_height="40dp"
-        android:layout_width="match_parent"
         android:id="@+id/id_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         app:actionBarHeight="40dp"
-        app:navigationIcon="@drawable/home"/>
+        app:navigationIcon="@drawable/home" />
 
     <!--android:theme="?attr/actionBarTheme"-->
     <!--<android.support.v7.widget.Toolbar-->

@@ -45,7 +45,6 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.xx.chinetek.util.function.GsonUtil.parseModelToJson;
@@ -314,7 +313,7 @@ public class ReviewScan extends BaseActivity {
         if(outStockDetailInfoModels!=null) {
             for (OutStockDetailInfo_Model outstockDetailModel : outStockDetailInfoModels) {
                 if (outstockDetailModel.getLstStockInfo() != null) {
-                    List<StockInfo_Model> tempStockModels = new ArrayList<>();
+                    ArrayList<StockInfo_Model> tempStockModels = new ArrayList<>();
                     for (StockInfo_Model stockModel : outstockDetailModel.getLstStockInfo()) {
                         if (stockModel.getStockBarCodeStatus() == 0) {
                             tempStockModels.add(0, stockModel);

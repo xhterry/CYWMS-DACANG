@@ -6,12 +6,21 @@ package com.xx.chinetek.model;
 
 public class ReturnMsgModel<T> {
 
-    public String HeaderStatus;
+    private String HeaderStatus;
 
-    public String Message;
+    private String Message;
 
-    public T ModelJson;
+    private T ModelJson;
 
+    private String MaterialDoc;
+
+    public String getMaterialDoc() {
+        return MaterialDoc;
+    }
+
+    public void setMaterialDoc(String materialDoc) {
+        MaterialDoc = materialDoc;
+    }
 
     public String getHeaderStatus() {
         return HeaderStatus;

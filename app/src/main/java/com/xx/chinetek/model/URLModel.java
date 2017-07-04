@@ -27,6 +27,7 @@ public class URLModel {
     public String GetT_InTaskDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InTaskDetailListByHeaderIDADF"; //上架表体
     public String GetT_OutStockDetailListByHeaderIDADF = GetWCFAdress()+"GetT_OutStockDetailListByHeaderIDADF"; //下架复核表体
     public String SaveT_InStockDetailADF = GetWCFAdress()+"SaveT_InStockDetailADF"; //提交收货
+    public String UpadteT_QualityUserADF = GetWCFAdress()+"UpadteT_QualityUserADF"; //更新取样人
     public String SaveT_InStockTaskDetailADF = GetWCFAdress()+"SaveT_InStockTaskDetailADF"; //提交上架
     //public static String GetT_SerialNoADF=GetWCFAdress()+"GetT_SerialNoADF"; //获取条码信息
     public String GetT_SerialNoByPalletADF=GetWCFAdress()+"GetT_SerialNoByPalletADF";//获取条码信息
@@ -43,5 +44,7 @@ public class URLModel {
     public String QualityDetailListByHeaderIDADF=GetWCFAdress()+"QualityDetailListByHeaderIDADF";//获取质检表体信息
     public String GetT_OutBarCodeInfoForQuanADF=GetWCFAdress()+"GetT_OutBarCodeInfoForQuanADF";//获取质检扫描条码信息
     public String SaveT_QuanlitySampADF=GetWCFAdress()+"SaveT_QuanlitySampADF";//提交质检明细
-    public String GetT_OutTaskDetailListByHeaderIDADF=GetWCFAdress()+"GetT_OutTaskDetailListByHeaderIDADF";//获取下架表头信息
+    public String SaveT_OutStockTaskDetailADF=GetWCFAdress()+"SaveT_OutStockTaskDetailADF";//提交下架明细
+    public String GetT_OutTaskDetailListByHeaderIDADF=GetWCFAdress()+"GetT_OutTaskDetailListByHeaderIDADF";//获取下架表体信息
+    public String GetT_OutTaskListADF=GetWCFAdress()+"GetT_OutTaskListADF";//获取下架表头信息
 }

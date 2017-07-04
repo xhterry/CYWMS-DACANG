@@ -15,6 +15,10 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     public OutStockTaskInfo_Model() {
 
     }
+
+    public OutStockTaskInfo_Model(String TaskNo){
+        this.TaskNo=TaskNo;
+    }
     private Float TaskType;
     private String TaskNo;
     private String SupcusName;
@@ -35,8 +39,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String MoveType;
     private Float IsOutStockPost;
     private Float IsUnderShelvePost;
-    private String DepartmentCode;
-    private String DepartmentName;
     private Float ReviewStatus;
     private String MoveReasonCode;
     private String MoveReasonDesc;
@@ -98,23 +100,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     public void setCloseUserNo(String closeUserNo) {
         CloseUserNo = closeUserNo;
     }
-
-    public String getDepartmentCode() {
-        return DepartmentCode;
-    }
-
-    public void setDepartmentCode(String departmentCode) {
-        DepartmentCode = departmentCode;
-    }
-
-    public String getDepartmentName() {
-        return DepartmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        DepartmentName = departmentName;
-    }
-
 
     public Float getIsOutStockPost() {
         return IsOutStockPost;
@@ -352,8 +337,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.MoveType);
         dest.writeValue(this.IsOutStockPost);
         dest.writeValue(this.IsUnderShelvePost);
-        dest.writeString(this.DepartmentCode);
-        dest.writeString(this.DepartmentName);
         dest.writeValue(this.ReviewStatus);
         dest.writeString(this.MoveReasonCode);
         dest.writeString(this.MoveReasonDesc);
@@ -389,8 +372,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.MoveType = in.readString();
         this.IsOutStockPost = (Float) in.readValue(Float.class.getClassLoader());
         this.IsUnderShelvePost = (Float) in.readValue(Float.class.getClassLoader());
-        this.DepartmentCode = in.readString();
-        this.DepartmentName = in.readString();
         this.ReviewStatus = (Float) in.readValue(Float.class.getClassLoader());
         this.MoveReasonCode = in.readString();
         this.MoveReasonDesc = in.readString();

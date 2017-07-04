@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,14 +50,14 @@ import java.util.Map;
 public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLayout.OnRefreshListener{
 
 
-    String TAG_GetT_OutTaskDetailListByHeaderIDADF = "OffShelfBillChoice_GetT_OutTaskDetailListByHeaderIDADF";
-    private final int RESULT_GetT_OutTaskDetailListByHeaderIDADF = 101;
+    String TAG_GetT_OutTaskListADF = "OffShelfBillChoice_GetT_OutTaskListADF";
+    private final int RESULT_GetT_OutTaskListADF = 101;
 
     @Override
     public void onHandleMessage(Message msg) {
         mSwipeLayout.setRefreshing(false);
         switch (msg.what) {
-            case RESULT_GetT_OutTaskDetailListByHeaderIDADF:
+            case RESULT_GetT_OutTaskListADF:
                 AnalysisGetT_OutTaskDetailListByHeaderIDADFJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
@@ -88,12 +89,12 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.receipt_subtitle), false);
         x.view().inject(this);
        // isPickingAdmin=BaseApplication.userInfo.isBIsAdmin();
-
     }
 
     @Override
     protected void initData() {
         super.initData();
+        edtfilterContent.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
         mSwipeLayout.setOnRefreshListener(this); //下拉刷新
     }
 
@@ -147,6 +148,26 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         return super.onOptionsItemSelected(item);
     }
 
+    @Event(value = R.id.edt_filterContent,type = View.OnKeyListener.class)
+    private  boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            if(outStockTaskInfoModels!=null && outStockTaskInfoModels.size()>0) {
+                String code = edtfilterContent.getText().toString().trim();
+                //扫描单据号、检查单据列表
+                OutStockTaskInfo_Model outStockTaskInfoModel = new OutStockTaskInfo_Model(code);
+                int index=outStockTaskInfoModels.indexOf(outStockTaskInfoModel);
+                if (index!=-1) {
+                    StartScanIntent(outStockTaskInfoModels.get(index));
+                    return false;
+                }
+            }
+            StartScanIntent(null);
+            CommonUtil.setEditFocus(edtfilterContent);
+        }
+        return false;
+    }
+
     /**
      * Listview item点击事件
      */
@@ -154,11 +175,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(!isPickingAdmin) {
             OutStockTaskInfo_Model outStockTaskInfoModel=(OutStockTaskInfo_Model)offSehlfBillChoiceItemAdapter.getItem(position);
-            Intent intent = new Intent(context, OffshelfScan.class);
-            Bundle  bundle=new Bundle();
-            bundle.putParcelable("outStockTaskInfoModel",outStockTaskInfoModel);
-            intent.putExtras(bundle);
-            startActivityLeft(intent);
+            StartScanIntent(outStockTaskInfoModel);
         }else{
             offSehlfBillChoiceItemAdapter.modifyStates(position);
             offSehlfBillChoiceItemAdapter.notifyDataSetInvalidated();
@@ -180,8 +197,8 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
             Map<String, String> params = new HashMap<>();
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("ModelJson", ModelJson);
-            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskDetailListByHeaderIDADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutTaskDetailListByHeaderIDADF, getString(R.string.Msg_GetT_OutTaskDetailListByHeaderIDADF), context, mHandler, RESULT_GetT_OutTaskDetailListByHeaderIDADF, null,  URLModel.GetURL().GetT_OutTaskDetailListByHeaderIDADF, params, null);
+            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutTaskListADF, getString(R.string.Msg_GetT_OutTaskListADF), context, mHandler, RESULT_GetT_OutTaskListADF, null,  URLModel.GetURL().GetT_OutTaskListADF, params, null);
         } catch (Exception ex) {
             mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
@@ -190,7 +207,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
 
 
     void AnalysisGetT_OutTaskDetailListByHeaderIDADFJson(String result){
-        LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_OutTaskDetailListByHeaderIDADF,result);
+        LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_OutTaskListADF,result);
         ReturnMsgModelList<OutStockTaskInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockTaskInfoModels=returnMsgModel.getModelJson();
@@ -206,6 +223,14 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         offSehlfBillChoiceItemAdapter=new OffSehlfBillChoiceItemAdapter(context,outStockTaskInfoModels);
         lsvOffshelfChioce.setAdapter(offSehlfBillChoiceItemAdapter);
 
+    }
+
+    void StartScanIntent(OutStockTaskInfo_Model outStockTaskInfoModel){
+        Intent intent = new Intent(context, OffshelfScan.class);
+        Bundle  bundle=new Bundle();
+        bundle.putParcelable("outStockTaskInfoModel",outStockTaskInfoModel);
+        intent.putExtras(bundle);
+        startActivityLeft(intent);
     }
 
 

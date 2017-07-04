@@ -147,8 +147,8 @@ public class UpShelfScanActivity extends BaseActivity {
                 return true;
             }
             final Map<String, String> params = new HashMap<String, String>();
-            params.put("BarCode", code);
-            params.put("ERPVoucherNo", inStockTaskInfoModel.getErpVoucherNo());
+            params.put("SerialNo", code);
+            params.put("VoucherNo", inStockTaskInfoModel.getErpVoucherNo());
             params.put("TaskNo", inStockTaskInfoModel.getTaskNo());
             params.put("AreaNo", StockCode);
             LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetT_ScanInStockModelADF, code);
@@ -195,7 +195,7 @@ public class UpShelfScanActivity extends BaseActivity {
             BindListVIew(inStockTaskDetailsInfoModels);
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
         }
     }
 
@@ -204,7 +204,7 @@ public class UpShelfScanActivity extends BaseActivity {
      */
     void GetInStockTaskDetail(InStockTaskInfo_Model inStockTaskInfoModel){
         if(inStockTaskInfoModel!=null) {
-          //  txtVoucherNo.setText(inStockTaskInfoModel.getTaskNo());
+            txtVoucherNo.setText(inStockTaskInfoModel.getTaskNo());
             InStockTaskDetailsInfo_Model inStockTaskDetailsInfoModel = new InStockTaskDetailsInfo_Model();
             inStockTaskDetailsInfoModel.setHeaderID(inStockTaskInfoModel.getID());
             inStockTaskDetailsInfoModel.setERPVoucherNo(inStockTaskInfoModel.getErpVoucherNo());
@@ -237,7 +237,7 @@ public class UpShelfScanActivity extends BaseActivity {
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
-            CommonUtil.setEditFocus(edtStockScan);
+            CommonUtil.setEditFocus(edtUpShelfScanBarcode);
         }
     }
 

@@ -3,16 +3,18 @@ package com.xx.chinetek.model.Pallet;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Stock.StockInfo_Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by GHOST on 2017/1/19.
  */
 
-public class PalletDetail_Model implements Parcelable {
+public class PalletDetail_Model extends Base_Model  implements Parcelable {
 
     public PalletDetail_Model(){
 
@@ -21,23 +23,21 @@ public class PalletDetail_Model implements Parcelable {
     private String VoucherNo;
     private String ErpVoucherNo;
     private String RowNo;
-    private int VoucherType;
     private String PalletNo;
     private String MaterialNo;
     private String MaterialDesc;
     private int IsSerial;
     private String PartNo;
-    private int MaterialNoID;
-    private List<BarCodeInfo> lstBarCode;
-    private List<StockInfo_Model> lstStockInfo;
+    private ArrayList<BarCodeInfo> lstBarCode;
+    private ArrayList<StockInfo_Model> lstStockInfo;
     private String BarCode;
     private int PalletType;
 
-    public List<StockInfo_Model> getLstStockInfo() {
+    public ArrayList<StockInfo_Model> getLstStockInfo() {
         return lstStockInfo;
     }
 
-    public void setLstStockInfo(List<StockInfo_Model> lstStockInfo) {
+    public void setLstStockInfo(ArrayList<StockInfo_Model> lstStockInfo) {
         this.lstStockInfo = lstStockInfo;
     }
 
@@ -53,7 +53,7 @@ public class PalletDetail_Model implements Parcelable {
         return lstBarCode;
     }
 
-    public void setLstBarCode(List<BarCodeInfo> lstBarCode) {
+    public void setLstBarCode(ArrayList<BarCodeInfo> lstBarCode) {
         this.lstBarCode = lstBarCode;
     }
 
@@ -65,13 +65,6 @@ public class PalletDetail_Model implements Parcelable {
         BarCode = barCode;
     }
 
-    public int getMaterialNoID() {
-        return MaterialNoID;
-    }
-
-    public void setMaterialNoID(int materialNoID) {
-        MaterialNoID = materialNoID;
-    }
 
     public String getPartNo() {
         return PartNo;
@@ -103,14 +96,6 @@ public class PalletDetail_Model implements Parcelable {
 
     public void setRowNo(String rowNo) {
         RowNo = rowNo;
-    }
-
-    public int getVoucherType() {
-        return VoucherType;
-    }
-
-    public void setVoucherType(int voucherType) {
-        VoucherType = voucherType;
     }
 
     public int getIsSerial() {
@@ -154,16 +139,15 @@ public class PalletDetail_Model implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeString(this.VoucherNo);
         dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.RowNo);
-        dest.writeInt(this.VoucherType);
         dest.writeString(this.PalletNo);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeInt(this.IsSerial);
         dest.writeString(this.PartNo);
-        dest.writeInt(this.MaterialNoID);
         dest.writeTypedList(this.lstBarCode);
         dest.writeTypedList(this.lstStockInfo);
         dest.writeString(this.BarCode);
@@ -171,16 +155,15 @@ public class PalletDetail_Model implements Parcelable {
     }
 
     protected PalletDetail_Model(Parcel in) {
+        super(in);
         this.VoucherNo = in.readString();
         this.ErpVoucherNo = in.readString();
         this.RowNo = in.readString();
-        this.VoucherType = in.readInt();
         this.PalletNo = in.readString();
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.IsSerial = in.readInt();
         this.PartNo = in.readString();
-        this.MaterialNoID = in.readInt();
         this.lstBarCode = in.createTypedArrayList(BarCodeInfo.CREATOR);
         this.lstStockInfo = in.createTypedArrayList(StockInfo_Model.CREATOR);
         this.BarCode = in.readString();
