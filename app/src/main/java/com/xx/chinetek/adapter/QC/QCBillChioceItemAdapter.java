@@ -81,11 +81,11 @@ public class QCBillChioceItemAdapter extends BaseAdapter {
             listItemView = (ListItemView) convertView.getTag();
         }
         QualityInfo_Model qualityInfoModel=qualityInfoModels.get(selectID);
-        listItemView.txtTaskNo.setText(qualityInfoModel.getErpVoucherNo());
+        listItemView.txtTaskNo.setText(qualityInfoModel.getMaterialDesc());
         listItemView.txtERPVoucherNo.setText(qualityInfoModel.getErpVoucherNo());
         listItemView.txtStrVoucherType.setText(qualityInfoModel.getStrVoucherType());
         listItemView.txtCompany.setText(qualityInfoModel.getStrongHoldName());
-        listItemView.txtdepartment.setText(qualityInfoModel.getDepartmentName());
+        listItemView.txtdepartment.setText(qualityInfoModel.getBatchNo());
         if (selectItem == position) {
             convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
         }

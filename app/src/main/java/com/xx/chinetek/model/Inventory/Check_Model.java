@@ -137,6 +137,23 @@ public class Check_Model implements Parcelable {
     }
 
 
+    public Check_Model() {
+    }
+
+    public Check_Model(String CHECKNO){
+        this.CHECKNO=CHECKNO;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Check_Model that = (Check_Model) obj;
+
+        return CHECKNO.equals(that.getCHECKNO());
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -158,9 +175,6 @@ public class Check_Model implements Parcelable {
         dest.writeString(this.begintime);
         dest.writeString(this.endtime);
         dest.writeValue(this.ischeck);
-    }
-
-    public Check_Model() {
     }
 
     protected Check_Model(Parcel in) {

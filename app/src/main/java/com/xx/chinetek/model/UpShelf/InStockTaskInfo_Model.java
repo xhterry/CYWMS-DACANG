@@ -449,4 +449,14 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
             return new InStockTaskInfo_Model[size];
         }
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        InStockTaskInfo_Model that = (InStockTaskInfo_Model) obj;
+
+        return ErpVoucherNo.equals(that.getErpVoucherNo());
+    }
 }

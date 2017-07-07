@@ -137,7 +137,7 @@ public class Receipt_Model extends Base_Model implements Parcelable {
 
         Receipt_Model that = (Receipt_Model) o;
 
-        return ErpVoucherNo.equals(that.ErpVoucherNo);
+        return ErpVoucherNo.equals(that.getErpVoucherNo());
 
     }
 

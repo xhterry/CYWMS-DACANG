@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Inventory.CheckDet_Model;
+import com.xx.chinetek.model.Inventory.Barcode_Model;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class InventoryScanItemAdapter extends BaseAdapter {
     private Context context; // 运行上下文
-    private ArrayList<CheckDet_Model> check_models; // 信息集合
+    private ArrayList<Barcode_Model> barcodeModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
 
     public final class ListItemView { // 自定义控件集合
@@ -30,21 +30,21 @@ public class InventoryScanItemAdapter extends BaseAdapter {
         public TextView txtMaterialDec;
     }
 
-    public InventoryScanItemAdapter(Context context, ArrayList<CheckDet_Model> check_models) {
+    public InventoryScanItemAdapter(Context context, ArrayList<Barcode_Model> barcodeModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-        this.check_models = check_models;
+        this.barcodeModels = barcodeModels;
 
     }
 
     @Override
     public int getCount() {
-        return check_models==null?0:check_models.size();
+        return barcodeModels==null?0:barcodeModels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return check_models.get(position);
+        return barcodeModels.get(position);
     }
 
     @Override
@@ -69,10 +69,10 @@ public class InventoryScanItemAdapter extends BaseAdapter {
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
-        CheckDet_Model check_model=check_models.get(selectID);
-        listItemView.txtMaterialNo.setText(check_model.getMATERIALNO());
-        listItemView.txtMaterialDec.setText(check_model.getMATERIALDESC());
-        listItemView.txtQty.setText(check_model.getQTY()+"");
+        Barcode_Model barcodeModel=barcodeModels.get(selectID);
+        listItemView.txtMaterialNo.setText(barcodeModel.getMaterialNo());
+        listItemView.txtMaterialDec.setText(barcodeModel.getMaterialDesc());
+        listItemView.txtQty.setText("数量："+barcodeModel.getQty());
         return convertView;
     }
 

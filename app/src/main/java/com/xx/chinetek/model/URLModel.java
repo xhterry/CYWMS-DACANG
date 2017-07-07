@@ -22,6 +22,11 @@ public class URLModel {
     public String UserLoginADF = GetWCFAdress()+"UserLoginADF"; //用户登录
     public String GetT_InStockListADF = GetWCFAdress()+"GetT_InStockListADF"; //收货表头
     public String GetT_InTaskListADF = GetWCFAdress()+"GetT_InTaskListADF"; //上架表头
+    public String GetCheckADF = GetWCFAdress()+"GetCheck"; //盘点表头
+    public String GetAreanobyCheckno = GetWCFAdress()+"GetAreanobyCheckno"; //获取可盘点库位
+    public String GetScanInfo = GetWCFAdress()+"GetScanInfo"; //获取盘点条码信息
+    public String InsertCheckDetail = GetWCFAdress()+"InsertCheckDetail"; //提交盘点条码信息
+    public String GetCheckDetail = GetWCFAdress()+"GetCheckDetail"; //获取已盘点条码信息
     public String GetT_OutStockListADF = GetWCFAdress()+"GetT_OutStockListADF"; //下架复核表头
     public String GetT_InStockDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InStockDetailListByHeaderIDADF"; //收货表体
     public String GetT_InTaskDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InTaskDetailListByHeaderIDADF"; //上架表体
@@ -41,7 +46,7 @@ public class URLModel {
     public String Get_PalletDetailByVoucherNo=GetWCFAdress()+"Get_PalletDetailByVoucherNo";//复核获取托盘信息
     public String Del_PalletOrSerialNo=GetWCFAdress()+"Del_PalletOrSerialNo";//复核删除托盘信息
     public String GetT_QualityListADF=GetWCFAdress()+"GetT_QualityListADF";//获取质检表头信息
-    public String QualityDetailListByHeaderIDADF=GetWCFAdress()+"QualityDetailListByHeaderIDADF";//获取质检表体信息
+    public String GetT_QualityDetailListByHeaderIDADF=GetWCFAdress()+"GetT_QualityDetailListByHeaderIDADF";//获取质检表体信息
     public String GetT_OutBarCodeInfoForQuanADF=GetWCFAdress()+"GetT_OutBarCodeInfoForQuanADF";//获取质检扫描条码信息
     public String SaveT_QuanlitySampADF=GetWCFAdress()+"SaveT_QuanlitySampADF";//提交质检明细
     public String SaveT_OutStockTaskDetailADF=GetWCFAdress()+"SaveT_OutStockTaskDetailADF";//提交下架明细

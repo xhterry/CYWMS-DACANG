@@ -28,6 +28,7 @@
         <activity android:name=".Review.ReviewBillChoice" />
         <activity android:name="com.xx.chinetek.Pallet.CombinPalletDetail"/>
         <activity android:name=".InnerMove.InnerMoveScan" />
+        <activity android:name=".Intentory.InventoryBillChoice" />
         <activity android:name=".Intentory.IntentoryScan" />
         <activity android:name="com.xx.chinetek.Pallet.CombinPallet" />
         <activity android:name=".Intentory.IntentoryDetial" />

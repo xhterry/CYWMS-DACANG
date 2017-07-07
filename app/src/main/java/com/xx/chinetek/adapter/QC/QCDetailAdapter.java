@@ -70,7 +70,7 @@ public class QCDetailAdapter extends BaseAdapter {
         }
         StockInfo_Model stockInfoModel=stockInfoModels.get(selectID);
         listItemView.txtbarcode.setText(stockInfoModel.getMaterialNo());
-        listItemView.txtScanNum.setText("扫描数："+stockInfoModel.getQty());
+        listItemView.txtScanNum.setText("取样数："+(stockInfoModel.getPickModel()==3?stockInfoModel.getAmountQty():stockInfoModel.getQty()));
         listItemView.txtMaterialDesc.setText(stockInfoModel.getMaterialDesc());
         return convertView;
     }

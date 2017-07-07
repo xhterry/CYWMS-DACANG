@@ -98,7 +98,7 @@ public class OffshelfScan extends BaseActivity {
     EditText edtOffShelfScanbarcode;
     @ViewInject(R.id.edt_Unboxing)
     EditText edtUnboxing;
-    @ViewInject(R.id.txt_VourcherNo)
+    @ViewInject(R.id.txt_VoucherNo)
     TextView txtVourcherNo;
     @ViewInject(R.id.txt_SugestStock)
     TextView txtSugestStock;

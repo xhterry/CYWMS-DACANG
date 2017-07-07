@@ -154,12 +154,14 @@
     <string name="PalletDetail_Content">长按托盘号删除托盘\n点击箱号删除单个箱号</string>
     <!--dialog-->
     <string name="return_home">是否返回主界面？</string>
+    <string name="No_Task">此单据在任务列表中不存在！</string>
     <!--form-->
     <string name="activity_bill_Task">无单据任务</string>
     <string name="activity_Receipt_Scan_InStockQty">收货数量：</string>
     <string name="activity_Receipt_Scan_ReceiveQty">已收数量：</string>
     <string name="activity_Receipt_Scan_RemainQty">可收数量：</string>
     <string name="activity_Receipt_Scan_ScanQty">已扫数量：</string>
+    <string name="activity_QC_Scan_ScanQty">已取数量：</string>
     <string name="activity_Receipt_Scan_Detail">单据明细</string>
     <string name="activity_UpShelf_Qty">上架数量：</string>
     <string name="activity_UpShelf_ScanQty">已扫数量：</string>
@@ -168,6 +170,7 @@
     <string name="activity_Review_GroupDetail">组托明细</string>
     <string name="activity_InnerMove_Instock">移入库：</string>
     <string name="activity_Intentory_detail">已盘明细</string>
+    <string name="activity_Intentory_PalletSubit">托盘提交</string>
     <string name="activity_pallet_combine">组托方式：</string>
     <string name="activity_pallet_On">添加组托</string>
     <string name="activity_pallet_Off">新建组托</string>
@@ -177,6 +180,7 @@
     <string name="activity_boxing">装拆方式：</string>
     <string name="activity_boxing_On">拆箱</string>
     <string name="activity_boxing_Off">装箱</string>
+    <string name="activity_box_num">箱数：</string>
     <string name="activity_boxing_barcode">装箱箱码：</string>
     <string name="activity_boxing_unbarcode">拆箱箱码：</string>
     <string name="activity_adjust_Number">调整数量：</string>
@@ -189,10 +193,14 @@
 
 
     <string name="Msg_Login">用户验证...</string>
+    <string name="Msg_Inventory_Load">盘点任务信息加载中...</string>
     <string name="Msg_GetT_InStockListADF">获取收货列表...</string>
     <string name="Msg_GetT_OutStockListADF">获取发货列表...</string>
     <string name="Msg_GetT_InStockDetailListByHeaderIDADF">获取收货明细列表...</string>
     <string name="Msg_GetT_InTaskDetailListByHeaderIDADF">获取上架明细列表...</string>
+    <string name="Msg_GetAreanobyCheckno">获取盘点库位信息...</string>
+    <string name="Msg_InsertCheckDetail">提交盘点信息...</string>
+    <string name="Msg_GetCheckDetail">获取已盘点信息...</string>
     <string name="Msg_GetT_OutStockDetailListByHeaderIDADF">获取下架复核明细列表...</string>
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
     <string name="Msg_SaveT_InStockDetailADF">保存收货明细列表...</string>
@@ -233,6 +241,7 @@
     <string name="Error_isnotnum">请输入数字！</string>
     <string name="Error_QtyBiger">拆箱数量超过箱内物品数量！</string>
     <string name="Error_QCQtyBiger">数量已超过取样数量！</string>
+    <string name="Error_materialNotMatch">扫描物料与质检物料属性不一致！</string>
     <string name="Error_offshelfQtyBiger">数量已超过下架数量！</string>
     <string name="Error_PackageQtyBiger">数量超过包装数量！</string>
     <string name="Error_BarcodeNotInList">此物料不在列表中！</string>
@@ -240,6 +249,7 @@
     <string name="Error_BarcodeScaned">该条码已扫描！</string>
     <string name="Error_ReceiveFinish">该物料已收货完毕！</string>
     <string name="Error_ReviewFinish">该物料已复核完毕！</string>
+   <string name="Error_Inventory_NoArtNo">此货位号不在盘点任务中</string>
 
 
 </resources>
