@@ -1,17 +1,16 @@
 package com.xx.chinetek.cyproduct.OffShelf;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.xx.chinetek.Service.ServiceElceSync;
-import com.xx.chinetek.base.BaseActivity;
+import com.xx.chinetek.Service.SocketService;
 import com.xx.chinetek.base.BaseApplication;
+import com.xx.chinetek.base.SocketBaseActivity;
 import com.xx.chinetek.cywms.R;
 
 import org.xutils.view.annotation.ContentView;
@@ -19,42 +18,49 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_product_offshelf_scan)
-public class OffshelfScan extends BaseActivity {
+public class OffshelfScan extends SocketBaseActivity {
 
    Context context=OffshelfScan.this;
 @ViewInject(R.id.txt_Unboxing)
     TextView txtSendCount;
+    @ViewInject(R.id.txtWeight)
+    TextView txtWeight;
+
     @ViewInject(R.id.edtSendCount)
     EditText edtSendCount;
 
 
 
-    UpdateUIBroadcastReceiver broadcastReceiver;
+    //UpdateUIBroadcastReceiver broadcastReceiver;
 
     @Override
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
-        // 动态注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_UPDATEUI);
-        broadcastReceiver = new UpdateUIBroadcastReceiver();
-        registerReceiver(broadcastReceiver, filter);
-        // 启动服务
-        Intent intent = new Intent(this, ServiceElceSync.class);
-        startService(intent);
+        initVariables();//设置接收服务
     }
 
-    private class UpdateUIBroadcastReceiver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            txtSendCount.setText(String.valueOf(intent.getExtras().getInt("count")));
-        }
 
+    protected void initVariables()
+    {
+        //给全局消息接收器赋值，并进行消息处理
+        mReciver = new MessageBackReciver(){
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                String action = intent.getAction();
+                if(action.equals(SocketService.MESSAGE_ACTION))
+                {
+                    String message = intent.getStringExtra("message");
+                    Log.v("WMSLOG_Socket", message);
+                    String message1=message.split("\r\n")[0];
+                    txtWeight.setText(message1.contains("ST,GS")?message1.split(",")[2].trim():"");
+                }
+            }
+        };
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,13 +76,6 @@ public class OffshelfScan extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        System.out.println("onDestroy");
-        super.onDestroy();
-        // 注销广播
-        unregisterReceiver(broadcastReceiver);
-    }
 
 
 }
