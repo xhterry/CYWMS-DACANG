@@ -15,6 +15,8 @@
     <string name="Setting_Port">端口：</string>
     <string name="Setting_TimeOut">超时时间：</string>
     <string name="Setting_Second">秒</string>
+    <string name="Setting_PrintIP">打印机IP：</string>
+    <string name="Setting_ElecScale">电子称IP：</string>
 
     <!--Title-->
     <string name="app_product">车间</string>
@@ -98,6 +100,7 @@
     <string name="ReportNum">报产量</string>
     <string name="ReportQC">完工报检</string>
     <string name="TaskAllcote">任务分配</string>
+    <string name="LogUpload">日志上报</string>
     <string name="submit">提交</string>
     <string name="Add">新增</string>
     <string name="filter_content">请输入或扫描单号/物料条码</string>
@@ -201,6 +204,9 @@
     <string name="Msg_GetAreanobyCheckno">获取盘点库位信息...</string>
     <string name="Msg_InsertCheckDetail">提交盘点信息...</string>
     <string name="Msg_GetCheckDetail">获取已盘点信息...</string>
+    <string name="Msg_QueryStockInfo">查询%s信息...</string>
+    <string name="Msg_NoSelectOffshelfTask">请选择需要分配下架任务</string>
+    <string name="Msg_UploadLogFile">日志文件上传中...</string>
     <string name="Msg_GetT_OutStockDetailListByHeaderIDADF">获取下架复核明细列表...</string>
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
     <string name="Msg_SaveT_InStockDetailADF">保存收货明细列表...</string>
@@ -216,6 +222,8 @@
     <string name="Msg_Del_PalletOrbarcode">托盘信息删除中...</string>
     <string name="Msg_GetT_QualityListADF">获取质检信息...</string>
     <string name="Msg_GetT_OutTaskListADF">获取下架信息...</string>
+    <string name="Msg_SavePickUserListADF">提交分配拣货任务...</string>
+    <string name="Msg_GetT_GetPickUserListByUserADF">获取拣货人员信息...</string>
     <string name="Msg_GetT_OutTaskDetailListByHeaderIDADF">获取下架明细信息...</string>
 
     <string name="Hit_ScanBarcode">请扫描物料条码</string>

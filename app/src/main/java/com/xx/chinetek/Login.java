@@ -106,12 +106,6 @@ public class Login extends BaseActivity {
         startActivityLeft(new Intent(context,Setting.class));
     }
 
-    @Event(R.id.btnWMS)
-    private  void btnWmsClick(View view){
-        Intent intent=new Intent(context, MainActivity.class);
-        startActivity(intent);
-    }
-
     @Event(R.id.btnProduct)
     private  void btnProductClick(View view){
         Intent intent=new Intent(context, com.xx.chinetek.cyproduct.MainActivity.class);
@@ -151,7 +145,6 @@ public class Login extends BaseActivity {
                 else {
                     handler.sendEmptyMessage(1);
                 }
-
             }
         }.start();
     }

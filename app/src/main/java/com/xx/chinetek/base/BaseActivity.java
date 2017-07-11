@@ -27,7 +27,7 @@ import static com.xx.chinetek.base.BaseApplication.context;
 public abstract class BaseActivity extends AppCompatActivity implements IHandleMessage {
     private ToolBarHelper mToolBarHelper;
     public Toolbar toolbar;
-
+    public static final String ACTION_UPDATEUI = "action.updateUI";
     public MyHandler<BaseActivity> mHandler;
 
     @Override
@@ -37,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); //隐藏输入法
         AppManager.getAppManager().addActivity(this); //添加当前Activity到avtivity管理类
         mHandler = new MyHandler<>(this);
+
         initViews(); //自定义的方法
         initData();
     }
@@ -145,6 +146,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
         startActivity(intent);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
+
+
+
+
+
 
 
 

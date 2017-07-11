@@ -43,7 +43,7 @@ public class Base_Model implements Parcelable {
     private String VouUser ;
     private String DepartmentCode ;
     private String DepartmentName ;
-    private int ERPStatus ;
+    private String ERPStatus ;
     private String ERPNote ;
     private int ErpLineStatus ;
 
@@ -105,11 +105,11 @@ public class Base_Model implements Parcelable {
         DepartmentName = departmentName;
     }
 
-    public int getERPStatus() {
+    public String getERPStatus() {
         return ERPStatus;
     }
 
-    public void setERPStatus(int ERPStatus) {
+    public void setERPStatus(String ERPStatus) {
         this.ERPStatus = ERPStatus;
     }
 
@@ -333,7 +333,7 @@ public class Base_Model implements Parcelable {
         dest.writeString(this.VouUser);
         dest.writeString(this.DepartmentCode);
         dest.writeString(this.DepartmentName);
-        dest.writeInt(this.ERPStatus);
+        dest.writeString(this.ERPStatus);
         dest.writeString(this.ERPNote);
         dest.writeInt(this.ErpLineStatus);
         dest.writeInt(this.StockType);
@@ -369,7 +369,7 @@ public class Base_Model implements Parcelable {
         this.VouUser = in.readString();
         this.DepartmentCode = in.readString();
         this.DepartmentName = in.readString();
-        this.ERPStatus = in.readInt();
+        this.ERPStatus = in.readString();
         this.ERPNote = in.readString();
         this.ErpLineStatus = in.readInt();
         this.StockType = in.readInt();

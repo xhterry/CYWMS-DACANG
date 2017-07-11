@@ -158,17 +158,21 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     void AnalysisGetT_QualityListADFJson(String result){
-        LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_QualityListADF,result);
-        ReturnMsgModelList<QualityInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<QualityInfo_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            qualityInfoModels=returnMsgModel.getModelJson();
-            if (qualityInfoModels != null && qualityInfoModels.size() == 1 && stockInfoModel != null)
+        try {
+            LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_QualityListADF, result);
+            ReturnMsgModelList<QualityInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<QualityInfo_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                qualityInfoModels = returnMsgModel.getModelJson();
+                if (qualityInfoModels != null && qualityInfoModels.size() == 1 && stockInfoModel != null)
                     StartScanIntent(qualityInfoModels.get(0));
-            else
-                BindListVIew(qualityInfoModels);
-        }else
-        {
-            ToastUtil.show(returnMsgModel.getMessage());
+                else
+                    BindListVIew(qualityInfoModels);
+            } else {
+                ToastUtil.show(returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            ToastUtil.show(ex.getMessage());
         }
     }
 

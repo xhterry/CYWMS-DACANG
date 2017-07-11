@@ -34,7 +34,7 @@
         <!--<file>${LOG_DIR}/${today}.txt</file>-->
         <append>true</append>
         <encoder>
-            <pattern>%date %logger{36} ---- %msg%n
+            <pattern>%date %logger{36} ----  %msg%n%n
             </pattern>
         </encoder>
 

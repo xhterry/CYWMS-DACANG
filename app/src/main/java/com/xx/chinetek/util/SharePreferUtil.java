@@ -12,6 +12,7 @@ import com.xx.chinetek.util.Network.RequestHandler;
 
 import java.lang.reflect.Type;
 
+
 /**
  * Created by GHOST on 2017/2/3.
  */
@@ -22,15 +23,19 @@ public class SharePreferUtil {
         SharedPreferences sharedPreferences=context.getSharedPreferences("Setting", Context.MODE_PRIVATE);
         if(sharedPreferences!=null) {
             URLModel.IPAdress=sharedPreferences.getString("IPAdress", "");
+            URLModel.PrintIP=sharedPreferences.getString("PrintIP", "");
+            URLModel.ElecIP=sharedPreferences.getString("ElecIP", "");
             URLModel.Port=sharedPreferences.getInt("Port", 80);
             RequestHandler.SOCKET_TIMEOUT=sharedPreferences.getInt("TimeOut", 20000);
         }
     }
 
-    public static void SetShare(Context context, String IPAdress, Integer Port, Integer TimeOut){
+    public static void SetShare(Context context, String IPAdress,String PrintIP,String ElecIP, Integer Port, Integer TimeOut){
         SharedPreferences sharedPreferences=context.getSharedPreferences("Setting", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit=sharedPreferences.edit();
         edit.putString("IPAdress",IPAdress);
+        edit.putString("PrintIP",PrintIP);
+        edit.putString("ElecIP",ElecIP);
         edit.putInt("Port",Port);
         edit.putInt("TimeOut",TimeOut);
         edit.commit();

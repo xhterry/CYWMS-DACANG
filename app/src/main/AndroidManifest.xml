@@ -75,6 +75,9 @@
         <activity android:name="com.xx.chinetek.cyproduct.Return.SemiproductReturn" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptSemiProduct" />
         <activity android:name="com.xx.chinetek.Setting"></activity>
+
+        <service android:name="com.xx.chinetek.Service.ServiceElceSync" />
+
     </application>
 
 </manifest>

@@ -53,11 +53,11 @@ import static com.xx.chinetek.util.function.GsonUtil.parseModelToJson;
 public class OffshelfScan extends BaseActivity {
 
     String TAG_GetT_OutTaskDetailListByHeaderIDADF="OffshelfScan_GetT_OutTaskDetailListByHeaderIDADF";
-    String TAG_GetT_OutBarCodeInfoForQuanADF="OffshelfScan_GetT_OutBarCodeInfoForQuanADF";
+    String TAG_GetStockModelADF="OffshelfScan_GetStockModelADF";
     String TAG_SaveT_OutStockTaskDetailADF="OffshelfScan_SaveT_OutStockTaskDetailADF";
 
     private final int RESULT_Msg_GetT_OutTaskDetailListByHeaderIDADF=101;
-   private final int RESULT_Msg_GetT_OutBarCodeInfoForQuanADF=102;
+   private final int RESULT_Msg_GetStockModelADF=102;
     private final int RESULT_Msg_SaveT_OutStockTaskDetailADF=103;
 
     @Override
@@ -66,8 +66,8 @@ public class OffshelfScan extends BaseActivity {
             case RESULT_Msg_GetT_OutTaskDetailListByHeaderIDADF:
                 AnalysisGetT_OutTaskDetailListByHeaderIDADFJson((String) msg.obj);
                 break;
-            case RESULT_Msg_GetT_OutBarCodeInfoForQuanADF:
-                AnalysisGetT_OutBarCodeInfoForQuanADFJson((String) msg.obj);
+            case RESULT_Msg_GetStockModelADF:
+                AnalysisGetStockModelADFJson((String) msg.obj);
                 break;
             case RESULT_Msg_SaveT_OutStockTaskDetailADF:
                 AnalysisSaveT_OutStockTaskDetailADFJson((String) msg.obj);
@@ -148,10 +148,12 @@ public class OffshelfScan extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             String code=edtOffShelfScanbarcode.getText().toString().trim();
+            int type=tbPalletType.isChecked()?1:(tbBoxType.isChecked()?2:3);
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
-            LogUtil.WriteLog(QCScan.class, TAG_GetT_OutBarCodeInfoForQuanADF, code);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutBarCodeInfoForQuanADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_OutBarCodeInfoForQuanADF, null, URLModel.GetURL().GetT_OutBarCodeInfoForQuanADF, params, null);
+            params.put("ScanType", type+"");
+            LogUtil.WriteLog(QCScan.class, TAG_GetStockModelADF, code);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
         }
         return false;
     }
@@ -249,8 +251,8 @@ public class OffshelfScan extends BaseActivity {
         }
     }
 
-    void AnalysisGetT_OutBarCodeInfoForQuanADFJson(String result){
-        LogUtil.WriteLog(QCScan.class, TAG_GetT_OutBarCodeInfoForQuanADF,result);
+    void AnalysisGetStockModelADFJson(String result){
+        LogUtil.WriteLog(QCScan.class, TAG_GetStockModelADF,result);
         ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             stockInfoModels=returnMsgModel.getModelJson();
