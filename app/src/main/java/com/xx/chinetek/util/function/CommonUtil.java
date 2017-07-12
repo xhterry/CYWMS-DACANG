@@ -177,7 +177,7 @@ public class CommonUtil {
 
     public static String DateToString(Date date){
         String dateStr = "";
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
             dateStr = df.format(date);
         } catch (Exception e) {

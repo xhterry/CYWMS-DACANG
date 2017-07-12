@@ -93,7 +93,8 @@ public class SocketService extends Service {
         super.onDestroy();
         if(heartBeatRunnable!=null) {
             mHandler.removeCallbacks(heartBeatRunnable);
-            mReadThread.release();
+            if(mReadThread!=null)
+                mReadThread.release();
             releaseLastSocket(mSocket);
         }
     }

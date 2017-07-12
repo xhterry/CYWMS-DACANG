@@ -91,6 +91,8 @@ public class CombinPallet extends BaseActivity {
     TextView txtBatch;
     @ViewInject(R.id.txt_Status)
     TextView txtStatus;
+    @ViewInject(R.id.txt_EDate)
+    TextView txtEDate;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
     @ViewInject(R.id.txt_CartonNum)
@@ -148,17 +150,19 @@ public class CombinPallet extends BaseActivity {
     private  boolean edtBarcodeonKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
+            keyBoardCancle();
             isBarcodeScaned=true;
             String barcode=edtBarcode.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("Barcode", barcode);
-            params.put("PalletModel", SWPallet.isChecked()?"2":"1"); //1：新建托盘  2：插入组托
+            params.put("PalletModel", "1"); //1：新建托盘  2：插入组托
             LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF, barcode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
-            return false;
+            return true;
         }
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
+            keyBoardCancle();
             if(SWPallet.isChecked()){
                 new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否放弃此次组托任务？")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -166,25 +170,26 @@ public class CombinPallet extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO 自动生成的方法
                                 edtPallet.setEnabled(true);
-                                edtBarcode.setText("");
+                                InitFrm();
                                 CommonUtil.setEditFocus(edtPallet);
                             }
                         }).setNegativeButton("取消", null).show();
-                return false;
+                return true;
             }
         }
-        return false;
+        return SWPallet.isChecked();
     }
 
     @Event(value = R.id.edt_Pallet,type = View.OnKeyListener.class)
     private  boolean edtPalletonKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
+            keyBoardCancle();
             isBarcodeScaned=false;
             String barcode=edtPallet.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("Barcode", barcode);
-            params.put("PalletModel", SWPallet.isChecked()?"2":"1"); //1：新建托盘  2：插入组托
+            params.put("PalletModel","2"); //1：新建托盘  2：插入组托
             LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF, barcode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_PalletADF), context, mHandler, RESULT_GetT_PalletDetailByNoADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
             return false;
@@ -224,9 +229,15 @@ public class CombinPallet extends BaseActivity {
                 if (palletDetailModels.get(0).getLstBarCode() != null) {// &&
                     for (BarCodeInfo barCodeInfo : palletDetailModel.getLstBarCode()) {
                         if (palletDetailModels.get(0).getLstBarCode().size() != 0) {
+                            if(palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)){
+                                MessageBox.Show(context, getString(R.string.Error_Contain_Barcode));
+                                CommonUtil.setEditFocus(edtBarcode);
+                                return;
+                            }
                             String checkError = CheckPalletCondition(barCodeInfo);
                             if (!TextUtils.isEmpty(checkError)) {
                                 MessageBox.Show(context, checkError);
+                                CommonUtil.setEditFocus(edtBarcode);
                                 return;
                             }
                             barCodeInfo.setPalletno(palletDetailModels.get(0).getLstBarCode().get(0).getPalletno());
@@ -239,6 +250,12 @@ public class CombinPallet extends BaseActivity {
                             palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
                             palletDetailModels.get(0).setStrongHoldName(barCodeInfo.getStrongHoldName());
                             palletDetailModels.get(0).setCompanyCode(barCodeInfo.getCompanyCode());
+                            palletDetailModels.get(0).setMaterialNo(barCodeInfo.getMaterialNo());
+                            palletDetailModels.get(0).setBatchNo(barCodeInfo.getBatchNo());
+                            palletDetailModels.get(0).setSupPrdBatch(barCodeInfo.getSupPrdBatch());
+                            palletDetailModels.get(0).setErpVoucherNo(barCodeInfo.getErpVoucherNo());
+                            palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
+                            palletDetailModels.get(0).setAreaID(barCodeInfo.getAreaID());
                         }
                     }
                 }
@@ -247,6 +264,7 @@ public class CombinPallet extends BaseActivity {
                 txtBatch.setText(barCodeInfo.getBatchNo());
                 txtStatus.setText(barCodeInfo.getStrStatus());
                 txtMaterialName.setText(barCodeInfo.getMaterialDesc());
+                txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
                 txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
                 BindListVIew(palletDetailModels.get(0).getLstBarCode());
             } else {
@@ -269,6 +287,7 @@ public class CombinPallet extends BaseActivity {
             palletDetailModels=returnMsgModel.getModelJson();
             BindListVIew(palletDetailModels.get(0).getLstBarCode());
             edtPallet.setEnabled(false);
+            txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
             CommonUtil.setEditFocus(edtBarcode);
         }else{
             MessageBox.Show(context,returnMsgModel.getMessage());
@@ -327,33 +346,34 @@ public class CombinPallet extends BaseActivity {
         txtCompany.setText("");
         txtBatch.setText("");
         txtStatus.setText("");
+        txtEDate.setText("");
         txtMaterialName.setText("");
         txtCartonNum.setText("0");
     }
 
 
-    String CheckPalletCondition(BarCodeInfo  barCodeInfo){
-            //收货组托判断组托条件：批次、据点、物料、订单相同才能组托
-            //在库组托判断库位相同才能组托
-            //getPalletType为0：收货组托
-            //新增：判断物料是否已组托 插入：判断物料所在托盘属性是否与现有托盘属性一致才能组托
-            if (!SWPallet.isChecked() && barCodeInfo.getPalletType() != 0)
-                return getString(R.string.Error_Contain_Barcode);
-//        if(SWPallet.isChecked() && palletDetailModels.get(0).getPalletType()!=barCodeInfo.getPalletType())
-//            return getString(R.string.Error_PalletypenotMatch);
-            if (!palletDetailModels.get(0).getLstBarCode().get(0).getMaterialNo().equals(barCodeInfo.getMaterialNo()))
-                return getString(R.string.Error_materialnotMatch);
-            else if (!palletDetailModels.get(0).getLstBarCode().get(0).getBatchNo().equals(barCodeInfo.getBatchNo()))
-                return getString(R.string.Error_BartchnotMatch);
-            else if (!palletDetailModels.get(0).getLstBarCode().get(0).getSupPrdBatch().equals(barCodeInfo.getSupPrdBatch()))
-                return getString(R.string.Error_ProductBartchnotMatch);
-            else if (!palletDetailModels.get(0).getLstBarCode().get(0).getStrongHoldCode().equals(barCodeInfo.getStrongHoldCode()))
-                return getString(R.string.Error_CompanynotMatch);
-            if (palletDetailModels.get(0).getPalletType() == 0) {
-                if (!palletDetailModels.get(0).getLstBarCode().get(0).getErpVoucherNo().equals(barCodeInfo.getErpVoucherNo()))
-                    return getString(R.string.Error_VourcherNonotMatch);
-            } else if (palletDetailModels.get(0).getLstBarCode().get(0).getAreaID() != (barCodeInfo.getAreaID()))
-                return getString(R.string.Error_AreaotnotMatch);
+    String CheckPalletCondition(BarCodeInfo  barCodeInfo) {
+        //收货组托判断组托条件：批次、据点、物料、订单相同才能组托
+        //在库组托判断库位相同才能组托
+        //getPalletType为0：收货组托
+        //新增：判断物料是否已组托 插入：判断物料所在托盘属性是否与现有托盘属性一致才能组托
+        if (!SWPallet.isChecked() && barCodeInfo.getPalletType() != 0)
+            return getString(R.string.Error_Contain_Barcode);
+        if (SWPallet.isChecked() && palletDetailModels.get(0).getPalletType() != barCodeInfo.getPalletType())
+            return getString(R.string.Error_PalletypenotMatch);//.getLstBarCode().get(0)
+        if (!palletDetailModels.get(0).getMaterialNo().equals(barCodeInfo.getMaterialNo()))
+            return getString(R.string.Error_materialnotMatch);
+        else if (barCodeInfo.getBatchNo()==null || !palletDetailModels.get(0).getBatchNo().equals(barCodeInfo.getBatchNo()))
+            return getString(R.string.Error_BartchnotMatch);
+        else if (barCodeInfo.getSupPrdBatch()==null || !palletDetailModels.get(0).getSupPrdBatch().equals(barCodeInfo.getSupPrdBatch()))
+            return getString(R.string.Error_ProductBartchnotMatch);
+        else if (!palletDetailModels.get(0).getStrongHoldCode().equals(barCodeInfo.getStrongHoldCode()))
+            return getString(R.string.Error_CompanynotMatch);
+        if (palletDetailModels.get(0).getPalletType() == 0) {
+            if (!palletDetailModels.get(0).getErpVoucherNo().equals(barCodeInfo.getErpVoucherNo()))
+                return getString(R.string.Error_VourcherNonotMatch);
+        } else if (palletDetailModels.get(0).getAreaID() != (barCodeInfo.getAreaID()))
+            return getString(R.string.Error_AreaotnotMatch);
 
         return "";
     }

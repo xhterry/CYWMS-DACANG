@@ -8,6 +8,7 @@ import android.widget.GridView;
 
 import com.xx.chinetek.Box.Boxing;
 import com.xx.chinetek.FillPrint.FillPrint;
+import com.xx.chinetek.FillPrint.InitPrint;
 import com.xx.chinetek.Pallet.CombinPallet;
 import com.xx.chinetek.Pallet.DismantlePallet;
 import com.xx.chinetek.adapter.GridViewItemAdapter;
@@ -105,6 +106,9 @@ public class MainActivity extends BaseActivity {
             case 13:
                 intent.setClass(context, FillPrint.class);
                 break;
+            case 14:
+                intent.setClass(context, InitPrint.class);
+                break;
         }
         if(intent!=null)
             startActivityLeft(intent);
@@ -123,13 +127,13 @@ public class MainActivity extends BaseActivity {
                 R.drawable.offshelf,R.drawable.review, R.drawable.innermove,
                 R.drawable.inventory, R.drawable.query,R.drawable.combinepallet,
                 R.drawable.dismantlepallet,R.drawable.dismounting,
-                R.drawable.materiel,R.drawable.truckload,R.drawable.fillprint
+                R.drawable.materiel,R.drawable.truckload,R.drawable.fillprint,R.drawable.fillprint
                 //R.drawable.adjustment,
         };
         String[] itemNames = new String[]{"质检","收货", "上架",
                 "下架","发货复核", "移库",
                 "盘点", "查询",//"调拨",盘点(普通、随机)"库存调整",
-                "组托","拆托","装箱拆箱","物料转换","装车","标签补打"
+                "组托","拆托","装箱拆箱","物料转换","装车","标签补打","期初打印"
         };
         //cion和iconName的长度是相同的，这里任选其一都可以
         for(int i=0;i<itemIcon.length;i++){

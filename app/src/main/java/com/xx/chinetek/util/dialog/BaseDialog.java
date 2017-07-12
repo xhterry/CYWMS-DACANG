@@ -34,7 +34,7 @@ public abstract class BaseDialog {
     }
 
     public void show() {
-        if (mDialog != null) {
+        if (mDialog != null && !mDialog.isShowing()) {
             mDialog.show();
         }
     }

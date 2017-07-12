@@ -1,4 +1,4 @@
-package com.xx.chinetek.cywms.Receiption;
+package com.xx.chinetek.cyproduct.Receiption;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -20,9 +18,8 @@ import com.xx.chinetek.adapter.Receiption.ReceiptBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
-import com.xx.chinetek.cywms.Qc.QCMaterialChoice;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Material.BarCodeInfo;
+import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Receiption.Receipt_Model;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -54,10 +51,8 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
     String TAG_GetT_PalletDetailByBarCode = "ReceiptBillChoice_GetT_PalletDetailByBarCode";
     private final int RESULT_GetT_InStockList = 101;
     private final int RESULT_GetT_PalletDetailByBarCode=102;
-    private final int supplierRequestCode = 1001;
 
     Context context = ReceiptBillChoice.this;
-    boolean isCancelFilterButton=false; //供应商筛选标志
 
 
     @Override
@@ -85,21 +80,23 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
     EditText edtfilterContent;
     @ViewInject(R.id.txt_Suppliername)
     TextView txtSuppliername;
-    MenuItem  gMenuItem=null;
+    @ViewInject(R.id.txt_SupplierContent)
+    TextView txtSupplierContent;
 
 
     ArrayList<Receipt_Model> receiptModels;//单据信息
-    List<Map<String, String>> SupplierList= new ArrayList<Map<String, String>>();//供应商列表
     ReceiptBillChioceItemAdapter receiptBillChioceItemAdapter;
 
-    ArrayList<BarCodeInfo> barCodeInfos;
+    List<PalletDetail_Model> palletDetailModels;
 
     @Override
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.receipt_subtitle), false);
+        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Product_receipt_title), true);
         x.view().inject(this);
+        txtSupplierContent.setVisibility(View.GONE);
+        txtSuppliername.setVisibility(View.GONE);
     }
 
     @Override
@@ -124,81 +121,12 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
      * 初始化加载listview
      */
     private void InitListView() {
-        barCodeInfos=new ArrayList<>();
+        palletDetailModels=new ArrayList<>();
         receiptModels=new ArrayList<>();
         edtfilterContent.setText("");
         Receipt_Model receiptModel = new Receipt_Model();
         receiptModel.setStatus(1);
         GetT_InStockList(receiptModel);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_receiptbillchoice, menu);
-        gMenuItem=menu.findItem(R.id.action_filter);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_filter) {
-            if (receiptModels!=null && receiptModels.size() != 0) {
-                if(isCancelFilterButton){
-                    isCancelFilterButton=false;
-                    txtSuppliername.setText(getResources().getString(R.string.supplierNoFilter));
-                    item.setTitle(getResources().getString(R.string.title_Receipt_Right));
-                    BindListVIew(receiptModels);
-                }else {
-                    for(int i=0;i<receiptModels.size();i++) {
-                        Map<String, String> map = new HashMap<String, String>();
-                        String SupplierName = receiptModels.get(i).getSupplierName();
-                        String SupplierID = receiptModels.get(i).getSupplierNo();
-                        map = new HashMap<String, String>();
-                        map.put("SupplierName", SupplierName == null || SupplierName.isEmpty() ? "空" : SupplierName);
-                        map.put("SupplierID", SupplierID == null || SupplierID.isEmpty() ? "000000" : SupplierID);
-                        SupplierList.add(map);
-                    }
-                    Intent intent = new Intent(context, SupplierFilterActivity.class);
-                    Bundle bundle = new Bundle();
-                    ArrayList bundlelist = new ArrayList();
-                    bundlelist.add(SupplierList);
-                    bundle.putParcelableArrayList("SupplierList", bundlelist);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, supplierRequestCode);
-                }
-            }
-        }
-
-        if(item.getItemId() ==R.id.action_QCfilter){
-            Intent intent = new Intent(context, QCMaterialChoice.class);
-            intent.putExtra("ErpVourcherNo","");
-            startActivityLeft(intent);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * 供应商筛选界面返回值接收
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==supplierRequestCode && resultCode==RESULT_OK){
-            String SupplierID=data.getStringExtra("SupplierID");
-            String SupplierName=data.getStringExtra("SupplierName");
-            txtSuppliername.setText(SupplierName);
-            ArrayList<Receipt_Model> receiptModelList= new ArrayList<>();
-            for (  Receipt_Model tempreceiptModel:receiptModels ) {
-                if(tempreceiptModel.getSupplierNo()!=null && tempreceiptModel.getSupplierNo().equals(SupplierID)){
-                    receiptModelList.add(tempreceiptModel);
-                }
-           }
-            isCancelFilterButton=true;
-            if(gMenuItem!=null ){
-                gMenuItem.setTitle(getResources().getString(R.string.title_Receipt_RightFilter));
-            }
-            BindListVIew(receiptModelList);
-        }
     }
 
     /**
@@ -231,7 +159,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
                     return false;
                 }
             }
-           // StartScanIntent(null,null);
+            StartScanIntent(null,null);
             CommonUtil.setEditFocus(edtfilterContent);
         }
         return false;
@@ -246,8 +174,8 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 receiptModels = returnMsgModel.getModelJson();
-                if (receiptModels != null && receiptModels.size() == 1 && barCodeInfos != null && barCodeInfos.size()!=0)
-                    StartScanIntent(receiptModels.get(0), barCodeInfos);
+                if (receiptModels != null && receiptModels.size() == 1 && palletDetailModels != null && palletDetailModels.size()!=0)
+                    StartScanIntent(receiptModels.get(0), palletDetailModels.get(0));
                 else
                     BindListVIew(receiptModels);
             } else {
@@ -262,18 +190,18 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
     void AnalysisGetT_PalletDetailByBarCodeJson(String result) {
         LogUtil.WriteLog(ReceiptBillChoice.class, TAG_GetT_PalletDetailByBarCode, result);
         try {
-            ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {
+            ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
-                this.barCodeInfos = returnMsgModel.getModelJson();
-                if (barCodeInfos != null) {
+                this.palletDetailModels = returnMsgModel.getModelJson();
+                if (palletDetailModels != null) {
                     // Receipt_Model receiptModel = new Receipt_Model(barCodeInfo.getBarCode());
                     //  int index = receiptModels.indexOf(receiptModel);
                     //  if (index != -1) {
                     //调用GetT_InStockList 赋值ERP订单号字段，获取Receipt_Model列表，跳转到扫描界面
                     Receipt_Model receiptModel = new Receipt_Model();
                     receiptModel.setStatus(1);
-                    receiptModel.setErpVoucherNo(barCodeInfos.get(0).getErpVoucherNo());
+                    receiptModel.setErpVoucherNo(palletDetailModels.get(0).getErpVoucherNo());
                     GetT_InStockList(receiptModel);
                     //   } else {
                     //     MessageBox.Show(context, R.string.Error_BarcodeNotInList);
@@ -301,11 +229,11 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
         }
     }
 
-    void StartScanIntent(Receipt_Model receiptModel,ArrayList<BarCodeInfo> barCodeInfo){
-        Intent intent=new Intent(context,ReceiptionScan.class);
+    void StartScanIntent(Receipt_Model receiptModel,PalletDetail_Model palletDetailModel){
+        Intent intent=new Intent(context, ReceiptionScan.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("receiptModel",receiptModel);
-        bundle.putParcelableArrayList("barCodeInfo",barCodeInfo);
+        bundle.putParcelable("palletDetailModel",palletDetailModel);
         intent.putExtras(bundle);
         startActivityLeft(intent);
     }

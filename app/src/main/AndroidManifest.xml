@@ -26,7 +26,7 @@
         <activity android:name=".OffShelf.OffShelfBillChoice" />
         <activity android:name=".Review.ReviewScan" />
         <activity android:name=".Review.ReviewBillChoice" />
-        <activity android:name="com.xx.chinetek.Pallet.CombinPalletDetail"/>
+        <activity android:name="com.xx.chinetek.Pallet.CombinPalletDetail" />
         <activity android:name=".InnerMove.InnerMoveScan" />
         <activity android:name=".Intentory.InventoryBillChoice" />
         <activity android:name=".Intentory.IntentoryScan" />
@@ -56,6 +56,7 @@
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutput" />
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutputNum" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionScan" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptBillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceipyionBillDetail" />
         <activity android:name="com.xx.chinetek.cyproduct.QC.TakeSample" />
         <activity android:name="com.xx.chinetek.cyproduct.Review.ReviewScan" />
@@ -74,10 +75,11 @@
         <activity android:name="com.xx.chinetek.cyproduct.OffShelf.SemiProductScan" />
         <activity android:name="com.xx.chinetek.cyproduct.Return.SemiproductReturn" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptSemiProduct" />
-        <activity android:name="com.xx.chinetek.Setting"></activity>
+        <activity android:name="com.xx.chinetek.Setting" />
 
         <service android:name="com.xx.chinetek.Service.SocketService" />
 
+        <activity android:name="com.xx.chinetek.FillPrint.InitPrint"></activity>
     </application>
 
 </manifest>

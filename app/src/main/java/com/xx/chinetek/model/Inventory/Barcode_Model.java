@@ -3,6 +3,8 @@ package com.xx.chinetek.model.Inventory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 /**
  * Created by GHOST on 2017/7/6.
  */
@@ -19,7 +21,70 @@ public class Barcode_Model implements Parcelable{
     private String BarCode;
     private String CHECKNO ;
     private int AREAID ;
+    private String areano;
     private String SerialNo;
+    private String IP;
+    private String LabelMark;
+    private String ErpVoucherNo;
+    private String SupPrdBatch;
+    private Date ProductDate;
+    private Date EDate;
+
+    public String getAreano() {
+        return areano;
+    }
+
+    public void setAreano(String areano) {
+        this.areano = areano;
+    }
+
+    public Date getProductDate() {
+        return ProductDate;
+    }
+
+    public void setProductDate(Date productDate) {
+        ProductDate = productDate;
+    }
+
+    public Date getEDate() {
+        return EDate;
+    }
+
+    public void setEDate(Date EDate) {
+        this.EDate = EDate;
+    }
+
+    public String getSupPrdBatch() {
+        return SupPrdBatch;
+    }
+
+    public void setSupPrdBatch(String supPrdBatch) {
+        SupPrdBatch = supPrdBatch;
+    }
+
+    public String getErpVoucherNo() {
+        return ErpVoucherNo;
+    }
+
+    public void setErpVoucherNo(String erpVoucherNo) {
+        ErpVoucherNo = erpVoucherNo;
+    }
+
+    public String getIP() {
+        return IP;
+    }
+
+    public void setIP(String IP) {
+        this.IP = IP;
+    }
+
+    public String getLabelMark() {
+        return LabelMark;
+    }
+
+    public void setLabelMark(String labelMark) {
+        LabelMark = labelMark;
+    }
 
     public String getSerialNo() {
         return SerialNo;
@@ -138,7 +203,14 @@ public class Barcode_Model implements Parcelable{
         dest.writeString(this.BarCode);
         dest.writeString(this.CHECKNO);
         dest.writeInt(this.AREAID);
+        dest.writeString(this.areano);
         dest.writeString(this.SerialNo);
+        dest.writeString(this.IP);
+        dest.writeString(this.LabelMark);
+        dest.writeString(this.ErpVoucherNo);
+        dest.writeString(this.SupPrdBatch);
+        dest.writeLong(this.ProductDate != null ? this.ProductDate.getTime() : -1);
+        dest.writeLong(this.EDate != null ? this.EDate.getTime() : -1);
     }
 
     protected Barcode_Model(Parcel in) {
@@ -153,7 +225,16 @@ public class Barcode_Model implements Parcelable{
         this.BarCode = in.readString();
         this.CHECKNO = in.readString();
         this.AREAID = in.readInt();
+        this.areano = in.readString();
         this.SerialNo = in.readString();
+        this.IP = in.readString();
+        this.LabelMark = in.readString();
+        this.ErpVoucherNo = in.readString();
+        this.SupPrdBatch = in.readString();
+        long tmpProductDate = in.readLong();
+        this.ProductDate = tmpProductDate == -1 ? null : new Date(tmpProductDate);
+        long tmpEDate = in.readLong();
+        this.EDate = tmpEDate == -1 ? null : new Date(tmpEDate);
     }
 
     public static final Creator<Barcode_Model> CREATOR = new Creator<Barcode_Model>() {

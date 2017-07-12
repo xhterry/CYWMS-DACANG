@@ -44,6 +44,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:hint="@string/Hit_ScanBarcode"
+        android:imeOptions="actionSearch"
         app:layout_constraintBottom_toBottomOf="@+id/textView47"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toRightOf="@+id/textView47"

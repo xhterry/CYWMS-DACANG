@@ -25,7 +25,6 @@ import com.xx.chinetek.cywms.Qc.QCMaterialChoice;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.Material.BarCodeInfo;
-import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Receiption.ReceiptDetail_Model;
 import com.xx.chinetek.model.Receiption.Receipt_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
@@ -107,12 +106,14 @@ public class ReceiptionScan extends BaseActivity {
     TextView txtBatch;
     @ViewInject(R.id.txt_Status)
     TextView txtStatus;
+    @ViewInject(R.id.txt_EDate)
+    TextView txtEDate;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
 
     ReceiptScanDetailAdapter receiptScanDetailAdapter;
     ArrayList<ReceiptDetail_Model> receiptDetailModels;
-    PalletDetail_Model palletDetailModel=null;
+    ArrayList<BarCodeInfo> barCodeInfos=null;
     Receipt_Model receiptModel=null;
 
     @Override
@@ -127,7 +128,7 @@ public class ReceiptionScan extends BaseActivity {
     protected void initData() {
         super.initData();
         receiptModel=getIntent().getParcelableExtra("receiptModel");
-        this.palletDetailModel=getIntent().getParcelableExtra("palletDetailModel");
+        this.barCodeInfos=getIntent().getParcelableArrayListExtra("barCodeInfo");
         txtVoucherNo.setText(receiptModel.getVoucherNo());
         GetReceiptDetail(receiptModel);
 
@@ -214,8 +215,8 @@ public class ReceiptionScan extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 receiptDetailModels = returnMsgModel.getModelJson();
                 //自动确认扫描箱号
-                if (palletDetailModel != null && palletDetailModel.getLstBarCode() != null)
-                    for (BarCodeInfo barCodeInfo : palletDetailModel.getLstBarCode()) {
+                if (barCodeInfos != null )
+                    for (BarCodeInfo barCodeInfo : barCodeInfos) {
                         CheckBarcode(barCodeInfo);
                         InitFrm(barCodeInfo);
                     }
@@ -235,16 +236,16 @@ public class ReceiptionScan extends BaseActivity {
     void AnalysisGetT_PalletDetailByNoADF(String result){
         LogUtil.WriteLog(ReceiptionScan.class, TAG_GetT_PalletDetailByBarCodeADF,result);
         try {
-            ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
+            ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
-                List<PalletDetail_Model> palletDetailModels = returnMsgModel.getModelJson();
-                if (palletDetailModels != null && palletDetailModels.size() != 0) {
-                    for (BarCodeInfo barCodeInfo : palletDetailModels.get(0).getLstBarCode()) {
+                List<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
+                if (barCodeInfos != null && barCodeInfos.size() != 0) {
+                    for (BarCodeInfo barCodeInfo : barCodeInfos) {
                         if (!CheckBarcode(barCodeInfo))
                             break;
                     }
-                    InitFrm(palletDetailModels.get(0).getLstBarCode().get(0));
+                    InitFrm(barCodeInfos.get(0));
                 }
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
@@ -287,6 +288,7 @@ public class ReceiptionScan extends BaseActivity {
             txtBatch.setText(barCodeInfo.getBatchNo());
             txtStatus.setText(barCodeInfo.getStrStatus());
             txtMaterialName.setText(barCodeInfo.getMaterialDesc());
+            txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
         }
         CommonUtil.setEditFocus(edtRecScanBarcode);
     }

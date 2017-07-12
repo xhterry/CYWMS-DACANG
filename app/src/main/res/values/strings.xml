@@ -4,7 +4,6 @@
     <string name="version_msg">当前版本：1.0</string>
 
 
-
     <string name="SaveSuccess">保存成功！</string>
 
     <string name="login_login">登陆</string>
@@ -257,7 +256,7 @@
     <string name="Error_BarcodeScaned">该条码已扫描！</string>
     <string name="Error_ReceiveFinish">该物料已收货完毕！</string>
     <string name="Error_ReviewFinish">该物料已复核完毕！</string>
-   <string name="Error_Inventory_NoArtNo">此货位号不在盘点任务中</string>
+    <string name="Error_Inventory_NoArtNo">此货位号不在盘点任务中</string>
 
 
 </resources>

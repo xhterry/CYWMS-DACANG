@@ -91,6 +91,8 @@ public class DismantlePallet extends BaseActivity {
     TextView txtStatus;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
+    @ViewInject(R.id.txt_EDate)
+    TextView txtEDate;
     @ViewInject(R.id.txt_PalletNo)
     TextView txtPalletNo;
     @ViewInject(R.id.edt_Barcode)
@@ -129,6 +131,7 @@ public class DismantlePallet extends BaseActivity {
     private  boolean edtBarcodeonKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
+            keyBoardCancle();
             String barcode=edtBarcode.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("Barcode", barcode);
@@ -186,6 +189,7 @@ public class DismantlePallet extends BaseActivity {
                 txtCompany.setText(barCodeInfo.getStrongHoldName());
                 txtBatch.setText(barCodeInfo.getBatchNo());
                 txtStatus.setText(barCodeInfo.getStatus());
+                txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
                 txtMaterialName.setText(barCodeInfo.getMaterialDesc());
                 txtPalletNo.setText(palletDetailModels.get(0).getPalletNo());
                 BindListVIew(palletDetailModels.get(0).getLstBarCode());

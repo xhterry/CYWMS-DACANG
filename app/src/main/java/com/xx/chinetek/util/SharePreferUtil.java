@@ -40,6 +40,8 @@ public class SharePreferUtil {
         edit.putInt("TimeOut",TimeOut);
         edit.commit();
         URLModel.IPAdress=IPAdress;
+        URLModel.PrintIP=PrintIP;
+        URLModel.ElecIP=ElecIP;
         URLModel.Port=Port;
         RequestHandler.SOCKET_TIMEOUT=TimeOut;
     }

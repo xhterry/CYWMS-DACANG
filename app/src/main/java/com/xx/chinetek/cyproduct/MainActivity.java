@@ -13,6 +13,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
 import com.xx.chinetek.cyproduct.OffShelf.DeliveryProduct;
+import com.xx.chinetek.cyproduct.Receiption.ReceiptBillChoice;
 import com.xx.chinetek.cywms.R;
 
 import org.xutils.view.annotation.ContentView;
@@ -51,8 +52,7 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (position) {
             case 0:
-                BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Product_receipt_title), true);
-                intent.setClass(context, BillChoice.class);
+                intent.setClass(context, ReceiptBillChoice.class);
                 break;
             case 1:
                 intent.setClass(context, DeliveryProduct.class);
