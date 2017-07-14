@@ -169,7 +169,7 @@ public class IntentoryScan extends BaseActivity {
             CommonUtil.setEditFocus(edtStockScan);
             return true;
         }
-        return false;
+        return true;
     }
 
     @Event(value =R.id.edt_InvNum,type = View.OnKeyListener.class)
@@ -188,7 +188,7 @@ public class IntentoryScan extends BaseActivity {
                 CommonUtil.setEditFocus(edtInvScanBarcode);
             return true;
         }
-        return false;
+        return true;
     }
 
 
@@ -264,7 +264,6 @@ public class IntentoryScan extends BaseActivity {
                 txtMaterialName.setText("");
                 txtStockNum.setText("");
                 btnPalletConfig.setVisibility(View.GONE);
-                checkAreaModel=new CheckArea_Model();
                 barcodeModels=new ArrayList<>();
                 inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
                 lsvIntentoryScan.setAdapter(inventoryScanItemAdapter);

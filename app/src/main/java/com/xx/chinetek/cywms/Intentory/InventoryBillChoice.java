@@ -126,7 +126,7 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
                     MessageBox.Show(context,getString(R.string.No_Task));
                 }
             }
-            StartScanIntent(null);
+          //  StartScanIntent(null);
             CommonUtil.setEditFocus(edtfilterContent);
         }
         return false;

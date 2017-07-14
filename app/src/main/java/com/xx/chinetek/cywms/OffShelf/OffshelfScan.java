@@ -115,7 +115,7 @@ public class OffshelfScan extends BaseActivity {
 
     OutStockTaskInfo_Model outStockTaskInfoModel;
     ArrayList<OutStockTaskDetailsInfo_Model> outStockTaskDetailsInfoModels;
-    List<StockInfo_Model> stockInfoModels;//扫描 条码
+    List<StockInfo_Model> stockInfoModels;//扫描条码
     int currentPickMaterial=0;//当前拣货物料位置
 
     @Override
@@ -129,10 +129,9 @@ public class OffshelfScan extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        currentPickMaterial=0;
         outStockTaskInfoModel=getIntent().getParcelableExtra("outStockTaskInfoModel");
-        // txtVourcherNo.setText(outStockTaskInfoModel.getTaskNo());
         GetT_OutTaskDetailListByHeaderIDADF(outStockTaskInfoModel);
-
     }
 
     @Event(value ={R.id.tb_UnboxType,R.id.tb_PalletType,R.id.tb_BoxType} ,type = CompoundButton.OnClickListener.class)
@@ -158,6 +157,9 @@ public class OffshelfScan extends BaseActivity {
         return false;
     }
 
+    /*
+    拆零数量
+     */
     @Event(value = R.id.edt_Unboxing,type = View.OnKeyListener.class)
     private  boolean edtunboxingClick(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
@@ -227,8 +229,12 @@ public class OffshelfScan extends BaseActivity {
     }
 
 
+    /*
+    下架明细获取
+     */
     void GetT_OutTaskDetailListByHeaderIDADF(OutStockTaskInfo_Model outStockTaskInfoModel){
         if(outStockTaskInfoModel!=null) {
+            txtVourcherNo.setText(outStockTaskInfoModel.getTaskNo());
             final OutStockTaskDetailsInfo_Model outStockTaskDetailsInfoModel = new OutStockTaskDetailsInfo_Model();
             outStockTaskDetailsInfoModel.setHeaderID(outStockTaskInfoModel.getID());
             final Map<String, String> params = new HashMap<String, String>();
@@ -239,18 +245,24 @@ public class OffshelfScan extends BaseActivity {
         }
     }
 
+    /*
+    处理下架明细
+     */
     void AnalysisGetT_OutTaskDetailListByHeaderIDADFJson(String result){
         LogUtil.WriteLog(OffshelfScan.class, TAG_GetT_OutTaskDetailListByHeaderIDADF,result);
         ReturnMsgModelList<OutStockTaskDetailsInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskDetailsInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockTaskDetailsInfoModels=returnMsgModel.getModelJson();
-            ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
+            ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));//显示需要拣货物料
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
         }
     }
 
+    /*
+    扫描条码
+     */
     void AnalysisGetStockModelADFJson(String result){
         LogUtil.WriteLog(QCScan.class, TAG_GetStockModelADF,result);
         ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
@@ -288,18 +300,20 @@ public class OffshelfScan extends BaseActivity {
     }
 
     void checkQTY(OutStockTaskDetailsInfo_Model currentOutTaskDetailInfo,float scanQty,Boolean isPallet){
-        if(currentOutTaskDetailInfo.getRemainQty()-scanQty<0){
+        if(currentOutTaskDetailInfo.getRemainQty()-currentOutTaskDetailInfo.getScanQty()-scanQty<0){
             MessageBox.Show(context,getString(R.string.Error_offshelfQtyBiger));
             CommonUtil.setEditFocus(edtOffShelfScanbarcode);
         }else {
             if(isPallet){
                 for (StockInfo_Model stockInfoModel:stockInfoModels) {
                     stockInfoModel.setPickModel(1);
+                    outStockTaskDetailsInfoModels.get(currentPickMaterial).setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterial).getScanQty()+scanQty);
                     outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0,stockInfoModel);
                 }
             }
             else {
                 stockInfoModels.get(0).setPickModel(2);
+                outStockTaskDetailsInfoModels.get(currentPickMaterial).setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterial).getScanQty()+scanQty);
                 outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0, stockInfoModels.get(0));
             }
             currentPickMaterial++;

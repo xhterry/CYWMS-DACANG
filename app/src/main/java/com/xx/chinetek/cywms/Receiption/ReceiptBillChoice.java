@@ -105,7 +105,8 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
     @Override
     protected void onResume() {
         super.onResume();
-        InitListView();
+        if(!isCancelFilterButton)
+            InitListView();
     }
 
     @Override

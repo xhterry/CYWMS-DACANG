@@ -19,8 +19,8 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModelList;
+import com.xx.chinetek.model.Stock.StockInfo_Model;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.UpShelf.InStockTaskInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
@@ -38,7 +38,6 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -47,9 +46,9 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
 
 
     String TAG_GetT_InTaskListADF = "UpShelfBillChoice_GetT_InTaskListADF";
-    String TAG_GetT_PalletDetailByBarCode = "UpShelfBillChoice_GetT_PalletDetailByBarCode";
+    String TAG_GetT_ScanInStockModelADF = "UpShelfBillChoice_GetT_ScanInStockModelADF";
     private final int RESULT_GetT_InTaskListADF = 101;
-    private final int RESULT_GetT_PalletDetailByBarCode=102;
+    private final int RESULT_GetT_ScanInStockModelADF=102;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -58,8 +57,8 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
             case RESULT_GetT_InTaskListADF:
                AnalysisGetT_InTaskListADFJson((String) msg.obj);
                 break;
-            case RESULT_GetT_PalletDetailByBarCode:
-                AnalysisGetT_PalletDetailByBarCodeJson((String) msg.obj);
+            case RESULT_GetT_ScanInStockModelADF:
+                AnalysisGetT_ScanInStockModelADFJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -81,7 +80,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
     Context context = UpShelfBillChoice.this;
     UpshelfBillChioceItemAdapter upshelfBillChioceItemAdapter;
     ArrayList<InStockTaskInfo_Model> inStockTaskInfoModels;
-    List<PalletDetail_Model> palletDetailModels;
+    ArrayList<StockInfo_Model> stockInfoModels;
 
     @Override
     protected void initViews() {
@@ -102,6 +101,8 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
     protected void onResume() {
         super.onResume();
         InitListView();
+        edtfilterContent.setText("");
+        CommonUtil.setEditFocus(edtfilterContent);
     }
 
     @Override
@@ -135,9 +136,12 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
                 } else {
                     //扫描箱条码
                     final Map<String, String> params = new HashMap<String, String>();
-                    params.put("BarCode", code);
-                    LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_PalletDetailByBarCode, code);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCode, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_PalletDetailByBarCode, null, URLModel.GetURL().GetT_PalletDetailByBarCodeADF, params, null);
+                    params.put("SerialNo", code);
+                    params.put("VoucherNo", inStockTaskInfoModel.getErpVoucherNo());
+                    params.put("TaskNo", inStockTaskInfoModel.getTaskNo());
+                    params.put("AreaNo", "");
+                    LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_ScanInStockModelADF, code);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_ScanInStockModelADF, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_ScanInStockModelADF, null, URLModel.GetURL().GetT_ScanInStockModelADF, params, null);
                     return false;
                 }
             }
@@ -168,6 +172,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
         } catch (Exception ex) {
             mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtfilterContent);
         }
     }
 
@@ -177,29 +182,30 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
         ReturnMsgModelList<InStockTaskInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<InStockTaskInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             inStockTaskInfoModels=returnMsgModel.getModelJson();
-            if (inStockTaskInfoModels != null && inStockTaskInfoModels.size() == 1 && palletDetailModels != null && palletDetailModels.size()!=0)
-                    StartScanIntent(inStockTaskInfoModels.get(0), palletDetailModels.get(0));
+            if (inStockTaskInfoModels != null && inStockTaskInfoModels.size() == 1 && stockInfoModels != null && stockInfoModels.size()!=0)
+                    StartScanIntent(inStockTaskInfoModels.get(0), stockInfoModels);
             else
                 BindListVIew(inStockTaskInfoModels);
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
+            CommonUtil.setEditFocus(edtfilterContent);
         }
     }
 
-    void AnalysisGetT_PalletDetailByBarCodeJson(String result){
-        LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_PalletDetailByBarCode,result);
-        ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {}.getType());
+    void AnalysisGetT_ScanInStockModelADFJson(String result){
+        LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_ScanInStockModelADF,result);
+        ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-           palletDetailModels=returnMsgModel.getModelJson();
-            if(palletDetailModels!=null) {
+            stockInfoModels=returnMsgModel.getModelJson();
+            if(stockInfoModels!=null) {
                 // Receipt_Model receiptModel = new Receipt_Model(barCodeInfo.getBarCode());
                 //  int index = receiptModels.indexOf(receiptModel);
                 //  if (index != -1) {
                 //调用GetT_InStockList 赋值ERP订单号字段，获取Receipt_Model列表，跳转到扫描界面
                 InStockTaskInfo_Model inStockTaskInfoModel=new InStockTaskInfo_Model();
                 inStockTaskInfoModel.setStatus(1);
-                inStockTaskInfoModel.setErpVoucherNo(palletDetailModels.get(0).getErpVoucherNo());
+                inStockTaskInfoModel.setErpVoucherNo(stockInfoModels.get(0).getErpVoucherNo());
                 GetT_InStockTaskInfoList(inStockTaskInfoModel);
                 //   } else {
                 //     MessageBox.Show(context, R.string.Error_BarcodeNotInList);
@@ -207,15 +213,16 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
             }
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
+            CommonUtil.setEditFocus(edtfilterContent);
         }
     }
 
-    void StartScanIntent(InStockTaskInfo_Model inStockTaskInfoModel,PalletDetail_Model palletDetailModel){
+    void StartScanIntent(InStockTaskInfo_Model inStockTaskInfoModel,ArrayList<StockInfo_Model> stockInfoModels){
         Intent intent=new Intent(context,UpShelfScanActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("inStockTaskInfoModel",inStockTaskInfoModel);
-        bundle.putParcelable("palletDetailModels",palletDetailModel);
+        bundle.putParcelableArrayList("stockInfoModels",stockInfoModels);
         intent.putExtras(bundle);
         startActivityLeft(intent);
     }

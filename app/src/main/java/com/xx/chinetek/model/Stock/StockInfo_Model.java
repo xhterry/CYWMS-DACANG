@@ -56,11 +56,19 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private int WareHouseID;
     private int HouseID;
     private int AreaID;
+    private String ErpVoucherNo;
     private int StockBarCodeStatus=0;//发货复核使用  0：未组托 1：已组托
     private String PartNo;
     private int PickModel; //下架方式 1-整托 2-整箱 3-零数
     private Float AmountQty;//零数
 
+    public String getErpVoucherNo() {
+        return ErpVoucherNo;
+    }
+
+    public void setErpVoucherNo(String erpVoucherNo) {
+        ErpVoucherNo = erpVoucherNo;
+    }
 
     public int getStockBarCodeStatus() {
         return StockBarCodeStatus;
@@ -473,6 +481,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeInt(this.WareHouseID);
         dest.writeInt(this.HouseID);
         dest.writeInt(this.AreaID);
+        dest.writeString(this.ErpVoucherNo);
         dest.writeInt(this.StockBarCodeStatus);
         dest.writeString(this.PartNo);
         dest.writeInt(this.PickModel);
@@ -520,6 +529,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.WareHouseID = in.readInt();
         this.HouseID = in.readInt();
         this.AreaID = in.readInt();
+        this.ErpVoucherNo = in.readString();
         this.StockBarCodeStatus = in.readInt();
         this.PartNo = in.readString();
         this.PickModel = in.readInt();

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Material.BarCodeInfo;
+import com.xx.chinetek.model.Stock.AreaInfo_Model;
 import com.xx.chinetek.model.Stock.StockInfo_Model;
 
 import java.util.ArrayList;
@@ -83,13 +83,75 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
     private int WarehouseID;
     private int HouseID;
     private int AreaID;
-    private List<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
+    private List<AreaInfo_Model> lstArea=new ArrayList<>();
     private List<StockInfo_Model> lstStockInfo=new ArrayList<StockInfo_Model>();
     private String SupCusCode;
     private String SupCusName;
     private String SaleName;
     private int TaskType;
     private String PartNo;
+    private String FromBatchNo;
+    private String FromErpAreaNo ;
+    private String FromErpWarehouse ;
+    private String ToBatchNo;
+    private String ToErpAreaNo;
+    private String ToErpWarehouse;
+
+    public List<AreaInfo_Model> getLstArea() {
+        return lstArea;
+    }
+
+    public void setLstArea(List<AreaInfo_Model> lstArea) {
+        this.lstArea = lstArea;
+    }
+
+    public String getFromBatchNo() {
+        return FromBatchNo;
+    }
+
+    public void setFromBatchNo(String fromBatchNo) {
+        FromBatchNo = fromBatchNo;
+    }
+
+    public String getFromErpAreaNo() {
+        return FromErpAreaNo;
+    }
+
+    public void setFromErpAreaNo(String fromErpAreaNo) {
+        FromErpAreaNo = fromErpAreaNo;
+    }
+
+    public String getFromErpWarehouse() {
+        return FromErpWarehouse;
+    }
+
+    public void setFromErpWarehouse(String fromErpWarehouse) {
+        FromErpWarehouse = fromErpWarehouse;
+    }
+
+    public String getToBatchNo() {
+        return ToBatchNo;
+    }
+
+    public void setToBatchNo(String toBatchNo) {
+        ToBatchNo = toBatchNo;
+    }
+
+    public String getToErpAreaNo() {
+        return ToErpAreaNo;
+    }
+
+    public void setToErpAreaNo(String toErpAreaNo) {
+        ToErpAreaNo = toErpAreaNo;
+    }
+
+    public String getToErpWarehouse() {
+        return ToErpWarehouse;
+    }
+
+    public void setToErpWarehouse(String toErpWarehouse) {
+        ToErpWarehouse = toErpWarehouse;
+    }
 
     public int getAreaID() {
         return AreaID;
@@ -222,13 +284,6 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         LimitStockQtySAP = limitStockQtySAP;
     }
 
-    public List<BarCodeInfo> getLstBarCode() {
-        return lstBarCode;
-    }
-
-    public void setLstBarCode(List<BarCodeInfo> lstBarCode) {
-        this.lstBarCode = lstBarCode;
-    }
 
     public String getMaterialDesc() {
         return MaterialDesc;
@@ -625,6 +680,7 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeValue(this.TaskQty);
@@ -682,16 +738,23 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         dest.writeInt(this.WarehouseID);
         dest.writeInt(this.HouseID);
         dest.writeInt(this.AreaID);
-        dest.writeTypedList(this.lstBarCode);
+        dest.writeList(this.lstArea);
         dest.writeTypedList(this.lstStockInfo);
         dest.writeString(this.SupCusCode);
         dest.writeString(this.SupCusName);
         dest.writeString(this.SaleName);
         dest.writeInt(this.TaskType);
         dest.writeString(this.PartNo);
+        dest.writeString(this.FromBatchNo);
+        dest.writeString(this.FromErpAreaNo);
+        dest.writeString(this.FromErpWarehouse);
+        dest.writeString(this.ToBatchNo);
+        dest.writeString(this.ToErpAreaNo);
+        dest.writeString(this.ToErpWarehouse);
     }
 
     protected InStockTaskDetailsInfo_Model(Parcel in) {
+        super(in);
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.TaskQty = (Float) in.readValue(Float.class.getClassLoader());
@@ -751,13 +814,20 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         this.WarehouseID = in.readInt();
         this.HouseID = in.readInt();
         this.AreaID = in.readInt();
-        this.lstBarCode = in.createTypedArrayList(BarCodeInfo.CREATOR);
+        this.lstArea = new ArrayList<AreaInfo_Model>();
+        in.readList(this.lstArea, AreaInfo_Model.class.getClassLoader());
         this.lstStockInfo = in.createTypedArrayList(StockInfo_Model.CREATOR);
         this.SupCusCode = in.readString();
         this.SupCusName = in.readString();
         this.SaleName = in.readString();
         this.TaskType = in.readInt();
         this.PartNo = in.readString();
+        this.FromBatchNo = in.readString();
+        this.FromErpAreaNo = in.readString();
+        this.FromErpWarehouse = in.readString();
+        this.ToBatchNo = in.readString();
+        this.ToErpAreaNo = in.readString();
+        this.ToErpWarehouse = in.readString();
     }
 
     public static final Creator<InStockTaskDetailsInfo_Model> CREATOR = new Creator<InStockTaskDetailsInfo_Model>() {

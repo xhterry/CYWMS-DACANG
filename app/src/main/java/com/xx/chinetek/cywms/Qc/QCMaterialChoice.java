@@ -149,6 +149,8 @@ public class QCMaterialChoice extends BaseActivity {
                 qualityInfoModels= returnMsgModel.getModelJson();
                 if (qualityInfoModels != null && qualityInfoModels.size() != 0) {
                     BindListview(qualityInfoModels);
+                }else{
+                    closeActiviry();
                 }
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());

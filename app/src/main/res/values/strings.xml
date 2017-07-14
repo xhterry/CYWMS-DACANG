@@ -214,6 +214,7 @@
     <string name="Msg_SaveT_InStockTaskDetailADF">保存上架明细列表...</string>
     <string name="Msg_UpadteT_QualityUserADF">提交取样物料信息...</string>
     <string name="Msg_GetT_SerialNoByPalletADF">获取条码信息...</string>
+    <string name="Msg_GetAreaModelADF">获取库位信息...</string>
     <string name="Msg_GetT_GetT_QualityListADF">获取质检物料信息...</string>
     <string name="Msg_GetT_PalletADF">获取托盘条码信息...</string>
     <string name="Msg_SaveT_PalletDetailADF">保存组托信息...</string>
@@ -257,6 +258,7 @@
     <string name="Error_ReceiveFinish">该物料已收货完毕！</string>
     <string name="Error_ReviewFinish">该物料已复核完毕！</string>
     <string name="Error_Inventory_NoArtNo">此货位号不在盘点任务中</string>
+    <string name="Error_Upshelf_HasStcokNotSubmit">存在未提交数据，请先提交</string>
 
 
 </resources>
