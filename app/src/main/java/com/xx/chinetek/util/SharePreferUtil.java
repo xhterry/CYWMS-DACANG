@@ -26,11 +26,12 @@ public class SharePreferUtil {
             URLModel.PrintIP=sharedPreferences.getString("PrintIP", "");
             URLModel.ElecIP=sharedPreferences.getString("ElecIP", "");
             URLModel.Port=sharedPreferences.getInt("Port", 80);
+            URLModel.isWMS=sharedPreferences.getBoolean("isWMS", true);
             RequestHandler.SOCKET_TIMEOUT=sharedPreferences.getInt("TimeOut", 20000);
         }
     }
 
-    public static void SetShare(Context context, String IPAdress,String PrintIP,String ElecIP, Integer Port, Integer TimeOut){
+    public static void SetShare(Context context, String IPAdress,String PrintIP,String ElecIP, Integer Port, Integer TimeOut,Boolean isWMS){
         SharedPreferences sharedPreferences=context.getSharedPreferences("Setting", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit=sharedPreferences.edit();
         edit.putString("IPAdress",IPAdress);
@@ -38,11 +39,13 @@ public class SharePreferUtil {
         edit.putString("ElecIP",ElecIP);
         edit.putInt("Port",Port);
         edit.putInt("TimeOut",TimeOut);
+        edit.putBoolean("isWMS",isWMS);
         edit.commit();
         URLModel.IPAdress=IPAdress;
         URLModel.PrintIP=PrintIP;
         URLModel.ElecIP=ElecIP;
         URLModel.Port=Port;
+        URLModel.isWMS=isWMS;
         RequestHandler.SOCKET_TIMEOUT=TimeOut;
     }
 

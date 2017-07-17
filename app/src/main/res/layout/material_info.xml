@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:text="已质检"
+        android:text="质检"
         app:layout_constraintBottom_toBottomOf="@+id/txt_Company"
         app:layout_constraintLeft_toRightOf="@+id/txt_Batch" />
 

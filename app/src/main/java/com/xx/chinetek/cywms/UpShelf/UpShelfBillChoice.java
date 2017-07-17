@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.Upshelf.UpshelfBillChioceItemAdapter;
+import com.xx.chinetek.adapter.wms.Upshelf.UpshelfBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;

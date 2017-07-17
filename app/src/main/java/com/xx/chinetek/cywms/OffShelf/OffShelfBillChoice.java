@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.OffShelf.OffSehlfBillChoiceItemAdapter;
+import com.xx.chinetek.adapter.wms.OffShelf.OffSehlfBillChoiceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;

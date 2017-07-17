@@ -31,10 +31,28 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     private String BatchNo;
     private String SupPrdBatch ;
     private int AreaID;
+    public String SuppliernNo;
+    public String SupplierName;
     private ArrayList<BarCodeInfo> lstBarCode;
     private ArrayList<StockInfo_Model> lstStockInfo;
     private String BarCode;
     private int PalletType;
+
+    public String getSuppliernNo() {
+        return SuppliernNo;
+    }
+
+    public void setSuppliernNo(String suppliernNo) {
+        SuppliernNo = suppliernNo;
+    }
+
+    public String getSupplierName() {
+        return SupplierName;
+    }
+
+    public void setSuppliernName(String supplierName) {
+        SupplierName = supplierName;
+    }
 
     public String getBatchNo() {
         return BatchNo;
@@ -178,6 +196,8 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
         dest.writeString(this.BatchNo);
         dest.writeString(this.SupPrdBatch);
         dest.writeInt(this.AreaID);
+        dest.writeString(this.SuppliernNo);
+        dest.writeString(this.SupplierName);
         dest.writeTypedList(this.lstBarCode);
         dest.writeTypedList(this.lstStockInfo);
         dest.writeString(this.BarCode);
@@ -197,6 +217,8 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
         this.BatchNo = in.readString();
         this.SupPrdBatch = in.readString();
         this.AreaID = in.readInt();
+        this.SuppliernNo = in.readString();
+        this.SupplierName = in.readString();
         this.lstBarCode = in.createTypedArrayList(BarCodeInfo.CREATOR);
         this.lstStockInfo = in.createTypedArrayList(StockInfo_Model.CREATOR);
         this.BarCode = in.readString();

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.Pallet.PalletItemAdapter;
+import com.xx.chinetek.adapter.wms.Pallet.PalletItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
@@ -177,7 +177,7 @@ public class CombinPallet extends BaseActivity {
                 return true;
             }
         }
-        return SWPallet.isChecked();
+        return false;
     }
 
     @Event(value = R.id.edt_Pallet,type = View.OnKeyListener.class)
@@ -192,7 +192,7 @@ public class CombinPallet extends BaseActivity {
             params.put("PalletModel","2"); //1：新建托盘  2：插入组托
             LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF, barcode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_PalletADF), context, mHandler, RESULT_GetT_PalletDetailByNoADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
-            return false;
+            return true;
         }
         return false;
     }
@@ -205,6 +205,7 @@ public class CombinPallet extends BaseActivity {
 
     @Event(R.id.btn_PrintPalletLabel)
     private void btnPrintPalletLabelClick(View v){
+        palletDetailModels.get(0).setVoucherType(999);
         String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
         String modelJson = GsonUtil.parseModelToJson(palletDetailModels);
         final Map<String, String> params = new HashMap<String, String>();
@@ -246,13 +247,15 @@ public class CombinPallet extends BaseActivity {
                             palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
                             palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
                             palletDetailModels.get(0).getLstBarCode().add(0, barCodeInfo);
-                            palletDetailModels.get(0).setVoucherType(999);
+                           // palletDetailModels.get(0).setVoucherType(999);
                             palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
                             palletDetailModels.get(0).setStrongHoldName(barCodeInfo.getStrongHoldName());
                             palletDetailModels.get(0).setCompanyCode(barCodeInfo.getCompanyCode());
                             palletDetailModels.get(0).setMaterialNo(barCodeInfo.getMaterialNo());
                             palletDetailModels.get(0).setBatchNo(barCodeInfo.getBatchNo());
                             palletDetailModels.get(0).setSupPrdBatch(barCodeInfo.getSupPrdBatch());
+                            palletDetailModels.get(0).setSuppliernNo(barCodeInfo.getSupCode());
+                            palletDetailModels.get(0).setSuppliernName(barCodeInfo.getSupName());
                             palletDetailModels.get(0).setErpVoucherNo(barCodeInfo.getErpVoucherNo());
                             palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
                             palletDetailModels.get(0).setAreaID(barCodeInfo.getAreaID());
@@ -332,8 +335,6 @@ public class CombinPallet extends BaseActivity {
     private void BindListVIew(List<BarCodeInfo> barCodeInfos) {
             palletItemAdapter = new PalletItemAdapter(context, barCodeInfos);
             lsvPalletDetail.setAdapter(palletItemAdapter);
-
-
     }
 
     void InitFrm(){
@@ -353,6 +354,14 @@ public class CombinPallet extends BaseActivity {
 
 
     String CheckPalletCondition(BarCodeInfo  barCodeInfo) {
+        if (palletDetailModels.get(0).getPalletType() == 0) {
+            if (!palletDetailModels.get(0).getErpVoucherNo().equals(barCodeInfo.getErpVoucherNo()))
+                return getString(R.string.Error_VourcherNonotMatch);
+            if(!palletDetailModels.get(0).getSuppliernNo().equals(barCodeInfo.getSupCode())){
+                return getString(R.string.Error_SuppilerNoMatch);
+            }
+        } else if (palletDetailModels.get(0).getAreaID() != (barCodeInfo.getAreaID()))
+            return getString(R.string.Error_AreaotnotMatch);
         //收货组托判断组托条件：批次、据点、物料、订单相同才能组托
         //在库组托判断库位相同才能组托
         //getPalletType为0：收货组托
@@ -369,12 +378,6 @@ public class CombinPallet extends BaseActivity {
             return getString(R.string.Error_ProductBartchnotMatch);
         else if (!palletDetailModels.get(0).getStrongHoldCode().equals(barCodeInfo.getStrongHoldCode()))
             return getString(R.string.Error_CompanynotMatch);
-        if (palletDetailModels.get(0).getPalletType() == 0) {
-            if (!palletDetailModels.get(0).getErpVoucherNo().equals(barCodeInfo.getErpVoucherNo()))
-                return getString(R.string.Error_VourcherNonotMatch);
-        } else if (palletDetailModels.get(0).getAreaID() != (barCodeInfo.getAreaID()))
-            return getString(R.string.Error_AreaotnotMatch);
-
         return "";
     }
 }

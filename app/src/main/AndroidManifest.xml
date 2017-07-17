@@ -57,7 +57,7 @@
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutputNum" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionScan" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptBillChoice" />
-        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceipyionBillDetail" />
+        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionBillDetail" />
         <activity android:name="com.xx.chinetek.cyproduct.QC.TakeSample" />
         <activity android:name="com.xx.chinetek.cyproduct.Review.ReviewScan" />
         <activity android:name="com.xx.chinetek.cyproduct.Manage.ProductManageAdd" />

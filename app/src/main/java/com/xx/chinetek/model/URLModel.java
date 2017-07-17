@@ -17,6 +17,7 @@ public class URLModel {
     public static String  LastContent="AndroidService.svc/";
     public static String PrintIP="10.2.32.192";
     public static String ElecIP="10.2.32.193";
+    public static Boolean isWMS=true;
     String  GetWCFAdress(){
         return  "http://"+IPAdress+":"+Port+"/"+LastContent;
     }

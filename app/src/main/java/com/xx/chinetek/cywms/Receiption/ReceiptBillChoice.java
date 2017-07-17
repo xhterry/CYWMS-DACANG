@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.Receiption.ReceiptBillChioceItemAdapter;
+import com.xx.chinetek.adapter.wms.Receiption.ReceiptBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
@@ -117,6 +117,11 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        if(isCancelFilterButton){
+            isCancelFilterButton=false;
+            gMenuItem.setTitle(getResources().getString(R.string.filter));
+            txtSuppliername.setText(getResources().getString(R.string.supplierNoFilter));
+        }
         InitListView();
     }
 
@@ -148,7 +153,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
                 if(isCancelFilterButton){
                     isCancelFilterButton=false;
                     txtSuppliername.setText(getResources().getString(R.string.supplierNoFilter));
-                    item.setTitle(getResources().getString(R.string.title_Receipt_Right));
+                    item.setTitle(getResources().getString(R.string.filter));
                     BindListVIew(receiptModels);
                 }else {
                     for(int i=0;i<receiptModels.size();i++) {
@@ -190,7 +195,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
             txtSuppliername.setText(SupplierName);
             ArrayList<Receipt_Model> receiptModelList= new ArrayList<>();
             for (  Receipt_Model tempreceiptModel:receiptModels ) {
-                if(tempreceiptModel.getSupplierNo()!=null && tempreceiptModel.getSupplierNo().equals(SupplierID)){
+                if(tempreceiptModel.getSupplierNo()!=null && tempreceiptModel.getSupplierNo().equals(SupplierID) && tempreceiptModel.getSupplierName().equals(SupplierName)){
                     receiptModelList.add(tempreceiptModel);
                 }
            }

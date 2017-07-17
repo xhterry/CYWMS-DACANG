@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.xx.chinetek.adapter.InnerMove.InnerMoveAdapter;
+import com.xx.chinetek.adapter.wms.InnerMove.InnerMoveAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;

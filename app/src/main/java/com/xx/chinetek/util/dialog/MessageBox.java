@@ -1,6 +1,5 @@
 package com.xx.chinetek.util.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,15 +19,6 @@ public class MessageBox {
      */
     public static void Show(Context context, String message) {
         new AlertDialog.Builder(context).setTitle("提示").setMessage(message).setPositiveButton("确定", null).show();
-    }
-
-    public static void ShowAndClose(final Context context, String message) {
-        new AlertDialog.Builder(context).setTitle("提示").setMessage(message).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ((Activity) context).finish();
-            }
-        }).show();
     }
 
     public static void Show(Context context, int resourceID) {

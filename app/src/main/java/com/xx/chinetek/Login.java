@@ -106,21 +106,13 @@ public class Login extends BaseActivity {
         startActivityLeft(new Intent(context,Setting.class));
     }
 
-    @Event(R.id.btnProduct)
-    private  void btnProductClick(View view){
-        Intent intent=new Intent(context, com.xx.chinetek.cyproduct.MainActivity.class);
-        startActivity(intent);
-    }
-
-
     void AnalysisJson(String result){
         LogUtil.WriteLog(Login.class, TAG,result);
         ReturnMsgModel<UerInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<UerInfo>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             BaseApplication.userInfo=returnMsgModel.getModelJson();
             SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
-            Intent intent=new Intent(context, MainActivity.class);
-           //  Intent intent=new Intent(context, com.xx.chinetek.cyproduct.MainActivity.class);
+            Intent intent=new Intent(context, URLModel.isWMS?MainActivity.class: com.xx.chinetek.cyproduct.MainActivity.class);
             startActivity(intent);
         }else
         {

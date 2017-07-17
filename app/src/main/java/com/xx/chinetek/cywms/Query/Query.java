@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.Query.QueryItemAdapter;
+import com.xx.chinetek.adapter.wms.Query.QueryItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.cywms.R;

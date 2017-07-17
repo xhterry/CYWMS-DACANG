@@ -300,10 +300,25 @@ public class OffshelfScan extends BaseActivity {
     }
 
     void checkQTY(OutStockTaskDetailsInfo_Model currentOutTaskDetailInfo,float scanQty,Boolean isPallet){
-        if(currentOutTaskDetailInfo.getRemainQty()-currentOutTaskDetailInfo.getScanQty()-scanQty<0){
+
+        //根据物料查询扫描剩余数量的总数
+        int size=outStockTaskDetailsInfoModels.size();
+        float SumQty=0f;
+        for(int i=0;i<size;i++){
+            if(outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(currentOutTaskDetailInfo.getMaterialNo())){
+                SumQty=SumQty+(outStockTaskDetailsInfoModels.get(i).getRemainQty()-outStockTaskDetailsInfoModels.get(i).getScanQty());
+            }
+        }
+        if(SumQty<scanQty){
             MessageBox.Show(context,getString(R.string.Error_offshelfQtyBiger));
             CommonUtil.setEditFocus(edtOffShelfScanbarcode);
-        }else {
+            return;
+        }
+
+//        if(currentOutTaskDetailInfo.getRemainQty()-currentOutTaskDetailInfo.getScanQty()-scanQty<0){
+//            MessageBox.Show(context,getString(R.string.Error_offshelfQtyBiger));
+//            CommonUtil.setEditFocus(edtOffShelfScanbarcode);
+//        }else {
             if(isPallet){
                 for (StockInfo_Model stockInfoModel:stockInfoModels) {
                     stockInfoModel.setPickModel(1);
@@ -318,7 +333,7 @@ public class OffshelfScan extends BaseActivity {
             }
             currentPickMaterial++;
             ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
-        }
+       // }
     }
 
 

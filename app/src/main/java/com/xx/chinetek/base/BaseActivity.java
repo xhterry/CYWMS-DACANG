@@ -90,22 +90,29 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity")) {
+                    if (!context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity") ||
+                    !context.getClass().getName().equals("com.xx.chinetek.cyproduct.MainActivity")
+                    ) {
                         BackAlter();
                     }
                 }
             });
     }
 
+
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode== KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_DOWN) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(keyCode== KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_UP) {
             if(!(context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity") ||
+                    context.getClass().getName().equals("com.xx.chinetek.cyproduct.MainActivity") ||
                     context.getClass().getName().equals("com.xx.chinetek.Login")))
                 BackAlter();
-
+            else{
+                closeActiviry();
+            }
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 
 
@@ -134,7 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
     public  void closeActiviry(){
         AppManager.getAppManager().finishActivity();
         if(AppManager.getAppManager().GetActivityCount()!=0)
-        context = AppManager.getAppManager().currentActivity();
+            context = AppManager.getAppManager().currentActivity();
     }
 
     /**

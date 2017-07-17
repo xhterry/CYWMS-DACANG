@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.xx.chinetek.adapter.MaterialChange.MaterialChangeAdapter;
+import com.xx.chinetek.adapter.wms.MaterialChange.MaterialChangeAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;

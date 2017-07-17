@@ -3,7 +3,7 @@ package com.xx.chinetek.cywms.UpShelf;
 import android.content.Context;
 import android.widget.ListView;
 
-import com.xx.chinetek.adapter.Receiption.ReceiptBillDetailAdapter;
+import com.xx.chinetek.adapter.wms.Receiption.ReceiptBillDetailAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;

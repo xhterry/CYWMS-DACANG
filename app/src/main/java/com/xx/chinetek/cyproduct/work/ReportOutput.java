@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.xx.chinetek.adapter.Production.ReportOutputItemAdapter;
+import com.xx.chinetek.adapter.wms.Production.ReportOutputItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
