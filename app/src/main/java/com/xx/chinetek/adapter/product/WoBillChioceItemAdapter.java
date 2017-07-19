@@ -1,4 +1,4 @@
-package com.xx.chinetek.adapter.wms.Upshelf;
+package com.xx.chinetek.adapter.product;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,22 +8,18 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Receiption.SupplierModel;
-import com.xx.chinetek.model.WMS.UpShelf.InStockTaskInfo_Model;
+import com.xx.chinetek.model.Production.Wo.WoModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by GHOST on 2017/1/13.
  */
 
-public class UpshelfBillChioceItemAdapter extends BaseAdapter {
+public class WoBillChioceItemAdapter extends BaseAdapter {
     private Context context; // 运行上下文
-    private List<InStockTaskInfo_Model> inStockTaskInfoModels; // 信息集合
+    private ArrayList<WoModel> woModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
-    private int selectItem = -1;
-    private ArrayList<SupplierModel> mUnfilteredData;
 
 
     public final class ListItemView { // 自定义控件集合
@@ -35,25 +31,21 @@ public class UpshelfBillChioceItemAdapter extends BaseAdapter {
         public TextView txtdepartment;
     }
 
-    public UpshelfBillChioceItemAdapter(Context context, List<InStockTaskInfo_Model> inStockTaskInfoModels) {
+    public WoBillChioceItemAdapter(Context context, ArrayList<WoModel> woModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-        this.inStockTaskInfoModels = inStockTaskInfoModels;
+        this.woModels = woModels;
 
-    }
-
-    public void setSelectItem(int selectItem) {
-        this.selectItem = selectItem;
     }
 
     @Override
     public int getCount() {
-        return inStockTaskInfoModels==null?0: inStockTaskInfoModels.size();
+        return woModels==null?0: woModels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return inStockTaskInfoModels.get(position);
+        return woModels.get(position);
     }
 
     @Override
@@ -80,15 +72,12 @@ public class UpshelfBillChioceItemAdapter extends BaseAdapter {
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
-        InStockTaskInfo_Model inStockTaskInfoModel=inStockTaskInfoModels.get(selectID);
-        listItemView.txtTaskNo.setText(inStockTaskInfoModel.getTaskNo());
-        listItemView.txtERPVoucherNo.setText(inStockTaskInfoModel.getErpVoucherNo());
-        listItemView.txtStrVoucherType.setText(inStockTaskInfoModel.getStrVoucherType());
-        listItemView.txtCompany.setText(inStockTaskInfoModel.getStrongHoldName());
-        listItemView.txtdepartment.setText(inStockTaskInfoModel.getDepartmentName());
-        if (selectItem == position) {
-            convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
-        }
+        WoModel woModel=woModels.get(selectID);
+        listItemView.txtTaskNo.setText(woModel.getVoucherNo());
+        listItemView.txtERPVoucherNo.setText(woModel.getErpVoucherNo());
+        listItemView.txtStrVoucherType.setText(woModel.getStrVoucherType());
+        listItemView.txtCompany.setText(woModel.getStrongHoldName());
+        listItemView.txtdepartment.setText(woModel.getDepartmentName());
         return convertView;
     }
 

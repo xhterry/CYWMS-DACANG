@@ -1,4 +1,4 @@
-package com.xx.chinetek.model.Inventory;
+package com.xx.chinetek.model.WMS.Inventory;
 
 import android.os.Parcel;
 import android.os.Parcelable;

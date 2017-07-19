@@ -23,7 +23,7 @@ import com.xx.chinetek.model.QC.QualityDetailInfo_Model;
 import com.xx.chinetek.model.QC.QualityInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.Stock.StockInfo_Model;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;

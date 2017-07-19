@@ -1,4 +1,4 @@
-package com.xx.chinetek.model.Inventory;
+package com.xx.chinetek.model.WMS.Inventory;
 
 /**
  * Created by GHOST on 2017/1/24.

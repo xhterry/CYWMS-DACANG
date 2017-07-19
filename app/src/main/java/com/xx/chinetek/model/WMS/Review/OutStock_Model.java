@@ -1,4 +1,4 @@
-package com.xx.chinetek.model.Review;
+package com.xx.chinetek.model.WMS.Review;
 
 import android.os.Parcel;
 import android.os.Parcelable;

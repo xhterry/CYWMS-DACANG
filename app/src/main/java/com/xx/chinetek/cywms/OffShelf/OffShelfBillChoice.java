@@ -22,7 +22,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.OffShelf.OutStockTaskInfo_Model;
+import com.xx.chinetek.model.WMS.OffShelf.OutStockTaskInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.User.UerInfo;

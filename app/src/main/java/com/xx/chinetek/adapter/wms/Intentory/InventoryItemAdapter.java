@@ -10,7 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Inventory.Check_Model;
+import com.xx.chinetek.model.WMS.Inventory.Check_Model;
 
 import java.util.ArrayList;
 

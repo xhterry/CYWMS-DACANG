@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Receiption.SupplierModel;
-import com.xx.chinetek.model.Review.OutStock_Model;
+import com.xx.chinetek.model.WMS.Review.OutStock_Model;
 
 import java.util.ArrayList;
 import java.util.List;

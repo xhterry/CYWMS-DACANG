@@ -16,7 +16,7 @@ public class URLModel {
     public static int Port=9000;//9000;
     public static String  LastContent="AndroidService.svc/";
     public static String PrintIP="10.2.32.192";
-    public static String ElecIP="10.2.32.193";
+    public static String ElecIP="10.2.32.244";
     public static Boolean isWMS=true;
     String  GetWCFAdress(){
         return  "http://"+IPAdress+":"+Port+"/"+LastContent;
@@ -60,4 +60,11 @@ public class URLModel {
     public String GetPickUserListByUserADF=GetWCFAdress()+"GetPickUserListByUserADF";//获取拣货人员信息
     public String SavePickUserListADF=GetWCFAdress()+"SavePickUserListADF";//提交拣货分配人员信息
     public String GetStockADF=GetWCFAdress()+"GetStockADF";//获取查询信息
+
+    //生产
+    public String GetT_LineManageInfoModel=GetWCFAdress()+"GetT_LineManageInfoModel";//获取作业记录
+    public String GetT_WoinfoModel=GetWCFAdress()+"GetT_WoinfoModel";//获取工单任务信息
+    public String GetT_UserInfoModel=GetWCFAdress()+"GetT_UserInfoModel";//获取员工信息
+    public String GetWoDetailModelByWoNo=GetWCFAdress()+"GetWoDetailModelByWoNo";//获取工单任务明细信息
+
 }

@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.xx.chinetek.cywms.IBackService;
+import com.xx.chinetek.model.URLModel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +32,7 @@ public class SocketService extends Service {
     //心跳包频率
     private static final long HEART_BEAT_RATE = 30 * 1000;
 
-    public static final String HOST = "10.2.32.244";// //
+   // public static final String HOST = "10.2.32.244";// //
     public static final int PORT = 4196;
 
     public static final String MESSAGE_ACTION="com.splxtech.powermanagor.engine.socket";
@@ -123,7 +124,7 @@ public class SocketService extends Service {
 
     private void initSocket() {//初始化Socket
         try {
-            Socket so = new Socket(HOST, PORT);
+            Socket so = new Socket(URLModel.ElecIP, PORT);
             mSocket = new WeakReference<Socket>(so);
             mReadThread = new ReadThread(so);
             mReadThread.start();

@@ -1,12 +1,14 @@
 package com.xx.chinetek.model.User;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 /**
  * Created by GHOST on 2017/3/20.
  */
 
-public class UserInfo {
+public class UserInfo implements Parcelable {
 
     private String UserNo;
     private String UserName;
@@ -46,10 +48,56 @@ public class UserInfo {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserInfo that = (UserInfo) o;
+
+        return UserNo.equals(that.getUserNo());
+
+    }
+
     public  Boolean CheckUserAndPass(){
         if(TextUtils.isEmpty(UserNo) || TextUtils.isEmpty(PassWord)){
             return false;
         }
         return true;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.UserNo);
+        dest.writeString(this.UserName);
+        dest.writeString(this.PassWord);
+        dest.writeInt(this.WarehouseID);
+    }
+
+    public UserInfo() {
+    }
+
+    protected UserInfo(Parcel in) {
+        this.UserNo = in.readString();
+        this.UserName = in.readString();
+        this.PassWord = in.readString();
+        this.WarehouseID = in.readInt();
+    }
+
+    public static final Parcelable.Creator<UserInfo> CREATOR = new Parcelable.Creator<UserInfo>() {
+        @Override
+        public UserInfo createFromParcel(Parcel source) {
+            return new UserInfo(source);
+        }
+
+        @Override
+        public UserInfo[] newArray(int size) {
+            return new UserInfo[size];
+        }
+    };
 }

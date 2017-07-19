@@ -18,7 +18,7 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.OffShelf.OutStockTaskInfo_Model;
+import com.xx.chinetek.model.WMS.OffShelf.OutStockTaskInfo_Model;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -49,9 +49,6 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
     private final int RESULT_GetT_InStockList = 101;
     private final int RESULT_GetT_PalletDetailByBarCode=102;
 
-    Context context = ReceiptBillChoice.this;
-
-
     @Override
     public void onHandleMessage(Message msg) {
         mSwipeLayout.setRefreshing(false);
@@ -68,7 +65,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
                 break;
         }
     }
-
+    Context context = ReceiptBillChoice.this;
     @ViewInject(R.id.lsvChoiceReceipt)
     ListView lsvChoiceReceipt;
     @ViewInject(R.id.mSwipeLayout)

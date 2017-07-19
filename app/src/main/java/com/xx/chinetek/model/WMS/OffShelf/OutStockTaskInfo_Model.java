@@ -1,4 +1,4 @@
-package com.xx.chinetek.model.UpShelf;
+package com.xx.chinetek.model.WMS.OffShelf;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,32 +8,29 @@ import com.xx.chinetek.model.Base_Model;
 import java.util.Date;
 
 /**
- * Created by GHOST on 2017/1/13.
+ * Created by GHOST on 2017/1/16.
  */
 
-public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
-
-    public InStockTaskInfo_Model(){
+public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
+    public OutStockTaskInfo_Model() {
 
     }
 
-    public InStockTaskInfo_Model(String ErpVoucherNo){
-        this.ErpVoucherNo=ErpVoucherNo;
+    public OutStockTaskInfo_Model(String TaskNo){
+        this.TaskNo=TaskNo;
     }
-
     private Float TaskType;
     private String TaskNo;
     private String SupcusName;
     private Float TaskStatus;
     private String AuditUserNo;
-    private Date AuditDateTime;
-  //  private Date TaskIssued;
     private String ReceiveUserNo;
     private String Remark;
     private String Reason;
     private String SupcusNo;
     private Float IsShelvePost;
-    private String ErpVoucherNo;
+    private Float Receive_ID;
+    private String ERPVoucherNo;
     private Float IsQuality;
     private Float IsReceivePost;
     private String Plant;
@@ -46,25 +43,37 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String MoveReasonCode;
     private String MoveReasonDesc;
     private Float PrintQty;
-    private Date PrintTime;
-    private Date CloseDateTime;
     private String CloseUserNo;
     private String CloseReason;
     private Float IsOwe;
     private Float IsUrgent;
     private Date OutStockDate;
-    private String TaskIsSuedUser;
-    private String MaterialNo ;
-    private int InStockID ;
-    private String StrTaskType;
-    private String StrTaskIsSuedUser;
+    private String TaskIsSueduser;
+    public String MaterialNo;
+    public String ErpDocNo;
 
-    public Date getAuditDateTime() {
-        return AuditDateTime;
+    public String getErpDocNo() {
+        return ErpDocNo;
     }
 
-    public void setAuditDateTime(Date auditDateTime) {
-        AuditDateTime = auditDateTime;
+    public void setErpDocNo(String erpDocNo) {
+        ErpDocNo = erpDocNo;
+    }
+
+    public String getERPVoucherNo() {
+        return ERPVoucherNo;
+    }
+
+    public void setERPVoucherNo(String ERPVoucherNo) {
+        this.ERPVoucherNo = ERPVoucherNo;
+    }
+
+    public Float getIsUnderShelvePost() {
+        return IsUnderShelvePost;
+    }
+
+    public void setIsUnderShelvePost(Float isUnderShelvePost) {
+        IsUnderShelvePost = isUnderShelvePost;
     }
 
     public String getAuditUserNo() {
@@ -75,13 +84,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         AuditUserNo = auditUserNo;
     }
 
-    public Date getCloseDateTime() {
-        return CloseDateTime;
-    }
-
-    public void setCloseDateTime(Date closeDateTime) {
-        CloseDateTime = closeDateTime;
-    }
 
     public String getCloseReason() {
         return CloseReason;
@@ -97,22 +99,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
 
     public void setCloseUserNo(String closeUserNo) {
         CloseUserNo = closeUserNo;
-    }
-
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
-
-    public int getInStockID() {
-        return InStockID;
-    }
-
-    public void setInStockID(int inStockID) {
-        InStockID = inStockID;
     }
 
     public Float getIsOutStockPost() {
@@ -153,14 +139,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
 
     public void setIsShelvePost(Float isShelvePost) {
         IsShelvePost = isShelvePost;
-    }
-
-    public Float getIsUnderShelvePost() {
-        return IsUnderShelvePost;
-    }
-
-    public void setIsUnderShelvePost(Float isUnderShelvePost) {
-        IsUnderShelvePost = isUnderShelvePost;
     }
 
     public Float getIsUrgent() {
@@ -243,20 +221,20 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         PrintQty = printQty;
     }
 
-    public Date getPrintTime() {
-        return PrintTime;
-    }
-
-    public void setPrintTime(Date printTime) {
-        PrintTime = printTime;
-    }
-
     public String getReason() {
         return Reason;
     }
 
     public void setReason(String reason) {
         Reason = reason;
+    }
+
+    public Float getReceive_ID() {
+        return Receive_ID;
+    }
+
+    public void setReceive_ID(Float receive_ID) {
+        Receive_ID = receive_ID;
     }
 
     public String getReceiveUserNo() {
@@ -283,22 +261,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         ReviewStatus = reviewStatus;
     }
 
-    public String getStrTaskIsSuedUser() {
-        return StrTaskIsSuedUser;
-    }
-
-    public void setStrTaskIsSuedUser(String strTaskIsSuedUser) {
-        StrTaskIsSuedUser = strTaskIsSuedUser;
-    }
-
-    public String getStrTaskType() {
-        return StrTaskType;
-    }
-
-    public void setStrTaskType(String strTaskType) {
-        StrTaskType = strTaskType;
-    }
-
     public String getSupcusName() {
         return SupcusName;
     }
@@ -315,13 +277,12 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         SupcusNo = supcusNo;
     }
 
-
-    public String getTaskIsSuedUser() {
-        return TaskIsSuedUser;
+    public String getTaskIsSueduser() {
+        return TaskIsSueduser;
     }
 
-    public void setTaskIsSuedUser(String taskIsSuedUser) {
-        TaskIsSuedUser = taskIsSuedUser;
+    public void setTaskIsSueduser(String taskIsSueduser) {
+        TaskIsSueduser = taskIsSueduser;
     }
 
     public String getTaskNo() {
@@ -348,6 +309,7 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         TaskType = taskType;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -355,19 +317,18 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
         dest.writeValue(this.TaskType);
         dest.writeString(this.TaskNo);
         dest.writeString(this.SupcusName);
         dest.writeValue(this.TaskStatus);
         dest.writeString(this.AuditUserNo);
-        dest.writeLong(this.AuditDateTime != null ? this.AuditDateTime.getTime() : -1);
         dest.writeString(this.ReceiveUserNo);
         dest.writeString(this.Remark);
         dest.writeString(this.Reason);
         dest.writeString(this.SupcusNo);
         dest.writeValue(this.IsShelvePost);
-        dest.writeString(this.ErpVoucherNo);
+        dest.writeValue(this.Receive_ID);
+        dest.writeString(this.ERPVoucherNo);
         dest.writeValue(this.IsQuality);
         dest.writeValue(this.IsReceivePost);
         dest.writeString(this.Plant);
@@ -380,35 +341,29 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.MoveReasonCode);
         dest.writeString(this.MoveReasonDesc);
         dest.writeValue(this.PrintQty);
-        dest.writeLong(this.PrintTime != null ? this.PrintTime.getTime() : -1);
-        dest.writeLong(this.CloseDateTime != null ? this.CloseDateTime.getTime() : -1);
         dest.writeString(this.CloseUserNo);
         dest.writeString(this.CloseReason);
         dest.writeValue(this.IsOwe);
         dest.writeValue(this.IsUrgent);
         dest.writeLong(this.OutStockDate != null ? this.OutStockDate.getTime() : -1);
-        dest.writeString(this.TaskIsSuedUser);
+        dest.writeString(this.TaskIsSueduser);
         dest.writeString(this.MaterialNo);
-        dest.writeInt(this.InStockID);
-        dest.writeString(this.StrTaskType);
-        dest.writeString(this.StrTaskIsSuedUser);
+        dest.writeString(this.ErpDocNo);
     }
 
-    protected InStockTaskInfo_Model(Parcel in) {
-        super(in);
+    protected OutStockTaskInfo_Model(Parcel in) {
         this.TaskType = (Float) in.readValue(Float.class.getClassLoader());
         this.TaskNo = in.readString();
         this.SupcusName = in.readString();
         this.TaskStatus = (Float) in.readValue(Float.class.getClassLoader());
         this.AuditUserNo = in.readString();
-        long tmpAuditDateTime = in.readLong();
-        this.AuditDateTime = tmpAuditDateTime == -1 ? null : new Date(tmpAuditDateTime);
         this.ReceiveUserNo = in.readString();
         this.Remark = in.readString();
         this.Reason = in.readString();
         this.SupcusNo = in.readString();
         this.IsShelvePost = (Float) in.readValue(Float.class.getClassLoader());
-        this.ErpVoucherNo = in.readString();
+        this.Receive_ID = (Float) in.readValue(Float.class.getClassLoader());
+        this.ERPVoucherNo = in.readString();
         this.IsQuality = (Float) in.readValue(Float.class.getClassLoader());
         this.IsReceivePost = (Float) in.readValue(Float.class.getClassLoader());
         this.Plant = in.readString();
@@ -421,42 +376,26 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.MoveReasonCode = in.readString();
         this.MoveReasonDesc = in.readString();
         this.PrintQty = (Float) in.readValue(Float.class.getClassLoader());
-        long tmpPrintTime = in.readLong();
-        this.PrintTime = tmpPrintTime == -1 ? null : new Date(tmpPrintTime);
-        long tmpCloseDateTime = in.readLong();
-        this.CloseDateTime = tmpCloseDateTime == -1 ? null : new Date(tmpCloseDateTime);
         this.CloseUserNo = in.readString();
         this.CloseReason = in.readString();
         this.IsOwe = (Float) in.readValue(Float.class.getClassLoader());
         this.IsUrgent = (Float) in.readValue(Float.class.getClassLoader());
         long tmpOutStockDate = in.readLong();
         this.OutStockDate = tmpOutStockDate == -1 ? null : new Date(tmpOutStockDate);
-        this.TaskIsSuedUser = in.readString();
+        this.TaskIsSueduser = in.readString();
         this.MaterialNo = in.readString();
-        this.InStockID = in.readInt();
-        this.StrTaskType = in.readString();
-        this.StrTaskIsSuedUser = in.readString();
+        this.ErpDocNo = in.readString();
     }
 
-    public static final Creator<InStockTaskInfo_Model> CREATOR = new Creator<InStockTaskInfo_Model>() {
+    public static final Creator<OutStockTaskInfo_Model> CREATOR = new Creator<OutStockTaskInfo_Model>() {
         @Override
-        public InStockTaskInfo_Model createFromParcel(Parcel source) {
-            return new InStockTaskInfo_Model(source);
+        public OutStockTaskInfo_Model createFromParcel(Parcel source) {
+            return new OutStockTaskInfo_Model(source);
         }
 
         @Override
-        public InStockTaskInfo_Model[] newArray(int size) {
-            return new InStockTaskInfo_Model[size];
+        public OutStockTaskInfo_Model[] newArray(int size) {
+            return new OutStockTaskInfo_Model[size];
         }
     };
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        InStockTaskInfo_Model that = (InStockTaskInfo_Model) obj;
-
-        return ErpVoucherNo.equals(that.getErpVoucherNo());
-    }
 }

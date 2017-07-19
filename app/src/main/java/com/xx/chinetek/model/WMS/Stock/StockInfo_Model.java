@@ -1,4 +1,4 @@
-package com.xx.chinetek.model.Stock;
+package com.xx.chinetek.model.WMS.Stock;
 
 import android.os.Parcel;
 import android.os.Parcelable;

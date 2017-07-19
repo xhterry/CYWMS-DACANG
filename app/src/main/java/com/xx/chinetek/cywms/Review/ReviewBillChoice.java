@@ -23,7 +23,7 @@ import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.Review.OutStock_Model;
+import com.xx.chinetek.model.WMS.Review.OutStock_Model;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;

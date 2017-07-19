@@ -129,7 +129,6 @@ public class ReceiptionScan extends BaseActivity {
         super.initData();
         receiptModel=getIntent().getParcelableExtra("receiptModel");
         this.barCodeInfos=getIntent().getParcelableArrayListExtra("barCodeInfo");
-        txtVoucherNo.setText(receiptModel.getVoucherNo());
         GetReceiptDetail(receiptModel);
 
     }

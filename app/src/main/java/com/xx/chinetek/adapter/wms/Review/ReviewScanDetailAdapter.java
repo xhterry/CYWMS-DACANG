@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Review.OutStockDetailInfo_Model;
+import com.xx.chinetek.model.WMS.Review.OutStockDetailInfo_Model;
 
 import java.util.List;
 

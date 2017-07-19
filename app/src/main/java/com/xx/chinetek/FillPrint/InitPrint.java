@@ -15,7 +15,7 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Inventory.Barcode_Model;
+import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.function.CommonUtil;

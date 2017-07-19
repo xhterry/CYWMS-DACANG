@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.UpShelf.InStockTaskDetailsInfo_Model;
+import com.xx.chinetek.model.WMS.UpShelf.InStockTaskDetailsInfo_Model;
 
 import java.util.List;
 

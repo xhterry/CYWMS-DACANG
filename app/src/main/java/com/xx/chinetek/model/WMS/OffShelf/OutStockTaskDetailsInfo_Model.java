@@ -1,10 +1,10 @@
-package com.xx.chinetek.model.OffShelf;
+package com.xx.chinetek.model.WMS.OffShelf;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Stock.StockInfo_Model;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 
 import java.util.ArrayList;
 import java.util.Date;

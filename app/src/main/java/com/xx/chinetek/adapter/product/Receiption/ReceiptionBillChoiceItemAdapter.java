@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.OffShelf.OutStockTaskInfo_Model;
+import com.xx.chinetek.model.WMS.OffShelf.OutStockTaskInfo_Model;
 
 import java.util.ArrayList;
 import java.util.List;

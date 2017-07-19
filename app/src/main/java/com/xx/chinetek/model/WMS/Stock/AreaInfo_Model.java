@@ -1,4 +1,4 @@
-package com.xx.chinetek.model.Stock;
+package com.xx.chinetek.model.WMS.Stock;
 
 /**
  * Created by GHOST on 2017/1/20.
