@@ -192,7 +192,7 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("ModelJson", ModelJson);
             LogUtil.WriteLog(WoBillChoice.class, TAG_GetT_WoinfoModel, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_WoinfoModel, getString(R.string.Mag_TAG_GetT_WoinfoModel), context, mHandler, RESULT_GetT_WoinfoModel, null,  URLModel.GetURL().GetT_WoinfoModel, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_WoinfoModel, getString(R.string.Mag_GetT_WoinfoModel), context, mHandler, RESULT_GetT_WoinfoModel, null,  URLModel.GetURL().GetT_WoinfoModel, params, null);
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }

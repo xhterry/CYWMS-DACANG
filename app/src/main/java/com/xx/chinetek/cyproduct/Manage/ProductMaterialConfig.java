@@ -1,51 +1,70 @@
 package com.xx.chinetek.cyproduct.Manage;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Message;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.adapter.product.Manage.WoDetailMaterialItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Production.Manage.LineManageModel;
 import com.xx.chinetek.model.Production.Wo.WoDetailModel;
 import com.xx.chinetek.model.Production.Wo.WoModel;
+import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.xx.chinetek.base.BaseApplication.userInfo;
+import static com.xx.chinetek.cywms.R.id.edt_ScanQty;
 
 @ContentView(R.layout.activity_product_material_config)
 public class ProductMaterialConfig extends BaseActivity {
 
     String TAG_GetWoDetailModelByWoNo="ProductMaterialConfig_GetWoDetailModelByWoNo";
+    String TAG_GetMaterialByBarcode="ProductMaterialConfig_GetMaterialByBarcode";
     private final int RESULT_GetWoDetailModelByWoNo=101;
+    private final int RESULT_GetMaterialByBarcode=102;
 
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
             case RESULT_GetWoDetailModelByWoNo:
                 AnalysisGetWoDetailModelByWoNoJson((String) msg.obj);
+                break;
+            case RESULT_GetMaterialByBarcode:
+                AnalysisGetMaterialByBarcodeJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -61,6 +80,8 @@ public class ProductMaterialConfig extends BaseActivity {
     TextView txtBatchNo;
     @ViewInject(R.id.txt_ProductLineNo)
     TextView txtProductLineNo;
+    @ViewInject(R.id.txt_ProductStartTime)
+    TextView txtProductStartTime;
     @ViewInject(R.id.txt_MaterialDesc)
     TextView txtMaterialDesc;
     @ViewInject(R.id.edt_PrePruductNum)
@@ -75,7 +96,12 @@ public class ProductMaterialConfig extends BaseActivity {
     Button btnStartProduct;
 
     LineManageModel lineManageModel;
+    WoModel woModel;
     ArrayList<WoDetailModel> woDetailModels;
+    WoDetailMaterialItemAdapter woDetailMaterialItemAdapter;
+    BarCodeInfo currentBarCodeInfo;//当前扫描物料
+    int currentIndex=-1;//当前扫描物料对应工单物料
+    int mHour, mMinute;
 
     @Override
     protected void initViews() {
@@ -89,14 +115,121 @@ public class ProductMaterialConfig extends BaseActivity {
     protected void initData() {
         super.initData();
         this.lineManageModel=getIntent().getParcelableExtra("lineManageModel");
-        WoModel woModel=getIntent().getParcelableExtra("woModel");
+        this.woModel=getIntent().getParcelableExtra("woModel");
         if(lineManageModel!=null && woModel!=null){
             txtVoucherNo.setText(woModel.getErpVoucherNo());
             txtBatchNo.setText(woModel.getBatchNo());
             txtProductLineNo.setText(lineManageModel.getProductLineNo());
             txtMaterialDesc.setText(woModel.getMaterialDesc());
             GetWoDetailModelByWoNo(woModel);
+            //测试
+            woDetailModels=getdata();
+            BindListview(woDetailModels);
         }
+    }
+
+
+    @Event(value = R.id.edt_PrePruductNum,type = View.OnKeyListener.class)
+    private  boolean edtPrePruductNumClick(View view, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String preProductNum=edtPrePruductNum.getText().toString().trim();
+            if(CommonUtil.isFloat(preProductNum)){
+                lineManageModel.setPreProductNum(Float.parseFloat(preProductNum));
+                edtPrePruductNum.setEnabled(false);
+                CommonUtil.setEditFocus(edtBarcode);
+            }else{
+                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+                CommonUtil.setEditFocus(edtPrePruductNum);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Event(value = R.id.edt_Barcode,type = View.OnKeyListener.class)
+    private  boolean edtBarcodeClick(View view, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String barcode=edtBarcode.getText().toString().trim();
+            if(!TextUtils.isEmpty(barcode)){
+                try {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("UserJson", GsonUtil.parseModelToJson(userInfo));
+                    params.put("ModelJson", barcode);
+                    LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetMaterialByBarcode, barcode);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetMaterialByBarcode, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetMaterialByBarcode, null,  URLModel.GetURL().GetMaterialByBarcode, params, null);
+                } catch (Exception ex) {
+                    MessageBox.Show(context, ex.getMessage());
+                }
+            }
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            edtScanQty.setText("");
+            edtBarcode.setText("");
+            edtPrePruductNum.setEnabled(true);
+            CommonUtil.setEditFocus(edtPrePruductNum);
+            return true;
+
+        }
+        return false;
+    }
+
+    @Event(value = edt_ScanQty,type = View.OnKeyListener.class)
+    private  boolean edtScanQtyClick(View view, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String scanQty=edtScanQty.getText().toString().trim();
+            if(CommonUtil.isFloat(scanQty)){
+                if(currentBarCodeInfo!=null) {
+                    Float qty = woDetailModels.get(currentIndex).getScanQty() + Float.parseFloat(scanQty) * currentBarCodeInfo.getOutPackQty();
+                    if (qty <= woDetailModels.get(currentIndex).getWoQty()) {
+                        woDetailModels.get(currentIndex).setScanQty(qty);
+                        BindListview(woDetailModels);
+                        edtScanQty.setText("");
+                        CommonUtil.setEditFocus(edtBarcode);
+                    } else {
+                        MessageBox.Show(context, getString(R.string.Error_PackageQtyBigerThenWo));
+                        CommonUtil.setEditFocus(edtScanQty);
+                    }
+                }
+
+            }else{
+                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+                CommonUtil.setEditFocus(edtScanQty);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Event(value = R.id.txt_ProductStartTime,type = View.OnClickListener.class )
+    private void txtProductStartTimeClick(View view){
+        final Calendar ca = Calendar.getInstance();
+        mHour = ca.get(Calendar.HOUR_OF_DAY);
+        mMinute = ca.get(Calendar.MINUTE);
+        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                mHour=hourOfDay;
+                mMinute=minute;
+                txtProductStartTime.setText(display());
+                lineManageModel.setStartTime(display());
+            }
+        },mHour,mMinute,true).show();
+    }
+
+    @Event(R.id.btn_StartProduct)
+    private void btnStartProductClick(View view){
+        //判断是否满足齐套扫描要求
+        //提交数据
     }
 
     void GetWoDetailModelByWoNo(WoModel woModel){
@@ -132,7 +265,61 @@ public class ProductMaterialConfig extends BaseActivity {
         }
     }
 
-    void BindListview(ArrayList<WoDetailModel> woDetailModels){
+    void AnalysisGetMaterialByBarcodeJson(String result){
+        try {
+            currentBarCodeInfo=new BarCodeInfo();
+            currentIndex=-1;
+            LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetWoDetailModelByWoNo, result);
+            ReturnMsgModel<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<BarCodeInfo>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+               this.currentBarCodeInfo = returnMsgModel.getModelJson();
+                if (currentBarCodeInfo != null ){
+                    WoDetailModel tempWoDetail=new WoDetailModel(currentBarCodeInfo.getMaterialNo());
+                    currentIndex=woDetailModels.indexOf(tempWoDetail);
+                    if(currentIndex!=-1){
+                        CommonUtil.setEditFocus(edtScanQty);
+                    }else{
+                        MessageBox.Show(context,getString(R.string.Error_BarcodeNotInList));
+                        CommonUtil.setEditFocus(edtBarcode);
+                    }
+                    BindListview(woDetailModels);
+                }
 
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(edtBarcode);
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+            CommonUtil.setEditFocus(edtBarcode);
+        }
+    }
+
+    void BindListview(ArrayList<WoDetailModel> woDetailModels){
+        woDetailMaterialItemAdapter=new WoDetailMaterialItemAdapter(context,woDetailModels);
+        lsvMaterial.setAdapter(woDetailMaterialItemAdapter);
+    }
+
+    ArrayList<WoDetailModel> getdata(){
+        ArrayList<WoDetailModel> stockInfoModels=new ArrayList<>();
+        for(int i=0;i<7;i++){
+            WoDetailModel userInfo=new WoDetailModel();
+            userInfo.setVoucherNo(woModel.getVoucherNo());
+            userInfo.setErpVoucherNo(woModel.getErpVoucherNo());
+            userInfo.setMaterialNo("R23311"+i);
+            userInfo.setMaterialDesc("原料物料"+i);
+            userInfo.setFromBatchNo("批次1123"+i);
+            userInfo.setWoQty(123f);
+            userInfo.setScanQty(0f);
+            stockInfoModels.add(userInfo);
+        }
+        return stockInfoModels;
+    }
+
+    public String  display() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String day=format.format(new Date());
+        return new StringBuffer().append(day).append(" ").append(mHour<10?"0"+mHour:mHour).append(":").append(mMinute<10?"0"+mMinute:mMinute).toString();
     }
 }

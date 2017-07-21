@@ -49,8 +49,26 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private Float IsUrgent;
     private Date OutStockDate;
     private String TaskIsSueduser;
-    public String MaterialNo;
-    public String ErpDocNo;
+    private String MaterialNo;
+    private String ErpDocNo;
+    private String PickLeaderUserNo;
+    private String PickUserNo;
+
+    public String getPickUserNo() {
+        return PickUserNo;
+    }
+
+    public void setPickUserNo(String pickUserNo) {
+        PickUserNo = pickUserNo;
+    }
+
+    public String getPickLeaderUserNo() {
+        return PickLeaderUserNo;
+    }
+
+    public void setPickLeaderUserNo(String pickLeaderUserNo) {
+        PickLeaderUserNo = pickLeaderUserNo;
+    }
 
     public String getErpDocNo() {
         return ErpDocNo;
@@ -311,12 +329,24 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
 
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OutStockTaskInfo_Model that = (OutStockTaskInfo_Model) o;
+
+        return TaskNo.equals(that.TaskNo) ||  ERPVoucherNo.equals(that.ERPVoucherNo) ;
+
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeValue(this.TaskType);
         dest.writeString(this.TaskNo);
         dest.writeString(this.SupcusName);
@@ -349,9 +379,12 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.TaskIsSueduser);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.ErpDocNo);
+        dest.writeString(this.PickLeaderUserNo);
+        dest.writeString(this.PickUserNo);
     }
 
     protected OutStockTaskInfo_Model(Parcel in) {
+        super(in);
         this.TaskType = (Float) in.readValue(Float.class.getClassLoader());
         this.TaskNo = in.readString();
         this.SupcusName = in.readString();
@@ -385,6 +418,8 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.TaskIsSueduser = in.readString();
         this.MaterialNo = in.readString();
         this.ErpDocNo = in.readString();
+        this.PickLeaderUserNo = in.readString();
+        this.PickUserNo = in.readString();
     }
 
     public static final Creator<OutStockTaskInfo_Model> CREATOR = new Creator<OutStockTaskInfo_Model>() {

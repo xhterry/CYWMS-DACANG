@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
@@ -22,14 +24,15 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.WMS.OffShelf.OutStockTaskInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.User.UerInfo;
+import com.xx.chinetek.model.WMS.OffShelf.OutStockTaskInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -70,7 +73,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
-               /// CommonUtil.setEditFocus(edtfilterContent);
+                CommonUtil.setEditFocus(edtfilterContent);
                 break;
         }
     }
@@ -80,8 +83,12 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
     ListView lsvOffshelfChioce;
     @ViewInject(R.id.mSwipeLayout)
     SwipeRefreshLayout mSwipeLayout;
-//    @ViewInject(R.id.edt_filterContent)
-//    EditText edtfilterContent;
+    @ViewInject(R.id.edt_filterContent)
+    EditText edtfilterContent;
+    @ViewInject(R.id.btn_StartPicking)
+    Button btnStartPicking;
+    MenuItem  gMenuItem1=null;
+    MenuItem  gMenuItem=null;
 
     Context context = OffShelfBillChoice.this;
 
@@ -96,13 +103,14 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.receipt_subtitle), false);
         x.view().inject(this);
-        //isPickingAdmin=BaseApplication.userInfo.isBIsAdmin();
+        isPickingAdmin=BaseApplication.userInfo.getIsPickLeader()==2;
     }
 
     @Override
     protected void initData() {
         super.initData();
-       // edtfilterContent.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
+        edtfilterContent.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
+        btnStartPicking.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
         mSwipeLayout.setOnRefreshListener(this); //下拉刷新
     }
 
@@ -115,29 +123,25 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
     @Override
     public void onRefresh() {
         outStockTaskInfoModels=new ArrayList<>();
-      //  edtfilterContent.setText("");
+        edtfilterContent.setText("");
         InitListView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuoffshelfbillchoice, menu);
-        MenuItem gMenuItem=menu.findItem(R.id.action_filter);
+        gMenuItem=menu.findItem(R.id.action_filter);
+        gMenuItem1=menu.findItem(R.id.action_filter1);
         gMenuItem.setVisible(isPickingAdmin);
+        gMenuItem1.setVisible(isPickingAdmin);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_filter) {
-
+        if (item.getItemId() == R.id.action_filter ) {
                 try {
-                    selectoutStockTaskInfoModels = new ArrayList<>();
-                    for (int i = 0; i < outStockTaskInfoModels.size(); i++) {
-                        if (offSehlfBillChoiceItemAdapter.getStates(i)) {
-                            selectoutStockTaskInfoModels.add(0, outStockTaskInfoModels.get(i));
-                        }
-                    }
+                    GetSelectTask();
                     if (selectoutStockTaskInfoModels.size() != 0) {
                         if (isPickingAdmin) {
                             Map<String, String> params = new HashMap<>();
@@ -145,8 +149,6 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
                             params.put("UserJson", UserModel);
                             LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetPickUserListByUserADF, UserModel);
                             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPickUserListByUserADF, getString(R.string.Msg_GetT_GetPickUserListByUserADF), context, mHandler, RESULT_GetPickUserListByUserADF, null, URLModel.GetURL().GetPickUserListByUserADF, params, null);
-                        }else{
-                            StartScanIntent(selectoutStockTaskInfoModels);
                         }
                     } else {
                         MessageBox.Show(context, getString(R.string.Msg_NoSelectOffshelfTask));
@@ -156,49 +158,80 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
                 }
 
         }
+        if(item.getItemId() == R.id.action_filter1){
+            try {
+                isPickingAdmin=!isPickingAdmin;
+                gMenuItem.setVisible(isPickingAdmin);
+                edtfilterContent.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
+                btnStartPicking.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
+                item.setTitle(isPickingAdmin?getString(R.string.isPicking):getString(R.string.cancelPicking));
+                InitListView();
+            } catch (Exception ex) {
+                MessageBox.Show(context, ex.getMessage());
+            }
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
-//    @Event(value = R.id.edt_filterContent,type = View.OnKeyListener.class)
-//    private  boolean onKey(View v, int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
-//        {
-//            if(outStockTaskInfoModels!=null && outStockTaskInfoModels.size()>0) {
-//                String code = edtfilterContent.getText().toString().trim();
-//                //扫描单据号、检查单据列表
-//                OutStockTaskInfo_Model outStockTaskInfoModel = new OutStockTaskInfo_Model(code);
-//                int index=outStockTaskInfoModels.indexOf(outStockTaskInfoModel);
-//                if (index!=-1) {
-//                    StartScanIntent(outStockTaskInfoModels.get(index));
-//                    return false;
-//                }
-//            }
-//            StartScanIntent(null);
-//            CommonUtil.setEditFocus(edtfilterContent);
-//        }
-//        return false;
-//    }
+    @Event(value = R.id.edt_filterContent,type = View.OnKeyListener.class)
+    private  boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            if(outStockTaskInfoModels!=null && outStockTaskInfoModels.size()>0) {
+                String code = edtfilterContent.getText().toString().trim();
+                //扫描单据号、检查单据列表
+                OutStockTaskInfo_Model outStockTaskInfoModel = new OutStockTaskInfo_Model(code);
+                int index=outStockTaskInfoModels.indexOf(outStockTaskInfoModel);
+                if (index!=-1) {
+                    offSehlfBillChoiceItemAdapter.modifyStates(index);
+                    offSehlfBillChoiceItemAdapter.notifyDataSetInvalidated();
+                }
+            }
+            CommonUtil.setEditFocus(edtfilterContent);
+        }
+        return false;
+    }
 
     /**
      * Listview item点击事件
      */
     @Event(value = R.id.lsvOffshelfChioce,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        if(!isPickingAdmin) {
-//            OutStockTaskInfo_Model outStockTaskInfoModel=(OutStockTaskInfo_Model)offSehlfBillChoiceItemAdapter.getItem(position);
-//            StartScanIntent(outStockTaskInfoModel);
-//        }else{
             offSehlfBillChoiceItemAdapter.modifyStates(position);
             offSehlfBillChoiceItemAdapter.notifyDataSetInvalidated();
-        //}
     }
 
+    @Event(R.id.btn_StartPicking)
+    private void btnStartPickingClick(View view){
+        GetSelectTask();
+        if(selectoutStockTaskInfoModels!=null  && selectoutStockTaskInfoModels.size()!=0){
+            StartScanIntent(selectoutStockTaskInfoModels);
+        }
+
+    }
+
+
+    void GetSelectTask(){
+        selectoutStockTaskInfoModels = new ArrayList<>();
+        for (int i = 0; i < outStockTaskInfoModels.size(); i++) {
+            if (offSehlfBillChoiceItemAdapter.getStates(i)) {
+                selectoutStockTaskInfoModels.add(0, outStockTaskInfoModels.get(i));
+            }
+        }
+    }
     /**
      * 初始化加载listview
      */
     private void InitListView() {
+        outStockTaskInfoModels=new ArrayList<>();
+        selectoutStockTaskInfoModels=new ArrayList<>();
         OutStockTaskInfo_Model outStockTaskInfoModel=new OutStockTaskInfo_Model();
         outStockTaskInfoModel.setStatus(1);
+        if(isPickingAdmin)
+            outStockTaskInfoModel.setPickLeaderUserNo(BaseApplication.userInfo.getUserNo());
+        else
+            outStockTaskInfoModel.setPickUserNo(BaseApplication.userInfo.getUserNo());
         GetT_OutStockTaskInfoList(outStockTaskInfoModel);
     }
 
@@ -221,6 +254,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         LogUtil.WriteLog(QCBillChoice.class, TAG_SavePickUserListADF,result);
         ReturnMsgModelList<OutStockTaskInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskInfo_Model>>() {}.getType());
         MessageBox.Show(context, returnMsgModel.getMessage());
+        BindListVIew(outStockTaskInfoModels);
     }
 
     void AnalysisGetPickUserListByUserADFJson(String result){
@@ -236,16 +270,12 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
                 //选择拣货人员
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("选择拣货人员");
-                //    指定下拉列表的显示数据
-                //    设置一个下拉的列表选择项
                 builder.setItems(person, new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-
                         SavePickUserListADF(selectoutStockTaskInfoModels,usrInfos.get(which));
-                        Toast.makeText(context,  person[which], Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.show();
@@ -262,7 +292,10 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         try {
             String ModelJson = GsonUtil.parseModelToJson(outStockModels);
             Map<String, String> params = new HashMap<>();
-            params.put("UserJson", GsonUtil.parseModelToJson(userInfo));
+            ArrayList<UerInfo> uerInfos=new ArrayList<>();
+            uerInfos.add(userInfo);
+            String UserJson= GsonUtil.parseModelToJson(uerInfos);
+            params.put("UserJson",UserJson);
             params.put("ModelJson", ModelJson);
             LogUtil.WriteLog(OffShelfBillChoice.class, TAG_SavePickUserListADF, ModelJson);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SavePickUserListADF, getString(R.string.Msg_SavePickUserListADF), context, mHandler, RESULT_SavePickUserListADF, null,  URLModel.GetURL().SavePickUserListADF, params, null);
@@ -277,12 +310,12 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
         ReturnMsgModelList<OutStockTaskInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockTaskInfoModels=returnMsgModel.getModelJson();
-            if (outStockTaskInfoModels != null)
-                BindListVIew(outStockTaskInfoModels);
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
         }
+        if (outStockTaskInfoModels != null)
+            BindListVIew(outStockTaskInfoModels);
     }
 
 

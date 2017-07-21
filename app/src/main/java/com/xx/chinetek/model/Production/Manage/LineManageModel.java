@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.Production.Wo.WoDetailModel;
 import com.xx.chinetek.model.User.UserInfo;
 
 import java.util.ArrayList;
@@ -22,13 +23,33 @@ public class LineManageModel extends Base_Model implements Parcelable {
 
     private String EquipID;//设备号
 
+    private Float PreProductNum;//预生产数
+
     private String ProductLineNo;//产线编号
 
     private String ProductTeamNo;//班组编号
 
     private String StartTime;//工单开始时间
 
+    private ArrayList<WoDetailModel> woDetailModels=new ArrayList<>();//工单原料信息
+
     private ArrayList<UserInfo> userInfos=new ArrayList<>();//人员列表
+
+    public Float getPreProductNum() {
+        return PreProductNum;
+    }
+
+    public void setPreProductNum(Float preProductNum) {
+        PreProductNum = preProductNum;
+    }
+
+    public ArrayList<WoDetailModel> getWoDetailModels() {
+        return woDetailModels;
+    }
+
+    public void setWoDetailModels(ArrayList<WoDetailModel> woDetailModels) {
+        this.woDetailModels = woDetailModels;
+    }
 
     public ArrayList<UserInfo> getUserInfos() {
         return userInfos;
@@ -119,10 +140,12 @@ public class LineManageModel extends Base_Model implements Parcelable {
         dest.writeString(this.WoErpVoucherNo);
         dest.writeString(this.WoBatchNo);
         dest.writeString(this.EquipID);
+        dest.writeValue(this.PreProductNum);
         dest.writeString(this.ProductLineNo);
         dest.writeString(this.ProductTeamNo);
         dest.writeString(this.StartTime);
-        dest.writeList(this.userInfos);
+        dest.writeTypedList(this.woDetailModels);
+        dest.writeTypedList(this.userInfos);
         dest.writeString(this.EndTime);
     }
 
@@ -132,11 +155,12 @@ public class LineManageModel extends Base_Model implements Parcelable {
         this.WoErpVoucherNo = in.readString();
         this.WoBatchNo = in.readString();
         this.EquipID = in.readString();
+        this.PreProductNum = (Float) in.readValue(Float.class.getClassLoader());
         this.ProductLineNo = in.readString();
         this.ProductTeamNo = in.readString();
         this.StartTime = in.readString();
-        this.userInfos = new ArrayList<UserInfo>();
-        in.readList(this.userInfos, UserInfo.class.getClassLoader());
+        this.woDetailModels = in.createTypedArrayList(WoDetailModel.CREATOR);
+        this.userInfos = in.createTypedArrayList(UserInfo.CREATOR);
         this.EndTime = in.readString();
     }
 

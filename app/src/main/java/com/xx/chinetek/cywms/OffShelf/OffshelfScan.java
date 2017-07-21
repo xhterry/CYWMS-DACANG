@@ -86,6 +86,8 @@ public class OffshelfScan extends BaseActivity {
     TextView txtBatch;
     @ViewInject(R.id.txt_Status)
     TextView txtStatus;
+    @ViewInject(R.id.txt_EDate)
+    TextView txtEDate;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
     @ViewInject(tb_UnboxType)
@@ -113,11 +115,11 @@ public class OffshelfScan extends BaseActivity {
     @ViewInject(R.id.btn_PrintBox)
     TextView btnPrintBox;
 
-    OutStockTaskInfo_Model outStockTaskInfoModel;
+    ArrayList<OutStockTaskInfo_Model> outStockTaskInfoModels;
     ArrayList<OutStockTaskDetailsInfo_Model> outStockTaskDetailsInfoModels;
     List<StockInfo_Model> stockInfoModels;//扫描条码
     int currentPickMaterial=0;//当前拣货物料位置
-
+    Float SumQty=0f; //当前拣货物料剩余拣货数量合计
     @Override
     protected void initViews() {
         super.initViews();
@@ -130,8 +132,8 @@ public class OffshelfScan extends BaseActivity {
     protected void initData() {
         super.initData();
         currentPickMaterial=0;
-        outStockTaskInfoModel=getIntent().getParcelableExtra("outStockTaskInfoModel");
-        GetT_OutTaskDetailListByHeaderIDADF(outStockTaskInfoModel);
+        outStockTaskInfoModels=getIntent().getParcelableArrayListExtra("outStockTaskInfoModel");
+        GetT_OutTaskDetailListByHeaderIDADF(outStockTaskInfoModels);
     }
 
     @Event(value ={R.id.tb_UnboxType,R.id.tb_PalletType,R.id.tb_BoxType} ,type = CompoundButton.OnClickListener.class)
@@ -182,6 +184,8 @@ public class OffshelfScan extends BaseActivity {
             //拆零
             stockInfoModels.get(0).setPickModel(3);
             stockInfoModels.get(0).setAmountQty(qty);
+            if( outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo()==null)
+                outStockTaskDetailsInfoModels.get(currentPickMaterial).setLstStockInfo(new ArrayList<StockInfo_Model>());
             outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0,stockInfoModels.get(0));
             currentPickMaterial++;
             ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
@@ -198,7 +202,8 @@ public class OffshelfScan extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO 自动生成的方法
                         currentPickMaterial++;
-                        ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
+                        if(currentPickMaterial<=outStockTaskDetailsInfoModels.size())
+                            ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
                     }
                 }).setNegativeButton("取消", null).show();
     }
@@ -232,13 +237,10 @@ public class OffshelfScan extends BaseActivity {
     /*
     下架明细获取
      */
-    void GetT_OutTaskDetailListByHeaderIDADF(OutStockTaskInfo_Model outStockTaskInfoModel){
-        if(outStockTaskInfoModel!=null) {
-            txtVourcherNo.setText(outStockTaskInfoModel.getTaskNo());
-            final OutStockTaskDetailsInfo_Model outStockTaskDetailsInfoModel = new OutStockTaskDetailsInfo_Model();
-            outStockTaskDetailsInfoModel.setHeaderID(outStockTaskInfoModel.getID());
+    void GetT_OutTaskDetailListByHeaderIDADF(ArrayList<OutStockTaskInfo_Model> outStockTaskInfoModels){
+        if(outStockTaskInfoModels!=null) {
             final Map<String, String> params = new HashMap<String, String>();
-            params.put("ModelDetailJson", parseModelToJson(outStockTaskDetailsInfoModel));
+            params.put("ModelDetailJson", parseModelToJson(outStockTaskInfoModels));
             String para = (new JSONObject(params)).toString();
             LogUtil.WriteLog(OffshelfScan.class, TAG_GetT_OutTaskDetailListByHeaderIDADF, para);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutTaskDetailListByHeaderIDADF, getString(R.string.Msg_QualityDetailListByHeaderIDADF), context, mHandler, RESULT_Msg_GetT_OutTaskDetailListByHeaderIDADF, null,  URLModel.GetURL().GetT_OutTaskDetailListByHeaderIDADF, params, null);
@@ -269,10 +271,13 @@ public class OffshelfScan extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
             stockInfoModels=returnMsgModel.getModelJson();
             OutStockTaskDetailsInfo_Model currentOutTaskDetailInfo=outStockTaskDetailsInfoModels.get(currentPickMaterial);
-            if(!currentOutTaskDetailInfo.getMaterialNo().equals(stockInfoModels.get(0).getMaterialNo())){
+            if(!(currentOutTaskDetailInfo.getMaterialNo().equals(stockInfoModels.get(0).getMaterialNo())
+                    && currentOutTaskDetailInfo.getStrongHoldCode().equals(stockInfoModels.get(0).getStrongHoldCode()))){
                 MessageBox.Show(context,getString(R.string.Error_NotPickMaterial));
                 CommonUtil.setEditFocus(edtOffShelfScanbarcode);
             }else{
+                txtEDate.setText(CommonUtil.DateToString(stockInfoModels.get(0).getEDate()));
+                txtStatus.setText(stockInfoModels.get(0).getStrStatus());
                 if(tbPalletType.isChecked()){//整托
                     Float scanQty=stockInfoModels.get(0).getPalletQty();
                     checkQTY(currentOutTaskDetailInfo,scanQty,true);
@@ -299,51 +304,44 @@ public class OffshelfScan extends BaseActivity {
         }
     }
 
-    void checkQTY(OutStockTaskDetailsInfo_Model currentOutTaskDetailInfo,float scanQty,Boolean isPallet){
+    void checkQTY(OutStockTaskDetailsInfo_Model currentOutTaskDetailInfo,float scanQty,Boolean isPallet) {
 
         //根据物料查询扫描剩余数量的总数
-        int size=outStockTaskDetailsInfoModels.size();
-        float SumQty=0f;
-        for(int i=0;i<size;i++){
-            if(outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(currentOutTaskDetailInfo.getMaterialNo())){
-                SumQty=SumQty+(outStockTaskDetailsInfoModels.get(i).getRemainQty()-outStockTaskDetailsInfoModels.get(i).getScanQty());
-            }
-        }
-        if(SumQty<scanQty){
-            MessageBox.Show(context,getString(R.string.Error_offshelfQtyBiger));
+        if (SumQty < scanQty) {
+            MessageBox.Show(context, getString(R.string.Error_offshelfQtyBiger));
             CommonUtil.setEditFocus(edtOffShelfScanbarcode);
             return;
         }
 
-//        if(currentOutTaskDetailInfo.getRemainQty()-currentOutTaskDetailInfo.getScanQty()-scanQty<0){
-//            MessageBox.Show(context,getString(R.string.Error_offshelfQtyBiger));
-//            CommonUtil.setEditFocus(edtOffShelfScanbarcode);
-//        }else {
-            if(isPallet){
-                for (StockInfo_Model stockInfoModel:stockInfoModels) {
-                    stockInfoModel.setPickModel(1);
-                    outStockTaskDetailsInfoModels.get(currentPickMaterial).setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterial).getScanQty()+scanQty);
-                    outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0,stockInfoModel);
-                }
+        if (outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo() == null)
+            outStockTaskDetailsInfoModels.get(currentPickMaterial).setLstStockInfo(new ArrayList<StockInfo_Model>());
+        if (isPallet) { //托盘
+            for (StockInfo_Model stockInfoModel : stockInfoModels) {
+                stockInfoModel.setPickModel(1);
+                outStockTaskDetailsInfoModels.get(currentPickMaterial).setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterial).getScanQty() + scanQty);
+                outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0, stockInfoModel);
             }
-            else {
-                stockInfoModels.get(0).setPickModel(2);
-                outStockTaskDetailsInfoModels.get(currentPickMaterial).setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterial).getScanQty()+scanQty);
-                outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0, stockInfoModels.get(0));
-            }
-            currentPickMaterial++;
-            ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
-       // }
+        } else {
+            stockInfoModels.get(0).setPickModel(2);
+            outStockTaskDetailsInfoModels.get(currentPickMaterial).setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterial).getScanQty() + scanQty);
+            outStockTaskDetailsInfoModels.get(currentPickMaterial).getLstStockInfo().add(0, stockInfoModels.get(0));
+        }
+        currentPickMaterial++;
+        ShowPickMaterialInfo(outStockTaskDetailsInfoModels.get(currentPickMaterial));
     }
 
 
     void ShowPickMaterialInfo(OutStockTaskDetailsInfo_Model outStockTaskDetailsInfoModel){
+        txtVourcherNo.setText(outStockTaskDetailsInfoModel.getErpVoucherNo());
         txtCompany.setText(outStockTaskDetailsInfoModel.getStrongHoldName());
-        txtBatch.setText(outStockTaskDetailsInfoModel.getBatchNo());
+        txtBatch.setText(outStockTaskDetailsInfoModel.getFromBatchno()+" / "+outStockTaskDetailsInfoModel.getIsSpcBatch());
         txtStatus.setText(outStockTaskDetailsInfoModel.getStrStatus());
         txtMaterialName.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
         txtSugestStock.setText(outStockTaskDetailsInfoModel.getAreaNo());
-        txtOffshelfNum.setText(outStockTaskDetailsInfoModel.getRemainQty()+"");
+        txtEDate.setText("");
+        Float qty=outStockTaskDetailsInfoModel.getRemainQty()-outStockTaskDetailsInfoModel.getScanQty();
+        FindSumQtyByMaterialNo(outStockTaskDetailsInfoModel.getMaterialNo());
+        txtOffshelfNum.setText(qty+"/拣货剩余量："+SumQty);
     }
 
     void ShowUnboxing(Boolean show){
@@ -352,6 +350,16 @@ public class OffshelfScan extends BaseActivity {
         edtUnboxing.setVisibility(visiable);
         btnPrintBox.setVisibility(visiable);
     }
+
+    void FindSumQtyByMaterialNo(String MaterialNo){
+        for(int i=0;i<outStockTaskDetailsInfoModels.size();i++){
+            if(outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)){
+                SumQty=SumQty+(outStockTaskDetailsInfoModels.get(i).getRemainQty()-outStockTaskDetailsInfoModels.get(i).getScanQty());
+            }
+        }
+    }
+
+
 
 
 

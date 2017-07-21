@@ -41,6 +41,33 @@ public class User implements Parcelable {
     private int ReceiveAreaID;
     private int PickHouseID;
     private int PickAreaID;
+    private int IsPickLeader;
+    private String  StrIsPickLeader;
+    private Boolean PickLeader;
+
+    public int getIsPickLeader() {
+        return IsPickLeader;
+    }
+
+    public void setIsPickLeader(int isPickLeader) {
+        IsPickLeader = isPickLeader;
+    }
+
+    public String getStrIsPickLeader() {
+        return StrIsPickLeader;
+    }
+
+    public void setStrIsPickLeader(String strIsPickLeader) {
+        StrIsPickLeader = strIsPickLeader;
+    }
+
+    public Boolean getPickLeader() {
+        return PickLeader;
+    }
+
+    public void setPickLeader(Boolean pickLeader) {
+        PickLeader = pickLeader;
+    }
 
     public int getWarehouseID() {
         return WarehouseID;
@@ -291,6 +318,9 @@ public class User implements Parcelable {
     }
 
 
+    public User() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -329,9 +359,9 @@ public class User implements Parcelable {
         dest.writeInt(this.ReceiveAreaID);
         dest.writeInt(this.PickHouseID);
         dest.writeInt(this.PickAreaID);
-    }
-
-    public User() {
+        dest.writeInt(this.IsPickLeader);
+        dest.writeString(this.StrIsPickLeader);
+        dest.writeValue(this.PickLeader);
     }
 
     protected User(Parcel in) {
@@ -367,6 +397,20 @@ public class User implements Parcelable {
         this.ReceiveAreaID = in.readInt();
         this.PickHouseID = in.readInt();
         this.PickAreaID = in.readInt();
+        this.IsPickLeader = in.readInt();
+        this.StrIsPickLeader = in.readString();
+        this.PickLeader = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

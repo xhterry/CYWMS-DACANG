@@ -7,6 +7,19 @@
     android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/txt_UnEDate"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="16dp"
+        android:text="有效期"
+        android:textColor="@color/brown"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_unStatus"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
         android:id="@+id/txt_unCompany"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"

@@ -29,6 +29,15 @@ public class Barcode_Model implements Parcelable{
     private String SupPrdBatch;
     private Date ProductDate;
     private Date EDate;
+    private int BarcodeType;
+
+    public int getBarcodeType() {
+        return BarcodeType;
+    }
+
+    public void setBarcodeType(int barcodeType) {
+        BarcodeType = barcodeType;
+    }
 
     public String getAreano() {
         return areano;
@@ -211,6 +220,7 @@ public class Barcode_Model implements Parcelable{
         dest.writeString(this.SupPrdBatch);
         dest.writeLong(this.ProductDate != null ? this.ProductDate.getTime() : -1);
         dest.writeLong(this.EDate != null ? this.EDate.getTime() : -1);
+        dest.writeInt(this.BarcodeType);
     }
 
     protected Barcode_Model(Parcel in) {
@@ -235,6 +245,7 @@ public class Barcode_Model implements Parcelable{
         this.ProductDate = tmpProductDate == -1 ? null : new Date(tmpProductDate);
         long tmpEDate = in.readLong();
         this.EDate = tmpEDate == -1 ? null : new Date(tmpEDate);
+        this.BarcodeType = in.readInt();
     }
 
     public static final Creator<Barcode_Model> CREATOR = new Creator<Barcode_Model>() {

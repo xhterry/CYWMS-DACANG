@@ -86,6 +86,7 @@
     <string name="MaterialChange_out_subtitle">转料-出库单选择</string>
     <string name="MaterialChange_scan_subtitle">转料-扫描</string>
     <string name="TakeSample_title">取样</string>
+    <string name="StartPiicking">开始拣货</string>
     <string name="Truckload_title">装车记录</string>
     <string name="ReportOutput_title">工单报产量</string>
     <string name="title_Receipt_Right">筛选</string>
@@ -99,6 +100,8 @@
     <string name="ReportNum">报产量</string>
     <string name="ReportQC">完工报检</string>
     <string name="TaskAllcote">任务分配</string>
+    <string name="isPicking">拣货</string>
+    <string name="cancelPicking">取消拣货</string>
     <string name="LogUpload">日志上报</string>
     <string name="submit">提交</string>
     <string name="Add">新增</string>
@@ -224,6 +227,7 @@
     <string name="Msg_GetT_QualityListADF">获取质检信息...</string>
     <string name="Msg_GetT_OutTaskListADF">获取下架信息...</string>
     <string name="Msg_SavePickUserListADF">提交分配拣货任务...</string>
+    <string name="Msg_PrintAndroid">打印期初标签...</string>
     <string name="Msg_GetT_GetPickUserListByUserADF">获取拣货人员信息...</string>
     <string name="Msg_GetT_OutTaskDetailListByHeaderIDADF">获取下架明细信息...</string>
     <string name="Mag_GetT_LineManageInfoModel">获取作业记录...</string>
@@ -258,6 +262,7 @@
     <string name="Error_materialNotMatch">扫描物料与质检物料属性不一致！</string>
     <string name="Error_offshelfQtyBiger">数量已超过下架数量！</string>
     <string name="Error_PackageQtyBiger">数量超过包装数量！</string>
+    <string name="Error_PackageQtyBigerThenWo">数量超过工单数量！</string>
     <string name="Error_BarcodeNotInList">此物料不在列表中！</string>
     <string name="Error_NotPickMaterial">此物料不是当前需要拣货物料！</string>
     <string name="Error_BarcodeScaned">该条码已扫描！</string>

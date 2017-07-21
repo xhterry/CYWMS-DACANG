@@ -17,9 +17,9 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -80,6 +80,8 @@ public class Boxing extends BaseActivity {
     TextView txtBatch;
     @ViewInject(R.id.txt_Status)
     TextView txtStatus;
+    @ViewInject(R.id.txt_EDate)
+    TextView txt_EDate;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
     @ViewInject(R.id.txt_boxQty)
@@ -90,12 +92,16 @@ public class Boxing extends BaseActivity {
     TextView txtunBatch;
     @ViewInject(R.id.txt_unStatus)
     TextView txtunStatus;
+    @ViewInject(R.id.txt_UnEDate)
+    TextView txt_UnEDate;
     @ViewInject(R.id.txt_unMaterialName)
     TextView txtunMaterialName;
     @ViewInject(R.id.txt_unboxQty)
     TextView txtunBoxQty;
     @ViewInject(R.id.txt_box)
     TextView txtbox;
+    @ViewInject(R.id.txt_boxNum)
+    TextView txtboxNum;
     @ViewInject(R.id.btn_BoxConfig)
     TextView btnBoxConfig;
     @ViewInject(R.id.conLay_unboxInfo)
@@ -104,8 +110,8 @@ public class Boxing extends BaseActivity {
     ConstraintLayout conLayboxInfo;
 
     boolean isUnbox=false;//判断扫描箱子类型 true:拆箱扫描
-    BarCodeInfo unbarCodeInfo=new BarCodeInfo();
-    BarCodeInfo barCodeInfo=new BarCodeInfo();
+    StockInfo_Model unStockInfoModel=new StockInfo_Model();
+    StockInfo_Model stockInfoModel=new StockInfo_Model();
 
     @Override
     protected void initViews() {
@@ -135,7 +141,7 @@ public class Boxing extends BaseActivity {
             String barcode=v.getId()==R.id.edt_UnboxCode?
                     edtUnboxCode.getText().toString().trim():edtBoxCode.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
-            params.put("Barcode", barcode);
+            params.put("BarCode", barcode);
                 LogUtil.WriteLog(Boxing.class, TAG_GetT_OutBarCodeInfoByBoxADF, barcode);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutBarCodeInfoByBoxADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_OutBarCodeInfoByBoxADF, null,  URLModel.GetURL().GetT_GetT_OutBarCodeInfoByBoxADF, params, null);
             return false;
@@ -143,9 +149,9 @@ public class Boxing extends BaseActivity {
         return false;
     }
 
-
     @Event(R.id.btn_BoxConfig)
     private void BtnBoxConfigClick(View v){
+        if(SWBox.isChecked()) {
         String num=edtBoxNum.getText().toString().trim();
         String returnMsg=CheckInputQty(num);
         if(!returnMsg.equals("")){
@@ -154,11 +160,11 @@ public class Boxing extends BaseActivity {
             return;
         }
         Float qty=Float.parseFloat(num);
-        unbarCodeInfo.setQty(unbarCodeInfo.getQty()-qty);
-        barCodeInfo.setQty(barCodeInfo.getQty()+qty);
+        unStockInfoModel.setAmountQty(qty);
+        }
         String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
-        String strOldBarCode = GsonUtil.parseModelToJson(unbarCodeInfo);
-        String strNewBarCode = GsonUtil.parseModelToJson(barCodeInfo);
+        String strOldBarCode = GsonUtil.parseModelToJson(unStockInfoModel);
+        String strNewBarCode =SWBox.isChecked()?"": GsonUtil.parseModelToJson(stockInfoModel);
         final Map<String, String> params = new HashMap<String, String>();
         params.put("UserJson", userJson);
         params.put("strOldBarCode", strOldBarCode);
@@ -173,32 +179,35 @@ public class Boxing extends BaseActivity {
   */
     void AnalysisGetT_SerialNoByPalletAD(String result){
         LogUtil.WriteLog(Boxing.class, TAG_GetT_OutBarCodeInfoByBoxADF,result);
-        ReturnMsgModel<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<BarCodeInfo>>() {}.getType());
+        ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            BarCodeInfo  barCodeInfo=returnMsgModel.getModelJson();
+            StockInfo_Model  stockInfoModel=returnMsgModel.getModelJson();
             if(isUnbox){
-                this.unbarCodeInfo=barCodeInfo;
-                txtunBatch.setText(barCodeInfo.getBatchNo());
-                txtunBoxQty.setText(barCodeInfo.getQty()+"/"+barCodeInfo.getOutPackQty());
-                txtunMaterialName.setText(barCodeInfo.getMaterialDesc());
-                txtunCompany.setText(barCodeInfo.getStrongHoldName());
-                txtunStatus.setText(barCodeInfo.getStatus());
+                this.unStockInfoModel=stockInfoModel;
+                txtunBatch.setText(stockInfoModel.getBatchNo());
+                txtunBoxQty.setText(stockInfoModel.getQty()+"/"+stockInfoModel.getPalletQty());
+                txtunMaterialName.setText(stockInfoModel.getMaterialDesc());
+                txtunCompany.setText(stockInfoModel.getStrongHoldName());
+                txtunStatus.setText(stockInfoModel.getStrStatus());
+                txt_UnEDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
                 if(SWBox.isChecked()){
-                    this.barCodeInfo=new BarCodeInfo();
-                    this.barCodeInfo.setQty(0f);
+                    this.stockInfoModel=new StockInfo_Model();
+                    this.stockInfoModel.setQty(0f);
                 }
             }else{
-                this.barCodeInfo=barCodeInfo;
-                txtBatch.setText(barCodeInfo.getBatchNo());
-                txtBoxQty.setText(barCodeInfo.getQty()+"/"+barCodeInfo.getOutPackQty());
-                txtMaterialName.setText(barCodeInfo.getMaterialDesc());
-                txtCompany.setText(barCodeInfo.getStrongHoldName());
-                txtStatus.setText(barCodeInfo.getStatus());
+                this.stockInfoModel=stockInfoModel;
+                txtBatch.setText(stockInfoModel.getBatchNo());
+                txtBoxQty.setText(stockInfoModel.getQty()+"/"+stockInfoModel.getPalletQty());
+                txtMaterialName.setText(stockInfoModel.getMaterialDesc());
+                txtCompany.setText(stockInfoModel.getStrongHoldName());
+                txtStatus.setText(stockInfoModel.getStrStatus());
+                txt_EDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
             }
 
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
+            CommonUtil.setEditFocus(isUnbox?edtUnboxCode:edtBoxCode);
         }
     }
 
@@ -228,10 +237,14 @@ public class Boxing extends BaseActivity {
             conLayboxInfo.setVisibility(View.VISIBLE);
             edtBoxCode.setVisibility(View.VISIBLE);
             txtbox.setVisibility(View.VISIBLE);
+            txtboxNum.setVisibility(View.GONE);
+            edtBoxNum.setVisibility(View.GONE);
         }else{
             conLayboxInfo.setVisibility(View.GONE);
             edtBoxCode.setVisibility(View.GONE);
             txtbox.setVisibility(View.GONE);
+            txtboxNum.setVisibility(View.VISIBLE);
+            edtBoxNum.setVisibility(View.VISIBLE);
         }
         CommonUtil.setEditFocus(edtUnboxCode);
     }
@@ -241,12 +254,12 @@ public class Boxing extends BaseActivity {
             return getString(R.string.Error_isnotnum);
         }
         Float qty=Float.parseFloat(num);
-        if(qty>unbarCodeInfo.getQty()){
+        if(qty>unStockInfoModel.getQty()){
             return getString(R.string.Error_QtyBiger);
         }
-        if(qty>Integer.parseInt(txtunBoxQty.getText().toString().split("/")[1])-Integer.parseInt(txtunBoxQty.getText().toString().split("/")[0])){
-            return getString(R.string.Error_PackageQtyBiger);
-        }
+//        if(qty>Integer.parseInt(txtunBoxQty.getText().toString().split("/")[1])-Integer.parseInt(txtunBoxQty.getText().toString().split("/")[0])){
+//            return getString(R.string.Error_PackageQtyBiger);
+//        }
         return "";
     }
 }

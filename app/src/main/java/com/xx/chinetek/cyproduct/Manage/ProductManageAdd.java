@@ -117,6 +117,7 @@ public class ProductManageAdd extends BaseActivity {
     private  boolean onKeyClick(View view, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
+            keyBoardCancle();
             EditText tv = (EditText)findViewById(view.getId());
             String code=tv.getText().toString().trim();
             if(TextUtils.isEmpty(code)) {

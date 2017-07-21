@@ -86,7 +86,100 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private int IsSerial;
     private String PartNo;
     private String MoveType;
-    public String BatchNo;
+    private String BatchNo;
+    /// <summary>
+    /// 是否指定批次
+    /// </summary>
+    private String IsSpcBatch;
+    /// <summary>
+    /// ERP指定的发货批次
+    /// </summary>
+    private String FromBatchno;
+    /// <summary>
+    /// ERP指定发货储位
+    /// </summary>
+    public String FromErpAreaNo;
+    /// <summary>
+    /// ERP指定发货仓库
+    /// </summary>
+    private String FromErpWareHouse;
+    /// <summary>
+    /// 给ERP指定的发货批次
+    /// </summary>
+    private String ToBatchno;
+    /// <summary>
+    /// 给ERP指定发货储位
+    /// </summary>
+    private String ToErpAreaNo;
+    /// <summary>
+    /// 给ERP指定发货仓库
+    /// </summary>
+    private String ToErpWareHouse;
+    private int FloorType;
+
+    public String getIsSpcBatch() {
+        return IsSpcBatch;
+    }
+
+    public void setIsSpcBatch(String isSpcBatch) {
+        IsSpcBatch = isSpcBatch;
+    }
+
+    public String getFromBatchno() {
+        return FromBatchno;
+    }
+
+    public void setFromBatchno(String fromBatchno) {
+        FromBatchno = fromBatchno;
+    }
+
+    public String getFromErpAreaNo() {
+        return FromErpAreaNo;
+    }
+
+    public void setFromErpAreaNo(String fromErpAreaNo) {
+        FromErpAreaNo = fromErpAreaNo;
+    }
+
+    public String getFromErpWareHouse() {
+        return FromErpWareHouse;
+    }
+
+    public void setFromErpWareHouse(String fromErpWareHouse) {
+        FromErpWareHouse = fromErpWareHouse;
+    }
+
+    public String getToBatchno() {
+        return ToBatchno;
+    }
+
+    public void setToBatchno(String toBatchno) {
+        ToBatchno = toBatchno;
+    }
+
+    public String getToErpAreaNo() {
+        return ToErpAreaNo;
+    }
+
+    public void setToErpAreaNo(String toErpAreaNo) {
+        ToErpAreaNo = toErpAreaNo;
+    }
+
+    public String getToErpWareHouse() {
+        return ToErpWareHouse;
+    }
+
+    public void setToErpWareHouse(String toErpWareHouse) {
+        ToErpWareHouse = toErpWareHouse;
+    }
+
+    public int getFloorType() {
+        return FloorType;
+    }
+
+    public void setFloorType(int floorType) {
+        FloorType = floorType;
+    }
 
     public String getBatchNo() {
         return BatchNo;
@@ -678,6 +771,14 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeString(this.PartNo);
         dest.writeString(this.MoveType);
         dest.writeString(this.BatchNo);
+        dest.writeString(this.IsSpcBatch);
+        dest.writeString(this.FromBatchno);
+        dest.writeString(this.FromErpAreaNo);
+        dest.writeString(this.FromErpWareHouse);
+        dest.writeString(this.ToBatchno);
+        dest.writeString(this.ToErpAreaNo);
+        dest.writeString(this.ToErpWareHouse);
+        dest.writeInt(this.FloorType);
     }
 
     protected OutStockTaskDetailsInfo_Model(Parcel in) {
@@ -747,6 +848,14 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.PartNo = in.readString();
         this.MoveType = in.readString();
         this.BatchNo = in.readString();
+        this.IsSpcBatch = in.readString();
+        this.FromBatchno = in.readString();
+        this.FromErpAreaNo = in.readString();
+        this.FromErpWareHouse = in.readString();
+        this.ToBatchno = in.readString();
+        this.ToErpAreaNo = in.readString();
+        this.ToErpWareHouse = in.readString();
+        this.FloorType = in.readInt();
     }
 
     public static final Creator<OutStockTaskDetailsInfo_Model> CREATOR = new Creator<OutStockTaskDetailsInfo_Model>() {

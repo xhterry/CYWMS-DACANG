@@ -141,6 +141,17 @@ public class WoDetailModel extends Base_Model{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WoDetailModel that = (WoDetailModel) o;
+
+        return MaterialNo.equals(that.MaterialNo);
+
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -164,6 +175,10 @@ public class WoDetailModel extends Base_Model{
     }
 
     public WoDetailModel() {
+    }
+
+    public WoDetailModel(String materialNo) {
+        this.MaterialNo=materialNo;
     }
 
     protected WoDetailModel(Parcel in) {

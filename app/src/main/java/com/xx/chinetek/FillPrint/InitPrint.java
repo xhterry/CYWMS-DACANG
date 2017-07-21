@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,26 +12,52 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cywms.Intentory.IntentoryScan;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
+import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
+import com.xx.chinetek.util.Network.NetworkError;
+import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
+import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.GsonUtil;
+import com.xx.chinetek.util.log.LogUtil;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @ContentView(R.layout.activity_init_print)
 public class InitPrint extends BaseActivity {
+    String TAG_PrintAndroid="InitPrint_PrintAndroid=";
+    private final int RESULT_PrintAndroid = 101;
+    @Override
+    public void onHandleMessage(Message msg) {
 
+        switch (msg.what) {
+            case RESULT_PrintAndroid:
+                AnalysisPrintAndroidJson((String) msg.obj);
+                break;
+            case NetworkError.NET_ERROR_CUSTOM:
+                ToastUtil.show("获取请求失败_____"+ msg.obj);
+                break;
+        }
+    }
     Context context=InitPrint.this;
 
     @ViewInject(R.id.edt_jd)
@@ -128,6 +155,7 @@ public class InitPrint extends BaseActivity {
     @Event(R.id.btn_Print)
     private void BtnPrintClick(View view){
         if(Check()){
+            barcodeModel.setBarcodeType(1);
             barcodeModel.setAreano(edtkw.getText().toString().trim());
             barcodeModel.setMaterialNo(edtwlbh.getText().toString().trim());
             barcodeModel.setErpVoucherNo(edtddh.getText().toString().trim());
@@ -135,7 +163,28 @@ public class InitPrint extends BaseActivity {
             barcodeModel.setBatchNo(edtcnp.getText().toString().trim());
             barcodeModel.setQty(Float.parseFloat(edtsl.getText().toString().trim()));
             barcodeModel.setIP(URLModel.PrintIP);
-          //  ClearFrm();
+            ArrayList<Barcode_Model> barcodeModels=new ArrayList<>();
+            barcodeModels.add(barcodeModel);
+            String modelJson = GsonUtil.parseModelToJson(barcodeModels);
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("json", modelJson);
+            LogUtil.WriteLog(InitPrint.class, TAG_PrintAndroid, modelJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintAndroid, getString(R.string.Msg_PrintAndroid), context, mHandler, RESULT_PrintAndroid, null,  URLModel.GetURL().PrintAndroid, params, null);
+        }
+    }
+
+
+    void AnalysisPrintAndroidJson(String result){
+        try {
+            LogUtil.WriteLog(IntentoryScan.class, TAG_PrintAndroid,result);
+            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+            }.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S")){
+                ClearFrm();
+            }else
+                MessageBox.Show(context, returnMsgModel.getMessage());
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
         }
     }
 

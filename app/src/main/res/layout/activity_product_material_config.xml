@@ -141,6 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/batch"
+        android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline35"
@@ -219,6 +220,7 @@
         android:layout_marginStart="16dp"
         android:gravity="left"
         android:text="TextView"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView204"
         app:layout_constraintLeft_toLeftOf="@+id/guideline35"
         app:layout_constraintRight_toRightOf="parent" />

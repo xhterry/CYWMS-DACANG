@@ -3,7 +3,6 @@ package com.xx.chinetek.Pallet;
 import android.content.Context;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -61,7 +60,7 @@ public class DismantlePallet extends BaseActivity {
 
         switch (msg.what) {
             case RESULT_GetT_SerialNoByPalletADF:
-                AnalysisGetT_SerialNoByPalletAD((String) msg.obj);
+              //  AnalysisGetT_SerialNoByPalletAD((String) msg.obj);
                 break;
             case RESULT_GetT_PalletADF:
                 AnalysisGetT_PalletAD((String) msg.obj);
@@ -103,7 +102,7 @@ public class DismantlePallet extends BaseActivity {
     Button btnConfig;
 
     PalletItemAdapter palletItemAdapter;
-    List<PalletDetail_Model> palletDetailModels;
+    ArrayList<PalletDetail_Model> palletDetailModels;
 
     @Override
     protected void initViews() {
@@ -135,13 +134,14 @@ public class DismantlePallet extends BaseActivity {
             String barcode=edtBarcode.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("Barcode", barcode);
-            if(!SWDisPallet.isChecked()) {
-                LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_SerialNoByPalletADF, barcode);
-                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_SerialNoByPalletADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_SerialNoByPalletADF, params, null);
-            }else{
+            params.put("PalletModel","2");
+//            if(!SWDisPallet.isChecked()) {
+//                LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_SerialNoByPalletADF, barcode);
+//                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_SerialNoByPalletADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_SerialNoByPalletADF, params, null);
+//            }else{
                 LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_PalletDetailByNoADF, barcode);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_PalletADF), context, mHandler, RESULT_GetT_PalletADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
-            }
+           // }
             return false;
         }
         return false;
@@ -166,41 +166,41 @@ public class DismantlePallet extends BaseActivity {
     /*
    解析物料条码扫描
     */
-    void AnalysisGetT_SerialNoByPalletAD(String result){
-        LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_SerialNoByPalletADF,result);
-        ReturnMsgModel<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<BarCodeInfo>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            BarCodeInfo  barCodeInfo=returnMsgModel.getModelJson();
-            if(palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)){ //存在条码
-                MessageBox.Show(context,R.string.Error_Barcode_hasScan);
-            }else{
-                //判断拆托条件：批次、据点、库位、物料、托盘属性相同才能一起拆托
-                if(palletDetailModels.get(0).getLstBarCode()!=null && palletDetailModels.get(0).getLstBarCode().size()!=0) {
-                    String checkError=CheckPalletCondition(barCodeInfo);
-                    if (!TextUtils.isEmpty(checkError)) {
-                        MessageBox.Show(context, checkError);
-                        return;
-                    }
-                    barCodeInfo.setPalletno(palletDetailModels.get(0).getLstBarCode().get(0).getPalletno());
-                }
-                palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
-                palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
-                palletDetailModels.get(0).getLstBarCode().add(0,barCodeInfo);
-                txtCompany.setText(barCodeInfo.getStrongHoldName());
-                txtBatch.setText(barCodeInfo.getBatchNo());
-                txtStatus.setText(barCodeInfo.getStatus());
-                txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
-                txtMaterialName.setText(barCodeInfo.getMaterialDesc());
-                txtPalletNo.setText(palletDetailModels.get(0).getPalletNo());
-                BindListVIew(palletDetailModels.get(0).getLstBarCode());
-            }
-        }else
-        {
-            ToastUtil.show(returnMsgModel.getMessage());
-        }
-        CommonUtil.setEditFocus(edtBarcode);
-    }
-
+//    void AnalysisGetT_SerialNoByPalletAD(String result){
+//        LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_SerialNoByPalletADF,result);
+//        ReturnMsgModel<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<BarCodeInfo>>() {}.getType());
+//        if(returnMsgModel.getHeaderStatus().equals("S")){
+//            BarCodeInfo  barCodeInfo=returnMsgModel.getModelJson();
+//            if(palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)){ //存在条码
+//                MessageBox.Show(context,R.string.Error_Barcode_hasScan);
+//            }else{
+//                //判断拆托条件：批次、据点、库位、物料、托盘属性相同才能一起拆托
+//                if(palletDetailModels.get(0).getLstBarCode()!=null && palletDetailModels.get(0).getLstBarCode().size()!=0) {
+//                    String checkError=CheckPalletCondition(barCodeInfo);
+//                    if (!TextUtils.isEmpty(checkError)) {
+//                        MessageBox.Show(context, checkError);
+//                        return;
+//                    }
+//                    barCodeInfo.setPalletno(palletDetailModels.get(0).getLstBarCode().get(0).getPalletno());
+//                }
+//                palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
+//                palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
+//                palletDetailModels.get(0).getLstBarCode().add(0,barCodeInfo);
+//                txtCompany.setText(barCodeInfo.getStrongHoldName());
+//                txtBatch.setText(barCodeInfo.getBatchNo());
+//                txtStatus.setText(barCodeInfo.getStatus());
+//                txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
+//                txtMaterialName.setText(barCodeInfo.getMaterialDesc());
+//                txtPalletNo.setText(palletDetailModels.get(0).getPalletNo());
+//                BindListVIew(palletDetailModels.get(0).getLstBarCode());
+//            }
+//        }else
+//        {
+//            ToastUtil.show(returnMsgModel.getMessage());
+//        }
+//        CommonUtil.setEditFocus(edtBarcode);
+//    }
+//
 
     /*
     解析托盘条码扫描
@@ -209,11 +209,35 @@ public class DismantlePallet extends BaseActivity {
         LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_PalletDetailByNoADF,result);
         ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            palletDetailModels=returnMsgModel.getModelJson();
+            ArrayList<PalletDetail_Model> temppalletDetailModels=returnMsgModel.getModelJson();
+            if(temppalletDetailModels!=null && temppalletDetailModels.get(0).getLstBarCode()!=null) {
+                String barcoce=edtBarcode.getText().toString().trim();
+                Boolean isFoundBarcode=false;
+                for (int i = 0; i < temppalletDetailModels.get(0).getLstBarCode().size();i++){
+                    if(temppalletDetailModels.get(0).getLstBarCode().get(i).getBarCode().contains(barcoce)){
+                        isFoundBarcode=true;
+                        BarCodeInfo barCodeInfo=temppalletDetailModels.get(0).getLstBarCode().get(i);
+                        palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
+                        palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
+                        palletDetailModels.get(0).getLstBarCode().add(0,barCodeInfo);
+                        txtCompany.setText(barCodeInfo.getStrongHoldName());
+                        txtBatch.setText(barCodeInfo.getBatchNo());
+                        txtStatus.setText(barCodeInfo.getStatus());
+                        txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
+                        txtMaterialName.setText(barCodeInfo.getMaterialDesc());
+                        txtPalletNo.setText(palletDetailModels.get(0).getPalletNo());
+                        BindListVIew(palletDetailModels.get(0).getLstBarCode());
+                        break;
+                    }
+                }
+                if(!isFoundBarcode){
+                    MessageBox.Show(context,getString(R.string.Error_BarcodeNotInList));
+                }
+            }
             BindListVIew(palletDetailModels.get(0).getLstBarCode());
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
         }
         CommonUtil.setEditFocus(edtBarcode);
     }
