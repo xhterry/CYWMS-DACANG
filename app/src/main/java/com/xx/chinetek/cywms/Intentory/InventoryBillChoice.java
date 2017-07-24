@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,9 +21,9 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.WMS.Inventory.Check_Model;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Inventory.Check_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -66,7 +68,7 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(R.id.edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_NoTask)
+    @ViewInject(R.id.btn_PrintQCLabrl)
     Button btnNoTask;
 
 
@@ -100,6 +102,22 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
         check_models=new ArrayList<>();
         edtfilterContent.setText("");
         InitListView();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_linemanagel, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_filter) {
+            Intent intent=new Intent(context,IntentoryAdd.class);
+            startActivityLeft(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

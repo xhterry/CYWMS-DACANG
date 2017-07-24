@@ -9,7 +9,6 @@ import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -21,8 +20,9 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
 
     }
 
-    public InStockTaskDetailsInfo_Model(String MaterialNo){
+    public InStockTaskDetailsInfo_Model(String MaterialNo,String BatchNo){
     this.MaterialNo=MaterialNo;
+        this.BatchNo=BatchNo;
     }
 
 
@@ -83,25 +83,34 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
     private int WarehouseID;
     private int HouseID;
     private int AreaID;
-    private List<AreaInfo_Model> lstArea=new ArrayList<>();
-    private List<StockInfo_Model> lstStockInfo=new ArrayList<StockInfo_Model>();
+    private ArrayList<AreaInfo_Model> lstArea=new ArrayList<>();
+    private ArrayList<StockInfo_Model> lstStockInfo=new ArrayList<StockInfo_Model>();
     private String SupCusCode;
     private String SupCusName;
     private String SaleName;
     private int TaskType;
     private String PartNo;
     private String FromBatchNo;
+    private String BatchNo;
     private String FromErpAreaNo ;
     private String FromErpWarehouse ;
     private String ToBatchNo;
     private String ToErpAreaNo;
     private String ToErpWarehouse;
 
-    public List<AreaInfo_Model> getLstArea() {
+    public String getBatchNo() {
+        return BatchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        BatchNo = batchNo;
+    }
+
+    public ArrayList<AreaInfo_Model> getLstArea() {
         return lstArea;
     }
 
-    public void setLstArea(List<AreaInfo_Model> lstArea) {
+    public void setLstArea(ArrayList<AreaInfo_Model> lstArea) {
         this.lstArea = lstArea;
     }
 
@@ -653,11 +662,11 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         Wbselem = wbselem;
     }
 
-    public List<StockInfo_Model> getLstStockInfo() {
+    public ArrayList<StockInfo_Model> getLstStockInfo() {
         return lstStockInfo;
     }
 
-    public void setLstStockInfo(List<StockInfo_Model> lstStockInfo) {
+    public void setLstStockInfo(ArrayList<StockInfo_Model> lstStockInfo) {
         this.lstStockInfo = lstStockInfo;
     }
 
@@ -668,7 +677,7 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
 
         InStockTaskDetailsInfo_Model that = (InStockTaskDetailsInfo_Model) o;
 
-        return MaterialNo.equals(that.MaterialNo);
+        return MaterialNo.equals(that.MaterialNo) && BatchNo.equals(that.BatchNo);
 
     }
 
@@ -746,6 +755,7 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         dest.writeInt(this.TaskType);
         dest.writeString(this.PartNo);
         dest.writeString(this.FromBatchNo);
+        dest.writeString(this.BatchNo);
         dest.writeString(this.FromErpAreaNo);
         dest.writeString(this.FromErpWarehouse);
         dest.writeString(this.ToBatchNo);
@@ -823,6 +833,7 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         this.TaskType = in.readInt();
         this.PartNo = in.readString();
         this.FromBatchNo = in.readString();
+        this.BatchNo = in.readString();
         this.FromErpAreaNo = in.readString();
         this.FromErpWarehouse = in.readString();
         this.ToBatchNo = in.readString();

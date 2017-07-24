@@ -23,8 +23,8 @@ import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.WMS.Review.OutStock_Model;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Review.OutStock_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -49,16 +49,16 @@ import static com.xx.chinetek.cywms.R.id.edt_filterContent;
 public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
 
-    String TAG_GetT_OutStockListADF = "ReviewBillChoice_GetT_OutStockListADF";
+    String TAG_GetT_OutStockReviewListADF = "ReviewBillChoice_GetT_OutStockReviewListADF";
     String TAG_GetT_PalletDetailByBarCode = "ReviewBillChoice_GetT_PalletDetailByBarCode";
-    private final int RESULT_GetT_OutStockListADF = 101;
+    private final int RESULT_GetT_OutStockReviewListADF = 101;
     private final int RESULT_GetT_PalletDetailByBarCode=102;
 
     @Override
     public void onHandleMessage(Message msg) {
         mSwipeLayout.setRefreshing(false);
         switch (msg.what) {
-            case RESULT_GetT_OutStockListADF:
+            case RESULT_GetT_OutStockReviewListADF:
                 AnalysisGetT_OutStockListADFJson((String) msg.obj);
                 break;
             case RESULT_GetT_PalletDetailByBarCode:
@@ -77,7 +77,7 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_NoTask)
+    @ViewInject(R.id.btn_PrintQCLabrl)
     Button btnNoTask;
 
 
@@ -112,6 +112,8 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
         edtfilterContent.setText("");
         InitListView();
     }
+
+
 
     /**
      * Listview item点击事件
@@ -165,8 +167,8 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
             Map<String, String> params = new HashMap<>();
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("ModelJson", ModelJson);
-            LogUtil.WriteLog(ReviewBillChoice.class, TAG_GetT_OutStockListADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutStockListADF, getString(R.string.Msg_GetT_OutStockListADF), context, mHandler, RESULT_GetT_OutStockListADF, null,  URLModel.GetURL().GetT_OutStockListADF, params, null);
+            LogUtil.WriteLog(ReviewBillChoice.class, TAG_GetT_OutStockReviewListADF, ModelJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutStockReviewListADF, getString(R.string.Msg_GetT_OutStockListADF), context, mHandler, RESULT_GetT_OutStockReviewListADF, null,  URLModel.GetURL().GetT_OutStockReviewListADF, params, null);
         } catch (Exception ex) {
             mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
@@ -174,9 +176,8 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
     }
 
     void AnalysisGetT_OutStockListADFJson(String result){
-        LogUtil.WriteLog(ReviewBillChoice.class, TAG_GetT_OutStockListADF,result);
-        Gson gson = new Gson();
-        ReturnMsgModelList<OutStock_Model> returnMsgModel = gson.fromJson(result, new TypeToken<ReturnMsgModelList<OutStock_Model>>() {}.getType());
+        LogUtil.WriteLog(ReviewBillChoice.class, TAG_GetT_OutStockReviewListADF,result);
+        ReturnMsgModelList<OutStock_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStock_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockModels=returnMsgModel.getModelJson();
             if(outStockModels!=null)

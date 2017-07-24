@@ -10,6 +10,7 @@ import java.util.Date;
  */
 
 public class User implements Parcelable {
+    private int ID;
     private String UserNo;
     private String UserName;
     private String PassWord;
@@ -44,6 +45,23 @@ public class User implements Parcelable {
     private int IsPickLeader;
     private String  StrIsPickLeader;
     private Boolean PickLeader;
+    private String PDAPrintIP;
+
+    public String getPDAPrintIP() {
+        return PDAPrintIP;
+    }
+
+    public void setPDAPrintIP(String PDAPrintIP) {
+        this.PDAPrintIP = PDAPrintIP;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
     public int getIsPickLeader() {
         return IsPickLeader;
@@ -328,6 +346,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.ID);
         dest.writeString(this.UserNo);
         dest.writeString(this.UserName);
         dest.writeString(this.PassWord);
@@ -362,9 +381,11 @@ public class User implements Parcelable {
         dest.writeInt(this.IsPickLeader);
         dest.writeString(this.StrIsPickLeader);
         dest.writeValue(this.PickLeader);
+        dest.writeString(this.PDAPrintIP);
     }
 
     protected User(Parcel in) {
+        this.ID = in.readInt();
         this.UserNo = in.readString();
         this.UserName = in.readString();
         this.PassWord = in.readString();
@@ -400,17 +421,7 @@ public class User implements Parcelable {
         this.IsPickLeader = in.readInt();
         this.StrIsPickLeader = in.readString();
         this.PickLeader = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.PDAPrintIP = in.readString();
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel source) {
-            return new User(source);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 }

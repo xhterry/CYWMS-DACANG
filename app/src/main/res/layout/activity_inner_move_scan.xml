@@ -35,6 +35,7 @@
         android:textOff="@string/AllPackage"
         android:textOn="@string/AllPallet"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

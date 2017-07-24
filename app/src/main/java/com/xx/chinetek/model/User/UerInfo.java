@@ -20,9 +20,39 @@ public class UerInfo extends User implements Parcelable {
     private String StrSex;
     private String ReceiveWareHouseNo;
     private String ReceiveAreaNo;
+    private String ToSampWareHouseNo;
+    private String ToSampAreaNo;
     private List<UserGroupInfo> lstUserGroup;
     private List<MenuInfo> lstMenu;
     private List<WareHouseInfo> lstWarehouse;
+    /// <summary>
+    /// 取样人编号
+    /// </summary>
+    private String QuanUserNo;
+
+    public String getToSampWareHouseNo() {
+        return ToSampWareHouseNo;
+    }
+
+    public void setToSampWareHouseNo(String toSampWareHouseNo) {
+        ToSampWareHouseNo = toSampWareHouseNo;
+    }
+
+    public String getToSampAreaNo() {
+        return ToSampAreaNo;
+    }
+
+    public void setToSampAreaNo(String toSampAreaNo) {
+        ToSampAreaNo = toSampAreaNo;
+    }
+
+    public String getQuanUserNo() {
+        return QuanUserNo;
+    }
+
+    public void setQuanUserNo(String quanUserNo) {
+        QuanUserNo = quanUserNo;
+    }
 
     public String getReceiveWareHouseNo() {
         return ReceiveWareHouseNo;
@@ -150,9 +180,12 @@ public class UerInfo extends User implements Parcelable {
         dest.writeString(this.StrSex);
         dest.writeString(this.ReceiveWareHouseNo);
         dest.writeString(this.ReceiveAreaNo);
+        dest.writeString(this.ToSampWareHouseNo);
+        dest.writeString(this.ToSampAreaNo);
         dest.writeTypedList(this.lstUserGroup);
         dest.writeTypedList(this.lstMenu);
         dest.writeTypedList(this.lstWarehouse);
+        dest.writeString(this.QuanUserNo);
     }
 
     protected UerInfo(Parcel in) {
@@ -167,9 +200,12 @@ public class UerInfo extends User implements Parcelable {
         this.StrSex = in.readString();
         this.ReceiveWareHouseNo = in.readString();
         this.ReceiveAreaNo = in.readString();
+        this.ToSampWareHouseNo = in.readString();
+        this.ToSampAreaNo = in.readString();
         this.lstUserGroup = in.createTypedArrayList(UserGroupInfo.CREATOR);
         this.lstMenu = in.createTypedArrayList(MenuInfo.CREATOR);
         this.lstWarehouse = in.createTypedArrayList(WareHouseInfo.CREATOR);
+        this.QuanUserNo = in.readString();
     }
 
     public static final Creator<UerInfo> CREATOR = new Creator<UerInfo>() {

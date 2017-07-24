@@ -140,11 +140,9 @@ public class InitPrint extends BaseActivity {
                 mDay = dayOfMonth;
                 if(isscrq) {
                     edtscrq.setText(display());
-                    barcodeModel.setProductDate(CommonUtil.dateStrConvertDate(edtscrq.getText().toString()));
                 }
                 else {
                     edtdqrq.setText(display());
-                    barcodeModel.setEDate(CommonUtil.dateStrConvertDate(edtdqrq.getText().toString()));
 
                 }
             }
@@ -162,6 +160,9 @@ public class InitPrint extends BaseActivity {
             barcodeModel.setSupPrdBatch(edtgysp.getText().toString().trim());
             barcodeModel.setBatchNo(edtcnp.getText().toString().trim());
             barcodeModel.setQty(Float.parseFloat(edtsl.getText().toString().trim()));
+            barcodeModel.setCreater(BaseApplication.userInfo.getUserName());
+            barcodeModel.setProductDate(CommonUtil.dateStrConvertDate(edtscrq.getText().toString()));
+            barcodeModel.setEDate(CommonUtil.dateStrConvertDate(edtdqrq.getText().toString()));
             barcodeModel.setIP(URLModel.PrintIP);
             ArrayList<Barcode_Model> barcodeModels=new ArrayList<>();
             barcodeModels.add(barcodeModel);

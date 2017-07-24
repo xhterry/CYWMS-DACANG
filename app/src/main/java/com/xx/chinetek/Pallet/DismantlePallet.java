@@ -159,7 +159,7 @@ public class DismantlePallet extends BaseActivity {
         params.put("UserJson", userJson);
         params.put("PalletDetailJson", modelJson);
         LogUtil.WriteLog(DismantlePallet.class, TAG_Delete_PalletORBarCodeADF, modelJson);
-        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Delete_PalletORBarCodeADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_Delete_PalletORBarCodeADF, null,  URLModel.GetURL().Delete_PalletORBarCodeADF, params, null);
+        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Delete_PalletORBarCodeADF, getString(R.string.Msg_Delete_PalletORBarCodeADF), context, mHandler, RESULT_Delete_PalletORBarCodeADF, null,  URLModel.GetURL().Delete_PalletORBarCodeADF, params, null);
     }
 
 
@@ -207,32 +207,42 @@ public class DismantlePallet extends BaseActivity {
      */
     void AnalysisGetT_PalletAD(String result){
         LogUtil.WriteLog(DismantlePallet.class, TAG_GetT_PalletDetailByNoADF,result);
-        ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {}.getType());
+        ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            ArrayList<PalletDetail_Model> temppalletDetailModels=returnMsgModel.getModelJson();
-            if(temppalletDetailModels!=null && temppalletDetailModels.get(0).getLstBarCode()!=null) {
-                String barcoce=edtBarcode.getText().toString().trim();
-                Boolean isFoundBarcode=false;
-                for (int i = 0; i < temppalletDetailModels.get(0).getLstBarCode().size();i++){
-                    if(temppalletDetailModels.get(0).getLstBarCode().get(i).getBarCode().contains(barcoce)){
-                        isFoundBarcode=true;
-                        BarCodeInfo barCodeInfo=temppalletDetailModels.get(0).getLstBarCode().get(i);
-                        palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
-                        palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
-                        palletDetailModels.get(0).getLstBarCode().add(0,barCodeInfo);
-                        txtCompany.setText(barCodeInfo.getStrongHoldName());
-                        txtBatch.setText(barCodeInfo.getBatchNo());
-                        txtStatus.setText(barCodeInfo.getStatus());
-                        txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
-                        txtMaterialName.setText(barCodeInfo.getMaterialDesc());
-                        txtPalletNo.setText(palletDetailModels.get(0).getPalletNo());
-                        BindListVIew(palletDetailModels.get(0).getLstBarCode());
-                        break;
+            try {
+                ArrayList<PalletDetail_Model> temppalletDetailModels = returnMsgModel.getModelJson();
+                if (temppalletDetailModels != null && temppalletDetailModels.get(0).getLstBarCode() != null) {
+                    String barcoce = edtBarcode.getText().toString().trim();
+
+                    Boolean isFoundBarcode = false;
+                    for (int i = 0; i < temppalletDetailModels.get(0).getLstBarCode().size(); i++) {
+                        if (!SWDisPallet.isChecked() && !temppalletDetailModels.get(0).getLstBarCode().get(i).getBarCode().contains(barcoce))
+                            continue;
+                        isFoundBarcode = true;
+                        BarCodeInfo barCodeInfo = temppalletDetailModels.get(0).getLstBarCode().get(i);
+                        if (palletDetailModels.get(0).getLstBarCode().indexOf(barCodeInfo) == -1) {
+                            palletDetailModels.get(0).setPalletNo(temppalletDetailModels.get(0).getPalletNo());
+                            palletDetailModels.get(0).setPalletType(temppalletDetailModels.get(0).getPalletType());
+                            palletDetailModels.get(0).getLstBarCode().add(0, barCodeInfo);
+                            txtCompany.setText(barCodeInfo.getStrongHoldName());
+                            txtBatch.setText(barCodeInfo.getBatchNo());
+                            txtStatus.setText("");
+                            txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
+                            txtMaterialName.setText(barCodeInfo.getMaterialDesc());
+                            txtPalletNo.setText(temppalletDetailModels.get(0).getPalletNo());
+                            //BindListVIew(palletDetailModels.get(0).getLstBarCode());
+                        } else {
+                            MessageBox.Show(context, getString(R.string.Error_BarcodeScaned));
+                        }
+                        if(!SWDisPallet.isChecked()) break;
+
+                    }
+                    if (!isFoundBarcode) {
+                        MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList));
                     }
                 }
-                if(!isFoundBarcode){
-                    MessageBox.Show(context,getString(R.string.Error_BarcodeNotInList));
-                }
+            }catch (Exception ex){
+                MessageBox.Show(context, ex.getMessage());
             }
             BindListVIew(palletDetailModels.get(0).getLstBarCode());
         }else
@@ -250,6 +260,9 @@ public class DismantlePallet extends BaseActivity {
             LogUtil.WriteLog(DismantlePallet.class, TAG_Delete_PalletORBarCodeADF, result);
             ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S")){
+                ClearFrm();
+            }
             MessageBox.Show(context, returnMsgModel.getMessage());
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
@@ -257,10 +270,8 @@ public class DismantlePallet extends BaseActivity {
     }
 
     private void BindListVIew(List<BarCodeInfo> barCodeInfos) {
-        if(barCodeInfos.size()!=0) {
             palletItemAdapter = new PalletItemAdapter(context, barCodeInfos);
             lsvDisPalletDetail.setAdapter(palletItemAdapter);
-        }
     }
 
     /*
@@ -269,11 +280,12 @@ public class DismantlePallet extends BaseActivity {
     void ShowMaterialScan(boolean check){
         if(!check){
             conLayDIsPallet.setVisibility(View.VISIBLE);
-            edtBarcode.setHint(R.string.Hit_ScanBarcode);
+           // edtBarcode.setHint(R.string.Hit_ScanBarcode);
         }else{
             conLayDIsPallet.setVisibility(View.GONE);
-            edtBarcode.setHint(R.string.Hit_ScanPallet);
+          //  edtBarcode.setHint(R.string.Hit_ScanPallet);
         }
+        ClearFrm();
     }
 
     String CheckPalletCondition(BarCodeInfo  barCodeInfo){
@@ -292,5 +304,20 @@ public class DismantlePallet extends BaseActivity {
             return getString(R.string.Error_AreaotnotMatch);
         else
             return "";
+    }
+
+    void ClearFrm(){
+        edtBarcode.setText("");
+        txtCompany.setText("");
+        txtBatch.setText("");
+        txtEDate.setText("");
+        txtStatus.setText("");
+        txtMaterialName.setText("");
+        txtPalletNo.setText("");
+        palletDetailModels=new ArrayList<>();
+        palletDetailModels.add(new PalletDetail_Model());
+        palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());
+        BindListVIew(palletDetailModels.get(0).getLstBarCode());
+        CommonUtil.setEditFocus(edtBarcode);
     }
 }

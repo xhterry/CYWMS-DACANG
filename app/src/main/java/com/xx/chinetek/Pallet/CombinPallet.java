@@ -244,7 +244,7 @@ public class CombinPallet extends BaseActivity {
                             barCodeInfo.setPalletno(palletDetailModels.get(0).getLstBarCode().get(0).getPalletno());
                         }
                         if (!palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)) {
-                            palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
+                           // palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
                             palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
                             palletDetailModels.get(0).getLstBarCode().add(0, barCodeInfo);
                            // palletDetailModels.get(0).setVoucherType(999);
@@ -257,7 +257,6 @@ public class CombinPallet extends BaseActivity {
                             palletDetailModels.get(0).setSuppliernNo(barCodeInfo.getSupCode());
                             palletDetailModels.get(0).setSuppliernName(barCodeInfo.getSupName());
                             palletDetailModels.get(0).setErpVoucherNo(barCodeInfo.getErpVoucherNo());
-                            palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
                             palletDetailModels.get(0).setAreaID(barCodeInfo.getAreaID());
                         }
                     }
@@ -288,9 +287,11 @@ public class CombinPallet extends BaseActivity {
         ReturnMsgModelList<PalletDetail_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             palletDetailModels=returnMsgModel.getModelJson();
-            BindListVIew(palletDetailModels.get(0).getLstBarCode());
-            edtPallet.setEnabled(false);
-            txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
+            if(palletDetailModels!=null) {
+                BindListVIew(palletDetailModels.get(0).getLstBarCode());
+                edtPallet.setEnabled(false);
+                txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
+            }
             CommonUtil.setEditFocus(edtBarcode);
         }else{
             MessageBox.Show(context,returnMsgModel.getMessage());
@@ -311,9 +312,11 @@ public class CombinPallet extends BaseActivity {
             MessageBox.Show(context, returnMsgModel.getMessage());
             if(returnMsgModel.getHeaderStatus().equals("S")) {
                 InitFrm();
+                 CommonUtil.setEditFocus(SWPallet.isChecked()?edtPallet:edtBarcode);
             }
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtBarcode);
         }
     }
 
@@ -322,6 +325,7 @@ public class CombinPallet extends BaseActivity {
      */
     void ShowPalletScan(boolean check){
         InitFrm();
+        txtPallet.setEnabled(true);
         if(!check){
             txtPallet.setVisibility(View.GONE);
             edtPallet.setVisibility(View.GONE);
@@ -342,6 +346,7 @@ public class CombinPallet extends BaseActivity {
         palletDetailModels.add(new PalletDetail_Model());
         palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());
         BindListVIew(palletDetailModels.get(0).getLstBarCode());
+        edtPallet.setEnabled(true);
         edtBarcode.setText("");
         edtPallet.setText("");
         txtCompany.setText("");
@@ -368,8 +373,8 @@ public class CombinPallet extends BaseActivity {
         //新增：判断物料是否已组托 插入：判断物料所在托盘属性是否与现有托盘属性一致才能组托
         if (!SWPallet.isChecked() && barCodeInfo.getPalletType() != 0)
             return getString(R.string.Error_Contain_Barcode);
-        if (SWPallet.isChecked() && palletDetailModels.get(0).getPalletType() != barCodeInfo.getPalletType())
-            return getString(R.string.Error_PalletypenotMatch);//.getLstBarCode().get(0)
+//        if (SWPallet.isChecked() && palletDetailModels.get(0).getPalletType() != barCodeInfo.getPalletType())
+//            return getString(R.string.Error_PalletypenotMatch);//.getLstBarCode().get(0)
         if (!palletDetailModels.get(0).getMaterialNo().equals(barCodeInfo.getMaterialNo()))
             return getString(R.string.Error_materialnotMatch);
         else if (barCodeInfo.getBatchNo()==null || !palletDetailModels.get(0).getBatchNo().equals(barCodeInfo.getBatchNo()))

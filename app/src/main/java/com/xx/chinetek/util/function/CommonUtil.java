@@ -148,7 +148,7 @@ public class CommonUtil {
      */
     public static Date dateStrConvertDate(String dateStr) {
         Date date = null;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
             date = (Date) df.parse(dateStr);
         } catch (Exception e) {

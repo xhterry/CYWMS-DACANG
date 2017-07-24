@@ -60,7 +60,7 @@ public class QCDetailAdapter extends BaseAdapter {
             listItemView = new ListItemView();
 
             // 获取list_item布局文件的视图
-            convertView = listContainer.inflate(R.layout.item_receiptscandetail_listview,null);
+            convertView = listContainer.inflate(R.layout.item_qcscandetail_listview,null);
             listItemView.txtbarcode = (TextView) convertView.findViewById(R.id.txtbarcode);
             listItemView.txtScanNum = (TextView) convertView.findViewById(R.id.txtScanNum);
             listItemView.txtMaterialDesc = (TextView) convertView.findViewById(R.id.txtMaterialDesc);

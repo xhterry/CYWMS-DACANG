@@ -102,9 +102,10 @@ public class RequestHandler {
         addRequest(method, tag, handler, what, bundle, url, params, header, new DefaultDialogRequestListener(context, LoadText) {
             @Override
             public boolean retry() {
-                addRequest(method, tag, handler, what, bundle, url, params, header,
-                        retryTimer++ >= MAX_RETRY_TIME ? new DefaultDialogRequestListener(context, LoadText) : this);
-                return true;
+//                addRequest(method, tag, handler, what, bundle, url, params, header,
+//                        retryTimer++ >= MAX_RETRY_TIME ? new DefaultDialogRequestListener(context, LoadText) : this);
+//                return true;
+                return false;
             }
         });
     }
@@ -148,7 +149,7 @@ public class RequestHandler {
 
         int retryTimer;
 
-        static final int MAX_RETRY_TIME = 3;
+        static final int MAX_RETRY_TIME = -1;
 
         @Override
         public void onPreRequest() {

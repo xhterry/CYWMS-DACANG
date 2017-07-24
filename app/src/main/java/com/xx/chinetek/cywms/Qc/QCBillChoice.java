@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,10 +21,13 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.QC.QualityInfo_Model;
+import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -45,7 +50,9 @@ import java.util.Map;
 public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     String TAG_GetT_QualityListADF = "QCBillChoice_GetT_QualityListADF";
+    String TAG_PrintQYAndroid = "QCBillChoice_PrintQYAndroid";
     private final int RESULT_GetT_QualityListADF = 101;
+    private final int RESULT_PrintQYAndroid = 102;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -53,6 +60,9 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         switch (msg.what) {
             case RESULT_GetT_QualityListADF:
                AnalysisGetT_QualityListADFJson((String) msg.obj);
+                break;
+            case RESULT_PrintQYAndroid:
+                AnalysisPrintQYAndroidJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -67,14 +77,16 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(R.id.edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_NoTask)
-    Button btnNoTask;
+    @ViewInject(R.id.btn_PrintQCLabrl)
+    Button btn_PrintQCLabrl;
 
 
     Context context = QCBillChoice.this;
     QCBillChioceItemAdapter qcBillChioceItemAdapter;
     ArrayList<QualityInfo_Model> qualityInfoModels;
     StockInfo_Model stockInfoModel;
+    MenuItem  gMenuItem=null;
+    Boolean isQcPrint=false;
 
     @Override
     protected void initViews() {
@@ -82,7 +94,7 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_title), false);
         x.view().inject(this);
-        btnNoTask.setVisibility(View.GONE);
+        btn_PrintQCLabrl.setVisibility(View.GONE);
     }
 
     @Override
@@ -104,13 +116,37 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         InitListView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_inventorybilldetail, menu);
+        gMenuItem=menu.findItem(R.id.action_filter);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() ==R.id.action_filter){
+            if(qualityInfoModels!=null && qualityInfoModels.size()>0){
+                isQcPrint=!isQcPrint;
+                initFrm();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     /**
      * Listview item点击事件
      */
     @Event(value = R.id.lsvChoice,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        QualityInfo_Model qualityInfoModel=(QualityInfo_Model) qcBillChioceItemAdapter.getItem(position);
-        StartScanIntent(qualityInfoModel);
+        if(isQcPrint){
+            qcBillChioceItemAdapter.modifyStates(position);
+            qcBillChioceItemAdapter.notifyDataSetInvalidated();
+        }else {
+            QualityInfo_Model qualityInfoModel = (QualityInfo_Model) qcBillChioceItemAdapter.getItem(position);
+            StartScanIntent(qualityInfoModel);
+        }
     }
 
     @Event(value = R.id.edt_filterContent,type = View.OnKeyListener.class)
@@ -127,12 +163,32 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
                     return false;
                 }
             }
-            StartScanIntent(null);
             CommonUtil.setEditFocus(edtfilterContent);
         }
         return false;
     }
 
+    @Event(R.id.btn_PrintQCLabrl)
+    private  void btnPrintQCLabrlClick(View view){
+        ArrayList<Barcode_Model> temp=new ArrayList<>();
+        int size=qualityInfoModels.size();
+        for (int i=0;i<size;i++){
+            if(qcBillChioceItemAdapter.getStates(i)){
+                Barcode_Model barcodeModel=new Barcode_Model();
+                barcodeModel.setCreater(BaseApplication.userInfo.getUserName());
+                barcodeModel.setMaterialNo( qualityInfoModels.get(i).getMaterialNo());
+                barcodeModel.setQty( qualityInfoModels.get(i).getQuanQty());
+                barcodeModel.setIP(URLModel.PrintIP);
+                temp.add(0,barcodeModel);
+            }
+        }
+        String ModelJson = GsonUtil.parseModelToJson(temp);
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("json",ModelJson );
+        LogUtil.WriteLog(QCBillChoice.class, TAG_PrintQYAndroid, ModelJson);
+        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintQYAndroid, getString(R.string.Msg_PrintQYAndroid), context, mHandler, RESULT_PrintQYAndroid, null,  URLModel.GetURL().PrintQYAndroid, params, null);
+
+    }
 
     /**
      * 初始化加载listview
@@ -140,6 +196,7 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     private void InitListView() {
         QualityInfo_Model qualityInfoModel=new QualityInfo_Model();
         qualityInfoModel.setStatus(1);
+        qualityInfoModel.setQuanUserNo(BaseApplication.userInfo.getID()+"");
         GetT_QualityList(qualityInfoModel);
     }
 
@@ -176,6 +233,21 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     }
 
+    void AnalysisPrintQYAndroidJson(String result){
+        try {
+            LogUtil.WriteLog(QCBillChoice.class, TAG_PrintQYAndroid,result);
+            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S")){
+                isQcPrint=false;
+                initFrm();
+            }else{
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
 
     void StartScanIntent(QualityInfo_Model qualityInfoModel){
         Intent intent=new Intent(context,QCScan.class);
@@ -183,6 +255,13 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         bundle.putParcelable("qualityInfoModel",qualityInfoModel);
         intent.putExtras(bundle);
         startActivityLeft(intent);
+    }
+
+    void initFrm(){
+        gMenuItem.setTitle(getString(isQcPrint?R.string.cancel:R.string.QCprint));
+        edtfilterContent.setVisibility(isQcPrint?View.GONE:View.VISIBLE);
+        btn_PrintQCLabrl.setVisibility(isQcPrint?View.VISIBLE:View.GONE);
+        BindListVIew(qualityInfoModels);
     }
 
     private void BindListVIew(ArrayList<QualityInfo_Model> qualityInfoModels) {

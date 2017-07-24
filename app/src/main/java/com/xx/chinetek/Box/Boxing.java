@@ -36,8 +36,6 @@ import org.xutils.x;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.xx.chinetek.cywms.R.id.edt_UnboxCode;
-
 @ContentView(R.layout.activity_boxing)
 public class Boxing extends BaseActivity {
 
@@ -70,7 +68,7 @@ public class Boxing extends BaseActivity {
     Switch SWBox;
     @ViewInject(R.id.edt_BoxCode)
     EditText edtBoxCode;
-    @ViewInject(edt_UnboxCode)
+    @ViewInject(R.id.edt_UnboxCode)
     EditText edtUnboxCode;
     @ViewInject(R.id.edt_BoxNum)
     EditText edtBoxNum;
@@ -152,25 +150,32 @@ public class Boxing extends BaseActivity {
     @Event(R.id.btn_BoxConfig)
     private void BtnBoxConfigClick(View v){
         if(SWBox.isChecked()) {
-        String num=edtBoxNum.getText().toString().trim();
-        String returnMsg=CheckInputQty(num);
-        if(!returnMsg.equals("")){
-            MessageBox.Show(context, returnMsg);
-            CommonUtil.setEditFocus(edtBoxNum);
+            String num = edtBoxNum.getText().toString().trim();
+            String returnMsg = CheckInputQty(num);
+            if (!returnMsg.equals("")) {
+                MessageBox.Show(context, returnMsg);
+                CommonUtil.setEditFocus(edtBoxNum);
+                return;
+            }
+            Float qty = Float.parseFloat(num);
+            unStockInfoModel.setAmountQty(qty);
+        }
+        if(!(unStockInfoModel.getMaterialNo().equals(stockInfoModel.getMaterialNo()) &&
+            unStockInfoModel.getStrongHoldCode().equals(stockInfoModel.getStrongHoldCode()))){
+            MessageBox.Show(context, getString(R.string.Error_MaterialNotMatch));
+            CommonUtil.setEditFocus(edtBoxCode);
             return;
         }
-        Float qty=Float.parseFloat(num);
-        unStockInfoModel.setAmountQty(qty);
-        }
+
         String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
         String strOldBarCode = GsonUtil.parseModelToJson(unStockInfoModel);
         String strNewBarCode =SWBox.isChecked()?"": GsonUtil.parseModelToJson(stockInfoModel);
         final Map<String, String> params = new HashMap<String, String>();
         params.put("UserJson", userJson);
-        params.put("strOldBarCode", strOldBarCode);
-        params.put("strNewBarCode", strNewBarCode);
+        params.put(!SWBox.isChecked()?"strNewBarCode":"strOldBarCode", strOldBarCode);
+        params.put(!SWBox.isChecked()?"strOldBarCode":"strNewBarCode", strNewBarCode);
         LogUtil.WriteLog(Boxing.class, TAG_SaveT_BarCodeToStockADF, strOldBarCode+"||"+strNewBarCode);
-        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null,  URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
+        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null,  URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
     }
 
 
@@ -181,29 +186,33 @@ public class Boxing extends BaseActivity {
         LogUtil.WriteLog(Boxing.class, TAG_GetT_OutBarCodeInfoByBoxADF,result);
         ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            StockInfo_Model  stockInfoModel=returnMsgModel.getModelJson();
-            if(isUnbox){
-                this.unStockInfoModel=stockInfoModel;
-                txtunBatch.setText(stockInfoModel.getBatchNo());
-                txtunBoxQty.setText(stockInfoModel.getQty()+"/"+stockInfoModel.getPalletQty());
-                txtunMaterialName.setText(stockInfoModel.getMaterialDesc());
-                txtunCompany.setText(stockInfoModel.getStrongHoldName());
-                txtunStatus.setText(stockInfoModel.getStrStatus());
-                txt_UnEDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
-                if(SWBox.isChecked()){
-                    this.stockInfoModel=new StockInfo_Model();
-                    this.stockInfoModel.setQty(0f);
+            try {
+                StockInfo_Model stockInfoModel = returnMsgModel.getModelJson();
+                if (isUnbox) {
+                    this.unStockInfoModel = stockInfoModel;
+                    txtunBatch.setText(stockInfoModel.getBatchNo());
+                    txtunBoxQty.setText(stockInfoModel.getQty() + "");
+                    txtunMaterialName.setText(stockInfoModel.getMaterialDesc());
+                    txtunCompany.setText(stockInfoModel.getStrongHoldName());
+                    txtunStatus.setText(stockInfoModel.getStrStatus());
+                    txt_UnEDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
+                    if (SWBox.isChecked()) {
+                        this.stockInfoModel = new StockInfo_Model();
+                        this.stockInfoModel.setQty(0f);
+                    }
+                } else {
+                    this.stockInfoModel = stockInfoModel;
+                    txtBatch.setText(stockInfoModel.getBatchNo());
+                    txtBoxQty.setText(stockInfoModel.getQty() + "");
+                    txtMaterialName.setText(stockInfoModel.getMaterialDesc());
+                    txtCompany.setText(stockInfoModel.getStrongHoldName());
+                    txtStatus.setText(stockInfoModel.getStrStatus());
+                    txt_EDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
                 }
-            }else{
-                this.stockInfoModel=stockInfoModel;
-                txtBatch.setText(stockInfoModel.getBatchNo());
-                txtBoxQty.setText(stockInfoModel.getQty()+"/"+stockInfoModel.getPalletQty());
-                txtMaterialName.setText(stockInfoModel.getMaterialDesc());
-                txtCompany.setText(stockInfoModel.getStrongHoldName());
-                txtStatus.setText(stockInfoModel.getStrStatus());
-                txt_EDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
+            }catch (Exception ex){
+                ToastUtil.show(returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(isUnbox?edtUnboxCode:edtBoxCode);
             }
-
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
@@ -220,9 +229,13 @@ public class Boxing extends BaseActivity {
            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
            }.getType());
            MessageBox.Show(context, returnMsgModel.getMessage());
+           if(returnMsgModel.getHeaderStatus().equals("S")){
+               clearFrm();
+           }
        } catch (Exception ex) {
            MessageBox.Show(context, ex.getMessage());
        }
+       CommonUtil.setEditFocus(edtUnboxCode);
    }
 
 
@@ -261,5 +274,27 @@ public class Boxing extends BaseActivity {
 //            return getString(R.string.Error_PackageQtyBiger);
 //        }
         return "";
+    }
+
+
+    void clearFrm(){
+        this.unStockInfoModel=new StockInfo_Model();
+        this.stockInfoModel=new StockInfo_Model();
+        edtBoxCode.setText("");
+        edtUnboxCode.setText("");
+        edtBoxNum.setText("");
+        txtunBatch.setText("");
+        txtunBoxQty.setText("");
+        txtunMaterialName.setText("");
+        txtunCompany.setText("");
+        txtunStatus.setText("");
+        txt_UnEDate.setText("");
+        txtBatch.setText("");
+        txtBoxQty.setText("");
+        txtMaterialName.setText("");
+        txtCompany.setText("");
+        txtStatus.setText("");
+        txt_EDate.setText("");
+        CommonUtil.setEditFocus(edtUnboxCode);
     }
 }

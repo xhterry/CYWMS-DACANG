@@ -61,6 +61,16 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private String PartNo;
     private int PickModel; //下架方式 1-整托 2-整箱 3-零数
     private Float AmountQty;//零数
+    private String TaskNo;
+
+
+    public String getTaskNo() {
+        return TaskNo;
+    }
+
+    public void setTaskNo(String taskNo) {
+        TaskNo = taskNo;
+    }
 
     public String getErpVoucherNo() {
         return ErpVoucherNo;
@@ -486,6 +496,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeString(this.PartNo);
         dest.writeInt(this.PickModel);
         dest.writeValue(this.AmountQty);
+        dest.writeString(this.TaskNo);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -534,6 +545,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.PartNo = in.readString();
         this.PickModel = in.readInt();
         this.AmountQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.TaskNo = in.readString();
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {

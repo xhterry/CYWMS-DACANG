@@ -1,8 +1,6 @@
 package com.xx.chinetek.cywms.Receiption;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -33,7 +31,6 @@ import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
-import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -46,7 +43,6 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.xx.chinetek.cywms.R.id.lsv_ReceiptScan;
@@ -115,6 +111,7 @@ public class ReceiptionScan extends BaseActivity {
     ArrayList<ReceiptDetail_Model> receiptDetailModels;
     ArrayList<BarCodeInfo> barCodeInfos=null;
     Receipt_Model receiptModel=null;
+  //  boolean isDel=false;//删除已扫条码
 
     @Override
     protected void initViews() {
@@ -214,12 +211,9 @@ public class ReceiptionScan extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 receiptDetailModels = returnMsgModel.getModelJson();
                 //自动确认扫描箱号
-                if (barCodeInfos != null )
-                    for (BarCodeInfo barCodeInfo : barCodeInfos) {
-                        CheckBarcode(barCodeInfo);
-                        InitFrm(barCodeInfo);
-                    }
-                BindListVIew(receiptDetailModels);
+                if (barCodeInfos != null) {
+                    Bindbarcode(barCodeInfos);
+                }
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
             }
@@ -238,14 +232,8 @@ public class ReceiptionScan extends BaseActivity {
             ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
-                List<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
-                if (barCodeInfos != null && barCodeInfos.size() != 0) {
-                    for (BarCodeInfo barCodeInfo : barCodeInfos) {
-                        if (!CheckBarcode(barCodeInfo))
-                            break;
-                    }
-                    InitFrm(barCodeInfos.get(0));
-                }
+                ArrayList<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
+                Bindbarcode(barCodeInfos);
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
             }
@@ -264,7 +252,7 @@ public class ReceiptionScan extends BaseActivity {
             ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
-                ToastUtil.show(returnMsgModel.getMessage());
+                MessageBox.Show(context,returnMsgModel.getMessage());
                 Intent intent=new Intent(context, QCMaterialChoice.class);
                 //换入参数待定
                 String ErpVourcherNo=returnMsgModel.getMaterialDoc();
@@ -293,59 +281,88 @@ public class ReceiptionScan extends BaseActivity {
     }
 
 
-    boolean CheckBarcode(BarCodeInfo barCodeInfo){
-        boolean isChecked=false;
-        if(barCodeInfo!=null && receiptDetailModels!=null){
-            ReceiptDetail_Model receiptDetailModel=new ReceiptDetail_Model(barCodeInfo.getMaterialNo(),barCodeInfo.getRowNo(),barCodeInfo.getRowNoDel());
-            int index=receiptDetailModels.indexOf(receiptDetailModel);
-            if(index!=-1) {
-                if (receiptDetailModels.get(index).getLstBarCode() == null)
-                    receiptDetailModels.get(index).setLstBarCode(new ArrayList<BarCodeInfo>());
-                if(receiptDetailModels.get(index).getLstBarCode().size()!=0){
-                    if(!barCodeInfo.getBatchNo().equals(receiptDetailModels.get(index).getLstBarCode().get(0).getBatchNo())) {
-                        MessageBox.Show(context, getString(R.string.Error_ReceivebatchError) + "|" + barCodeInfo.getSerialNo());
-                        return false;
-                    }
-                    if(!barCodeInfo.getSupPrdBatch().equals(receiptDetailModels.get(index).getLstBarCode().get(0).getSupPrdBatch())) {
-                        MessageBox.Show(context, getString(R.string.Error_ProductbatchError) + "|" + barCodeInfo.getSerialNo());
-                        return false;
+    void Bindbarcode( ArrayList<BarCodeInfo> barCodeInfos){
+       // isDel=false;
+        if (barCodeInfos != null && barCodeInfos.size() != 0) {
+            for (BarCodeInfo barCodeInfo : barCodeInfos) {
+                if (barCodeInfo != null && receiptDetailModels != null) {
+                    ReceiptDetail_Model receiptDetailModel = new ReceiptDetail_Model(barCodeInfo.getMaterialNo(), barCodeInfo.getRowNo(), barCodeInfo.getRowNoDel());
+                    final  int index = receiptDetailModels.indexOf(receiptDetailModel);
+                    if (index != -1) {
+                        if (receiptDetailModels.get(index).getLstBarCode() == null)
+                            receiptDetailModels.get(index).setLstBarCode(new ArrayList<BarCodeInfo>());
+                        final int barIndex = receiptDetailModels.get(index).getLstBarCode().indexOf(barCodeInfo);
+                        if(barIndex!=-1) {
+                          //  if(isDel){
+                                RemoveBarcode(index, barIndex);
+//                            }else {
+//                                new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
+//                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                // TODO 自动生成的方法
+//                                                RemoveBarcode(index, barIndex);
+//                                                isDel = true;
+//                                            }
+//                                        }).setNegativeButton("取消", null).show();
+//                            }
+                        }
+                        else {
+                            if (!CheckBarcode(barCodeInfo, index))
+                                break;
+                        }
+                        RefeshFrm(index);
+                    } else {
+                        MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + barCodeInfo.getSerialNo());
+                        break;
                     }
                 }
-                int barIndex = receiptDetailModels.get(index).getLstBarCode().indexOf(barCodeInfo);
-                isChecked = barIndex == -1 ? Addbarcode(index, barCodeInfo) : RemoveBarcode(index, barIndex);
-            }else {
-                MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + barCodeInfo.getSerialNo());
+
+            }
+            InitFrm(barCodeInfos.get(0));
+        }
+    }
+
+
+    boolean CheckBarcode(BarCodeInfo barCodeInfo,int index) {
+        boolean isChecked = false;
+        if (receiptDetailModels.get(index).getRemainQty() == 0) {
+            MessageBox.Show(context, getString(R.string.Error_ReceiveFinish));
+            return false;
+        }
+
+        if (receiptDetailModels.get(index).getLstBarCode().size() != 0) {
+            if (!barCodeInfo.getBatchNo().equals(receiptDetailModels.get(index).getLstBarCode().get(0).getBatchNo())) {
+                MessageBox.Show(context, getString(R.string.Error_ReceivebatchError) + "|" + barCodeInfo.getSerialNo());
+                return false;
+            }
+            if (!barCodeInfo.getSupPrdBatch().equals(receiptDetailModels.get(index).getLstBarCode().get(0).getSupPrdBatch())) {
+                MessageBox.Show(context, getString(R.string.Error_ProductbatchError) + "|" + barCodeInfo.getSerialNo());
+                return false;
             }
         }
+        isChecked =Addbarcode(index, barCodeInfo);
         return isChecked;
     }
 
 
     boolean RemoveBarcode(final  int index, final int barIndex){
-        new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO 自动生成的方法
-                        float qty=receiptDetailModels.get(index).getScanQty()-receiptDetailModels.get(index).getLstBarCode().get(barIndex).getQty();
-                        receiptDetailModels.get(index).getLstBarCode().remove(barIndex);
-                        receiptDetailModels.get(index).setScanQty(qty);
-                        RefeshFrm(index);
-                    }
-                }).setNegativeButton("取消", null).show();
+        float qty=receiptDetailModels.get(index).getScanQty()-receiptDetailModels.get(index).getLstBarCode().get(barIndex).getQty();
+        receiptDetailModels.get(index).getLstBarCode().remove(barIndex);
+        receiptDetailModels.get(index).setScanQty(qty);
         return true;
     }
 
     boolean Addbarcode(int index,BarCodeInfo barCodeInfo){
         float qty=receiptDetailModels.get(index).getScanQty()+barCodeInfo.getQty();
+
         if(qty<=receiptDetailModels.get(index).getRemainQty()) {
             receiptDetailModels.get(index).getLstBarCode().add(0, barCodeInfo);
             receiptDetailModels.get(index).setBatchNo(barCodeInfo.getBatchNo());
             receiptDetailModels.get(index).setScanQty(qty);
-            RefeshFrm(index);
             return true;
         }else{
-            MessageBox.Show(context, getString(R.string.Error_ReceiveFinish));
+            MessageBox.Show(context, getString(R.string.Error_ReceiveOver));
         }
         return false;
     }

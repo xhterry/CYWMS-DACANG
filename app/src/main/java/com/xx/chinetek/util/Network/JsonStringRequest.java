@@ -58,6 +58,7 @@ public class JsonStringRequest extends JsonRequest<String> {
             in = in.substring(1);
         }
         in = in.replace("\\\\n", "\n");
+        in = in.replace("\\r", "");
         return in.replace("\\", "");
     }
 }

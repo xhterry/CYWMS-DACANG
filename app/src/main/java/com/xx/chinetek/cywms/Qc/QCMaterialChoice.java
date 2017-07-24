@@ -95,8 +95,11 @@ public class QCMaterialChoice extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
             List<QualityInfo_Model> temp=new ArrayList<>();
-            for (int i=0;i<qualityInfoModels.size();i++){
+            int size=qualityInfoModels.size();
+            for (int i=0;i<size;i++){
                 if(qcMaterialChioceItemAdapter.getStates(i)){
+                    qualityInfoModels.get(i).setQuanUserNo(BaseApplication.userInfo.getQuanUserNo());
+                    qualityInfoModels.get(i).setStrQuanUserNo(BaseApplication.userInfo.getQuanUserNo());
                     temp.add(0,qualityInfoModels.get(i));
                 }
             }
@@ -119,6 +122,7 @@ public class QCMaterialChoice extends BaseActivity {
         qcMaterialChioceItemAdapter.modifyStates(position);
         qcMaterialChioceItemAdapter.notifyDataSetInvalidated();
     }
+
 
 
     void GetT_QualityListADF(String ErpVourcherNo){

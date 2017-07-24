@@ -37,7 +37,15 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     /// 取样人编号
     /// </summary>
     private String QuanUserNo;
+    private String StrQuanUserNo;
 
+    public String getStrQuanUserNo() {
+        return StrQuanUserNo;
+    }
+
+    public void setStrQuanUserNo(String strQuanUserNo) {
+        StrQuanUserNo = strQuanUserNo;
+    }
 
     public int getIsDel() {
         return IsDel;
@@ -175,6 +183,17 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        QualityInfo_Model that = (QualityInfo_Model) o;
+
+        return ErpVoucherNo.equals(that.getErpVoucherNo());
+
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -195,10 +214,10 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         dest.writeValue(this.DesQty);
         dest.writeString(this.WarehouseNo);
         dest.writeString(this.BatchNo);
-        dest.writeString(this.QuanUserNo);
         dest.writeString(this.ErpInVoucherNo);
         dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.QuanUserNo);
+        dest.writeString(this.StrQuanUserNo);
     }
 
     protected QualityInfo_Model(Parcel in) {
@@ -216,10 +235,10 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         this.DesQty = (Float) in.readValue(Float.class.getClassLoader());
         this.WarehouseNo = in.readString();
         this.BatchNo = in.readString();
-        this.QuanUserNo = in.readString();
         this.ErpInVoucherNo = in.readString();
         this.ErpVoucherNo = in.readString();
         this.QuanUserNo = in.readString();
+        this.StrQuanUserNo = in.readString();
     }
 
     public static final Creator<QualityInfo_Model> CREATOR = new Creator<QualityInfo_Model>() {

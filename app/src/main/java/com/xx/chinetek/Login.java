@@ -111,6 +111,7 @@ public class Login extends BaseActivity {
         ReturnMsgModel<UerInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<UerInfo>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             BaseApplication.userInfo=returnMsgModel.getModelJson();
+            BaseApplication.userInfo.setPDAPrintIP(URLModel.PrintIP);
             SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
             Intent intent=new Intent(context, URLModel.isWMS?MainActivity.class: com.xx.chinetek.cyproduct.MainActivity.class);
             startActivity(intent);

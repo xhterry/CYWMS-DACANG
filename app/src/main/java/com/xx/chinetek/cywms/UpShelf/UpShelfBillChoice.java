@@ -73,7 +73,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(R.id.edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_NoTask)
+    @ViewInject(R.id.btn_PrintQCLabrl)
     Button btnNoTask;
 
 
@@ -137,8 +137,8 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
                     //扫描箱条码
                     final Map<String, String> params = new HashMap<String, String>();
                     params.put("SerialNo", code);
-                    params.put("VoucherNo", inStockTaskInfoModel.getErpVoucherNo());
-                    params.put("TaskNo", inStockTaskInfoModel.getTaskNo());
+                    params.put("ERPVoucherNo", "");
+                    params.put("TaskNo","");
                     params.put("AreaNo", "");
                     LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_ScanInStockModelADF, code);
                     RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_ScanInStockModelADF, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_ScanInStockModelADF, null, URLModel.GetURL().GetT_ScanInStockModelADF, params, null);
@@ -205,7 +205,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
                 //调用GetT_InStockList 赋值ERP订单号字段，获取Receipt_Model列表，跳转到扫描界面
                 InStockTaskInfo_Model inStockTaskInfoModel=new InStockTaskInfo_Model();
                 inStockTaskInfoModel.setStatus(1);
-                inStockTaskInfoModel.setErpVoucherNo(stockInfoModels.get(0).getErpVoucherNo());
+                inStockTaskInfoModel.setTaskNo(stockInfoModels.get(0).getTaskNo());
                 GetT_InStockTaskInfoList(inStockTaskInfoModel);
                 //   } else {
                 //     MessageBox.Show(context, R.string.Error_BarcodeNotInList);

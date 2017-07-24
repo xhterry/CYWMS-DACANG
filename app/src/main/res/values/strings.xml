@@ -80,7 +80,10 @@
     <string name="InnerMove_title">移库</string>
     <string name="InnerMove_subtitle">移库扫描</string>
     <string name="Intentory_title">盘点</string>
+    <string name="Intentory_add">新增盘点</string>
     <string name="Intentory_subtitle">盘点扫描</string>
+    <string name="Intentory_desc">盘点描述：</string>
+    <string name="Intentory_remark">备注：</string>
     <string name="Intentory_detail">盘点明细</string>
     <string name="MaterialChange_title">转料-入库单选择</string>
     <string name="MaterialChange_out_subtitle">转料-出库单选择</string>
@@ -104,6 +107,8 @@
     <string name="cancelPicking">取消拣货</string>
     <string name="LogUpload">日志上报</string>
     <string name="submit">提交</string>
+    <string name="QCprint">取样打印</string>
+    <string name="QCprintLabel">打印取样标签</string>
     <string name="Add">新增</string>
     <string name="filter_content">请输入或扫描单号/物料条码</string>
     <string name="filter_deleteContent">请输入或扫描删除的物料条码</string>
@@ -213,15 +218,19 @@
     <string name="Msg_GetT_OutStockDetailListByHeaderIDADF">获取下架复核明细列表...</string>
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
     <string name="Msg_SaveT_InStockDetailADF">保存收货明细列表...</string>
+    <string name="Msg_SaveT_StockADF">移库提交中...</string>
     <string name="Msg_SaveT_QuanlitySampADF">保存质检明细列表...</string>
     <string name="Msg_SaveT_OutStockTaskDetailADF">保存下架明细列表...</string>
     <string name="Msg_SaveT_InStockTaskDetailADF">保存上架明细列表...</string>
     <string name="Msg_UpadteT_QualityUserADF">提交取样物料信息...</string>
+    <string name="Msg_PrintQYAndroid">打印取样标签...</string>
     <string name="Msg_GetT_SerialNoByPalletADF">获取条码信息...</string>
     <string name="Msg_GetAreaModelADF">获取库位信息...</string>
     <string name="Msg_GetT_GetT_QualityListADF">获取质检物料信息...</string>
     <string name="Msg_GetT_PalletADF">获取托盘条码信息...</string>
     <string name="Msg_SaveT_PalletDetailADF">保存组托信息...</string>
+    <string name="Msg_SaveT_BarCodeToStockADF">保存拆零信息...</string>
+    <string name="Msg_Delete_PalletORBarCodeADF">删除组托信息...</string>
     <string name="Msg_Get_PalletDetailByVoucherNo">获取托盘信息...</string>
     <string name="Msg_Del_PalletOrbarcode">托盘信息删除中...</string>
     <string name="Msg_GetT_QualityListADF">获取质检信息...</string>
@@ -258,18 +267,22 @@
     <string name="Error_Setting_IPAdressError">IP地址格式错误！</string>
     <string name="Error_isnotnum">请输入数字！</string>
     <string name="Error_QtyBiger">拆箱数量超过箱内物品数量！</string>
-    <string name="Error_QCQtyBiger">数量已超过取样数量！</string>
+    <string name="Error_QCQtyBiger">扫描数量已超过取样数量！</string>
     <string name="Error_materialNotMatch">扫描物料与质检物料属性不一致！</string>
-    <string name="Error_offshelfQtyBiger">数量已超过下架数量！</string>
-    <string name="Error_PackageQtyBiger">数量超过包装数量！</string>
+    <string name="Error_offshelfQtyBiger">扫描数量已超过下架数量！</string>
+    <string name="Error_PackageQtyBiger">扫描数量超过包装数量！</string>
     <string name="Error_PackageQtyBigerThenWo">数量超过工单数量！</string>
     <string name="Error_BarcodeNotInList">此物料不在列表中！</string>
     <string name="Error_NotPickMaterial">此物料不是当前需要拣货物料！</string>
     <string name="Error_BarcodeScaned">该条码已扫描！</string>
+    <string name="Error_SampNumIsNotMatch">取样数量不足！</string>
     <string name="Error_ReceiveFinish">该物料已收货完毕！</string>
+    <string name="Error_ReceiveOver">该物料收货数量大于可收数量！</string>
     <string name="Error_ReviewFinish">该物料已复核完毕！</string>
+    <string name="Error_MaterialNotMatch">物料属性不一致，无法装箱！</string>
     <string name="Error_Inventory_NoArtNo">此货位号不在盘点任务中</string>
     <string name="Error_Upshelf_HasStcokNotSubmit">存在未提交数据，请先提交</string>
+    <string name="Error_PickingFinish">拣货完毕！</string>
 
 
 </resources>

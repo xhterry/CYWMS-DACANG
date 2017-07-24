@@ -26,6 +26,7 @@ public class ReceiptScanDetailAdapter extends BaseAdapter {
 
         public TextView txtbarcode;
         public TextView txtScanNum;
+        public TextView txtRemainQty;
         public TextView txtMaterialDesc;
     }
 
@@ -58,11 +59,11 @@ public class ReceiptScanDetailAdapter extends BaseAdapter {
         ListItemView listItemView = null;
         if (convertView == null) {
             listItemView = new ListItemView();
-
             // 获取list_item布局文件的视图
             convertView = listContainer.inflate(R.layout.item_receiptscandetail_listview,null);
             listItemView.txtbarcode = (TextView) convertView.findViewById(R.id.txtbarcode);
             listItemView.txtScanNum = (TextView) convertView.findViewById(R.id.txtScanNum);
+            listItemView.txtRemainQty = (TextView) convertView.findViewById(R.id.txtRemainQty);
             listItemView.txtMaterialDesc = (TextView) convertView.findViewById(R.id.txtMaterialDesc);
             convertView.setTag(listItemView);
         } else {
@@ -71,6 +72,7 @@ public class ReceiptScanDetailAdapter extends BaseAdapter {
         ReceiptDetail_Model receiptDetailModel=receiptDetailModels.get(selectID);
         listItemView.txtbarcode.setText(receiptDetailModel.getMaterialNo());
         listItemView.txtScanNum.setText("扫描数："+receiptDetailModel.getScanQty());
+        listItemView.txtRemainQty.setText("收货数："+receiptDetailModel.getRemainQty());
         listItemView.txtMaterialDesc.setText(receiptDetailModel.getMaterialDesc());
         return convertView;
     }

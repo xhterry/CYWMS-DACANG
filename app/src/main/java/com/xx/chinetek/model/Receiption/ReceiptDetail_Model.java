@@ -369,7 +369,7 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
 
         ReceiptDetail_Model that = (ReceiptDetail_Model) o;
 
-        return MaterialNo.equals(that.MaterialNo) && RowNo.equals(that.RowNo) && RowNoDel.equals(RowNoDel);
+        return MaterialNo.equals(that.MaterialNo) && RowNo.equals(that.RowNo) && RowNoDel.equals(that.RowNoDel);
 
     }
 
