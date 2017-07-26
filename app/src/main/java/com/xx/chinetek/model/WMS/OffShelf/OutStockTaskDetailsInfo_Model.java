@@ -19,16 +19,22 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
 
     }
 
-    public OutStockTaskDetailsInfo_Model(String MaterialNo,String RowNo){
+    public OutStockTaskDetailsInfo_Model(String MaterialNo,String RowNo,String RowNoDel){
         this.MaterialNo=MaterialNo;
         this.RowNo=RowNo;
+        this.RowNoDel=RowNoDel;
+    }
+
+    public OutStockTaskDetailsInfo_Model(String MaterialNo,String StrongHoldCode){
+        this.MaterialNo=MaterialNo;
+        this.StrongHoldCode=StrongHoldCode;
     }
 
     private String MaterialNo;
     private String MaterialDesc;
     private Float TaskQty;
     private Float QualityQty;
-    private Float RemainQty;
+    private Float RemainQty; //剩余拣货数量
     private Float ShelveQty;
     private String TaskNo;
     private Float IsQualitycomp;
@@ -42,6 +48,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private Float ShelvePackCount;
     private String VoucherNo;
     private String RowNo;
+    private String RowNoDel;
     private String TrackNo;
     private String Unit;
     private Float UnQualityQty;
@@ -62,6 +69,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private String ToStorageLoc;
     private String FromStorageLoc;
     private Float OutStockQty;
+    private Float StockQty; //库存数量
     private Float LimitStockQtySAP;
     private Float RemainsSockQtySAP;
     private Float PackFlag;
@@ -74,7 +82,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private String ErpVoucherNo;
     private Float IsSmallBatch;
     private String UnitName;
-    private Float ScanQty;
+    private Float ScanQty;  //扫描数量
     private String AreaNo;
     private String HouseNo;
     private String WareHouseNo;
@@ -94,7 +102,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     /// <summary>
     /// ERP指定的发货批次
     /// </summary>
-    private String FromBatchno;
+    private String FromBatchNo;
     /// <summary>
     /// ERP指定发货储位
     /// </summary>
@@ -102,7 +110,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     /// <summary>
     /// ERP指定发货仓库
     /// </summary>
-    private String FromErpWareHouse;
+    private String FromErpWarehouse;
     /// <summary>
     /// 给ERP指定的发货批次
     /// </summary>
@@ -117,6 +125,46 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private String ToErpWareHouse;
     private int FloorType;
 
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OutStockTaskDetailsInfo_Model that = (OutStockTaskDetailsInfo_Model) o;
+
+        return MaterialNo.equals(that.MaterialNo) && StrongHoldCode.equals(that.StrongHoldCode);
+       // return MaterialNo.equals(that.MaterialNo) && RowNo.equals(that.RowNo);
+
+    }
+
+    public Float getStockQty() {
+        return StockQty;
+    }
+
+    public void setStockQty(Float stockQty) {
+        StockQty = stockQty;
+    }
+
+    public String getRowNoDel() {
+        return RowNoDel;
+    }
+
+    public void setRowNoDel(String rowNoDel) {
+        RowNoDel = rowNoDel;
+    }
+
+    private Boolean isOutOfstock=false; //是否缺货
+
+    public Boolean getOutOfstock() {
+        return isOutOfstock;
+    }
+
+    public void setOutOfstock(Boolean outOfstock) {
+        isOutOfstock = outOfstock;
+    }
+
     public String getIsSpcBatch() {
         return IsSpcBatch;
     }
@@ -125,12 +173,12 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         IsSpcBatch = isSpcBatch;
     }
 
-    public String getFromBatchno() {
-        return FromBatchno;
+    public String getFromBatchNo() {
+        return FromBatchNo;
     }
 
-    public void setFromBatchno(String fromBatchno) {
-        FromBatchno = fromBatchno;
+    public void setFromBatchNo(String fromBatchno) {
+        FromBatchNo = fromBatchno;
     }
 
     public String getFromErpAreaNo() {
@@ -141,12 +189,12 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         FromErpAreaNo = fromErpAreaNo;
     }
 
-    public String getFromErpWareHouse() {
-        return FromErpWareHouse;
+    public String getFromErpWarehouse() {
+        return FromErpWarehouse;
     }
 
-    public void setFromErpWareHouse(String fromErpWareHouse) {
-        FromErpWareHouse = fromErpWareHouse;
+    public void setFromErpWarehouse(String fromErpWareHouse) {
+        FromErpWarehouse = fromErpWareHouse;
     }
 
     public String getToBatchno() {
@@ -687,19 +735,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     }
 
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OutStockTaskDetailsInfo_Model that = (OutStockTaskDetailsInfo_Model) o;
-
-        return MaterialNo.equals(that.MaterialNo) && RowNo.equals(that.RowNo);
-
-    }
-
-
     @Override
     public int describeContents() {
         return 0;
@@ -726,6 +761,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeValue(this.ShelvePackCount);
         dest.writeString(this.VoucherNo);
         dest.writeString(this.RowNo);
+        dest.writeString(this.RowNoDel);
         dest.writeString(this.TrackNo);
         dest.writeString(this.Unit);
         dest.writeValue(this.UnQualityQty);
@@ -746,6 +782,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeString(this.ToStorageLoc);
         dest.writeString(this.FromStorageLoc);
         dest.writeValue(this.OutStockQty);
+        dest.writeValue(this.StockQty);
         dest.writeValue(this.LimitStockQtySAP);
         dest.writeValue(this.RemainsSockQtySAP);
         dest.writeValue(this.PackFlag);
@@ -772,13 +809,14 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeString(this.MoveType);
         dest.writeString(this.BatchNo);
         dest.writeString(this.IsSpcBatch);
-        dest.writeString(this.FromBatchno);
+        dest.writeString(this.FromBatchNo);
         dest.writeString(this.FromErpAreaNo);
-        dest.writeString(this.FromErpWareHouse);
+        dest.writeString(this.FromErpWarehouse);
         dest.writeString(this.ToBatchno);
         dest.writeString(this.ToErpAreaNo);
         dest.writeString(this.ToErpWareHouse);
         dest.writeInt(this.FloorType);
+        dest.writeValue(this.isOutOfstock);
     }
 
     protected OutStockTaskDetailsInfo_Model(Parcel in) {
@@ -801,6 +839,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.ShelvePackCount = (Float) in.readValue(Float.class.getClassLoader());
         this.VoucherNo = in.readString();
         this.RowNo = in.readString();
+        this.RowNoDel = in.readString();
         this.TrackNo = in.readString();
         this.Unit = in.readString();
         this.UnQualityQty = (Float) in.readValue(Float.class.getClassLoader());
@@ -823,6 +862,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.ToStorageLoc = in.readString();
         this.FromStorageLoc = in.readString();
         this.OutStockQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.StockQty = (Float) in.readValue(Float.class.getClassLoader());
         this.LimitStockQtySAP = (Float) in.readValue(Float.class.getClassLoader());
         this.RemainsSockQtySAP = (Float) in.readValue(Float.class.getClassLoader());
         this.PackFlag = (Float) in.readValue(Float.class.getClassLoader());
@@ -849,13 +889,14 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.MoveType = in.readString();
         this.BatchNo = in.readString();
         this.IsSpcBatch = in.readString();
-        this.FromBatchno = in.readString();
+        this.FromBatchNo = in.readString();
         this.FromErpAreaNo = in.readString();
-        this.FromErpWareHouse = in.readString();
+        this.FromErpWarehouse = in.readString();
         this.ToBatchno = in.readString();
         this.ToErpAreaNo = in.readString();
         this.ToErpWareHouse = in.readString();
         this.FloorType = in.readInt();
+        this.isOutOfstock = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<OutStockTaskDetailsInfo_Model> CREATOR = new Creator<OutStockTaskDetailsInfo_Model>() {

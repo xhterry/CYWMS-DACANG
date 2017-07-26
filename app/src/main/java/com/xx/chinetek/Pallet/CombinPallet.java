@@ -121,7 +121,6 @@ public class CombinPallet extends BaseActivity {
     protected void initData() {
         super.initData();
         ShowPalletScan(SWPallet.isChecked());
-
     }
 
     /*
@@ -138,7 +137,7 @@ public class CombinPallet extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO 自动生成的方法
                             palletDetailModels.get(0).getLstBarCode().remove(position);
-                            txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
+                            txtCartonNum.setText(ShowNum());
                             BindListVIew( palletDetailModels.get(0).getLstBarCode());
                         }
                     }).setNegativeButton("取消", null).show();
@@ -267,7 +266,7 @@ public class CombinPallet extends BaseActivity {
                 txtStatus.setText(barCodeInfo.getStrStatus());
                 txtMaterialName.setText(barCodeInfo.getMaterialDesc());
                 txtEDate.setText(CommonUtil.DateToString(barCodeInfo.getEDate()));
-                txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
+                txtCartonNum.setText(ShowNum());
                 BindListVIew(palletDetailModels.get(0).getLstBarCode());
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
@@ -290,7 +289,7 @@ public class CombinPallet extends BaseActivity {
             if(palletDetailModels!=null) {
                 BindListVIew(palletDetailModels.get(0).getLstBarCode());
                 edtPallet.setEnabled(false);
-                txtCartonNum.setText(palletDetailModels.get(0).getLstBarCode().size() + "");
+                txtCartonNum.setText(ShowNum());
             }
             CommonUtil.setEditFocus(edtBarcode);
         }else{
@@ -354,7 +353,21 @@ public class CombinPallet extends BaseActivity {
         txtStatus.setText("");
         txtEDate.setText("");
         txtMaterialName.setText("");
-        txtCartonNum.setText("0");
+        txtCartonNum.setText("0 / 0");
+    }
+
+    Float GetAllQunantity(){
+        Float sumPackageQty=0f;
+        if(palletDetailModels.get(0).getLstBarCode()!=null) {
+            for (BarCodeInfo barCodeInfo : palletDetailModels.get(0).getLstBarCode()) {
+                sumPackageQty += barCodeInfo.getQty();
+            }
+        }
+       return sumPackageQty;
+    }
+
+    String ShowNum(){
+        return new StringBuffer().append(palletDetailModels.get(0).getLstBarCode().size()).append(" / ").append(GetAllQunantity()).toString();
     }
 
 

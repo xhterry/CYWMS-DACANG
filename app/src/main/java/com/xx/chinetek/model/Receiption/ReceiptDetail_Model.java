@@ -35,6 +35,34 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     private String UnitName;
     private Float RemainQty;
     private Float ScanQty;
+    private String IsSpcBatch;
+    private String QcCode;
+    private String QcDesc;
+
+    public String getQcCode() {
+        return QcCode;
+    }
+
+    public void setQcCode(String qcCode) {
+        QcCode = qcCode;
+    }
+
+    public String getQcDesc() {
+        return QcDesc;
+    }
+
+    public void setQcDesc(String qcDesc) {
+        QcDesc = qcDesc;
+    }
+
+    public String getIsSpcBatch() {
+        return IsSpcBatch;
+    }
+
+    public void setIsSpcBatch(String isSpcBatch) {
+        IsSpcBatch = isSpcBatch;
+    }
+
     //private List<SerialNo_Model> lstSerialNo=new ArrayList<SerialNo_Model>();
     private List<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
     private String SaleName ;
@@ -55,6 +83,15 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     private Date ArrivalDate;
     public Date ShipmentDate;
     public Date ArrStockDate;
+    private String FromBatchNo;
+
+    public String getFromBatchNo() {
+        return FromBatchNo;
+    }
+
+    public void setFromBatchNo(String fromBatchNo) {
+        FromBatchNo = fromBatchNo;
+    }
 
     public Date getSupPrdDate() {
         return SupPrdDate;
@@ -421,6 +458,9 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         dest.writeString(this.UnitName);
         dest.writeValue(this.RemainQty);
         dest.writeValue(this.ScanQty);
+        dest.writeString(this.IsSpcBatch);
+        dest.writeString(this.QcCode);
+        dest.writeString(this.QcDesc);
         dest.writeTypedList(this.lstBarCode);
         dest.writeString(this.SaleName);
         dest.writeString(this.ErpVoucherNo);
@@ -439,6 +479,7 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         dest.writeLong(this.ArrivalDate != null ? this.ArrivalDate.getTime() : -1);
         dest.writeLong(this.ShipmentDate != null ? this.ShipmentDate.getTime() : -1);
         dest.writeLong(this.ArrStockDate != null ? this.ArrStockDate.getTime() : -1);
+        dest.writeString(this.FromBatchNo);
     }
 
     protected ReceiptDetail_Model(Parcel in) {
@@ -461,6 +502,9 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         this.UnitName = in.readString();
         this.RemainQty = (Float) in.readValue(Float.class.getClassLoader());
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.IsSpcBatch = in.readString();
+        this.QcCode = in.readString();
+        this.QcDesc = in.readString();
         this.lstBarCode = in.createTypedArrayList(BarCodeInfo.CREATOR);
         this.SaleName = in.readString();
         this.ErpVoucherNo = in.readString();
@@ -483,6 +527,7 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         this.ShipmentDate = tmpShipmentDate == -1 ? null : new Date(tmpShipmentDate);
         long tmpArrStockDate = in.readLong();
         this.ArrStockDate = tmpArrStockDate == -1 ? null : new Date(tmpArrStockDate);
+        this.FromBatchNo = in.readString();
     }
 
     public static final Creator<ReceiptDetail_Model> CREATOR = new Creator<ReceiptDetail_Model>() {

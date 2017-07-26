@@ -36,7 +36,7 @@ public class URLModel {
     public String GetT_OutStockReviewListADF = GetWCFAdress()+"GetT_OutStockReviewListADF"; //下架复核表头
     public String GetT_InStockDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InStockDetailListByHeaderIDADF"; //收货表体
     public String GetT_InTaskDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InTaskDetailListByHeaderIDADF"; //上架表体
-    public String GetT_OutStockDetailListByHeaderIDADF = GetWCFAdress()+"GetT_OutStockDetailListByHeaderIDADF"; //下架复核表体
+    public String GetT_OutStockReviewDetailListByHeaderIDADF = GetWCFAdress()+"GetT_OutStockReviewDetailListByHeaderIDADF"; //下架复核表体
     public String SaveT_InStockDetailADF = GetWCFAdress()+"SaveT_InStockDetailADF"; //提交收货
     public String SaveT_StockADF = GetWCFAdress()+"SaveT_StockADF"; //提交移库
     public String UpadteT_QualityUserADF = GetWCFAdress()+"UpadteT_QualityUserADF"; //更新取样人
@@ -47,9 +47,12 @@ public class URLModel {
     public String GetT_GetT_OutBarCodeInfoByBoxADF=GetWCFAdress()+"GetT_OutBarCodeInfoByBoxADF";//获取拆托条码信息
     public String GetT_PalletDetailByNoADF=GetWCFAdress()+"GetT_PalletDetailByNoADF";//获取托盘信息
     public String GetT_PalletDetailByBarCodeADF=GetWCFAdress()+"GetT_PalletDetailByBarCodeADF";//库存获取托盘信息
+    public String ScanOutStockReviewByBarCodeADF=GetWCFAdress()+"ScanOutStockReviewByBarCodeADF";//复核条码扫描
     public String GetT_ScanInStockModelADF=GetWCFAdress()+"GetT_ScanInStockModelADF";//上架扫描条码或者托盘条码
     public String GetAreaModelADF=GetWCFAdress()+"GetAreaModelADF";//上架扫描库位
+    public String SaveT_OutStockReviewPalletDetailADF=GetWCFAdress()+"SaveT_OutStockReviewPalletDetailADF";//保存组托信息
     public String SaveT_PalletDetailADF=GetWCFAdress()+"SaveT_PalletDetailADF";//保存组托信息
+    public String SaveT_OutStockReviewDetailADF=GetWCFAdress()+"SaveT_OutStockReviewDetailADF";//提交复核明细
     public String PrintAndroid=GetWCFAdress()+"PrintAndroid";//打印期初标签
     public String Delete_PalletORBarCodeADF=GetWCFAdress()+"Delete_PalletORBarCodeADF";//删除组托信息
     public String SaveT_BarCodeToStockADF=GetWCFAdress()+"SaveT_BarCodeToStockADF";//装箱拆箱提交

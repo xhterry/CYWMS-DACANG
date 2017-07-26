@@ -307,8 +307,21 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     public OutStockDetailInfo_Model() {
     }
 
-    public OutStockDetailInfo_Model(String MaterialNo){
+    public OutStockDetailInfo_Model(String MaterialNo,String StrongHoldCode){
         this.MaterialNo=MaterialNo;
+        this.StrongHoldCode=StrongHoldCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OutStockDetailInfo_Model that = (OutStockDetailInfo_Model) o;
+
+        return MaterialNo.equals(that.MaterialNo) && StrongHoldCode.equals(that.StrongHoldCode);
+        // return MaterialNo.equals(that.MaterialNo) && RowNo.equals(that.RowNo);
+
     }
 
     @Override

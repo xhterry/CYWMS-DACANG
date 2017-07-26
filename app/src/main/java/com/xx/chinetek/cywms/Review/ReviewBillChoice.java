@@ -113,8 +113,6 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
         InitListView();
     }
 
-
-
     /**
      * Listview item点击事件
      */
@@ -157,7 +155,7 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
      */
     private void InitListView() {
         OutStock_Model outStock_model=new OutStock_Model();
-        outStock_model.setStatus(1);
+        outStock_model.setStatus(2);
         GetT_InStockTaskInfoList(outStock_model);
     }
 

@@ -34,7 +34,7 @@ public class Base_Model implements Parcelable {
     private int VoucherType;
     private String StrVoucherType;
     private int MaterialNoID;
-    private String StrongHoldCode;
+    public String StrongHoldCode;
     private String StrongHoldName;
     private String CompanyCode;
     private String ERPCreater ;

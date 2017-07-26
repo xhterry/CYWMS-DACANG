@@ -160,7 +160,7 @@ public class Boxing extends BaseActivity {
             Float qty = Float.parseFloat(num);
             unStockInfoModel.setAmountQty(qty);
         }
-        if(!(unStockInfoModel.getMaterialNo().equals(stockInfoModel.getMaterialNo()) &&
+        if(!SWBox.isChecked()&& !(unStockInfoModel.getMaterialNo().equals(stockInfoModel.getMaterialNo()) &&
             unStockInfoModel.getStrongHoldCode().equals(stockInfoModel.getStrongHoldCode()))){
             MessageBox.Show(context, getString(R.string.Error_MaterialNotMatch));
             CommonUtil.setEditFocus(edtBoxCode);

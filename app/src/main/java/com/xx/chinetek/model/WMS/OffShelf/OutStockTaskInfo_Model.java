@@ -54,6 +54,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String PickLeaderUserNo;
     private String PickUserNo;
 
+
     public String getPickUserNo() {
         return PickUserNo;
     }

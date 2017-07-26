@@ -20,6 +20,7 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     private String Unit;
     private String UnitName;
     private Float QuanQty;
+    private Float SampQty;
     private Float UnQuanQty;
     private Float DesQty;
     private String WarehouseNo;
@@ -38,6 +39,15 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     /// </summary>
     private String QuanUserNo;
     private String StrQuanUserNo;
+
+
+    public Float getSampQty() {
+        return SampQty;
+    }
+
+    public void setSampQty(Float sampQty) {
+        SampQty = sampQty;
+    }
 
     public String getStrQuanUserNo() {
         return StrQuanUserNo;

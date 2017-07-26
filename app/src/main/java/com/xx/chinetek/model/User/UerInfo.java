@@ -22,6 +22,9 @@ public class UerInfo extends User implements Parcelable {
     private String ReceiveAreaNo;
     private String ToSampWareHouseNo;
     private String ToSampAreaNo;
+    private String PickWareHouseNo ;
+    private String PickAreaNo;
+
     private List<UserGroupInfo> lstUserGroup;
     private List<MenuInfo> lstMenu;
     private List<WareHouseInfo> lstWarehouse;
@@ -29,6 +32,22 @@ public class UerInfo extends User implements Parcelable {
     /// 取样人编号
     /// </summary>
     private String QuanUserNo;
+
+    public String getPickWareHouseNo() {
+        return PickWareHouseNo;
+    }
+
+    public void setPickWareHouseNo(String pickWareHouseNo) {
+        PickWareHouseNo = pickWareHouseNo;
+    }
+
+    public String getPickAreaNo() {
+        return PickAreaNo;
+    }
+
+    public void setPickAreaNo(String pickAreaNo) {
+        PickAreaNo = pickAreaNo;
+    }
 
     public String getToSampWareHouseNo() {
         return ToSampWareHouseNo;
@@ -182,6 +201,8 @@ public class UerInfo extends User implements Parcelable {
         dest.writeString(this.ReceiveAreaNo);
         dest.writeString(this.ToSampWareHouseNo);
         dest.writeString(this.ToSampAreaNo);
+        dest.writeString(this.PickWareHouseNo);
+        dest.writeString(this.PickAreaNo);
         dest.writeTypedList(this.lstUserGroup);
         dest.writeTypedList(this.lstMenu);
         dest.writeTypedList(this.lstWarehouse);
@@ -202,6 +223,8 @@ public class UerInfo extends User implements Parcelable {
         this.ReceiveAreaNo = in.readString();
         this.ToSampWareHouseNo = in.readString();
         this.ToSampAreaNo = in.readString();
+        this.PickWareHouseNo = in.readString();
+        this.PickAreaNo = in.readString();
         this.lstUserGroup = in.createTypedArrayList(UserGroupInfo.CREATOR);
         this.lstMenu = in.createTypedArrayList(MenuInfo.CREATOR);
         this.lstWarehouse = in.createTypedArrayList(WareHouseInfo.CREATOR);

@@ -177,7 +177,7 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
                 Barcode_Model barcodeModel=new Barcode_Model();
                 barcodeModel.setCreater(BaseApplication.userInfo.getUserName());
                 barcodeModel.setMaterialNo( qualityInfoModels.get(i).getMaterialNo());
-                barcodeModel.setQty( qualityInfoModels.get(i).getQuanQty());
+                barcodeModel.setQty( qualityInfoModels.get(i).getSampQty());
                 barcodeModel.setIP(URLModel.PrintIP);
                 temp.add(0,barcodeModel);
             }
@@ -187,7 +187,6 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         params.put("json",ModelJson );
         LogUtil.WriteLog(QCBillChoice.class, TAG_PrintQYAndroid, ModelJson);
         RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintQYAndroid, getString(R.string.Msg_PrintQYAndroid), context, mHandler, RESULT_PrintQYAndroid, null,  URLModel.GetURL().PrintQYAndroid, params, null);
-
     }
 
     /**

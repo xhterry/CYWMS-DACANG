@@ -26,6 +26,7 @@ public class ReviewScanDetailAdapter extends BaseAdapter {
 
         public TextView txtbarcode;
         public TextView txtScanNum;
+        public TextView txtRemainQty;
         public TextView txtMaterialDesc;
     }
 
@@ -63,6 +64,7 @@ public class ReviewScanDetailAdapter extends BaseAdapter {
             convertView = listContainer.inflate(R.layout.item_receiptscandetail_listview,null);
             listItemView.txtbarcode = (TextView) convertView.findViewById(R.id.txtbarcode);
             listItemView.txtScanNum = (TextView) convertView.findViewById(R.id.txtScanNum);
+            listItemView.txtRemainQty = (TextView) convertView.findViewById(R.id.txtRemainQty);
             listItemView.txtMaterialDesc = (TextView) convertView.findViewById(R.id.txtMaterialDesc);
             convertView.setTag(listItemView);
         } else {
@@ -71,6 +73,7 @@ public class ReviewScanDetailAdapter extends BaseAdapter {
         OutStockDetailInfo_Model outStockDetailInfoModel=outStockDetailInfoModels.get(selectID);
         listItemView.txtbarcode.setText(outStockDetailInfoModel.getMaterialNo());
         listItemView.txtScanNum.setText("扫描数："+outStockDetailInfoModel.getScanQty());
+        listItemView.txtRemainQty.setText("复核数："+outStockDetailInfoModel.getOutStockQty());
         listItemView.txtMaterialDesc.setText(outStockDetailInfoModel.getMaterialDesc());
         return convertView;
     }
