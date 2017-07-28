@@ -74,6 +74,13 @@ public class ReceiptScanDetailAdapter extends BaseAdapter {
         listItemView.txtScanNum.setText("扫描数："+receiptDetailModel.getScanQty());
         listItemView.txtRemainQty.setText("收货数："+receiptDetailModel.getRemainQty());
         listItemView.txtMaterialDesc.setText(receiptDetailModel.getMaterialDesc());
+        if (receiptDetailModel.getScanQty()!=0 &&
+                receiptDetailModel.getScanQty().compareTo(receiptDetailModel.getRemainQty())<0) {
+            convertView.setBackgroundResource(R.color.khaki);
+        }
+        else if (receiptDetailModel.getScanQty().compareTo(receiptDetailModel.getRemainQty())==0) {
+            convertView.setBackgroundResource(R.color.springgreen);
+        }
         return convertView;
     }
 

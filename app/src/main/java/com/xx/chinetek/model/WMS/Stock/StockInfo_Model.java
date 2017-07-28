@@ -62,7 +62,69 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private int PickModel; //下架方式 1-整托 2-整箱 3-零数
     private Float AmountQty;//零数
     private String TaskNo;
+    private String AreaType;
+    private String ToErpAreaNo;
+    private String ToErpWarehouse;
+    private String FromErpAreaNo;
+    private String FromErpWarehouse;
+    private String FromBatchNo;
+    private int OutstockDetailID;
 
+    public int getOutstockDetailID() {
+        return OutstockDetailID;
+    }
+
+    public void setOutstockDetailID(int outstockDetailID) {
+        OutstockDetailID = outstockDetailID;
+    }
+
+    public String getToErpAreaNo() {
+        return ToErpAreaNo;
+    }
+
+    public void setToErpAreaNo(String toErpAreaNo) {
+        ToErpAreaNo = toErpAreaNo;
+    }
+
+    public String getToErpWarehouse() {
+        return ToErpWarehouse;
+    }
+
+    public void setToErpWarehouse(String toErpWarehouse) {
+        ToErpWarehouse = toErpWarehouse;
+    }
+
+    public String getFromErpAreaNo() {
+        return FromErpAreaNo;
+    }
+
+    public void setFromErpAreaNo(String fromErpAreaNo) {
+        FromErpAreaNo = fromErpAreaNo;
+    }
+
+    public String getFromErpWarehouse() {
+        return FromErpWarehouse;
+    }
+
+    public void setFromErpWarehouse(String fromErpWarehouse) {
+        FromErpWarehouse = fromErpWarehouse;
+    }
+
+    public String getFromBatchNo() {
+        return FromBatchNo;
+    }
+
+    public void setFromBatchNo(String fromBatchNo) {
+        FromBatchNo = fromBatchNo;
+    }
+
+    public String getAreaType() {
+        return AreaType;
+    }
+
+    public void setAreaType(String areaType) {
+        AreaType = areaType;
+    }
 
     public String getTaskNo() {
         return TaskNo;
@@ -439,7 +501,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
 
         StockInfo_Model that = (StockInfo_Model) o;
 
-        return SerialNo.equals(that.SerialNo);
+        return SerialNo.equals(that.SerialNo) ;
 
     }
 
@@ -497,6 +559,13 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeInt(this.PickModel);
         dest.writeValue(this.AmountQty);
         dest.writeString(this.TaskNo);
+        dest.writeString(this.AreaType);
+        dest.writeString(this.ToErpAreaNo);
+        dest.writeString(this.ToErpWarehouse);
+        dest.writeString(this.FromErpAreaNo);
+        dest.writeString(this.FromErpWarehouse);
+        dest.writeString(this.FromBatchNo);
+        dest.writeInt(this.OutstockDetailID);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -546,6 +615,13 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.PickModel = in.readInt();
         this.AmountQty = (Float) in.readValue(Float.class.getClassLoader());
         this.TaskNo = in.readString();
+        this.AreaType = in.readString();
+        this.ToErpAreaNo = in.readString();
+        this.ToErpWarehouse = in.readString();
+        this.FromErpAreaNo = in.readString();
+        this.FromErpWarehouse = in.readString();
+        this.FromBatchNo = in.readString();
+        this.OutstockDetailID = in.readInt();
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {

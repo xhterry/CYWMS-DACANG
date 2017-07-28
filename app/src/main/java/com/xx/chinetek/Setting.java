@@ -56,6 +56,8 @@ public class Setting extends BaseActivity {
     @ViewInject(R.id.rb_Product)
     RadioButton rbProduct;
 
+    final  int LogUploadIndex=1;
+
     @Override
     protected void initViews() {
         super.initViews();
@@ -90,29 +92,40 @@ public class Setting extends BaseActivity {
             dialog.show();
             String url="http://"+ URLModel.IPAdress+":"+URLModel.Port+"/UpLoad.ashx";
             File[] files = new File(Environment.getExternalStorageDirectory()+"/wmshht/").listFiles();
-            List<File> list= Arrays.asList(files);
+            final List<File> list= Arrays.asList(files);
             Collections.sort(list, new FileComparator());
-            RequestParams params = new RequestParams(url);
-            params.setMultipart(true);
-            params.addBodyParameter("file",new File(list.get(list.size()-1).getAbsolutePath()));
-            x.http().post(params, new Callback.CommonCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
-                    //加载成功回调，返回获取到的数据
-                    ToastUtil.show(result);
-                }
-                @Override
-                public void onFinished() {
-                    dialog.dismiss();
-                }
-                @Override
-                public void onCancelled(CancelledException cex) {
-                }
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    ToastUtil.show(ex.toString());
-                }
-            });
+
+            for(int i=0;i<LogUploadIndex;i++) {
+                final  int index=i;
+                RequestParams params = new RequestParams(url);
+                params.setMultipart(true);
+                params.addBodyParameter("file", new File(list.get(list.size()-i-1).getAbsolutePath()));
+                x.http().post(params, new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        //加载成功回调，返回获取到的数据
+                        if(index==LogUploadIndex-1) {
+                            ToastUtil.show(result);
+                        }
+                    }
+
+                    @Override
+                    public void onFinished() {
+                        if(index==LogUploadIndex-1) {
+                            dialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+                        ToastUtil.show(ex.toString());
+                    }
+                });
+            }
         }
         return super.onOptionsItemSelected(item);
     }

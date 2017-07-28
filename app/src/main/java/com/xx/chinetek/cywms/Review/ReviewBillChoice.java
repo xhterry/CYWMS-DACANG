@@ -109,7 +109,6 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         outStockModels=new ArrayList<>();
-        edtfilterContent.setText("");
         InitListView();
     }
 
@@ -154,6 +153,7 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
      * 初始化加载listview
      */
     private void InitListView() {
+        edtfilterContent.setText("");
         OutStock_Model outStock_model=new OutStock_Model();
         outStock_model.setStatus(2);
         GetT_InStockTaskInfoList(outStock_model);

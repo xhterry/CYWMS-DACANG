@@ -50,8 +50,10 @@ public class URLModel {
     public String ScanOutStockReviewByBarCodeADF=GetWCFAdress()+"ScanOutStockReviewByBarCodeADF";//复核条码扫描
     public String GetT_ScanInStockModelADF=GetWCFAdress()+"GetT_ScanInStockModelADF";//上架扫描条码或者托盘条码
     public String GetAreaModelADF=GetWCFAdress()+"GetAreaModelADF";//上架扫描库位
+    public String GetAreaModelByMoveStockADF=GetWCFAdress()+"GetAreaModelByMoveStockADF";//移库扫描库位
     public String SaveT_OutStockReviewPalletDetailADF=GetWCFAdress()+"SaveT_OutStockReviewPalletDetailADF";//保存组托信息
     public String SaveT_PalletDetailADF=GetWCFAdress()+"SaveT_PalletDetailADF";//保存组托信息
+    public String PrintLpkPalletAndroid=GetWCFAdress()+"PrintLpkPalletAndroid";//打印托盘标签
     public String SaveT_OutStockReviewDetailADF=GetWCFAdress()+"SaveT_OutStockReviewDetailADF";//提交复核明细
     public String PrintAndroid=GetWCFAdress()+"PrintAndroid";//打印期初标签
     public String Delete_PalletORBarCodeADF=GetWCFAdress()+"Delete_PalletORBarCodeADF";//删除组托信息

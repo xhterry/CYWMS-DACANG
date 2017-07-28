@@ -80,7 +80,13 @@ public class UpShelfScanDetailAdapter extends BaseAdapter {
         listItemView.txtRemainQty.setText("上架数："+inStockTaskDetailsInfoModel.getRemainQty());
         listItemView.txtreferStock.setText("推荐库位："+GetReferStock(inStockTaskDetailsInfoModel.getLstArea()));
         listItemView.txtMaterialDesc.setText(inStockTaskDetailsInfoModel.getMaterialDesc());
-
+        if (inStockTaskDetailsInfoModel.getScanQty()!=0 &&
+                inStockTaskDetailsInfoModel.getScanQty().compareTo(inStockTaskDetailsInfoModel.getRemainQty())<0) {
+            convertView.setBackgroundResource(R.color.khaki);
+        }
+        else if (inStockTaskDetailsInfoModel.getScanQty().compareTo(inStockTaskDetailsInfoModel.getRemainQty())==0) {
+            convertView.setBackgroundResource(R.color.springgreen);
+        }
         return convertView;
     }
 

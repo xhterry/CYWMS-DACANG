@@ -20,6 +20,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     private String MaterialNo;
     private String MaterialDesc;
     private String RowNo;
+    private String RowNoDel;
     private String Plant;
     private String PlantName;
     private String ToStorageLoc;
@@ -42,11 +43,88 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     public String VoucherNo;
     private Float ScanQty;
     public List<SerialNo_Model> lstSerialNo;
-    private List<StockInfo_Model> lstStockInfo=new ArrayList<StockInfo_Model>();
+    private List<StockInfo_Model> lstStock=new ArrayList<StockInfo_Model>();
     public String BatchNo;
     public int IsSerial;
     public String PartNo;
+    /// <summary>
+    /// 给ERP指定的发货批次
+    /// </summary>
+    private String ToBatchno;
+    /// <summary>
+    /// 给ERP指定发货储位
+    /// </summary>
+    private String ToErpAreaNo;
+    /// <summary>
+    /// 给ERP指定发货仓库
+    /// </summary>
+    private String ToErpWareHouse;
+
+    private String SourceVoucherNo;
+
+    private String SourceRowNo;
+
+    private int OutstockDetailID;
+
+    public int getOutstockDetailID() {
+        return OutstockDetailID;
+    }
+
+    public void setOutstockDetailID(int outstockDetailID) {
+        OutstockDetailID = outstockDetailID;
+    }
+
+
     public int OustockStatus=0;//：0：StockInfo_Model不存在未组托条码  1：StockInfo_Model存在未组托条码
+
+    public String getSourceVoucherNo() {
+        return SourceVoucherNo;
+    }
+
+    public void setSourceVoucherNo(String sourceVoucherNo) {
+        SourceVoucherNo = sourceVoucherNo;
+    }
+
+    public String getSourceRowNo() {
+        return SourceRowNo;
+    }
+
+    public void setSourceRowNo(String sourceRowNo) {
+        SourceRowNo = sourceRowNo;
+    }
+
+    public String getToBatchno() {
+        return ToBatchno;
+    }
+
+    public void setToBatchno(String toBatchno) {
+        ToBatchno = toBatchno;
+    }
+
+    public String getToErpAreaNo() {
+        return ToErpAreaNo;
+    }
+
+    public void setToErpAreaNo(String toErpAreaNo) {
+        ToErpAreaNo = toErpAreaNo;
+    }
+
+    public String getToErpWareHouse() {
+        return ToErpWareHouse;
+    }
+
+    public void setToErpWareHouse(String toErpWareHouse) {
+        ToErpWareHouse = toErpWareHouse;
+    }
+
+
+    public String getRowNoDel() {
+        return RowNoDel;
+    }
+
+    public void setRowNoDel(String rowNoDel) {
+        RowNoDel = rowNoDel;
+    }
 
     public int getOustockStatus() {
         return OustockStatus;
@@ -72,12 +150,12 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         this.ERPVoucherNo = ERPVoucherNo;
     }
 
-    public List<StockInfo_Model> getLstStockInfo() {
-        return lstStockInfo;
+    public List<StockInfo_Model> getLstStock() {
+        return lstStock;
     }
 
-    public void setLstStockInfo(List<StockInfo_Model> lstStockInfo) {
-        this.lstStockInfo = lstStockInfo;
+    public void setLstStock(List<StockInfo_Model> lstStockInfo) {
+        this.lstStock = lstStockInfo;
     }
 
     public String getBatchNo() {
@@ -337,6 +415,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeString(this.RowNo);
+        dest.writeString(this.RowNoDel);
         dest.writeString(this.Plant);
         dest.writeString(this.PlantName);
         dest.writeString(this.ToStorageLoc);
@@ -359,10 +438,16 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         dest.writeString(this.VoucherNo);
         dest.writeValue(this.ScanQty);
         dest.writeTypedList(this.lstSerialNo);
-        dest.writeTypedList(this.lstStockInfo);
+        dest.writeTypedList(this.lstStock);
         dest.writeString(this.BatchNo);
         dest.writeInt(this.IsSerial);
         dest.writeString(this.PartNo);
+        dest.writeString(this.ToBatchno);
+        dest.writeString(this.ToErpAreaNo);
+        dest.writeString(this.ToErpWareHouse);
+        dest.writeString(this.SourceVoucherNo);
+        dest.writeString(this.SourceRowNo);
+        dest.writeInt(this.OutstockDetailID);
         dest.writeInt(this.OustockStatus);
     }
 
@@ -373,6 +458,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.RowNo = in.readString();
+        this.RowNoDel = in.readString();
         this.Plant = in.readString();
         this.PlantName = in.readString();
         this.ToStorageLoc = in.readString();
@@ -395,10 +481,16 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         this.VoucherNo = in.readString();
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());
         this.lstSerialNo = in.createTypedArrayList(SerialNo_Model.CREATOR);
-        this.lstStockInfo = in.createTypedArrayList(StockInfo_Model.CREATOR);
+        this.lstStock = in.createTypedArrayList(StockInfo_Model.CREATOR);
         this.BatchNo = in.readString();
         this.IsSerial = in.readInt();
         this.PartNo = in.readString();
+        this.ToBatchno = in.readString();
+        this.ToErpAreaNo = in.readString();
+        this.ToErpWareHouse = in.readString();
+        this.SourceVoucherNo = in.readString();
+        this.SourceRowNo = in.readString();
+        this.OutstockDetailID = in.readInt();
         this.OustockStatus = in.readInt();
     }
 

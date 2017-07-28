@@ -314,7 +314,7 @@ public class QCScan extends BaseActivity {
                     if (!TBunboxType.isChecked()) {//整箱
                         Float scanQty = Float.parseFloat(txtScanQty.getText().toString());//以扫描数量
                         //if (stockInfoModel.getQty() >= qualityDetailInfoModels.get(0).getRemainQty() - scanQty) {
-                        if (stockInfoModel.getQty() >= qualityDetailInfoModels.get(0).getQuanQty() - scanQty) {
+                        if (stockInfoModel.getQty() > qualityDetailInfoModels.get(0).getSampQty() - scanQty) {
                             MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
                             CommonUtil.setEditFocus(edtQCScanBarcode);
                             return;

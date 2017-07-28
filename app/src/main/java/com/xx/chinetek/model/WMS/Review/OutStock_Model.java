@@ -155,6 +155,17 @@ public class OutStock_Model extends Base_Model implements Parcelable{
         Note = note;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OutStock_Model that = (OutStock_Model) o;
+
+        return ErpVoucherNo.equals(that.ErpVoucherNo) ;
+
+    }
     @Override
     public int describeContents() {
         return 0;

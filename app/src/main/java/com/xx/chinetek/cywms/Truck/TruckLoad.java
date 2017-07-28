@@ -62,6 +62,13 @@ public class TruckLoad extends BaseActivity {
         CommonUtil.setEditFocus(edtVourcherNo);
     }
 
+    @Override
+    protected void initData() {
+        super.initData();
+        String voucherNo=getIntent().getStringExtra("VoucherNo");
+        edtVourcherNo.setText(voucherNo);
+    }
+
     @Event(value = R.id.edt_VourcherNo,type = View.OnKeyListener.class)
     private  boolean edtVourcherNoonKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键

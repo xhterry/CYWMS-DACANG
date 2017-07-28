@@ -14,6 +14,16 @@ public class ReturnMsgModel<T> {
 
     private String MaterialDoc;
 
+    private String TaskNo;
+
+    public String getTaskNo() {
+        return TaskNo;
+    }
+
+    public void setTaskNo(String taskNo) {
+        TaskNo = taskNo;
+    }
+
     public String getMaterialDoc() {
         return MaterialDoc;
     }

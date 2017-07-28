@@ -41,7 +41,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}.txt</fileNamePattern>
             <!--最大保存7天的日志-->
-            <maxHistory>7</maxHistory>
+            <maxHistory>3</maxHistory>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
 

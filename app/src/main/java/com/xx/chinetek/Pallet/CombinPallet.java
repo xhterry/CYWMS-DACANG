@@ -28,6 +28,7 @@ import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -53,11 +54,13 @@ public class CombinPallet extends BaseActivity {
 
     String TAG_GetT_PalletDetailByNoADF="CombinPallet_GetT_PalletDetailByNoADF";
     String TAG_SaveT_PalletDetailADF="CombinPallet_TAG_SaveT_PalletDetailADF";
+    String TAG_PrintLpkPalletAndroid="CombinPallet_TAG_PrintLpkPalletAndroid";
 
     Context context=CombinPallet.this;
     private final int RESULT_GetT_SerialNoByPalletADF = 101;
     private final int RESULT_GetT_PalletDetailByNoADF = 102;
     private final int RESULT_SaveT_PalletDetailADF = 103;
+    private final int RESULT_PrintLpkPalletAndroid = 104;
     boolean isBarcodeScaned=false;
 
     @Override
@@ -72,6 +75,9 @@ public class CombinPallet extends BaseActivity {
                 break;
             case RESULT_SaveT_PalletDetailADF:
                 AnalysisSaveT_PalletDetailADF((String) msg.obj);
+                break;
+            case RESULT_PrintLpkPalletAndroid:
+                AnalysisPrintLpkPalletAndroid((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -311,12 +317,37 @@ public class CombinPallet extends BaseActivity {
             MessageBox.Show(context, returnMsgModel.getMessage());
             if(returnMsgModel.getHeaderStatus().equals("S")) {
                 InitFrm();
-                 CommonUtil.setEditFocus(SWPallet.isChecked()?edtPallet:edtBarcode);
+
+                String palletNo=returnMsgModel.getTaskNo();
+                Barcode_Model barcodeModel=new Barcode_Model();
+                barcodeModel.setSerialNo(palletNo);
+                barcodeModel.setIP(URLModel.PrintIP);
+                ArrayList<Barcode_Model> barcodeModels=new ArrayList<>();
+                barcodeModels.add(barcodeModel);
+                String modelJson = GsonUtil.parseModelToJson(barcodeModels);
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("json", modelJson);
+                LogUtil.WriteLog(CombinPallet.class, TAG_PrintLpkPalletAndroid, modelJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintLpkPalletAndroid, getString(R.string.Msg_PrintLpkPalletAndroid), context, mHandler, RESULT_PrintLpkPalletAndroid, null,  URLModel.GetURL().PrintLpkPalletAndroid, params, null);
             }
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
             CommonUtil.setEditFocus(edtBarcode);
         }
+    }
+
+
+    void AnalysisPrintLpkPalletAndroid(String result){
+        try {
+            LogUtil.WriteLog(CombinPallet.class, TAG_PrintLpkPalletAndroid, result);
+            ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+            }.getType());
+                MessageBox.Show(context,returnMsgModel.getMessage());
+
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+        CommonUtil.setEditFocus(SWPallet.isChecked()?edtPallet:edtBarcode);
     }
 
     /*
