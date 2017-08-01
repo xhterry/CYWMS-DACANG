@@ -54,6 +54,8 @@ public class URLModel {
     public String SaveT_OutStockReviewPalletDetailADF=GetWCFAdress()+"SaveT_OutStockReviewPalletDetailADF";//保存组托信息
     public String SaveT_PalletDetailADF=GetWCFAdress()+"SaveT_PalletDetailADF";//保存组托信息
     public String PrintLpkPalletAndroid=GetWCFAdress()+"PrintLpkPalletAndroid";//打印托盘标签
+    public String PrintLpkApartAndroid=GetWCFAdress()+"PrintLpkApartAndroid";//打印拆零标签
+    public String QYReprintAndroid=GetWCFAdress()+"QYReprintAndroid";//打印取样标签
     public String SaveT_OutStockReviewDetailADF=GetWCFAdress()+"SaveT_OutStockReviewDetailADF";//提交复核明细
     public String PrintAndroid=GetWCFAdress()+"PrintAndroid";//打印期初标签
     public String Delete_PalletORBarCodeADF=GetWCFAdress()+"Delete_PalletORBarCodeADF";//删除组托信息
@@ -70,7 +72,7 @@ public class URLModel {
     public String GetT_OutTaskListADF=GetWCFAdress()+"GetT_OutTaskListADF";//获取下架表头信息
     public String GetPickUserListByUserADF=GetWCFAdress()+"GetPickUserListByUserADF";//获取拣货人员信息
     public String SavePickUserListADF=GetWCFAdress()+"SavePickUserListADF";//提交拣货分配人员信息
-    public String GetStockADF=GetWCFAdress()+"GetStockADF";//获取查询信息
+    public String GetStockByMaterialNoADF=GetWCFAdress()+"GetStockByMaterialNoADF";//获取查询信息
 
     //生产
     public String GetT_LineManageInfoModel=GetWCFAdress()+"GetT_LineManageInfoModel";//获取作业记录

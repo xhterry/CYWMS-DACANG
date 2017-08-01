@@ -22,7 +22,6 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -113,7 +112,6 @@ public class ReviewScan extends BaseActivity {
     ArrayList<OutStockDetailInfo_Model> outStockDetailInfoModels;
     ArrayList<StockInfo_Model> stockInfoModels;//扫描条码
     OutStock_Model outStockModel=null;
-    PalletDetail_Model palletDetailModel=null;
     ReviewScanDetailAdapter reviewScanDetailAdapter;
 
     @Override
@@ -129,7 +127,7 @@ public class ReviewScan extends BaseActivity {
     protected void initData() {
         super.initData();
         outStockModel=getIntent().getParcelableExtra("outStock_model");
-        palletDetailModel=getIntent().getParcelableExtra("palletDetailModel");
+        stockInfoModels=getIntent().getParcelableArrayListExtra("stockInfoModels");
         GetOutStockDetailInfo(outStockModel);
 
     }
@@ -184,7 +182,7 @@ public class ReviewScan extends BaseActivity {
 
     @Event(R.id.btn_Combinepallet)
     private void btnCombinepalletClick(View view){
-        ArrayList<PalletDetail_Model> palletDetailModels=GetPalletModels();
+        ArrayList<OutStockDetailInfo_Model> palletDetailModels=GetPalletModels();
         if(palletDetailModels.size()!=0){
             final Map<String, String> params = new HashMap<String, String>();
             String ModelJson = parseModelToJson(palletDetailModels);
@@ -201,7 +199,6 @@ public class ReviewScan extends BaseActivity {
         intent.putExtra("VoucherNo",txtVoucherNo.getText().toString());
         intent.putParcelableArrayListExtra("outStockDetailInfoModels",outStockDetailInfoModels);
         startActivityForResult(intent,RequestCode_PalletDetail);
-
     }
 
     /*
@@ -242,8 +239,8 @@ public class ReviewScan extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockDetailInfoModels=returnMsgModel.getModelJson();
             //自动确认扫描箱号
-            if(palletDetailModel!=null && palletDetailModel.getLstStockInfo()!=null) {
-                for (StockInfo_Model stockInfoModel : palletDetailModel.getLstStockInfo()) {
+            if(stockInfoModels!=null && stockInfoModels.size()!=0) {
+                for (StockInfo_Model stockInfoModel :stockInfoModels) {
                     CheckBarcode(stockInfoModel);
                     InitFrm(stockInfoModel);
                 }
@@ -264,9 +261,10 @@ public class ReviewScan extends BaseActivity {
             ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
+                MessageBox.Show(context,returnMsgModel.getMessage());
                 //更改实体类组托状态
                 for (int i=0;i<outStockDetailInfoModels.size();i++) {
-                    for(int j=0;i<outStockDetailInfoModels.get(i).getLstStock().size();j++){
+                    for(int j=0;j<outStockDetailInfoModels.get(i).getLstStock().size();j++){
                         outStockDetailInfoModels.get(i).getLstStock().get(j).setStockBarCodeStatus(1);
                     }
                     outStockDetailInfoModels.get(i).setOustockStatus(0);
@@ -336,23 +334,22 @@ public class ReviewScan extends BaseActivity {
     }
 
     boolean CheckBarcode(StockInfo_Model StockInfo_Model){
-        if(StockInfo_Model!=null && outStockDetailInfoModels!=null){
-            OutStockDetailInfo_Model outStockDetailInfoModel=new OutStockDetailInfo_Model(StockInfo_Model.getMaterialNo(),StockInfo_Model.getStrongHoldCode());
-            int index=outStockDetailInfoModels.indexOf(outStockDetailInfoModel);
-            if(index!=-1){
+        if(StockInfo_Model!=null && outStockDetailInfoModels!=null) {
+            int index = -1;
+            int size = outStockDetailInfoModels.size();
+            for (int i = 0; i < size; i++) {
+                if (outStockDetailInfoModels.get(i).getID() == StockInfo_Model.getOutstockDetailID()) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1) {
                 if (outStockDetailInfoModels.get(index).getLstStock() == null)
                     outStockDetailInfoModels.get(index).setLstStock(new ArrayList<StockInfo_Model>());
 
-                int StockIndex = -1;
-                int size=outStockDetailInfoModels.get(index).getLstStock().size();
-                for (int i=0;i<size;i++) {
-                    StockInfo_Model stockModel = outStockDetailInfoModels.get(index).getLstStock().get(i);
-                    if (stockModel.getOutstockDetailID() == StockInfo_Model.getOutstockDetailID()) {
-                        StockIndex = i;
-                        break;
-                    }
-                }
-                if(StockIndex==-1) {
+                int StockIndex = outStockDetailInfoModels.get(index).getLstStock().indexOf(StockInfo_Model);
+                if (StockIndex == -1) {
+
                     //需要删除
                     outStockDetailInfoModels.get(index).setToBatchno(StockInfo_Model.getBatchNo());
 
@@ -365,13 +362,12 @@ public class ReviewScan extends BaseActivity {
                         MessageBox.Show(context, getString(R.string.Error_ReviewFinish));
                         return false;
                     }
-                }
-                else{
-                    MessageBox.Show(context, getString(R.string.Error_BarcodeScaned)+"|"+StockInfo_Model.getSerialNo());
+                } else {
+                    MessageBox.Show(context, getString(R.string.Error_BarcodeScaned) + "|" + StockInfo_Model.getSerialNo());
                     return false;
                 }
-            }else{
-                MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList)+"|"+StockInfo_Model.getSerialNo());
+            } else {
+                MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + StockInfo_Model.getSerialNo());
                 return false;
             }
         }
@@ -381,31 +377,37 @@ public class ReviewScan extends BaseActivity {
     /*
     获取需要组托条码
      */
-    ArrayList<PalletDetail_Model> GetPalletModels(){
-        ArrayList<PalletDetail_Model> palletDetailModels=new ArrayList<>();
+    ArrayList<OutStockDetailInfo_Model> GetPalletModels(){
+        ArrayList<OutStockDetailInfo_Model> palletDetailModels=new ArrayList<>();
         if(outStockDetailInfoModels!=null) {
             for (OutStockDetailInfo_Model outstockDetailModel : outStockDetailInfoModels) {
-                if (outstockDetailModel.getLstStock() != null) {
-                    ArrayList<StockInfo_Model> tempStockModels = new ArrayList<>();
-                    for (StockInfo_Model stockModel : outstockDetailModel.getLstStock()) {
-                        if (stockModel.getStockBarCodeStatus() == 0) {
-                            tempStockModels.add(0, stockModel);
+                if (outstockDetailModel.getOustockStatus() == 1) {
+                    if (outstockDetailModel.getLstStock() != null) {
+                        ArrayList<StockInfo_Model> tempStockModels = new ArrayList<>();
+                        for (StockInfo_Model stockModel : outstockDetailModel.getLstStock()) {
+                            if (stockModel.getStockBarCodeStatus() == 0) {
+                                tempStockModels.add(0, stockModel);
+                            }
                         }
+                        if (tempStockModels.size() == 0)
+                            continue;
+                        OutStockDetailInfo_Model palletDetail_model = new OutStockDetailInfo_Model();
+                        palletDetail_model.setErpVoucherNo(outstockDetailModel.getErpVoucherNo());
+                        palletDetail_model.setVoucherNo(outstockDetailModel.getVoucherNo());
+                        palletDetail_model.setRowNo(outstockDetailModel.getRowNo());
+                        palletDetail_model.setRowNoDel(outstockDetailModel.getRowNoDel());
+                        palletDetail_model.setCompanyCode(outstockDetailModel.getCompanyCode());
+                        palletDetail_model.setStrongHoldCode(outstockDetailModel.getStrongHoldCode());
+                        palletDetail_model.setStrongHoldName(outstockDetailModel.getStrongHoldName());
+                        palletDetail_model.setVoucherType(999);
+                        palletDetail_model.setMaterialNo(outstockDetailModel.getMaterialNo());
+                        palletDetail_model.setMaterialNoID(outstockDetailModel.getMaterialNoID());
+                        palletDetail_model.setMaterialDesc(outstockDetailModel.getMaterialDesc());
+                        if (outstockDetailModel.getLstStock() != null && outstockDetailModel.getLstStock().size() != 0) {
+                            palletDetail_model.setLstStock(tempStockModels);
+                        }
+                        palletDetailModels.add(palletDetail_model);
                     }
-                    if (tempStockModels.size() == 0)
-                        continue;
-                    PalletDetail_Model palletDetail_model = new PalletDetail_Model();
-                    palletDetail_model.setErpVoucherNo(outstockDetailModel.getErpVoucherNo());
-                    palletDetail_model.setVoucherNo(outstockDetailModel.getVoucherNo());
-                    palletDetail_model.setRowNo(outstockDetailModel.getRowNo());
-                    palletDetail_model.setVoucherType(999);
-                    palletDetail_model.setMaterialNo(outstockDetailModel.getMaterialNo());
-                    palletDetail_model.setMaterialNoID(outstockDetailModel.getMaterialNoID());
-                    palletDetail_model.setMaterialDesc(outstockDetailModel.getMaterialDesc());
-                    if (outstockDetailModel.getLstStock() != null && outstockDetailModel.getLstStock().size() != 0) {
-                        palletDetail_model.setLstStockInfo(tempStockModels);
-                    }
-                    palletDetailModels.add(palletDetail_model);
                 }
             }
         }

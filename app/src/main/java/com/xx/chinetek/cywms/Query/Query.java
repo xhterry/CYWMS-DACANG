@@ -40,7 +40,7 @@ import java.util.Map;
 @ContentView(R.layout.activity_query)
 public class Query extends BaseActivity {
 
-    String TAG_GetStockADF = "Query_GetStockADF";
+    String TAG_GetStockByMaterialNoADF = "Query_GetStockByMaterialNoADF";
 
     private final int RESULT_Msg_GetStockADF=101;
 
@@ -86,15 +86,15 @@ public class Query extends BaseActivity {
                 params.put("barcode", barcode);
                 params.put("type", "1");
                 String para = (new JSONObject(params)).toString();
-                LogUtil.WriteLog(Query.class, TAG_GetStockADF, para);
-                RequestHandler.addRequestWithDialog(Request.Method.POST,TAG_GetStockADF,String.format(getString(R.string.Msg_QueryStockInfo),BaseApplication.toolBarTitle.Title), context, mHandler, RESULT_Msg_GetStockADF, null,  URLModel.GetURL().GetStockADF, params, null);
+                LogUtil.WriteLog(Query.class, TAG_GetStockByMaterialNoADF, para);
+                RequestHandler.addRequestWithDialog(Request.Method.POST,TAG_GetStockByMaterialNoADF,String.format(getString(R.string.Msg_QueryStockInfo),BaseApplication.toolBarTitle.Title), context, mHandler, RESULT_Msg_GetStockADF, null,  URLModel.GetURL().GetStockByMaterialNoADF, params, null);
             }
         }
         return false;
     }
 
     void AnalysisGetStockADFJson(String result){
-        LogUtil.WriteLog(Query.class, TAG_GetStockADF,result);
+        LogUtil.WriteLog(Query.class, TAG_GetStockByMaterialNoADF,result);
         List<StockInfo_Model> stockInfoModels=new ArrayList<>();
         ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){

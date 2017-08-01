@@ -13,18 +13,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.android.volley.Request;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.adapter.wms.Review.ReviewBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Pallet.PalletDetail_Model;
-import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.WMS.Review.OutStock_Model;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -50,9 +48,9 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
 
 
     String TAG_GetT_OutStockReviewListADF = "ReviewBillChoice_GetT_OutStockReviewListADF";
-    String TAG_GetT_PalletDetailByBarCode = "ReviewBillChoice_GetT_PalletDetailByBarCode";
+    String TAG_ScanOutStockReviewByBarCodeADF = "ReviewBillChoice_ScanOutStockReviewByBarCodeADF";
     private final int RESULT_GetT_OutStockReviewListADF = 101;
-    private final int RESULT_GetT_PalletDetailByBarCode=102;
+    private final int RESULT_ScanOutStockReviewByBarCodeADF=102;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -61,8 +59,8 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
             case RESULT_GetT_OutStockReviewListADF:
                 AnalysisGetT_OutStockListADFJson((String) msg.obj);
                 break;
-            case RESULT_GetT_PalletDetailByBarCode:
-                AnalysisGetT_PalletDetailByBarCodeJson((String) msg.obj);
+            case RESULT_ScanOutStockReviewByBarCodeADF:
+                AnalysisScanOutStockReviewByBarCodeADFJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -84,6 +82,7 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
     Context context = ReviewBillChoice.this;
     ReviewBillChioceItemAdapter reviewBillChioceItemAdapter;
     ArrayList<OutStock_Model> outStockModels;
+    ArrayList<StockInfo_Model> stockInfoModels;
 
     @Override
     protected void initViews() {
@@ -136,13 +135,13 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
                 } else {
                     //扫描箱条码
                     final Map<String, String> params = new HashMap<String, String>();
-                    params.put("SerialNo", code);
-                    LogUtil.WriteLog(ReviewBillChoice.class, TAG_GetT_PalletDetailByBarCode, code);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCode, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_PalletDetailByBarCode, null,  URLModel.GetURL().GetT_PalletDetailByBarCodeADF, params, null);
+                    params.put("BarCode", code);
+                    LogUtil.WriteLog(ReviewBillChoice.class, TAG_ScanOutStockReviewByBarCodeADF, code);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_ScanOutStockReviewByBarCodeADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_ScanOutStockReviewByBarCodeADF, null,  URLModel.GetURL().ScanOutStockReviewByBarCodeADF, params, null);
                     return false;
                 }
             }
-            StartScanIntent(null,null);
+           // StartScanIntent(null,null);
             CommonUtil.setEditFocus(edtfilterContent);
         }
         return false;
@@ -178,7 +177,9 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
         ReturnMsgModelList<OutStock_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStock_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockModels=returnMsgModel.getModelJson();
-            if(outStockModels!=null)
+            if (outStockModels != null && outStockModels.size() == 1 && stockInfoModels != null && stockInfoModels.size()!=0)
+                StartScanIntent(outStockModels.get(0), stockInfoModels);
+            else
                 BindListVIew(outStockModels);
         }else
         {
@@ -186,36 +187,33 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
         }
     }
 
-    void AnalysisGetT_PalletDetailByBarCodeJson(String result){
-        LogUtil.WriteLog(ReviewBillChoice.class, TAG_GetT_PalletDetailByBarCode,result);
-        Gson gson = new Gson();
-        ReturnMsgModel<PalletDetail_Model> returnMsgModel = gson.fromJson(result, new TypeToken<ReturnMsgModel<PalletDetail_Model>>() {}.getType());
+    void AnalysisScanOutStockReviewByBarCodeADFJson(String result){
+        LogUtil.WriteLog(ReviewBillChoice.class, TAG_ScanOutStockReviewByBarCodeADF,result);
+        ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            PalletDetail_Model palletDetailModel=returnMsgModel.getModelJson();
-            if(palletDetailModel!=null) {
+            stockInfoModels=returnMsgModel.getModelJson();
+            if(stockInfoModels!=null) {
                 // Receipt_Model receiptModel = new Receipt_Model(barCodeInfo.getBarCode());
                 //  int index = receiptModels.indexOf(receiptModel);
                 //  if (index != -1) {
                 //调用GetT_InStockList 赋值ERP订单号字段，获取Receipt_Model列表，跳转到扫描界面
                 OutStock_Model outStock_model=new OutStock_Model();
-                outStock_model.setStatus(1);
-                outStock_model.setErpVoucherNo(palletDetailModel.getErpVoucherNo());
+                outStock_model.setStatus(2);
+                outStock_model.setErpVoucherNo(stockInfoModels.get(0).getErpVoucherNo());
                 GetT_InStockTaskInfoList(outStock_model);
-                //   } else {
-                //     MessageBox.Show(context, R.string.Error_BarcodeNotInList);
-                // }
             }
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
         }
+        CommonUtil.setEditFocus(edtfilterContent);
     }
 
-    void StartScanIntent(OutStock_Model outStock_model,PalletDetail_Model palletDetailModel){
+    void StartScanIntent(OutStock_Model outStock_model,ArrayList<StockInfo_Model> stockInfoModels){
         Intent intent=new Intent(context,ReviewScan.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("outStock_model",outStock_model);
-        bundle.putParcelable("palletDetailModel",palletDetailModel);
+        bundle.putParcelableArrayList("stockInfoModels",stockInfoModels);
         intent.putExtras(bundle);
         startActivityLeft(intent);
     }

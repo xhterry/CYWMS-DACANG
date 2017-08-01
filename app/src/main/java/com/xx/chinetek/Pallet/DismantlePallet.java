@@ -92,7 +92,7 @@ public class DismantlePallet extends BaseActivity {
     TextView txtMaterialName;
     @ViewInject(R.id.txt_EDate)
     TextView txtEDate;
-    @ViewInject(R.id.txt_PalletNo)
+    @ViewInject(R.id.textView2201)
     TextView txtPalletNo;
     @ViewInject(R.id.edt_Barcode)
     EditText edtBarcode;

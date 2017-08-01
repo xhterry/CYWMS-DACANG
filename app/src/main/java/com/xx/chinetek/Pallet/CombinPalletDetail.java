@@ -19,12 +19,12 @@ import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.Material.BarCodeInfo;
-import com.xx.chinetek.model.Material.SerialNo_Model;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.WMS.Review.OutStockDetailInfo_Model;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Review.OutStockDetailInfo_Model;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -75,7 +75,7 @@ public class CombinPalletDetail extends BaseActivity {
     PalletDetail_Model delPalletModel=null;
     BarCodeInfo delBarCodeInfo=null;
     PalletDetailItemAdapter palletDetailItemAdapter;
-    ArrayList<OutStockDetailInfo_Model> outStockDetailInfoModels;//用于收货
+    ArrayList<OutStockDetailInfo_Model> outStockDetailInfoModels;
     String voucherNo;
 
     @Override
@@ -87,6 +87,12 @@ public class CombinPalletDetail extends BaseActivity {
         voucherNo=getIntent().getStringExtra("VoucherNo");
         outStockDetailInfoModels=getIntent().getParcelableArrayListExtra("outStockDetailInfoModels");
         PalletDetailModelList=new ArrayList<PalletDetail_Model>();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                close();
+            }
+        });
         Get_PalletDetailByVoucherNo(voucherNo);
     }
 
@@ -99,7 +105,7 @@ public class CombinPalletDetail extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO 自动生成的方法
-                            Del_PalletOrSerialNo(delPalletModel.getPalletNo(),"","");
+                            Del_PalletOrSerialNo(delPalletModel.getPalletNo(),"");
                         }
                     }).setNegativeButton("取消", null).show();
         }
@@ -115,7 +121,7 @@ public class CombinPalletDetail extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO 自动生成的方法
-                        Del_PalletOrSerialNo(delPalletModel.getPalletNo(),delBarCodeInfo.getSerialNo(),delBarCodeInfo.getMaterialNo());
+                        Del_PalletOrSerialNo(delPalletModel.getPalletNo(),delBarCodeInfo.getSerialNo());
                     }
                 }).setNegativeButton("取消", null).show();
 
@@ -124,16 +130,12 @@ public class CombinPalletDetail extends BaseActivity {
 
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         // 过滤按键动作
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            Intent mIntent = new Intent();
-            mIntent.putParcelableArrayListExtra("outStockDetailInfoModels",outStockDetailInfoModels);
-            setResult(RESULT_OK, mIntent);
-            finish();
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK || event.getAction() == KeyEvent.ACTION_UP) {
+            close();
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 
     /*
@@ -166,7 +168,7 @@ public class CombinPalletDetail extends BaseActivity {
         }
     }
 
-    private void Del_PalletOrSerialNo(final String PalletNo,final String SerialNo,final String MaterialNo) {
+    private void Del_PalletOrSerialNo(final String PalletNo,final String SerialNo) {
         final Map<String, String> params = new HashMap<String, String>();
         params.put("PalletNo", PalletNo);
         params.put("SerialNo", SerialNo);
@@ -203,17 +205,28 @@ public class CombinPalletDetail extends BaseActivity {
     }
 
     void DeleteSerial(String SerialNo,String MaterialNo){
-        OutStockDetailInfo_Model temp = new OutStockDetailInfo_Model();
-        temp.setMaterialNo(MaterialNo);
-        int RowIndex = outStockDetailInfoModels.indexOf(temp);
-        SerialNo_Model serialNo_model=new SerialNo_Model();
-        serialNo_model.setSerialNo(SerialNo);
-        int sindex=outStockDetailInfoModels.get(RowIndex).getLstSerialNo().indexOf(serialNo_model);
-        if(sindex!=-1){
-            outStockDetailInfoModels.get(RowIndex).getLstSerialNo().remove(sindex);
-            outStockDetailInfoModels.get(RowIndex).setScanQty(outStockDetailInfoModels.get(RowIndex).getScanQty() - 1);
+
+//        outStockDetailInfoModels.get(index).getLstStock().add(0, StockInfo_Model);
+//        outStockDetailInfoModels.get(index).setScanQty(qty);
+//        outStockDetailInfoModels.get(index).setOustockStatus(1); //存在未组托条码
+
+        StockInfo_Model stockInfoModel=new StockInfo_Model("",SerialNo);
+        for(int i=0;i<outStockDetailInfoModels.size();i++){
+            int index= outStockDetailInfoModels.get(i).getLstStock().indexOf(stockInfoModel);
+            if(index!=-1){
+                outStockDetailInfoModels.get(i).setScanQty( outStockDetailInfoModels.get(i).getScanQty()-outStockDetailInfoModels.get(i).getLstStock().get(index).getQty());
+                outStockDetailInfoModels.get(i).getLstStock().remove(index);
+                outStockDetailInfoModels.get(i).setOustockStatus(1);
+                break;
+            }
         }
     }
 
+    void close(){
+        Intent mIntent = new Intent();
+        mIntent.putParcelableArrayListExtra("outStockDetailInfoModels",outStockDetailInfoModels);
+        setResult(RESULT_OK, mIntent);
+        closeActiviry();
+    }
 
 }

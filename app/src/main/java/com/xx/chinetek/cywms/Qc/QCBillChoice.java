@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -116,23 +115,23 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         InitListView();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_inventorybilldetail, menu);
-        gMenuItem=menu.findItem(R.id.action_filter);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() ==R.id.action_filter){
-            if(qualityInfoModels!=null && qualityInfoModels.size()>0){
-                isQcPrint=!isQcPrint;
-                initFrm();
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_inventorybilldetail, menu);
+//        gMenuItem=menu.findItem(R.id.action_filter);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if(item.getItemId() ==R.id.action_filter){
+//            if(qualityInfoModels!=null && qualityInfoModels.size()>0){
+//                isQcPrint=!isQcPrint;
+//                initFrm();
+//            }
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     /**

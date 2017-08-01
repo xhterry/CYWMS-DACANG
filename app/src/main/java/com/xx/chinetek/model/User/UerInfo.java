@@ -25,6 +25,7 @@ public class UerInfo extends User implements Parcelable {
     private String PickWareHouseNo ;
     private String PickAreaNo;
 
+
     private List<UserGroupInfo> lstUserGroup;
     private List<MenuInfo> lstMenu;
     private List<WareHouseInfo> lstWarehouse;

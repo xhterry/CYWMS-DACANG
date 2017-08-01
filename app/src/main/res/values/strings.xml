@@ -156,6 +156,7 @@
     <string name="AllPallet">整&#160;&#160;&#160;&#160;&#160;托</string>
     <string name="unboxing">拆&#160;&#160;&#160;&#160;&#160;零</string>
     <string name="Carrier">承运商：</string>
+    <string name="PalletNo">托盘号：</string>
     <string name="Destination">目的地：</string>
     <string name="StockNumber">库存数量：</string>
     <string name="PrintLabel">打印外箱标签</string>
@@ -229,7 +230,7 @@
     <string name="Msg_GetT_GetT_QualityListADF">获取质检物料信息...</string>
     <string name="Msg_GetT_PalletADF">获取托盘条码信息...</string>
     <string name="Msg_SaveT_PalletDetailADF">保存组托信息...</string>
-    <string name="Msg_PrintLpkPalletAndroid">打印托盘标签...</string>
+    <string name="Msg_PrintLpkPalletAndroid">打印标签中...</string>
     <string name="Msg_SaveT_OutStockReviewDetailADF">提交复核信息...</string>
     <string name="Msg_SaveT_BarCodeToStockADF">保存拆零信息...</string>
     <string name="Msg_Delete_PalletORBarCodeADF">删除组托信息...</string>

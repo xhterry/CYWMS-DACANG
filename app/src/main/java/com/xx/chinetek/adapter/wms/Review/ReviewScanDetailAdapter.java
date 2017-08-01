@@ -76,10 +76,10 @@ public class ReviewScanDetailAdapter extends BaseAdapter {
         listItemView.txtRemainQty.setText("复核数："+outStockDetailInfoModel.getOutStockQty());
         listItemView.txtMaterialDesc.setText(outStockDetailInfoModel.getMaterialDesc());
         if (outStockDetailInfoModel.getScanQty()!=0 &&
-                outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getRemainQty())<0) {
+                outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getOutStockQty())<0) {
             convertView.setBackgroundResource(R.color.khaki);
         }
-        else if (outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getRemainQty())==0) {
+        else if (outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getOutStockQty())==0) {
             convertView.setBackgroundResource(R.color.springgreen);
         }
         return convertView;

@@ -14,8 +14,9 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
 
     }
 
-    public StockInfo_Model(String Barcode){
+    public StockInfo_Model(String Barcode,String serialNo){
         this.Barcode=Barcode;
+        this.SerialNo=serialNo;
     }
     private String Barcode;
     private String SerialNo;
@@ -69,6 +70,15 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private String FromErpWarehouse;
     private String FromBatchNo;
     private int OutstockDetailID;
+    private int OutstockHeaderID;
+
+    public int getOutstockHeaderID() {
+        return OutstockHeaderID;
+    }
+
+    public void setOutstockHeaderID(int outstockHeaderID) {
+        OutstockHeaderID = outstockHeaderID;
+    }
 
     public int getOutstockDetailID() {
         return OutstockDetailID;
@@ -501,7 +511,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
 
         StockInfo_Model that = (StockInfo_Model) o;
 
-        return SerialNo.equals(that.SerialNo) ;
+        return SerialNo.equals(that.SerialNo) || Barcode.equals(that.Barcode);
 
     }
 
@@ -566,6 +576,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeString(this.FromErpWarehouse);
         dest.writeString(this.FromBatchNo);
         dest.writeInt(this.OutstockDetailID);
+        dest.writeInt(this.OutstockHeaderID);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -622,6 +633,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.FromErpWarehouse = in.readString();
         this.FromBatchNo = in.readString();
         this.OutstockDetailID = in.readInt();
+        this.OutstockHeaderID = in.readInt();
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {

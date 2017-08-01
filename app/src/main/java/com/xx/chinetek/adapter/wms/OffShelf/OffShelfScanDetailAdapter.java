@@ -29,6 +29,7 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
         public TextView txtRemainQty;
         public TextView txtMaterialDesc;
         public TextView txtreferStock;
+        public TextView txtERPVoucherNo;
     }
 
     public OffShelfScanDetailAdapter(Context context, ArrayList<OutStockTaskDetailsInfo_Model> outStockTaskDetailsInfoModels) {
@@ -65,6 +66,7 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
             convertView = listContainer.inflate(R.layout.item_offshelfscandetail_listview,null);
             listItemView.txtbarcode = (TextView) convertView.findViewById(R.id.txtbarcode);
             listItemView.txtScanNum = (TextView) convertView.findViewById(R.id.txtScanNum);
+            listItemView.txtERPVoucherNo = (TextView) convertView.findViewById(R.id.txtERPVoucherNo);
             listItemView.txtreferStock = (TextView) convertView.findViewById(R.id.txtreferStock);
             listItemView.txtRemainQty = (TextView) convertView.findViewById(R.id.txtRemainQty);
             listItemView.txtMaterialDesc = (TextView) convertView.findViewById(R.id.txtMaterialDesc);
@@ -77,6 +79,7 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
         listItemView.txtScanNum.setText("扫描数："+outStockTaskDetailsInfoModel.getScanQty());
         listItemView.txtRemainQty.setText("拣货数："+outStockTaskDetailsInfoModel.getRemainQty());
         listItemView.txtreferStock.setText(outStockTaskDetailsInfoModel.getAreaNo());
+        listItemView.txtERPVoucherNo.setText(outStockTaskDetailsInfoModel.getErpVoucherNo());
         listItemView.txtMaterialDesc.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
         if (outStockTaskDetailsInfoModel.getScanQty()!=0 &&
                 outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRemainQty())<0) {

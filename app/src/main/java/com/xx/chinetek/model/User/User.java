@@ -45,7 +45,16 @@ public class User implements Parcelable {
     private int IsPickLeader;
     private String  StrIsPickLeader;
     private Boolean PickLeader;
+    private int PickWareHouseID;
     private String PDAPrintIP;
+
+    public int getPickWareHouseID() {
+        return PickWareHouseID;
+    }
+
+    public void setPickWareHouseID(int pickWareHouseID) {
+        PickWareHouseID = pickWareHouseID;
+    }
 
     public String getPDAPrintIP() {
         return PDAPrintIP;
@@ -381,6 +390,7 @@ public class User implements Parcelable {
         dest.writeInt(this.IsPickLeader);
         dest.writeString(this.StrIsPickLeader);
         dest.writeValue(this.PickLeader);
+        dest.writeInt(this.PickWareHouseID);
         dest.writeString(this.PDAPrintIP);
     }
 
@@ -421,7 +431,19 @@ public class User implements Parcelable {
         this.IsPickLeader = in.readInt();
         this.StrIsPickLeader = in.readString();
         this.PickLeader = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.PickWareHouseID = in.readInt();
         this.PDAPrintIP = in.readString();
     }
 
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

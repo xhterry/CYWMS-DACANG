@@ -209,15 +209,18 @@ public class CombinPallet extends BaseActivity {
 
 
     @Event(R.id.btn_PrintPalletLabel)
-    private void btnPrintPalletLabelClick(View v){
-        palletDetailModels.get(0).setVoucherType(999);
-        String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
-        String modelJson = GsonUtil.parseModelToJson(palletDetailModels);
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("UserJson", userJson);
-        params.put("ModelJson", modelJson);
-        LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, modelJson);
-        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_PalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_PalletDetailADF, null,  URLModel.GetURL().SaveT_PalletDetailADF, params, null);
+    private void btnPrintPalletLabelClick(View v) {
+        if (palletDetailModels != null && palletDetailModels.size() != 0 && palletDetailModels.get(0).getLstBarCode()!=null
+                && palletDetailModels.get(0).getLstBarCode().size()!=0) {
+            palletDetailModels.get(0).setVoucherType(999);
+            String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
+            String modelJson = GsonUtil.parseModelToJson(palletDetailModels);
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("UserJson", userJson);
+            params.put("ModelJson", modelJson);
+            LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, modelJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_PalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_PalletDetailADF, null, URLModel.GetURL().SaveT_PalletDetailADF, params, null);
+        }
     }
 
 
