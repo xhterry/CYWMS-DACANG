@@ -23,11 +23,14 @@ public class URLModel {
     }
 
     public String UserLoginADF = GetWCFAdress()+"UserLoginADF"; //用户登录
+    public String GetWareHouseByUserADF = GetWCFAdress()+"GetWareHouseByUserADF"; //获取仓库列表
     public String GetT_InStockListADF = GetWCFAdress()+"GetT_InStockListADF"; //收货表头
     public String GetT_InTaskListADF = GetWCFAdress()+"GetT_InTaskListADF"; //上架表头
     public String GetCheckADF = GetWCFAdress()+"GetCheck"; //盘点表头
     public String GetPDNoAndroid = GetWCFAdress()+"GetPDNoAndroid"; //获取盘点单号
-    public String GetAreanoID = GetWCFAdress()+"GetAreanoID"; //获取盘点库位
+    public String GetAreanoID = GetWCFAdress()+"TakeAID"; //获取盘点库位
+    public String GetTransportSupplierListADF = GetWCFAdress()+"GetTransportSupplierListADF"; //获取盘点库位
+    public String GetWareHouse = GetWCFAdress()+"GetWareHouse"; //获取盘点仓库
     public String SaveCheckAndroid = GetWCFAdress()+"SaveCheckAndroid"; //提交盘点库位
     public String GetAreanobyCheckno = GetWCFAdress()+"GetAreanobyCheckno"; //获取可盘点库位
     public String GetScanInfo = GetWCFAdress()+"GetScanInfo"; //获取盘点条码信息
@@ -68,6 +71,7 @@ public class URLModel {
     public String GetStockModelADF=GetWCFAdress()+"GetStockModelADF";//获取下架和仓库内移库条码信息
     public String SaveT_QuanlitySampADF=GetWCFAdress()+"SaveT_QuanlitySampADF";//提交质检明细
     public String SaveT_OutStockTaskDetailADF=GetWCFAdress()+"SaveT_OutStockTaskDetailADF";//提交下架明细
+    public String SaveT_ChangeMaterialADF=GetWCFAdress()+"SaveT_ChangeMaterialADF";//提交转料明细
     public String GetT_OutTaskDetailListByHeaderIDADF=GetWCFAdress()+"GetT_OutTaskDetailListByHeaderIDADF";//获取下架表体信息
     public String GetT_OutTaskListADF=GetWCFAdress()+"GetT_OutTaskListADF";//获取下架表头信息
     public String GetPickUserListByUserADF=GetWCFAdress()+"GetPickUserListByUserADF";//获取拣货人员信息

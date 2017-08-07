@@ -1,10 +1,13 @@
 package com.xx.chinetek;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,11 +22,14 @@ import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.User.UerInfo;
 import com.xx.chinetek.model.User.UserInfo;
+import com.xx.chinetek.model.User.WareHouseInfo;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.SharePreferUtil;
 import com.xx.chinetek.util.UpdateVersionService;
+import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DESUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -33,7 +39,9 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,7 +50,9 @@ import java.util.Map;
 public class Login extends BaseActivity {
 
     String TAG="Loagin";
+    String TAG_GetWareHouseByUserADF="Login_GetWareHouseByUserADF";
     private static final int RESULT_GET_LOGIN_INFO = 101;
+    private static final int RESULT_GetWareHouseByUserADF = 102;
 
     private UpdateVersionService updateVersionService;
 
@@ -52,6 +62,9 @@ public class Login extends BaseActivity {
             case RESULT_GET_LOGIN_INFO:
                 AnalysisJson((String) msg.obj);
                 break;
+            case RESULT_GetWareHouseByUserADF:
+                AnalysisGetWareHouseByUserADFJson((String) msg.obj);
+                break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
                 break;
@@ -60,10 +73,13 @@ public class Login extends BaseActivity {
 
     @ViewInject(R.id.txt_Verion)
     TextView txtVersion;
+    @ViewInject(R.id.txt_WareHousName)
+    TextView txtWareHousName;
     @ViewInject(R.id.edt_UserName)
     EditText edtUserName;
     @ViewInject(R.id.edt_Password)
     EditText edtPassword;
+    int SelectWareHouseID=-1;
 
     Context context=Login.this;
 
@@ -78,10 +94,34 @@ public class Login extends BaseActivity {
         if( BaseApplication.userInfo!=null){
             edtUserName.setText( BaseApplication.userInfo.getUserNo());
             edtPassword.setText(DESUtil.decode( BaseApplication.userInfo.getPassWord()));
+            txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());
         }
-        txtVersion.setText(getString(R.string.login_Version)+(updateVersionService.getVersionCode(context)));
+         txtVersion.setText(getString(R.string.login_Version)+(updateVersionService.getVersionCode(context)));
     }
 
+    @Event(value = R.id.edt_UserName, type = View.OnKeyListener.class)
+    private boolean edtUserNameOnKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String userNo=edtUserName.getText().toString().trim();
+            if(!userNo.isEmpty()) {
+                keyBoardCancle();
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("UserNo", userNo);
+                LogUtil.WriteLog(Login.class, TAG_GetWareHouseByUserADF, userNo);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetWareHouseByUserADF, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetWareHouseByUserADF, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
+
+            }
+        }
+        return false;
+    }
+
+    @Event(value = R.id.txt_WareHousName,  type = View.OnClickListener.class)
+    private void  txtWareHousNameOnClick(View v) {
+            keyBoardCancle();
+            SelectWareHouse();
+    }
 
 
     @Event(R.id.btn_Login)
@@ -112,12 +152,82 @@ public class Login extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
             BaseApplication.userInfo=returnMsgModel.getModelJson();
             BaseApplication.userInfo.setPDAPrintIP(URLModel.PrintIP);
-            SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
-            Intent intent=new Intent(context, URLModel.isWMS?MainActivity.class: com.xx.chinetek.cyproduct.MainActivity.class);
-            startActivity(intent);
+            if( BaseApplication.userInfo.getReceiveAreaID()<=0){
+                MessageBox.Show( context,getResources().getString(R.string.Message_No_ReceiveAreaID));
+            }else if(BaseApplication.userInfo.getPickAreaID()<=0){
+                MessageBox.Show( context,getResources().getString(R.string.Message_No_PickAreaID));
+            }else if(BaseApplication.userInfo.getToSampAreaNo()==null && BaseApplication.userInfo.getToSampAreaNo().equals("")){
+                MessageBox.Show( context,getResources().getString(R.string.Message_No_SampAreaNo));
+            }else if(BaseApplication.userInfo.getQuanUserNo()==null && BaseApplication.userInfo.getQuanUserNo().equals("")){
+                MessageBox.Show( context,getResources().getString(R.string.Message_No_QuanUserNo));
+            }
+            else{
+                SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
+                Intent intent=new Intent(context, URLModel.isWMS?MainActivity.class: com.xx.chinetek.cyproduct.MainActivity.class);
+                startActivity(intent);
+            }
+
+
+
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
+        }
+    }
+
+    void AnalysisGetWareHouseByUserADFJson(String result){
+        try{
+            LogUtil.WriteLog(Login.class, TAG_GetWareHouseByUserADF,result);
+            ReturnMsgModel<UerInfo> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<UerInfo>>() {}.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S")){
+                BaseApplication.userInfo=returnMsgModel.getModelJson();
+                if( BaseApplication.userInfo.getLstWarehouse()==null){
+                   MessageBox.Show(context,getResources().getString(R.string.Message_No_WhareHouse));
+                    CommonUtil.setEditFocus(edtUserName);
+                }else{
+                    SelectWareHouse();
+                    CommonUtil.setEditFocus(edtPassword);
+                }
+            }else
+            {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(edtUserName);
+            }
+
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtUserName);
+        }
+    }
+
+    void SelectWareHouse(){
+        if (BaseApplication.userInfo==null || BaseApplication.userInfo.getLstWarehouse() == null) return;
+
+        List<String> wareHouses = new ArrayList<String>();
+
+
+        if(BaseApplication.userInfo.getLstWarehouse().size()>1) {
+            for (WareHouseInfo warehouse : BaseApplication.userInfo.getLstWarehouse()) {
+                if (warehouse.getWareHouseName() != null && !warehouse.getWareHouseName().equals("")) {
+                    wareHouses.add(warehouse.getWareHouseName());
+                }
+            }
+            final String[] items = wareHouses.toArray(new String[0]);
+            new AlertDialog.Builder(context).setTitle(getResources().getString(R.string.activity_login_WareHousChoice))// 设置对话框标题
+                    .setIcon(android.R.drawable.ic_dialog_info)// 设置对话框图
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO 自动生成的方法存根
+                            String select_item = items[which].toString();
+                            SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(which).getID();
+                            txtWareHousName.setText(select_item);
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }else{
+            SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(0).getID();
+            txtWareHousName.setText(BaseApplication.userInfo.getLstWarehouse().get(0).getWareHouseName());
         }
     }
 

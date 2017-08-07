@@ -174,6 +174,7 @@ public class Boxing extends BaseActivity {
         params.put("UserJson", userJson);
         params.put(!SWBox.isChecked()?"strNewBarCode":"strOldBarCode", strOldBarCode);
         params.put(!SWBox.isChecked()?"strOldBarCode":"strNewBarCode", strNewBarCode);
+        params.put("PrintFlag","1"); //1：打印 2：不打印
         LogUtil.WriteLog(Boxing.class, TAG_SaveT_BarCodeToStockADF, strOldBarCode+"||"+strNewBarCode);
         RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null,  URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
     }

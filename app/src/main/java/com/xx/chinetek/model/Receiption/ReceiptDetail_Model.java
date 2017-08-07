@@ -38,6 +38,32 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     private String IsSpcBatch;
     private String QcCode;
     private String QcDesc;
+    private List<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
+    private String SaleName ;
+    private String ErpVoucherNo ;
+    private String VoucherNo;
+    private int IsSerial;
+    //private List<PalletDetail_Model> lstPallet=new ArrayList<PalletDetail_Model>();
+    private String SaleCode;
+    private String SupplierNo;
+    private String SupplierName;
+    private Date SupPrdDate ;
+    private String SupPrdBatch ;
+    private String BatchNo;
+    private String PartNo;
+    private String MoveType;
+    private String Company;
+    private String Department;
+    private Date ArrivalDate;
+    private Date ShipmentDate;
+    private Date ArrStockDate;
+    private String FromBatchNo;
+    private String FromErpAreaNo;
+    private String FromErpWarehouse;
+    private String ToBatchNo;
+    private String ToErpAreaNo;
+    private String ToErpWarehouse;
+
 
     public String getQcCode() {
         return QcCode;
@@ -64,26 +90,47 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     }
 
     //private List<SerialNo_Model> lstSerialNo=new ArrayList<SerialNo_Model>();
-    private List<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
-    private String SaleName ;
-    private String ErpVoucherNo ;
-    private String VoucherNo;
-    private int IsSerial;
-    //private List<PalletDetail_Model> lstPallet=new ArrayList<PalletDetail_Model>();
-    private String SaleCode;
-    private String SupplierNo;
-    private String SupplierName;
-    private Date SupPrdDate ;
-    private String SupPrdBatch ;
-    private String BatchNo;
-    private String PartNo;
-    private String MoveType;
-    private String Company;
-    private String Department;
-    private Date ArrivalDate;
-    public Date ShipmentDate;
-    public Date ArrStockDate;
-    private String FromBatchNo;
+
+
+    public String getFromErpAreaNo() {
+        return FromErpAreaNo;
+    }
+
+    public void setFromErpAreaNo(String fromErpAreaNo) {
+        FromErpAreaNo = fromErpAreaNo;
+    }
+
+    public String getFromErpWarehouse() {
+        return FromErpWarehouse;
+    }
+
+    public void setFromErpWarehouse(String fromErpWarehouse) {
+        FromErpWarehouse = fromErpWarehouse;
+    }
+
+    public String getToBatchNo() {
+        return ToBatchNo;
+    }
+
+    public void setToBatchNo(String toBatchNo) {
+        ToBatchNo = toBatchNo;
+    }
+
+    public String getToErpAreaNo() {
+        return ToErpAreaNo;
+    }
+
+    public void setToErpAreaNo(String toErpAreaNo) {
+        ToErpAreaNo = toErpAreaNo;
+    }
+
+    public String getToErpWarehouse() {
+        return ToErpWarehouse;
+    }
+
+    public void setToErpWarehouse(String toErpWarehouse) {
+        ToErpWarehouse = toErpWarehouse;
+    }
 
     public String getFromBatchNo() {
         return FromBatchNo;
@@ -480,6 +527,11 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         dest.writeLong(this.ShipmentDate != null ? this.ShipmentDate.getTime() : -1);
         dest.writeLong(this.ArrStockDate != null ? this.ArrStockDate.getTime() : -1);
         dest.writeString(this.FromBatchNo);
+        dest.writeString(this.FromErpAreaNo);
+        dest.writeString(this.FromErpWarehouse);
+        dest.writeString(this.ToBatchNo);
+        dest.writeString(this.ToErpAreaNo);
+        dest.writeString(this.ToErpWarehouse);
     }
 
     protected ReceiptDetail_Model(Parcel in) {
@@ -528,6 +580,11 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         long tmpArrStockDate = in.readLong();
         this.ArrStockDate = tmpArrStockDate == -1 ? null : new Date(tmpArrStockDate);
         this.FromBatchNo = in.readString();
+        this.FromErpAreaNo = in.readString();
+        this.FromErpWarehouse = in.readString();
+        this.ToBatchNo = in.readString();
+        this.ToErpAreaNo = in.readString();
+        this.ToErpWarehouse = in.readString();
     }
 
     public static final Creator<ReceiptDetail_Model> CREATOR = new Creator<ReceiptDetail_Model>() {

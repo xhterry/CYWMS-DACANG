@@ -66,7 +66,33 @@
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/ArtNO"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline47"
+        app:layout_constraintTop_toBottomOf="@+id/textView43" />
+
+    <TextView
+        android:id="@+id/txt_SelectWohouse"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:hint="@string/Hit_Selectwohouse"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toBottomOf="@+id/textView43"
+        app:layout_constraintLeft_toRightOf="@+id/textView43"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/textView43"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/ArtNO"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"

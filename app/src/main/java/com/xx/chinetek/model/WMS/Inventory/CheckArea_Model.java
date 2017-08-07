@@ -14,7 +14,16 @@ public class CheckArea_Model {
     private String LOCATIONDESC	 ;
     private String CREATER	         ;
     private String MODIFYER	     ;
-    public int AREAID;
+    private int AREAID;
+    private String warehouseno;
+
+    public String getWarehouseno() {
+        return warehouseno;
+    }
+
+    public void setWarehouseno(String warehouseno) {
+        this.warehouseno = warehouseno;
+    }
 
     public int getAREAID() {
         return AREAID;

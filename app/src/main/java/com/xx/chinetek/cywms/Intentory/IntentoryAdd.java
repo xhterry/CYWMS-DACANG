@@ -1,6 +1,8 @@
 package com.xx.chinetek.cywms.Intentory;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -20,7 +22,9 @@ import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
+import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.User.WareHouseInfo;
 import com.xx.chinetek.model.WMS.Inventory.CheckArea_Model;
 import com.xx.chinetek.model.WMS.Inventory.Check_Model;
 import com.xx.chinetek.util.Network.NetworkError;
@@ -45,10 +49,12 @@ public class IntentoryAdd extends BaseActivity {
 
     String TAG_GetPDNoAndroid = "IntentoryAdd_GetPDNoAndroid";
     String TAG_GetAreanoID = "IntentoryAdd_GetAreanoID";
+    String TAG_GetWareHouse = "IntentoryAdd_GetWareHouse";
     String TAG_SaveCheckAndroid = "IntentoryAdd_SaveCheckAndroid";
     private final int RESULT_GetPDNoAndroid = 101;
     private final int RESULT_GetAreanoID = 102;
     private final int RESULT_SaveCheckAndroid = 103;
+    private final int RESULT_GetWareHouse = 104;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -62,6 +68,9 @@ public class IntentoryAdd extends BaseActivity {
             case RESULT_SaveCheckAndroid:
                 AnalysisSaveCheckAndroidJson((String) msg.obj);
                 break;
+            case RESULT_GetWareHouse:
+                AnalysisGetWareHouseJson((String) msg.obj);
+                break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
                 break;
@@ -72,6 +81,8 @@ public class IntentoryAdd extends BaseActivity {
     Context context = IntentoryAdd.this;
     @ViewInject(R.id.txt_VoucherNo)
     TextView txtVoucherNo;
+    @ViewInject(R.id.txt_SelectWohouse)
+    TextView txtSelectWohouse;
     @ViewInject(R.id.edt_InventoryDesc)
     EditText edtInventoryDesc;
     @ViewInject(R.id.edt_InventoryRemark)
@@ -83,6 +94,7 @@ public class IntentoryAdd extends BaseActivity {
 
     ArrayList<CheckArea_Model> checkAreaModels;
     InventoryAddItemAdapter inventoryAddItemAdapter;
+    String WareHouseNo="";
 
     @Override
     protected void initViews() {
@@ -137,11 +149,15 @@ public class IntentoryAdd extends BaseActivity {
         {
             keyBoardCancle();
             String areaNo=edtInventoryAreaNo.getText().toString().trim();
-            if(!TextUtils.isEmpty(areaNo)){
+            if(!TextUtils.isEmpty(areaNo)&& !TextUtils.isEmpty(WareHouseNo)){
                 try {
+                    CheckArea_Model checkAreaModel=new CheckArea_Model();
+                    checkAreaModel.setAREANO(areaNo);
+                    checkAreaModel.setWarehouseno(WareHouseNo);
+                    String json=GsonUtil.parseModelToJson(checkAreaModel);
                     Map<String, String> params = new HashMap<>();
-                    params.put("areano",areaNo);
-                    LogUtil.WriteLog(IntentoryAdd.class, TAG_GetAreanoID, areaNo);
+                    params.put("json", json);
+                    LogUtil.WriteLog(IntentoryAdd.class, TAG_GetPDNoAndroid, json);
                     RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreanoID, getString(R.string.Msg_GetAreanobyCheckno), context, mHandler, RESULT_GetAreanoID, null,  URLModel.GetURL().GetAreanoID, params, null);
                 } catch (Exception ex) {
                     MessageBox.Show(context, ex.getMessage());
@@ -149,6 +165,23 @@ public class IntentoryAdd extends BaseActivity {
             }
         }
         return false;
+    }
+
+    @Event(value = R.id.txt_SelectWohouse,type =View.OnClickListener.class )
+    private void txtSelectWohouseClick(View view){
+        LogUtil.WriteLog(IntentoryAdd.class, TAG_GetWareHouse,"");
+       final Map<String, String> params = new HashMap<>();
+        try {
+            if(checkAreaModels!=null && checkAreaModels.size()==0){
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetWareHouse, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetWareHouse, null,  URLModel.GetURL().GetWareHouse, params, null);
+            }else{
+                new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("已存在盘点库位信息，无法更改仓库！")
+                        .setPositiveButton("确定", null).show();
+            }
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+        CommonUtil.setEditFocus(edtInventoryAreaNo);
     }
 
     void GetPDNoAndroid(){
@@ -179,6 +212,7 @@ public class IntentoryAdd extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
            CheckArea_Model checkAreaModel=returnMsgModel.getModelJson();
             if(checkAreaModel!=null) {
+                checkAreaModel.setADDRESS(txtSelectWohouse.getText().toString());
                 checkAreaModels.add(0, checkAreaModel);
                 inventoryAddItemAdapter=new InventoryAddItemAdapter(context,checkAreaModels);
                 lsvInventoryAdd.setAdapter(inventoryAddItemAdapter);
@@ -197,6 +231,46 @@ public class IntentoryAdd extends BaseActivity {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
                closeActiviry();
+            }else
+                MessageBox.Show(context, returnMsgModel.getMessage());
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+    void AnalysisGetWareHouseJson(String result){
+        try {
+            LogUtil.WriteLog(IntentoryAdd.class, TAG_GetWareHouse,result);
+            ReturnMsgModelList<WareHouseInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WareHouseInfo>>() {
+            }.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S")){
+               final ArrayList<WareHouseInfo> wareHouseInfos=returnMsgModel.getModelJson();
+                int size=wareHouseInfos.size();
+                String[] wareHouseInfo=new String[size];
+                for(int i=0;i<size;i++){
+                    wareHouseInfo[i]=wareHouseInfos.get(i).getWareHouseNo()+wareHouseInfos.get(i).getWareHouseName();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("选择盘点所属仓库");
+                builder.setItems(wareHouseInfo, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        final int  selectID=which;
+                        new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否选择当前仓库建立盘点单？\n【"+wareHouseInfos.get(which).getWareHouseName()+"】")
+                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        WareHouseNo=wareHouseInfos.get(selectID).getWareHouseNo();
+                                        txtSelectWohouse.setText(wareHouseInfos.get(selectID).getWareHouseName());
+                                        // TODO 自动生成的方法
+                                    }
+                                }).setNegativeButton("否", null).show();
+                    }
+                });
+                builder.show();
+                CommonUtil.setEditFocus(edtInventoryAreaNo);
             }else
                 MessageBox.Show(context, returnMsgModel.getMessage());
         } catch (Exception ex) {

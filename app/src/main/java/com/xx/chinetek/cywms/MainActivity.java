@@ -17,6 +17,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.InnerMove.InnerMoveScan;
 import com.xx.chinetek.cywms.Intentory.InventoryBillChoice;
+import com.xx.chinetek.cywms.MaterialChange.MaterialChangeReceiptBillChoice;
 import com.xx.chinetek.cywms.OffShelf.OffShelfBillChoice;
 import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.Query.QueryMain;
@@ -97,8 +98,7 @@ public class MainActivity extends BaseActivity {
 //                intent.setClass(context, AdjustStock.class);
 //                break;
             case 11:
-                BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.MaterialChange_title), false);
-                intent.setClass(context, BillChoice.class);
+                intent.setClass(context, MaterialChangeReceiptBillChoice.class);
                 break;
             case 12:
                 intent.setClass(context, TruckLoad.class);

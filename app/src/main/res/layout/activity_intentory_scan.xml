@@ -101,7 +101,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:enabled="false"
         android:hint="请扫描条码"
         app:layout_constraintBottom_toBottomOf="@+id/textView56"
         app:layout_constraintHorizontal_bias="0.0"
@@ -118,7 +117,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:hint="请输入盘点数量"
-        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="@+id/textView57"
         app:layout_constraintLeft_toLeftOf="@+id/guideline12"
         app:layout_constraintRight_toRightOf="parent" />

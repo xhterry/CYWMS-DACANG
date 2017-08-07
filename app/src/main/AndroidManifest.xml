@@ -41,6 +41,8 @@
         <activity android:name=".Query.Query" />
         <activity android:name=".Query.QueryMain" />
         <activity android:name=".MaterialChange.MaterialChange" />
+        <activity android:name=".MaterialChange.MaterialChangeReceiptBillChoice" />
+        <activity android:name=".MaterialChange.MaterialChangeReviewBillChoice" />
         <activity android:name=".Truck.TruckLoad" />
         <activity android:name=".Qc.QCMaterialChoice" />
         <activity android:name="com.xx.chinetek.Login">

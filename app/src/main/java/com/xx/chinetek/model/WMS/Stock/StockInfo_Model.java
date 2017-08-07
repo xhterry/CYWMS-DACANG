@@ -71,6 +71,15 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private String FromBatchNo;
     private int OutstockDetailID;
     private int OutstockHeaderID;
+    private Boolean OKSelect;
+
+    public Boolean getOKSelect() {
+        return OKSelect;
+    }
+
+    public void setOKSelect(Boolean OKSelect) {
+        this.OKSelect = OKSelect;
+    }
 
     public int getOutstockHeaderID() {
         return OutstockHeaderID;
@@ -577,6 +586,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeString(this.FromBatchNo);
         dest.writeInt(this.OutstockDetailID);
         dest.writeInt(this.OutstockHeaderID);
+        dest.writeValue(this.OKSelect);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -634,6 +644,7 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.FromBatchNo = in.readString();
         this.OutstockDetailID = in.readInt();
         this.OutstockHeaderID = in.readInt();
+        this.OKSelect = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {

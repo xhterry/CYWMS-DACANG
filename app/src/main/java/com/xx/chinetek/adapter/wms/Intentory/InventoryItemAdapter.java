@@ -73,7 +73,7 @@ public class InventoryItemAdapter extends BaseAdapter implements Filterable {
         }
         Check_Model check_model=check_models.get(selectID);
         listItemView.txtTaskNo.setText(check_model.getCHECKNO());
-        listItemView.txtCheckDesc.setText(check_model.getCHECKDESC());
+        listItemView.txtCheckDesc.setText(check_model.getREMARKS());
         listItemView.txtCheckStatus.setText(check_model.getCHECKSTATUS());
         return convertView;
     }

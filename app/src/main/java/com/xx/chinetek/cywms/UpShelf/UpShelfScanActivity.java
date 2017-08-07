@@ -146,22 +146,22 @@ public class UpShelfScanActivity extends BaseActivity {
     private  boolean edtUpShelfScanBarcodeClick(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
-            String code=edtUpShelfScanBarcode.getText().toString().trim();
-            if(TextUtils.isEmpty(code)){
+            String code = edtUpShelfScanBarcode.getText().toString().trim();
+            if (TextUtils.isEmpty(code)) {
                 CommonUtil.setEditFocus(edtUpShelfScanBarcode);
                 return true;
             }
 
-         //   txtReferStock.setText(GetReferStock(inStockTaskDetailsInfoModels.get(index).getLstArea())); //推荐货位
+            //   txtReferStock.setText(GetReferStock(inStockTaskDetailsInfoModels.get(index).getLstArea())); //推荐货位
 
-            String StockCode=edtStockScan.getText().toString().trim();
-            if(TextUtils.isEmpty(StockCode)){
+            String StockCode = edtStockScan.getText().toString().trim();
+            if (TextUtils.isEmpty(StockCode)) {
                 CommonUtil.setEditFocus(edtStockScan);
                 return true;
             }
 
-            ScanBarcode(code,StockCode);
-          }
+            ScanBarcode(code, StockCode);
+        }
         return false;
     }
 
@@ -258,7 +258,6 @@ public class UpShelfScanActivity extends BaseActivity {
         params.put("AreaNo", StockCode);
         LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetT_ScanInStockModelADF, code);
         RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_ScanInStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_ScanInStockModelADF, null,  URLModel.GetURL().GetT_ScanInStockModelADF, params, null);
-
     }
 
     /*

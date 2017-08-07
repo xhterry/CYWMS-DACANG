@@ -24,6 +24,7 @@ public class InventoryAddItemAdapter extends BaseAdapter {
     public final class ListItemView { // 自定义控件集合
 
         public TextView txtAreaNo;
+        public TextView txtWareHouse;
     }
 
     public InventoryAddItemAdapter(Context context, ArrayList<CheckArea_Model> checkAreaModels) {
@@ -59,12 +60,14 @@ public class InventoryAddItemAdapter extends BaseAdapter {
             // 获取list_item布局文件的视图
             convertView = listContainer.inflate(R.layout.item_inventoryadd_listview,null);
             listItemView.txtAreaNo = (TextView) convertView.findViewById(R.id.txtAreaNo);
+            listItemView.txtWareHouse = (TextView) convertView.findViewById(R.id.txtWareHouse);
             convertView.setTag(listItemView);
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
         CheckArea_Model checkAreaModel=checkAreaModels.get(selectID);
         listItemView.txtAreaNo.setText(checkAreaModel.getAREANO());
+        listItemView.txtWareHouse.setText(checkAreaModel.getADDRESS());
         return convertView;
     }
 

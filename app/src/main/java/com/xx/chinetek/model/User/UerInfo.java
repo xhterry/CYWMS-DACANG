@@ -23,8 +23,17 @@ public class UerInfo extends User implements Parcelable {
     private String ToSampWareHouseNo;
     private String ToSampAreaNo;
     private String PickWareHouseNo ;
-    private String PickAreaNo;
 
+    public String getQuanUserName() {
+        return QuanUserName;
+    }
+
+    public void setQuanUserName(String quanUserName) {
+        QuanUserName = quanUserName;
+    }
+
+    private String PickAreaNo;
+    private String QuanUserName;
 
     private List<UserGroupInfo> lstUserGroup;
     private List<MenuInfo> lstMenu;
@@ -204,6 +213,7 @@ public class UerInfo extends User implements Parcelable {
         dest.writeString(this.ToSampAreaNo);
         dest.writeString(this.PickWareHouseNo);
         dest.writeString(this.PickAreaNo);
+        dest.writeString(this.QuanUserName);
         dest.writeTypedList(this.lstUserGroup);
         dest.writeTypedList(this.lstMenu);
         dest.writeTypedList(this.lstWarehouse);
@@ -226,6 +236,7 @@ public class UerInfo extends User implements Parcelable {
         this.ToSampAreaNo = in.readString();
         this.PickWareHouseNo = in.readString();
         this.PickAreaNo = in.readString();
+        this.QuanUserName = in.readString();
         this.lstUserGroup = in.createTypedArrayList(UserGroupInfo.CREATOR);
         this.lstMenu = in.createTypedArrayList(MenuInfo.CREATOR);
         this.lstWarehouse = in.createTypedArrayList(WareHouseInfo.CREATOR);

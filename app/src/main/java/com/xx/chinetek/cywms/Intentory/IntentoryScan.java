@@ -18,12 +18,12 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
-import com.xx.chinetek.model.WMS.Inventory.CheckArea_Model;
-import com.xx.chinetek.model.WMS.Inventory.Check_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
+import com.xx.chinetek.model.WMS.Inventory.CheckArea_Model;
+import com.xx.chinetek.model.WMS.Inventory.Check_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -135,7 +135,6 @@ public class IntentoryScan extends BaseActivity {
                 int index=checkAreaModels.indexOf(temp);
                 if (index!=-1) {
                     checkAreaModel=checkAreaModels.get(index);
-                    edtInvScanBarcode.setEnabled(true);
                     CommonUtil.setEditFocus(edtInvScanBarcode);
                     return false;
                 } else {
@@ -165,11 +164,10 @@ public class IntentoryScan extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             edtInvScanBarcode.setText("");
-            edtInvScanBarcode.setEnabled(false);
             CommonUtil.setEditFocus(edtStockScan);
             return true;
         }
-        return true;
+        return false;
     }
 
     @Event(value =R.id.edt_InvNum,type = View.OnKeyListener.class)
@@ -178,17 +176,21 @@ public class IntentoryScan extends BaseActivity {
         {
             keyBoardCancle();
             String qty = edtInvNum.getText().toString().trim();
+            if(!CommonUtil.isFloat(qty)){
+                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+                CommonUtil.setEditFocus(edtInvNum);
+                return true;
+            }
             barcodeModels.get(0).setQty(Float.parseFloat(qty));
             SumbitStockInfo();
         }
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
                 edtInvNum.setText("");
-                edtInvNum.setEnabled(false);
                 CommonUtil.setEditFocus(edtInvScanBarcode);
             return true;
         }
-        return true;
+        return false;
     }
 
 
@@ -236,9 +238,7 @@ public class IntentoryScan extends BaseActivity {
                 lsvIntentoryScan.setAdapter(inventoryScanItemAdapter);
                 if(barcodeModels.size()>1){
                     btnPalletConfig.setVisibility(View.VISIBLE);
-                    edtInvNum.setEnabled(false);
                 }else{
-                    edtInvNum.setEnabled(true);
                     CommonUtil.setEditFocus(edtInvNum);
                 }
 
@@ -257,7 +257,6 @@ public class IntentoryScan extends BaseActivity {
             if(returnMsgModel.getHeaderStatus().equals("S")){
                 edtInvScanBarcode.setText("");
                 edtInvNum.setText("");
-                edtInvNum.setEnabled(false);
                 txtCompany.setText("");
                 txtBatch.setText("");
                 txtStatus.setText("");

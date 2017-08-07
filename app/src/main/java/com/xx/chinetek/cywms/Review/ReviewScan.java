@@ -1,6 +1,8 @@
 package com.xx.chinetek.cywms.Review;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
 import android.text.TextUtils;
@@ -313,10 +315,19 @@ public class ReviewScan extends BaseActivity {
         LogUtil.WriteLog(ReviewScan.class, TAG_SaveT_OutStockReviewDetailADF,result);
         ReturnMsgModelList<OutStock_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStock_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            closeActiviry();
-//            Intent intent=new Intent(context, TruckLoad.class);
+            new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage(returnMsgModel.getMessage())
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO 自动生成的方法
+                            //            Intent intent=new Intent(context, TruckLoad.class);
 //            intent.putExtra("VoucherNo",txtVoucherNo.getText().toString().trim());
 //            startActivityLeft(intent);
+                            closeActiviry();
+                        }
+                    }).show();
+            closeActiviry();
+
         }else
         {
            MessageBox.Show(context,returnMsgModel.getMessage());

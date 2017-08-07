@@ -25,7 +25,7 @@ public class InventoryScanItemAdapter extends BaseAdapter {
     public final class ListItemView { // 自定义控件集合
 
         public TextView txtMaterialNo;
-        public TextView txtSerialNo;
+        public TextView txtStock;
         public TextView txtQty;
         public TextView txtMaterialDec;
     }
@@ -64,6 +64,7 @@ public class InventoryScanItemAdapter extends BaseAdapter {
             convertView = listContainer.inflate(R.layout.item_inventoryscan_listview,null);
             listItemView.txtMaterialNo = (TextView) convertView.findViewById(R.id.txtMaterialNo);
             listItemView.txtQty = (TextView) convertView.findViewById(R.id.txtQty);
+            listItemView.txtStock = (TextView) convertView.findViewById(R.id.txtStock);
             listItemView.txtMaterialDec = (TextView) convertView.findViewById(R.id.txtMaterialDec);
             convertView.setTag(listItemView);
         } else {
@@ -71,6 +72,7 @@ public class InventoryScanItemAdapter extends BaseAdapter {
         }
         Barcode_Model barcodeModel=barcodeModels.get(selectID);
         listItemView.txtMaterialNo.setText(barcodeModel.getMaterialNo());
+        listItemView.txtStock.setText("库位："+barcodeModel.getAreano());
         listItemView.txtMaterialDec.setText(barcodeModel.getMaterialDesc());
         listItemView.txtQty.setText("数量："+barcodeModel.getQty());
         return convertView;

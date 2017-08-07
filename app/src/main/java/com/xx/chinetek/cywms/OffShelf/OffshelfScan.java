@@ -20,7 +20,6 @@ import com.xx.chinetek.adapter.wms.OffShelf.OffShelfScanDetailAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
-import com.xx.chinetek.cywms.Qc.QCScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.QC.QualityDetailInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
@@ -226,9 +225,9 @@ public class OffshelfScan extends BaseActivity {
             params.put("UserJson", userJson);
             params.put("strOldBarCode", strOldBarCode);
             params.put("strNewBarCode", "");
+            params.put("PrintFlag","1"); //1：打印 2：不打印
             LogUtil.WriteLog(OffshelfScan.class, TAG_SaveT_BarCodeToStockADF, strOldBarCode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null, URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
-
         }
     }
 
@@ -286,7 +285,7 @@ public class OffshelfScan extends BaseActivity {
     扫描条码
      */
     void AnalysisGetStockModelADFJson(String result) {
-        LogUtil.WriteLog(QCScan.class, TAG_GetStockModelADF, result);
+        LogUtil.WriteLog(OffshelfScan.class, TAG_GetStockModelADF, result);
         try {
             ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {
             }.getType());
@@ -462,7 +461,7 @@ public class OffshelfScan extends BaseActivity {
     }
 
     Boolean CheckBarcodeScaned(){
-        if(!tbBoxType.isChecked()) { //整箱、整托需要检查条码是否扫描
+        if(!tbUnboxType.isChecked()) { //整箱、整托需要检查条码是否扫描
             for (OutStockTaskDetailsInfo_Model temoStockTaskDetail : outStockTaskDetailsInfoModels) {
                 if(temoStockTaskDetail.getLstStockInfo()!=null) {
                     if (temoStockTaskDetail.getLstStockInfo().indexOf(stockInfoModels.get(0)) != -1) {
