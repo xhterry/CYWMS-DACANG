@@ -189,7 +189,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
                     //调用GetT_InStockList 赋值ERP订单号字段，获取Receipt_Model列表，跳转到扫描界面
                     OutStockTaskInfo_Model outStockTaskInfoModel = new OutStockTaskInfo_Model();
                     outStockTaskInfoModel.setStatus(1);
-                    outStockTaskInfoModel.setERPVoucherNo(palletDetailModels.get(0).getErpVoucherNo());
+                    outStockTaskInfoModel.setErpVoucherNo(palletDetailModels.get(0).getErpVoucherNo());
                     GetT_OutStockTaskList(outStockTaskInfoModel);
                     //   } else {
                     //     MessageBox.Show(context, R.string.Error_BarcodeNotInList);

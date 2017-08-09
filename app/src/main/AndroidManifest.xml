@@ -83,7 +83,8 @@
         <service android:name="com.xx.chinetek.Service.SocketService" />
 
         <activity android:name="com.xx.chinetek.FillPrint.InitPrint" />
-        <activity android:name=".Intentory.IntentoryAdd"></activity>
+        <activity android:name=".Intentory.IntentoryAdd" />
+        <activity android:name=".Qc.QCInStock"></activity>
     </application>
 
 </manifest>

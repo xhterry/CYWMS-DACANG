@@ -91,6 +91,7 @@ public class FillPrint extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Product_fillPrint_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Event(value = R.id.edt_LabelScanbarcode,type = View.OnKeyListener.class)

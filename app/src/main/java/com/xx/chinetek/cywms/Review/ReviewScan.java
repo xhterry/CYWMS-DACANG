@@ -23,6 +23,7 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.cywms.Truck.TruckLoad;
 import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
@@ -122,6 +123,7 @@ public class ReviewScan extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Review_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
 
@@ -219,10 +221,10 @@ public class ReviewScan extends BaseActivity {
     */
     void GetOutStockDetailInfo(OutStock_Model outStockModel){
         if(outStockModel!=null) {
-            txtVoucherNo.setText(outStockModel.getVoucherNo());
+            txtVoucherNo.setText(outStockModel.getErpVoucherNo());
             final OutStockDetailInfo_Model outStockDetailInfoModel1 = new OutStockDetailInfo_Model();
             outStockDetailInfoModel1.setHeaderID(outStockModel.getID());
-            outStockDetailInfoModel1.setERPVoucherNo(outStockModel.getErpVoucherNo());
+            outStockDetailInfoModel1.setErpVoucherNo(outStockModel.getErpVoucherNo());
             outStockDetailInfoModel1.setVoucherType(outStockModel.getVoucherType());
             final Map<String, String> params = new HashMap<String, String>();
             params.put("ModelDetailJson", parseModelToJson(outStockDetailInfoModel1));
@@ -314,20 +316,18 @@ public class ReviewScan extends BaseActivity {
     void AnalysisSaveT_OutStockReviewDetailADFJson(String result){
         LogUtil.WriteLog(ReviewScan.class, TAG_SaveT_OutStockReviewDetailADF,result);
         ReturnMsgModelList<OutStock_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStock_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
+        if(returnMsgModel.getHeaderStatus().equals("S")) {
             new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage(returnMsgModel.getMessage())
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO 自动生成的方法
-                            //            Intent intent=new Intent(context, TruckLoad.class);
-//            intent.putExtra("VoucherNo",txtVoucherNo.getText().toString().trim());
-//            startActivityLeft(intent);
+                            Intent intent = new Intent(context, TruckLoad.class);
+                            intent.putExtra("VoucherNo", txtVoucherNo.getText().toString().trim());
+                            startActivityLeft(intent);
                             closeActiviry();
                         }
                     }).show();
-            closeActiviry();
-
         }else
         {
            MessageBox.Show(context,returnMsgModel.getMessage());

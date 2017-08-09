@@ -140,6 +140,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
                     params.put("ERPVoucherNo", "");
                     params.put("TaskNo","");
                     params.put("AreaNo", "");
+                    params.put("WareHouseID", BaseApplication.userInfo.getWarehouseID()+"");
                     LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_ScanInStockModelADF, code);
                     RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_ScanInStockModelADF, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_ScanInStockModelADF, null, URLModel.GetURL().GetT_ScanInStockModelADF, params, null);
                     return false;

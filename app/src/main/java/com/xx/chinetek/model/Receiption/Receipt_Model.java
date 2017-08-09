@@ -21,7 +21,6 @@ public class Receipt_Model extends Base_Model implements Parcelable {
     }
 
     private String VoucherNo;
-    private String ErpVoucherNo;
     private String SupplierNo;
     private String SupplierName;
     private Float IsQuality;
@@ -34,13 +33,6 @@ public class Receipt_Model extends Base_Model implements Parcelable {
     private List<ReceiptDetail_Model> lstDetail;
     private String Note;
 
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
 
     public Float getIsQuality() {
         return IsQuality;
@@ -155,7 +147,6 @@ public class Receipt_Model extends Base_Model implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(this.VoucherNo);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.SupplierNo);
         dest.writeString(this.SupplierName);
         dest.writeValue(this.IsQuality);
@@ -171,7 +162,6 @@ public class Receipt_Model extends Base_Model implements Parcelable {
     protected Receipt_Model(Parcel in) {
         super(in);
         this.VoucherNo = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.SupplierNo = in.readString();
         this.SupplierName = in.readString();
         this.IsQuality = (Float) in.readValue(Float.class.getClassLoader());

@@ -8,7 +8,6 @@ import android.widget.GridView;
 
 import com.xx.chinetek.Box.Boxing;
 import com.xx.chinetek.FillPrint.FillPrint;
-import com.xx.chinetek.FillPrint.InitPrint;
 import com.xx.chinetek.Pallet.CombinPallet;
 import com.xx.chinetek.Pallet.DismantlePallet;
 import com.xx.chinetek.adapter.GridViewItemAdapter;
@@ -23,7 +22,6 @@ import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.Query.QueryMain;
 import com.xx.chinetek.cywms.Receiption.ReceiptBillChoice;
 import com.xx.chinetek.cywms.Review.ReviewBillChoice;
-import com.xx.chinetek.cywms.Truck.TruckLoad;
 import com.xx.chinetek.cywms.UpShelf.UpShelfBillChoice;
 
 import org.xutils.view.annotation.ContentView;
@@ -100,15 +98,15 @@ public class MainActivity extends BaseActivity {
             case 11:
                 intent.setClass(context, MaterialChangeReceiptBillChoice.class);
                 break;
+//            case 12:
+//                intent.setClass(context, TruckLoad.class);
+//                break;
             case 12:
-                intent.setClass(context, TruckLoad.class);
-                break;
-            case 13:
                 intent.setClass(context, FillPrint.class);
                 break;
-            case 14:
-                intent.setClass(context, InitPrint.class);
-                break;
+//            case 14:
+//                intent.setClass(context, InitPrint.class);
+//                break;
         }
         if(intent!=null)
             startActivityLeft(intent);
@@ -127,13 +125,13 @@ public class MainActivity extends BaseActivity {
                 R.drawable.offshelf,R.drawable.review, R.drawable.innermove,
                 R.drawable.inventory, R.drawable.query,R.drawable.combinepallet,
                 R.drawable.dismantlepallet,R.drawable.dismounting,
-                R.drawable.materiel,R.drawable.truckload,R.drawable.fillprint,R.drawable.fillprint
-                //R.drawable.adjustment,
+                R.drawable.materiel,R.drawable.fillprint
+                //R.drawable.adjustment,,R.drawable.truckload,R.drawable.fillprint
         };
         String[] itemNames = new String[]{"质检","收货", "上架",
                 "下架","发货复核", "移库",
-                "盘点", "查询",//"调拨",盘点(普通、随机)"库存调整",
-                "组托","拆托","装箱拆箱","物料转换","装车","标签补打","期初打印"
+                "盘点", "查询",//"调拨",盘点(普通、随机)"库存调整","装车",,"期初打印"
+                "组托","拆托","装箱拆箱","物料转换","标签补打"
         };
         //cion和iconName的长度是相同的，这里任选其一都可以
         for(int i=0;i<itemIcon.length;i++){

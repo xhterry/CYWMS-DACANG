@@ -113,6 +113,7 @@ public class IntentoryScan extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Intentory_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override

@@ -158,7 +158,7 @@ public class Login extends BaseActivity {
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_PickAreaID));
             }else if(BaseApplication.userInfo.getToSampAreaNo()==null && BaseApplication.userInfo.getToSampAreaNo().equals("")){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_SampAreaNo));
-            }else if(BaseApplication.userInfo.getQuanUserNo()==null && BaseApplication.userInfo.getQuanUserNo().equals("")){
+            }else if(BaseApplication.userInfo.getToSampWareHouseNo()==null && BaseApplication.userInfo.getToSampWareHouseNo().equals("")){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_QuanUserNo));
             }
             else{
@@ -202,10 +202,7 @@ public class Login extends BaseActivity {
 
     void SelectWareHouse(){
         if (BaseApplication.userInfo==null || BaseApplication.userInfo.getLstWarehouse() == null) return;
-
         List<String> wareHouses = new ArrayList<String>();
-
-
         if(BaseApplication.userInfo.getLstWarehouse().size()>1) {
             for (WareHouseInfo warehouse : BaseApplication.userInfo.getLstWarehouse()) {
                 if (warehouse.getWareHouseName() != null && !warehouse.getWareHouseName().equals("")) {

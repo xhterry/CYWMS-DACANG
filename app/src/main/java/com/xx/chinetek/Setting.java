@@ -75,8 +75,11 @@ public class Setting extends BaseActivity {
         edtPort.setText(URLModel.Port+"");
         edtPrintIP.setText(URLModel.PrintIP);
         edtElecIP.setText(URLModel.ElecIP);
+        edtIPAdress.setEnabled(false);
+        edtPort.setEnabled(false);
         if(URLModel.isWMS) rbWMS.setChecked(true); else rbProduct.setChecked(true);
         edtTimeOut.setText(RequestHandler.SOCKET_TIMEOUT/1000+"");
+        CommonUtil.setEditFocus(edtPrintIP);
     }
 
     @Override
@@ -150,7 +153,7 @@ public class Setting extends BaseActivity {
         String ElecIP=edtElecIP.getText().toString().trim();
         Integer Port=Integer.parseInt(edtPort.getText().toString().trim());
         Integer TimeOut=Integer.parseInt(edtTimeOut.getText().toString().trim())*1000;
-        if(CommonUtil.MatcherIP(IPAdress) && CommonUtil.MatcherIP(ElecIP)){
+        if(CommonUtil.MatcherIP(ElecIP)){//CommonUtil.MatcherIP(IPAdress) &&
             SharePreferUtil.SetShare(context,IPAdress,PrintIp,ElecIP,Port,TimeOut,rbWMS.isChecked());
             new AlertDialog.Builder(context).setTitle("提示").setMessage(getResources().getString(R.string.SaveSuccess)).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override

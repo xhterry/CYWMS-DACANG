@@ -11,7 +11,6 @@ public class SerialNo_Model implements Parcelable,Cloneable {
 
     public String FacMaterialNo;
     public String SerialNo ;
-    public String ERPVoucherNo;
     public String SerialQty;
     private String MaterialNo;
     private String MaterialDesc;
@@ -43,14 +42,6 @@ public class SerialNo_Model implements Parcelable,Cloneable {
 
     public static Creator<SerialNo_Model> getCREATOR() {
         return CREATOR;
-    }
-
-    public String getERPVoucherNo() {
-        return ERPVoucherNo;
-    }
-
-    public void setERPVoucherNo(String ERPVoucherNo) {
-        this.ERPVoucherNo = ERPVoucherNo;
     }
 
     public String getFacMaterialNo() {
@@ -115,7 +106,6 @@ public class SerialNo_Model implements Parcelable,Cloneable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.FacMaterialNo);
         dest.writeString(this.SerialNo);
-        dest.writeString(this.ERPVoucherNo);
         dest.writeString(this.SerialQty);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
@@ -125,7 +115,6 @@ public class SerialNo_Model implements Parcelable,Cloneable {
     protected SerialNo_Model(Parcel in) {
         this.FacMaterialNo = in.readString();
         this.SerialNo = in.readString();
-        this.ERPVoucherNo = in.readString();
         this.SerialQty = in.readString();
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();

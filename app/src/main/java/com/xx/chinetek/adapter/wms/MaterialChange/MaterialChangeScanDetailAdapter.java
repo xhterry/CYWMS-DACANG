@@ -63,7 +63,7 @@ public class MaterialChangeScanDetailAdapter extends BaseAdapter {
             listItemView = new ListItemView();
 
             // 获取list_item布局文件的视图
-            convertView = listContainer.inflate(R.layout.item_offshelfscandetail_listview,null);
+            convertView = listContainer.inflate(R.layout.item_materialchangedetail_listview,null);
             listItemView.txtbarcode = (TextView) convertView.findViewById(R.id.txtbarcode);
             listItemView.txtScanNum = (TextView) convertView.findViewById(R.id.txtScanNum);
             listItemView.txtERPVoucherNo = (TextView) convertView.findViewById(R.id.txtERPVoucherNo);
@@ -78,8 +78,8 @@ public class MaterialChangeScanDetailAdapter extends BaseAdapter {
         listItemView.txtbarcode.setText(outStockTaskDetailsInfoModel.getMaterialNo());
         listItemView.txtScanNum.setText("扫描数："+outStockTaskDetailsInfoModel.getScanQty());
         listItemView.txtRemainQty.setText("转料数："+outStockTaskDetailsInfoModel.getOutStockQty());
-        listItemView.txtreferStock.setVisibility(View.VISIBLE);
-        listItemView.txtERPVoucherNo.setVisibility(View.VISIBLE);
+        listItemView.txtreferStock.setText(outStockTaskDetailsInfoModel.getFromErpAreaNo());
+        listItemView.txtERPVoucherNo.setText(outStockTaskDetailsInfoModel.getFromBatchNo());
         listItemView.txtMaterialDesc.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
         if (outStockTaskDetailsInfoModel.getScanQty()!=0 &&
                 outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getOutStockQty())<0) {

@@ -81,8 +81,8 @@ public class UpshelfBillChioceItemAdapter extends BaseAdapter {
             listItemView = (ListItemView) convertView.getTag();
         }
         InStockTaskInfo_Model inStockTaskInfoModel=inStockTaskInfoModels.get(selectID);
-        listItemView.txtTaskNo.setText(inStockTaskInfoModel.getTaskNo());
-        listItemView.txtERPVoucherNo.setText(inStockTaskInfoModel.getErpVoucherNo());
+        listItemView.txtTaskNo.setText(inStockTaskInfoModel.getErpVoucherNo());
+        listItemView.txtERPVoucherNo.setText(inStockTaskInfoModel.getTaskNo());
         listItemView.txtStrVoucherType.setText(inStockTaskInfoModel.getStrVoucherType());
         listItemView.txtCompany.setText(inStockTaskInfoModel.getStrongHoldName());
         listItemView.txtdepartment.setText(inStockTaskInfoModel.getDepartmentName());

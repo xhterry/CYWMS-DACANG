@@ -21,7 +21,6 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     }
 
     private String VoucherNo;
-    private String ErpVoucherNo;
     private String RowNo;
     private String PalletNo;
     private String MaterialNo;
@@ -127,14 +126,6 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
         VoucherNo = voucherNo;
     }
 
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
-
     public String getRowNo() {
         return RowNo;
     }
@@ -186,7 +177,6 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(this.VoucherNo);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.RowNo);
         dest.writeString(this.PalletNo);
         dest.writeString(this.MaterialNo);
@@ -207,7 +197,6 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     protected PalletDetail_Model(Parcel in) {
         super(in);
         this.VoucherNo = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.RowNo = in.readString();
         this.PalletNo = in.readString();
         this.MaterialNo = in.readString();

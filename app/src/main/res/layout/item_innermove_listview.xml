@@ -3,44 +3,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="5dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.4">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3">
 
-                <TextView
-                    android:id="@+id/list_OutLoacl"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:textSize="15sp"
-                    android:maxLines="1"
-                    android:textColor="@color/green" />
+        <TextView
+            android:id="@+id/list_OutLoacl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:gravity="left"
+            android:maxLines="1"
+            android:textColor="@color/green"
+            android:textSize="15sp" />
 
 
+        <TextView
+            android:id="@+id/list_SerialNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="left"
+            android:maxLines="1"
+            android:textColor="@color/chocolate"
+            android:textSize="15sp" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/list_SerialNo"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.7"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:textSize="15sp"
-                    android:maxLines="1"
-                    android:textColor="@color/chocolate" />
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8">
 
-         <TextView
+    <TextView
             android:id="@+id/list_MaterialDesc"
-            android:layout_width="match_parent"
-            android:layout_weight="0.6"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="match_parent"
             android:gravity="left"
             android:textSize="20sp"
             android:maxLines="1"
             android:textColor="@color/blue_66f" />
 
+        <TextView
+            android:id="@+id/list_qty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:gravity="right"
+            android:maxLines="1"
+            android:textColor="@color/crimson"
+            android:textSize="15sp" />
+    </LinearLayout>
 </LinearLayout>

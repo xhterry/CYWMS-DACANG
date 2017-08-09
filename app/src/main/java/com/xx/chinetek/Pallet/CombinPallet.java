@@ -121,6 +121,7 @@ public class CombinPallet extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Pallet_scan), false);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -345,6 +346,7 @@ public class CombinPallet extends BaseActivity {
             LogUtil.WriteLog(CombinPallet.class, TAG_PrintLpkPalletAndroid, result);
             ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
+            if(!returnMsgModel.getHeaderStatus().equals("S"))
                 MessageBox.Show(context,returnMsgModel.getMessage());
 
         } catch (Exception ex) {

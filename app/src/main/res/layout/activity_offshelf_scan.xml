@@ -58,7 +58,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/txt_Unboxing"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/txt_Unboxing"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="16dp" />
 
     <Button
         android:id="@+id/btn_BillDetail"

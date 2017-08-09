@@ -135,6 +135,7 @@ public class OffshelfScan extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.OffShelf_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -150,6 +151,49 @@ public class OffshelfScan extends BaseActivity {
         tbPalletType.setChecked(view.getId()== R.id.tb_PalletType);
         tbBoxType.setChecked(view.getId()== R.id.tb_BoxType);
         ShowUnboxing(view.getId()== R.id.tb_UnboxType);
+    }
+
+    @Event(value =R.id.edt_Unboxing,type = View.OnKeyListener.class)
+    private  boolean edtUnboxingClick(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            String num=edtUnboxing.getText().toString().trim();
+            if(!CommonUtil.isFloat(num)) {
+                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+                CommonUtil.setEditFocus(edtUnboxing);
+                return true;
+            }
+            Float qty=Float.parseFloat(num); //输入数量
+            Float scanQty=stockInfoModels.get(0).getQty(); //箱数量
+            if(qty>scanQty){
+                MessageBox.Show(context,getString(R.string.Error_PackageQtyBiger));
+                CommonUtil.setEditFocus(edtUnboxing);
+                return true;
+            }
+            if(currentPickMaterialIndex!=-1) {
+
+                Float remainqty= outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getRemainQty()-
+                        outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty();
+                if (qty >remainqty  || SumReaminQty<qty) {
+                    MessageBox.Show(context, getString(R.string.Error_offshelfQtyBiger));
+                    CommonUtil.setEditFocus(edtUnboxing);
+                    return true;
+                }
+                //拆零
+                stockInfoModels.get(0).setPickModel(3);
+                stockInfoModels.get(0).setAmountQty(qty);
+                String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
+                String strOldBarCode = GsonUtil.parseModelToJson(stockInfoModels.get(0));
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("UserJson", userJson);
+                params.put("strOldBarCode", strOldBarCode);
+                params.put("strNewBarCode", "");
+                params.put("PrintFlag","1"); //1：打印 2：不打印
+                LogUtil.WriteLog(OffshelfScan.class, TAG_SaveT_BarCodeToStockADF, strOldBarCode);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null, URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
+            }
+        }
+        return false;
     }
 
     @Event(value =R.id.edt_OffShelfScanbarcode,type = View.OnKeyListener.class)
@@ -194,41 +238,7 @@ public class OffshelfScan extends BaseActivity {
 
     @Event(R.id.btn_PrintBox)
     private  void btnPrintBoxClick(View view){
-        String num=edtUnboxing.getText().toString().trim();
-        if(!CommonUtil.isFloat(num)) {
-            MessageBox.Show(context,getString(R.string.Error_isnotnum));
-            CommonUtil.setEditFocus(edtUnboxing);
-            return;
-        }
-        Float qty=Float.parseFloat(num); //输入数量
-        Float scanQty=stockInfoModels.get(0).getQty(); //箱数量
-        if(qty>scanQty){
-            MessageBox.Show(context,getString(R.string.Error_PackageQtyBiger));
-            CommonUtil.setEditFocus(edtUnboxing);
-            return ;
-        }
-        if(currentPickMaterialIndex!=-1) {
 
-            Float remainqty= outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getRemainQty()-
-                    outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty();
-            if (qty >remainqty  || SumReaminQty<qty) {
-                MessageBox.Show(context, getString(R.string.Error_offshelfQtyBiger));
-                CommonUtil.setEditFocus(edtUnboxing);
-                return;
-            }
-            //拆零
-            stockInfoModels.get(0).setPickModel(3);
-            stockInfoModels.get(0).setAmountQty(qty);
-            String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
-            String strOldBarCode = GsonUtil.parseModelToJson(stockInfoModels.get(0));
-            final Map<String, String> params = new HashMap<String, String>();
-            params.put("UserJson", userJson);
-            params.put("strOldBarCode", strOldBarCode);
-            params.put("strNewBarCode", "");
-            params.put("PrintFlag","1"); //1：打印 2：不打印
-            LogUtil.WriteLog(OffshelfScan.class, TAG_SaveT_BarCodeToStockADF, strOldBarCode);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null, URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
-        }
     }
 
     @Override
@@ -457,7 +467,7 @@ public class OffshelfScan extends BaseActivity {
         int visiable=show? View.VISIBLE:View.GONE;
         txtUnboxing.setVisibility(visiable);
         edtUnboxing.setVisibility(visiable);
-        btnPrintBox.setVisibility(visiable);
+       // btnPrintBox.setVisibility(visiable);
     }
 
     Boolean CheckBarcodeScaned(){

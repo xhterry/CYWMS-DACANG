@@ -16,7 +16,6 @@ public class BarCodeInfo extends Base_Model implements Parcelable{
     private String VoucherNo;
     private String RowNo;
     private String RowNoDel;
-    private String ErpVoucherNo;
     private String MaterialNo;
     private String MaterialDesc;
     private String CusCode;
@@ -160,14 +159,6 @@ public class BarCodeInfo extends Base_Model implements Parcelable{
 
     public void setRowNo(String rowNo) {
         RowNo = rowNo;
-    }
-
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
     }
 
     public String getMaterialNo() {
@@ -431,7 +422,6 @@ public class BarCodeInfo extends Base_Model implements Parcelable{
         dest.writeString(this.VoucherNo);
         dest.writeString(this.RowNo);
         dest.writeString(this.RowNoDel);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeString(this.CusCode);
@@ -477,7 +467,6 @@ public class BarCodeInfo extends Base_Model implements Parcelable{
         this.VoucherNo = in.readString();
         this.RowNo = in.readString();
         this.RowNoDel = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.CusCode = in.readString();

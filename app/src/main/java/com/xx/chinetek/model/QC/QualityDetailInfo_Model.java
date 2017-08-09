@@ -14,7 +14,6 @@ import java.util.List;
 
 public class QualityDetailInfo_Model extends Base_Model  implements Parcelable{
 
-    private String ERPVoucherNo;
     private String AreaNo;
     private String Unit;
     private String UnitName;
@@ -156,14 +155,6 @@ public class QualityDetailInfo_Model extends Base_Model  implements Parcelable{
         RemainQty = remainQty;
     }
 
-    public String getERPVoucherNo() {
-        return ERPVoucherNo;
-    }
-
-    public void setERPVoucherNo(String ERPVoucherNo) {
-        this.ERPVoucherNo = ERPVoucherNo;
-    }
-
     public String getAreaNo() {
         return AreaNo;
     }
@@ -215,7 +206,6 @@ public class QualityDetailInfo_Model extends Base_Model  implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(this.ERPVoucherNo);
         dest.writeString(this.AreaNo);
         dest.writeString(this.Unit);
         dest.writeString(this.UnitName);
@@ -240,7 +230,6 @@ public class QualityDetailInfo_Model extends Base_Model  implements Parcelable{
 
     protected QualityDetailInfo_Model(Parcel in) {
         super(in);
-        this.ERPVoucherNo = in.readString();
         this.AreaNo = in.readString();
         this.Unit = in.readString();
         this.UnitName = in.readString();

@@ -14,6 +14,7 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:layout_weight="0.7"
+                    android:textColor="@color/blueviolet"
                     android:textSize="25sp"/>
 
                 <TextView
@@ -22,8 +23,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:maxLines="1"
-                    android:textColor="@color/gray"
-                    android:textSize="15sp"/>
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/dodgerblue"
+                    android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -40,7 +42,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
                     android:maxLines="1"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/mediumseagreen"
                     android:textSize="15sp"/>
 
         </LinearLayout>
@@ -55,7 +57,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
                     android:maxLines="1"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/peru"
                     android:textSize="15sp"/>
 
                 <TextView

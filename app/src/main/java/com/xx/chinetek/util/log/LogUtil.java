@@ -12,7 +12,7 @@ public class LogUtil {
     public static <T> void WriteLog(Class<T> class1, String title, String info) {
         if (debugBoolean) {
             log = LoggerFactory.getLogger(class1);
-            log.info(title + "*" + info + "\r\n");
+            log.info(title + "*" +"\r\n" +info + "\r\n\r\n");
             Log.v("WMSLOG_"+title, info);
         }
     }

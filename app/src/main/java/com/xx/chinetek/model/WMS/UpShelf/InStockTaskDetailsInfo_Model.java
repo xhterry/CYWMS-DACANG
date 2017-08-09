@@ -37,7 +37,6 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
     private String OperatorUserNo;
     private int TaskID;
     private String TaskNo;
-    private String ERPVoucherNo;
     private String TMaterialNo;
     private String TMaterialDesc;
     private Float ReviewQty;
@@ -192,14 +191,6 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
 
     public void setPartNo(String partNo) {
         PartNo = partNo;
-    }
-
-    public String getERPVoucherNo() {
-        return ERPVoucherNo;
-    }
-
-    public void setERPVoucherNo(String ERPVoucherNo) {
-        this.ERPVoucherNo = ERPVoucherNo;
     }
 
     public String getTaskNo() {
@@ -701,7 +692,6 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         dest.writeString(this.OperatorUserNo);
         dest.writeInt(this.TaskID);
         dest.writeString(this.TaskNo);
-        dest.writeString(this.ERPVoucherNo);
         dest.writeString(this.TMaterialNo);
         dest.writeString(this.TMaterialDesc);
         dest.writeValue(this.ReviewQty);
@@ -776,7 +766,6 @@ public class InStockTaskDetailsInfo_Model extends Base_Model implements Parcelab
         this.OperatorUserNo = in.readString();
         this.TaskID = in.readInt();
         this.TaskNo = in.readString();
-        this.ERPVoucherNo = in.readString();
         this.TMaterialNo = in.readString();
         this.TMaterialDesc = in.readString();
         this.ReviewQty = (Float) in.readValue(Float.class.getClassLoader());

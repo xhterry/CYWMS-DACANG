@@ -114,6 +114,7 @@ public class MaterialChange extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.MaterialChange_scan_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override

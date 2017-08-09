@@ -6,8 +6,8 @@
 
     <item
         android:id="@+id/action_filter"
-        android:title="@string/QCprint"
+        android:title="@string/InStockQC"
         android:orderInCategory="80"
         app:showAsAction="ifRoom" />
-
+    <!--android:title="@string/QCprint"-->
 </menu>

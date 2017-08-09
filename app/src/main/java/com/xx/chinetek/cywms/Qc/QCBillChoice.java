@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -91,9 +92,10 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_title), false);
+        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_title), true);
         x.view().inject(this);
         btn_PrintQCLabrl.setVisibility(View.GONE);
+        edtfilterContent.setVisibility(View.GONE);
     }
 
     @Override
@@ -115,23 +117,26 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         InitListView();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_inventorybilldetail, menu);
-//        gMenuItem=menu.findItem(R.id.action_filter);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if(item.getItemId() ==R.id.action_filter){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_inventorybilldetail, menu);
+        gMenuItem=menu.findItem(R.id.action_filter);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() ==R.id.action_filter){
+
+            Intent intent=new Intent(context,QCInStock.class);
+            startActivityLeft(intent);
 //            if(qualityInfoModels!=null && qualityInfoModels.size()>0){
 //                isQcPrint=!isQcPrint;
 //                initFrm();
 //            }
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     /**
@@ -219,16 +224,17 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 qualityInfoModels = returnMsgModel.getModelJson();
-                if (qualityInfoModels != null && qualityInfoModels.size() == 1 && stockInfoModel != null)
-                    StartScanIntent(qualityInfoModels.get(0));
-                else
-                    BindListVIew(qualityInfoModels);
+//                if (qualityInfoModels != null && qualityInfoModels.size() == 1 && stockInfoModel != null)
+//                    StartScanIntent(qualityInfoModels.get(0));
+//                else
+                   // BindListVIew(qualityInfoModels);
             } else {
-                ToastUtil.show(returnMsgModel.getMessage());
+               ToastUtil.show(returnMsgModel.getMessage());
             }
         }catch (Exception ex){
-            ToastUtil.show(ex.getMessage());
+            MessageBox.Show(context,ex.getMessage());
         }
+        BindListVIew(qualityInfoModels);
     }
 
     void AnalysisPrintQYAndroidJson(String result){

@@ -30,7 +30,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String SupcusNo;
     private Float IsShelvePost;
     private Float Receive_ID;
-    private String ERPVoucherNo;
     private Float IsQuality;
     private Float IsReceivePost;
     private String Plant;
@@ -79,13 +78,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         ErpDocNo = erpDocNo;
     }
 
-    public String getERPVoucherNo() {
-        return ERPVoucherNo;
-    }
-
-    public void setERPVoucherNo(String ERPVoucherNo) {
-        this.ERPVoucherNo = ERPVoucherNo;
-    }
 
     public Float getIsUnderShelvePost() {
         return IsUnderShelvePost;
@@ -336,7 +328,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
 
         OutStockTaskInfo_Model that = (OutStockTaskInfo_Model) o;
 
-        return TaskNo.equals(that.TaskNo) ||  ERPVoucherNo.equals(that.ERPVoucherNo) ;
+        return TaskNo.equals(that.TaskNo) ||  ErpVoucherNo.equals(that.ErpVoucherNo) ;
 
     }
 
@@ -359,7 +351,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.SupcusNo);
         dest.writeValue(this.IsShelvePost);
         dest.writeValue(this.Receive_ID);
-        dest.writeString(this.ERPVoucherNo);
         dest.writeValue(this.IsQuality);
         dest.writeValue(this.IsReceivePost);
         dest.writeString(this.Plant);
@@ -397,7 +388,6 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.SupcusNo = in.readString();
         this.IsShelvePost = (Float) in.readValue(Float.class.getClassLoader());
         this.Receive_ID = (Float) in.readValue(Float.class.getClassLoader());
-        this.ERPVoucherNo = in.readString();
         this.IsQuality = (Float) in.readValue(Float.class.getClassLoader());
         this.IsReceivePost = (Float) in.readValue(Float.class.getClassLoader());
         this.Plant = in.readString();

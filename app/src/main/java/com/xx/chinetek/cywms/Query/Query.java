@@ -66,13 +66,14 @@ public class Query extends BaseActivity {
     EditText edtqueryScanBarcode;
 
     QueryItemAdapter queryItemAdapter;
-
+int Type=-1;
     @Override
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
         txtname.setText(BaseApplication.toolBarTitle.Title+"号：");
+        Type=getIntent().getIntExtra("Type",-1);
     }
 
 
@@ -83,8 +84,8 @@ public class Query extends BaseActivity {
             String barcode=edtqueryScanBarcode.getText().toString().trim();
             if(!TextUtils.isEmpty(barcode)){
                 final Map<String, String> params = new HashMap<String, String>();
-                params.put("barcode", barcode);
-                params.put("type", "1");
+                params.put("MaterialNo", barcode);
+                params.put("ScanType", Type+"");
                 String para = (new JSONObject(params)).toString();
                 LogUtil.WriteLog(Query.class, TAG_GetStockByMaterialNoADF, para);
                 RequestHandler.addRequestWithDialog(Request.Method.POST,TAG_GetStockByMaterialNoADF,String.format(getString(R.string.Msg_QueryStockInfo),BaseApplication.toolBarTitle.Title), context, mHandler, RESULT_Msg_GetStockADF, null,  URLModel.GetURL().GetStockByMaterialNoADF, params, null);
@@ -95,14 +96,21 @@ public class Query extends BaseActivity {
 
     void AnalysisGetStockADFJson(String result){
         LogUtil.WriteLog(Query.class, TAG_GetStockByMaterialNoADF,result);
-        List<StockInfo_Model> stockInfoModels=new ArrayList<>();
-        ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            stockInfoModels=returnMsgModel.getModelJson();
-        }else{
-            MessageBox.Show(context,returnMsgModel.getMessage());
+        try {
+            List<StockInfo_Model> stockInfoModels = new ArrayList<>();
+            ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                stockInfoModels = returnMsgModel.getModelJson();
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+            queryItemAdapter = new QueryItemAdapter(context, stockInfoModels);
+            lsvQuery.setAdapter(queryItemAdapter);
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+
         }
-        queryItemAdapter=new QueryItemAdapter(context,stockInfoModels);
-        lsvQuery.setAdapter(queryItemAdapter);
+        CommonUtil.setEditFocus(edtqueryScanBarcode);
     }
 }

@@ -12,8 +12,8 @@ public class URLModel {
         return  new URLModel();
     }
 
-    public static String IPAdress="10.2.32.191";//"";
-    public static int Port=9000;//9000;
+    public static String IPAdress="wmstest.beukay.com";//"wmstest.beukay.com";
+    public static int Port=9010;//9000;
     public static String  LastContent="AndroidService.svc/";
     public static String PrintIP="10.2.32.192";
     public static String ElecIP="10.2.32.244";
@@ -30,6 +30,7 @@ public class URLModel {
     public String GetPDNoAndroid = GetWCFAdress()+"GetPDNoAndroid"; //获取盘点单号
     public String GetAreanoID = GetWCFAdress()+"TakeAID"; //获取盘点库位
     public String GetTransportSupplierListADF = GetWCFAdress()+"GetTransportSupplierListADF"; //获取盘点库位
+    public String GetDeliveryInfoAndroid = GetWCFAdress()+"GetDeliveryInfoAndroid"; //获取目的地
     public String GetWareHouse = GetWCFAdress()+"GetWareHouse"; //获取盘点仓库
     public String SaveCheckAndroid = GetWCFAdress()+"SaveCheckAndroid"; //提交盘点库位
     public String GetAreanobyCheckno = GetWCFAdress()+"GetAreanobyCheckno"; //获取可盘点库位
@@ -66,10 +67,13 @@ public class URLModel {
     public String Get_PalletDetailByVoucherNo=GetWCFAdress()+"Get_PalletDetailByVoucherNo";//复核获取托盘信息
     public String Del_PalletOrSerialNo=GetWCFAdress()+"Del_PalletOrSerialNo";//复核删除托盘信息
     public String GetT_QualityListADF=GetWCFAdress()+"GetT_QualityListADF";//获取质检表头信息
+    public String ScanQualityStockADF=GetWCFAdress()+"ScanQualityStockADF";//获取质检扫描条码
+    public String SaveTransportSupplierListADF=GetWCFAdress()+"SaveTransportSupplierListADF";//保存承运商
     public String GetT_QualityDetailListByHeaderIDADF=GetWCFAdress()+"GetT_QualityDetailListByHeaderIDADF";//获取质检表体信息
     public String GetT_OutBarCodeInfoForQuanADF=GetWCFAdress()+"GetT_OutBarCodeInfoForQuanADF";//获取质检扫描条码信息
     public String GetStockModelADF=GetWCFAdress()+"GetStockModelADF";//获取下架和仓库内移库条码信息
     public String SaveT_QuanlitySampADF=GetWCFAdress()+"SaveT_QuanlitySampADF";//提交质检明细
+    public String CreateQualityForStock=GetWCFAdress()+"CreateQualityForStock";//提交在库检明细
     public String SaveT_OutStockTaskDetailADF=GetWCFAdress()+"SaveT_OutStockTaskDetailADF";//提交下架明细
     public String SaveT_ChangeMaterialADF=GetWCFAdress()+"SaveT_ChangeMaterialADF";//提交转料明细
     public String GetT_OutTaskDetailListByHeaderIDADF=GetWCFAdress()+"GetT_OutTaskDetailListByHeaderIDADF";//获取下架表体信息

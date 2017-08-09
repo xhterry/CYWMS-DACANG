@@ -210,7 +210,7 @@ public class MaterialChangeReviewBillChoice extends BaseActivity implements Swip
         if(outStockModel!=null) {
             final OutStockDetailInfo_Model outStockDetailInfoModel1 = new OutStockDetailInfo_Model();
             outStockDetailInfoModel1.setHeaderID(outStockModel.getID());
-            outStockDetailInfoModel1.setERPVoucherNo(outStockModel.getErpVoucherNo());
+            outStockDetailInfoModel1.setErpVoucherNo(outStockModel.getErpVoucherNo());
             outStockDetailInfoModel1.setVoucherType(outStockModel.getVoucherType());
             final Map<String, String> params = new HashMap<String, String>();
             params.put("ModelDetailJson", parseModelToJson(outStockDetailInfoModel1));

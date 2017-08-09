@@ -40,7 +40,6 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     private String QcDesc;
     private List<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
     private String SaleName ;
-    private String ErpVoucherNo ;
     private String VoucherNo;
     private int IsSerial;
     //private List<PalletDetail_Model> lstPallet=new ArrayList<PalletDetail_Model>();
@@ -258,14 +257,6 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
 
     public void setStorageLoc(String storageLoc) {
         StorageLoc = storageLoc;
-    }
-
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
     }
 
     public int getInStockID() {
@@ -510,7 +501,6 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         dest.writeString(this.QcDesc);
         dest.writeTypedList(this.lstBarCode);
         dest.writeString(this.SaleName);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.VoucherNo);
         dest.writeInt(this.IsSerial);
         dest.writeString(this.SaleCode);
@@ -559,7 +549,6 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         this.QcDesc = in.readString();
         this.lstBarCode = in.createTypedArrayList(BarCodeInfo.CREATOR);
         this.SaleName = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.VoucherNo = in.readString();
         this.IsSerial = in.readInt();
         this.SaleCode = in.readString();

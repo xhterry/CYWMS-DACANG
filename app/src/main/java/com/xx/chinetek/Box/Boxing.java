@@ -117,6 +117,7 @@ public class Boxing extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Boxing_title), false);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override

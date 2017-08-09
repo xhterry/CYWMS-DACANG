@@ -3,6 +3,7 @@ package com.xx.chinetek.Pallet;
 import android.content.Context;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -110,6 +111,7 @@ public class DismantlePallet extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.DisPallet_scan), false);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -213,12 +215,21 @@ public class DismantlePallet extends BaseActivity {
                 ArrayList<PalletDetail_Model> temppalletDetailModels = returnMsgModel.getModelJson();
                 if (temppalletDetailModels != null && temppalletDetailModels.get(0).getLstBarCode() != null) {
                     String barcoce = edtBarcode.getText().toString().trim();
+                    String PalletNo=txtPalletNo.getText().toString();
+                    if(!TextUtils.isEmpty(PalletNo)){
+                        if(!PalletNo.equals(temppalletDetailModels.get(0).getPalletNo())){
+                            MessageBox.Show(context,getString(R.string.Error_PalletNoMatch));
+                           CommonUtil.setEditFocus(edtBarcode);
+                            return;
+                        }
+                    }
 
-                    Boolean isFoundBarcode = false;
+
+                    //Boolean isFoundBarcode = false;
                     for (int i = 0; i < temppalletDetailModels.get(0).getLstBarCode().size(); i++) {
                         if (!SWDisPallet.isChecked() && !temppalletDetailModels.get(0).getLstBarCode().get(i).getBarCode().contains(barcoce))
                             continue;
-                        isFoundBarcode = true;
+//                        isFoundBarcode = true;
                         BarCodeInfo barCodeInfo = temppalletDetailModels.get(0).getLstBarCode().get(i);
                         if (palletDetailModels.get(0).getLstBarCode().indexOf(barCodeInfo) == -1) {
                             palletDetailModels.get(0).setPalletNo(temppalletDetailModels.get(0).getPalletNo());
@@ -237,9 +248,9 @@ public class DismantlePallet extends BaseActivity {
                         if(!SWDisPallet.isChecked()) break;
 
                     }
-                    if (!isFoundBarcode) {
-                        MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList));
-                    }
+//                    if (!isFoundBarcode) {
+//                        MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList));
+//                    }
                 }
             }catch (Exception ex){
                 MessageBox.Show(context, ex.getMessage());

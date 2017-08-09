@@ -98,6 +98,8 @@ public class QCScan extends BaseActivity {
     TextView txtCompany;
     @ViewInject(R.id.txt_Batch)
     TextView txtBatch;
+    @ViewInject(R.id.txt_Stock)
+    TextView txtStock;
     @ViewInject(R.id.txt_Status)
     TextView txtStatus;
     @ViewInject(R.id.txt_EDate)
@@ -135,6 +137,7 @@ public class QCScan extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -142,7 +145,6 @@ public class QCScan extends BaseActivity {
         super.initData();
         qualityInfoModel=getIntent().getParcelableExtra("qualityInfoModel");
         GetQualityDetailInf(qualityInfoModel);
-
     }
 
     @Event(value = R.id.tb_unboxType,type = CompoundButton.OnCheckedChangeListener.class)
@@ -298,6 +300,8 @@ public class QCScan extends BaseActivity {
            CommonUtil.setEditFocus(edtQCScanBarcode);
            if(returnMsgModel.getHeaderStatus().equals("S")) {
                ClearFrm();
+//               if(txtSampleNum.getText().toString().equals("0.0"))
+//                   closeActiviry();
            }
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
@@ -305,57 +309,64 @@ public class QCScan extends BaseActivity {
     }
 
     void AnalysisGetT_OutBarCodeInfoForQuanADFJson(String result){
-        LogUtil.WriteLog(QCScan.class, TAG_GetT_OutBarCodeInfoForQuanADF,result);
-        ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            stockInfoModel=returnMsgModel.getModelJson();
+        try {
+            LogUtil.WriteLog(QCScan.class, TAG_GetT_OutBarCodeInfoForQuanADF, result);
+            ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                stockInfoModel = returnMsgModel.getModelJson();
 
-            if(!qualityDetailInfoModels.get(0).getMaterialNo().equals(stockInfoModel.getMaterialNo())){
-                MessageBox.Show(context,getString(R.string.Error_BarcodeNotInList));
-            }else{
-                if(qualityDetailInfoModels.get(0).getLstStock().indexOf(stockInfoModel)!=-1){
-                    MessageBox.Show(context, getString(R.string.Error_BarcodeScaned));
+                if (!qualityDetailInfoModels.get(0).getMaterialNo().equals(stockInfoModel.getMaterialNo())) {
+                    MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList));
                     CommonUtil.setEditFocus(edtQCScanBarcode);
-                    return;
-                }
-
-                //判断扫描条码批次、据点、仓库与质检单物料相同
-                if(qualityDetailInfoModels.get(0).getBatchNo().equals(stockInfoModel.getBatchNo())
-                        && qualityDetailInfoModels.get(0).getWarehouseNo().equals(stockInfoModel.getWarehouseNo())
-                && qualityDetailInfoModels.get(0).getCompanyCode().equals(stockInfoModel.getCompanyCode())) {
-                    txtCompany.setText(stockInfoModel.getStrongHoldName());
-                    txtBatch.setText(stockInfoModel.getBatchNo());
-                    txtStatus.setText(stockInfoModel.getStrStatus());
-                    txtMaterialName.setText(stockInfoModel.getMaterialDesc());
-                    txtEDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
-                    if (!TBunboxType.isChecked()) {//整箱
-                        Float scanQty = Float.parseFloat(txtScanQty.getText().toString());//以扫描数量
-                        //if (stockInfoModel.getQty() >= qualityDetailInfoModels.get(0).getRemainQty() - scanQty) {
-                        if (stockInfoModel.getQty() > qualityDetailInfoModels.get(0).getSampQty() - scanQty) {
-                            MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
-                            CommonUtil.setEditFocus(edtQCScanBarcode);
-                            return;
-                        } else {
-                            stockInfoModel.setPickModel(2);
-                            qualityDetailInfoModels.get(0).setVoucherType(9996);
-                            qualityDetailInfoModels.get(0).setScanQty( qualityDetailInfoModels.get(0).getScanQty()+stockInfoModel.getQty());
-                            qualityDetailInfoModels.get(0).getLstStock().add(0, stockInfoModel);
-                            txtScanQty.setText( qualityDetailInfoModels.get(0).getScanQty()+"");
-                            BindListVIew(qualityDetailInfoModels.get(0).getLstStock());
-                            //打印质检标签
-                            PrintQCLabel(stockInfoModel);
-                        }
+                } else {
+                    if (qualityDetailInfoModels.get(0).getLstStock().indexOf(stockInfoModel) != -1) {
+                        MessageBox.Show(context, getString(R.string.Error_BarcodeScaned));
+                        CommonUtil.setEditFocus(edtQCScanBarcode);
+                        return;
                     }
-                    CommonUtil.setEditFocus(TBunboxType.isChecked()?edtunboxing:edtQCScanBarcode);
-                }else{
-                    MessageBox.Show(context, getString(R.string.Error_materialNotMatch));
-                    CommonUtil.setEditFocus(edtQCScanBarcode);
-                }
 
+                    //判断扫描条码批次、据点、仓库与质检单物料相同
+                    if (qualityDetailInfoModels.get(0).getBatchNo().equals(stockInfoModel.getBatchNo())
+                            && qualityDetailInfoModels.get(0).getWarehouseNo().equals(stockInfoModel.getWarehouseNo())
+                            && qualityDetailInfoModels.get(0).getCompanyCode().equals(stockInfoModel.getCompanyCode())) {
+                        txtCompany.setText(stockInfoModel.getStrongHoldName());
+                        txtBatch.setText(stockInfoModel.getBatchNo());
+                        txtStatus.setText(stockInfoModel.getStrStatus());
+                        txtMaterialName.setText(stockInfoModel.getMaterialDesc());
+                        txtStock.setText(stockInfoModel.getQty().toString());
+                        txtEDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
+                        if (!TBunboxType.isChecked()) {//整箱
+                            Float scanQty = Float.parseFloat(txtScanQty.getText().toString());//以扫描数量
+                            //if (stockInfoModel.getQty() >= qualityDetailInfoModels.get(0).getRemainQty() - scanQty) {
+                            if (stockInfoModel.getQty() > qualityDetailInfoModels.get(0).getSampQty() - scanQty) {
+                                MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
+                                CommonUtil.setEditFocus(edtQCScanBarcode);
+                                return;
+                            } else {
+                                stockInfoModel.setPickModel(2);
+                                qualityDetailInfoModels.get(0).setVoucherType(9996);
+                                qualityDetailInfoModels.get(0).setScanQty(qualityDetailInfoModels.get(0).getScanQty() + stockInfoModel.getQty());
+                                qualityDetailInfoModels.get(0).getLstStock().add(0, stockInfoModel);
+                                txtScanQty.setText(qualityDetailInfoModels.get(0).getScanQty() + "");
+                                BindListVIew(qualityDetailInfoModels.get(0).getLstStock());
+                                //打印质检标签
+                                PrintQCLabel(stockInfoModel);
+                            }
+                        }
+                        CommonUtil.setEditFocus(TBunboxType.isChecked() ? edtunboxing : edtQCScanBarcode);
+                    } else {
+                        MessageBox.Show(context, getString(R.string.Error_materialNotMatch));
+                        CommonUtil.setEditFocus(edtQCScanBarcode);
+                    }
+
+                }
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(edtQCScanBarcode);
             }
-        }else
-        {
-            MessageBox.Show(context,returnMsgModel.getMessage());
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
             CommonUtil.setEditFocus(edtQCScanBarcode);
         }
 
@@ -387,6 +398,7 @@ public class QCScan extends BaseActivity {
         txtCompany.setText("");
         txtBatch.setText("");
         txtStatus.setText("");
+        txtStock.setText("");
         txtMaterialName.setText("");
         txtEDate.setText("");
         edtunboxing.setText("");

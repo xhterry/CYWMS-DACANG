@@ -16,7 +16,6 @@ import java.util.List;
 
 public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     private Float OutStockID;
-    private String ErpVoucherNo;
     private String MaterialNo;
     private String MaterialDesc;
     private String RowNo;
@@ -31,7 +30,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     private Float RemainQty;
     private String Costcenter;
     private String Wbselem;
-    private String ERPVoucherNo;
     private String FromStorageLoc;
     private Float ReviewStatus;
     private String CloseOweUser;
@@ -173,13 +171,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         ScanQty = scanQty;
     }
 
-    public String getERPVoucherNo() {
-        return ERPVoucherNo;
-    }
-
-    public void setERPVoucherNo(String ERPVoucherNo) {
-        this.ERPVoucherNo = ERPVoucherNo;
-    }
 
     public List<StockInfo_Model> getLstStock() {
         return lstStock;
@@ -205,13 +196,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         OutStockID = outStockID;
     }
 
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
 
     public String getMaterialNo() {
         return MaterialNo;
@@ -442,7 +426,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeValue(this.OutStockID);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeString(this.RowNo);
@@ -457,7 +440,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         dest.writeValue(this.RemainQty);
         dest.writeString(this.Costcenter);
         dest.writeString(this.Wbselem);
-        dest.writeString(this.ERPVoucherNo);
         dest.writeString(this.FromStorageLoc);
         dest.writeValue(this.ReviewStatus);
         dest.writeString(this.CloseOweUser);
@@ -490,7 +472,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     protected OutStockDetailInfo_Model(Parcel in) {
         super(in);
         this.OutStockID = (Float) in.readValue(Float.class.getClassLoader());
-        this.ErpVoucherNo = in.readString();
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.RowNo = in.readString();
@@ -505,7 +486,6 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         this.RemainQty = (Float) in.readValue(Float.class.getClassLoader());
         this.Costcenter = in.readString();
         this.Wbselem = in.readString();
-        this.ERPVoucherNo = in.readString();
         this.FromStorageLoc = in.readString();
         this.ReviewStatus = (Float) in.readValue(Float.class.getClassLoader());
         this.CloseOweUser = in.readString();

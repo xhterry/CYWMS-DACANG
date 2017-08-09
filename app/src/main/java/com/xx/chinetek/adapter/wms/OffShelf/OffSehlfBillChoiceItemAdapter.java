@@ -104,8 +104,8 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
             listItemView = (ListItemView) convertView.getTag();
         }
         OutStockTaskInfo_Model outStockTaskInfoModel=outStockTaskInfoModels.get(selectID);
-        listItemView.txtTaskNo.setText(outStockTaskInfoModel.getTaskNo());
-        listItemView.txtERPVoucherNo.setText(outStockTaskInfoModel.getERPVoucherNo());
+        listItemView.txtTaskNo.setText(outStockTaskInfoModel.getErpVoucherNo());
+        listItemView.txtERPVoucherNo.setText(outStockTaskInfoModel.getTaskNo());
         listItemView.txtStrVoucherType.setText(outStockTaskInfoModel.getStrVoucherType());
         listItemView.txtCompany.setText("据点："+outStockTaskInfoModel.getStrongHoldName());
         listItemView.txtdepartment.setText("部门："+outStockTaskInfoModel.getDepartmentName());

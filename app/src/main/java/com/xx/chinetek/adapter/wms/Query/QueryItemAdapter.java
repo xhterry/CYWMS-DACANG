@@ -31,7 +31,7 @@ public class QueryItemAdapter extends BaseAdapter {
         public TextView txtBatchNo;
         public TextView txtCompany;
         public TextView txtQCStatus;
-        public TextView txtStockStatus;
+       // public TextView txtStockStatus;
     }
 
     public QueryItemAdapter(Context context, List<StockInfo_Model> stockInfoModels) {
@@ -73,7 +73,7 @@ public class QueryItemAdapter extends BaseAdapter {
             listItemView.txtBatchNo = (TextView) convertView.findViewById(R.id.txtBatchNo);
             listItemView.txtCompany = (TextView) convertView.findViewById(R.id.txtCompany);
             listItemView.txtQCStatus = (TextView) convertView.findViewById(R.id.txtQCStatus);
-            listItemView.txtStockStatus = (TextView) convertView.findViewById(R.id.txtStockStatus);
+           // listItemView.txtStockStatus = (TextView) convertView.findViewById(R.id.txtStockStatus);
             convertView.setTag(listItemView);
         } else {
             listItemView = (ListItemView) convertView.getTag();
@@ -83,10 +83,10 @@ public class QueryItemAdapter extends BaseAdapter {
         listItemView.txtAreaNo.setText("库位："+stockInfoModel.getAreaNo());
         listItemView.txtMaterialDec.setText(stockInfoModel.getMaterialDesc());
         listItemView.txtQty.setText("数量："+stockInfoModel.getQty()+"");
-        listItemView.txtBatchNo.setText("批次");
-        listItemView.txtCompany.setText("据点");
-        listItemView.txtQCStatus.setText("质检状态");
-        listItemView.txtStockStatus.setText("库存状态");
+        listItemView.txtBatchNo.setText("批："+stockInfoModel.getBatchNo());
+        listItemView.txtCompany.setText("据："+stockInfoModel.getStrongHoldName());
+        listItemView.txtQCStatus.setText(stockInfoModel.getStrStatus());
+       // listItemView.txtStockStatus.setText("库存状态");
         return convertView;
     }
 

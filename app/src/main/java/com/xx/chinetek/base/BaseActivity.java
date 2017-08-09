@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); //隐藏输入法
         AppManager.getAppManager().addActivity(this); //添加当前Activity到avtivity管理类
         mHandler = new MyHandler<>(this);
-
+        BaseApplication.isCloseActivity=true;
         initViews(); //自定义的方法
         initData();
     }
@@ -90,11 +90,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity") ||
-                    !context.getClass().getName().equals("com.xx.chinetek.cyproduct.MainActivity")
-                    ) {
+//                    if (!context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity") ||
+//                    !context.getClass().getName().equals("com.xx.chinetek.cyproduct.MainActivity")
+//                    ) {
+//                        BackAlter();
+//                    }
+                    if(BaseApplication.isCloseActivity)
                         BackAlter();
-                    }
                 }
             });
     }
@@ -104,13 +106,17 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if(keyCode== KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_UP) {
-            if(!(context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity") ||
-                    context.getClass().getName().equals("com.xx.chinetek.cyproduct.MainActivity") ||
-                    context.getClass().getName().equals("com.xx.chinetek.Login")))
+//            if(!(context.getClass().getName().equals("com.xx.chinetek.cywms.MainActivity") ||
+//                    context.getClass().getName().equals("com.xx.chinetek.cyproduct.MainActivity") ||
+//                    context.getClass().getName().equals("com.xx.chinetek.Login")))
+//                BackAlter();
+//            else{
+//                closeActiviry();
+//            }
+            if(BaseApplication.isCloseActivity)
+               closeActiviry();
+            else
                 BackAlter();
-            else{
-                closeActiviry();
-            }
         }
         return true;
     }

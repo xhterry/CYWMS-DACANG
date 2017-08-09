@@ -41,13 +41,14 @@ public class QueryMain extends BaseActivity {
         gridView.setAdapter(adapter);
     }
 
+    //,R.drawable.workno
     public List<Map<String, Object>> getData(){
         List<Map<String, Object>> data_list = new ArrayList<Map<String, Object>>();
         int[] itemIcon = new int[]{ R.drawable.material,R.drawable.stock, R.drawable.batch,
-                R.drawable.supplier,R.drawable.workno
-        };
+                R.drawable.supplier
+        };//,"工单"
         String[] itemNames = new String[]{"物料","库位", "批次",
-                "供应商","工单"
+                "供应商"
         };
         //cion和iconName的长度是相同的，这里任选其一都可以
         for(int i=0;i<itemIcon.length;i++){
@@ -62,24 +63,28 @@ public class QueryMain extends BaseActivity {
     @Event(value = R.id.gv_QueryFunction,type = AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent();
+        intent.setClass(context, Query.class);
         switch (position) {
             case 0:
                 BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.query_Materialtitle), true);
+                intent.putExtra("Type",1);
                 break;
             case 1:
                 BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.query_Stocktitle), true);
+                intent.putExtra("Type",2);
                 break;
             case 2:
                 BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.query_Bathtitle), true);
+                intent.putExtra("Type",3);
                 break;
             case 3:
                 BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.query_Suppliertitle), true);
+                intent.putExtra("Type",4);
                 break;
             case 4:
                 BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.query_WorkNotitle), true);
                 break;
         }
-        intent.setClass(context, Query.class);
             startActivityLeft(intent);
     }
 }

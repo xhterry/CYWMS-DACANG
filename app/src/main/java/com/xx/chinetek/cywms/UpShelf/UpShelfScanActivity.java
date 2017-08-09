@@ -121,6 +121,7 @@ public class UpShelfScanActivity extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.UpShelfscan_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -182,6 +183,7 @@ public class UpShelfScanActivity extends BaseActivity {
             }
             final Map<String, String> params = new HashMap<String, String>();
             params.put("AreaNo", StockCode);
+            params.put("UserJson",  GsonUtil.parseModelToJson(BaseApplication.userInfo));
             LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetAreaModelADF, StockCode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreaModelADF, getString(R.string.Msg_GetAreaModelADF), context, mHandler, RESULT_Msg_GetAreaModelADF, null,  URLModel.GetURL().GetAreaModelADF, params, null);
         }
@@ -231,7 +233,10 @@ public class UpShelfScanActivity extends BaseActivity {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 inStockTaskDetailsInfoModels = returnMsgModel.getModelJson();
-//            //自动确认扫描箱号
+                BindListVIew(inStockTaskDetailsInfoModels);
+
+
+//            //自动确认扫描箱号 删除，上架需要扫描库位
 //            if(stockInfoModels!=null ) {
 //                for (StockInfo_Model stockInfoModel : stockInfoModels) {
 //                    if(!CheckBarcode(stockInfoModel)) break;
@@ -240,7 +245,6 @@ public class UpShelfScanActivity extends BaseActivity {
 //                edtUpShelfScanBarcode.setEnabled(false);
 //                CommonUtil.setEditFocus(edtStockScan);
 //            }
-                BindListVIew(inStockTaskDetailsInfoModels);
             } else {
                 MessageBox.Show(context, returnMsgModel.getMessage());
             }
@@ -256,6 +260,7 @@ public class UpShelfScanActivity extends BaseActivity {
         params.put("ERPVoucherNo", inStockTaskInfoModel.getErpVoucherNo());
         params.put("TaskNo", inStockTaskInfoModel.getTaskNo());
         params.put("AreaNo", StockCode);
+        params.put("WareHouseID", BaseApplication.userInfo.getWarehouseID()+"");
         LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetT_ScanInStockModelADF, code);
         RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_ScanInStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_ScanInStockModelADF, null,  URLModel.GetURL().GetT_ScanInStockModelADF, params, null);
     }
@@ -265,11 +270,11 @@ public class UpShelfScanActivity extends BaseActivity {
      */
     void GetInStockTaskDetail(InStockTaskInfo_Model inStockTaskInfoModel){
         if(inStockTaskInfoModel!=null) {
-            txtVoucherNo.setText(inStockTaskInfoModel.getTaskNo());
+            txtVoucherNo.setText(inStockTaskInfoModel.getErpVoucherNo());
             InStockTaskDetailsInfo_Model inStockTaskDetailsInfoModel = new InStockTaskDetailsInfo_Model();
             inStockTaskDetailsInfoModel.setHeaderID(inStockTaskInfoModel.getID());
             inStockTaskDetailsInfoModel.setTaskNo(inStockTaskInfoModel.getTaskNo());
-            inStockTaskDetailsInfoModel.setERPVoucherNo(inStockTaskInfoModel.getErpVoucherNo());
+            inStockTaskDetailsInfoModel.setErpVoucherNo(inStockTaskInfoModel.getErpVoucherNo());
             inStockTaskDetailsInfoModel.setVoucherType(inStockTaskInfoModel.getVoucherType());
             final Map<String, String> params = new HashMap<String, String>();
             params.put("ModelDetailJson", parseModelToJson(inStockTaskDetailsInfoModel));
@@ -308,19 +313,24 @@ public class UpShelfScanActivity extends BaseActivity {
     扫描库位
      */
     void AnalysisGetAreaModelADFJson(String result){
-        LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetAreaModelADF,result);
-        ReturnMsgModel<AreaInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<AreaInfo_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            areaInfoModel=returnMsgModel.getModelJson();
-          if(!TextUtils.isEmpty(edtUpShelfScanBarcode.getText().toString().trim())) {
-              String code=edtUpShelfScanBarcode.getText().toString().trim();
-              String StockCode=edtStockScan.getText().toString().trim();
-              ScanBarcode(code,StockCode);
-          }
-          CommonUtil.setEditFocus(edtUpShelfScanBarcode);
-        }else
-        {
-            MessageBox.Show(context,returnMsgModel.getMessage());
+        try {
+            LogUtil.WriteLog(UpShelfScanActivity.class, TAG_GetAreaModelADF, result);
+            ReturnMsgModel<AreaInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<AreaInfo_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                areaInfoModel = returnMsgModel.getModelJson();
+                if (!TextUtils.isEmpty(edtUpShelfScanBarcode.getText().toString().trim())) {
+                    String code = edtUpShelfScanBarcode.getText().toString().trim();
+                    String StockCode = edtStockScan.getText().toString().trim();
+                    ScanBarcode(code, StockCode);
+                }
+                CommonUtil.setEditFocus(edtUpShelfScanBarcode);
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(edtStockScan);
+            }
+        }catch (Exception  ex){
+            MessageBox.Show(context, ex.getMessage());
             CommonUtil.setEditFocus(edtStockScan);
         }
     }
@@ -336,7 +346,8 @@ public class UpShelfScanActivity extends BaseActivity {
             }.getType());
             MessageBox.Show(context, returnMsgModel.getMessage());
             if(returnMsgModel.getHeaderStatus().equals("S")) {
-              ClearFrm();
+                ClearFrm();
+                GetInStockTaskDetail(inStockTaskInfoModel);
             }
             CommonUtil.setEditFocus(edtUpShelfScanBarcode);
         } catch (Exception ex) {
@@ -379,7 +390,6 @@ public class UpShelfScanActivity extends BaseActivity {
                 {
                     inStockTaskDetailsInfoModels.get(index).setVoucherType(9996);//生成调拨单
                     inStockTaskDetailsInfoModels.get(index).setScanQty(inStockTaskDetailsInfoModels.get(index).getScanQty()+StockInfo_Model.getQty());
-
                     txtUpShelfNum.setText(inStockTaskDetailsInfoModels.get(index).getRemainQty()+"");
                     txtUpShelfScanNum.setText(inStockTaskDetailsInfoModels.get(index).getScanQty()+"");
                    // edtUpShelfScanBarcode.setText(StockInfo_Model.getBarcode()+"");

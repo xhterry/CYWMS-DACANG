@@ -102,6 +102,7 @@ public class IntentoryAdd extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Intentory_add), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -110,6 +111,7 @@ public class IntentoryAdd extends BaseActivity {
         GetPDNoAndroid();
         checkAreaModels=new ArrayList<>();
         CommonUtil.setEditFocus(edtInventoryAreaNo);
+
     }
 
     @Override

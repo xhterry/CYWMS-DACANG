@@ -19,7 +19,6 @@ public class OutStock_Model extends Base_Model implements Parcelable{
         this.ErpVoucherNo=ErpVoucherNo;
     }
 
-    private String ErpVoucherNo;
     private String CustomerCode;
     private String CustomerName;
     private Float IsOutStockPost;
@@ -34,14 +33,6 @@ public class OutStock_Model extends Base_Model implements Parcelable{
     private Float ReviewStatus;
     private String VoucherNo;
     private String Note;
-
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
 
     public String getCustomerCode() {
         return CustomerCode;
@@ -174,7 +165,6 @@ public class OutStock_Model extends Base_Model implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.CustomerCode);
         dest.writeString(this.CustomerName);
         dest.writeValue(this.IsOutStockPost);
@@ -193,7 +183,6 @@ public class OutStock_Model extends Base_Model implements Parcelable{
 
     protected OutStock_Model(Parcel in) {
         super(in);
-        this.ErpVoucherNo = in.readString();
         this.CustomerCode = in.readString();
         this.CustomerName = in.readString();
         this.IsOutStockPost = (Float) in.readValue(Float.class.getClassLoader());

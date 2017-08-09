@@ -31,10 +31,6 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     /// </summary>
     private String ErpInVoucherNo;
     /// <summary>
-    /// ERP检验单号
-    /// </summary>
-    private String ErpVoucherNo;
-    /// <summary>
     /// 取样人编号
     /// </summary>
     private String QuanUserNo;

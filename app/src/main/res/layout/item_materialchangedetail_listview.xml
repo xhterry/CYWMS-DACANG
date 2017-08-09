@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txtbarcode"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:textColor="@color/peru"
+            android:maxLines="1"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/txtMaterialDesc"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:textColor="@color/peru"
+            android:maxLines="1"
+            android:textSize="17sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+                <TextView
+                    android:id="@+id/txtRemainQty"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_margin="3dp"
+                    android:textColor="@color/mediumpurple"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/txtScanNum"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_margin="3dp"
+                    android:textColor="@color/red"
+                    android:textSize="16sp"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+                <TextView
+                    android:id="@+id/txtERPVoucherNo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_margin="3dp"
+                    android:textColor="@color/blue"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/txtreferStock"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_margin="3dp"
+                    android:textColor="@color/orange"
+                    android:maxLines="1"
+                    android:textSize="15sp"/>
+        </LinearLayout>
+
+</LinearLayout>

@@ -33,7 +33,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String Reason;
     private String SupcusNo;
     private Float IsShelvePost;
-    private String ErpVoucherNo;
     private Float IsQuality;
     private Float IsReceivePost;
     private String Plant;
@@ -99,13 +98,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         CloseUserNo = closeUserNo;
     }
 
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
 
     public int getInStockID() {
         return InStockID;
@@ -367,7 +359,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.Reason);
         dest.writeString(this.SupcusNo);
         dest.writeValue(this.IsShelvePost);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeValue(this.IsQuality);
         dest.writeValue(this.IsReceivePost);
         dest.writeString(this.Plant);
@@ -408,7 +399,6 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.Reason = in.readString();
         this.SupcusNo = in.readString();
         this.IsShelvePost = (Float) in.readValue(Float.class.getClassLoader());
-        this.ErpVoucherNo = in.readString();
         this.IsQuality = (Float) in.readValue(Float.class.getClassLoader());
         this.IsReceivePost = (Float) in.readValue(Float.class.getClassLoader());
         this.Plant = in.readString();

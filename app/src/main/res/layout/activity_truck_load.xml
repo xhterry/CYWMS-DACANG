@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout_TruckLoad"
     tools:context="com.xx.chinetek.cywms.Truck.TruckLoad">
 
     <Button
@@ -33,7 +34,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:gravity="left"
-        android:text="TextView"
+        android:hint="点击选择目的地"
         app:layout_constraintBottom_toBottomOf="@+id/textView146"
         app:layout_constraintLeft_toRightOf="@+id/textView146"
         app:layout_constraintRight_toRightOf="parent" />
@@ -49,7 +50,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:gravity="left"
-        android:text="TextView"
+        android:hint="点击选择承运商"
         app:layout_constraintBottom_toBottomOf="@+id/textView145"
         app:layout_constraintLeft_toRightOf="@+id/textView145"
         app:layout_constraintRight_toRightOf="parent" />
@@ -224,9 +225,9 @@
         app:layout_constraintRight_toLeftOf="@+id/guideline22"
         app:layout_constraintTop_toBottomOf="@+id/textView96" />
 
-    <EditText
+    <TextView
         android:id="@+id/edt_VourcherNo"
-        style="@style/EditTextStyle"
+        style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
@@ -234,7 +235,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:hint="请扫描出库单号"
+        android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="@+id/textView96"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline22"

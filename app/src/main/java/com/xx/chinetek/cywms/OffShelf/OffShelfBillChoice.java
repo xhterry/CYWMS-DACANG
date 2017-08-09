@@ -283,7 +283,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
 
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
         }
     }
 
@@ -306,16 +306,20 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
     }
 
     void AnalysisGetT_OutTaskDetailListByHeaderIDADFJson(String result){
-        LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_OutTaskListADF,result);
-        ReturnMsgModelList<OutStockTaskInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskInfo_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            outStockTaskInfoModels=returnMsgModel.getModelJson();
-        }else
-        {
-            ToastUtil.show(returnMsgModel.getMessage());
+        try {
+            LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_OutTaskListADF, result);
+            ReturnMsgModelList<OutStockTaskInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskInfo_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                outStockTaskInfoModels = returnMsgModel.getModelJson();
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+            if (outStockTaskInfoModels != null)
+                BindListVIew(outStockTaskInfoModels);
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
         }
-        if (outStockTaskInfoModels != null)
-            BindListVIew(outStockTaskInfoModels);
     }
 
 

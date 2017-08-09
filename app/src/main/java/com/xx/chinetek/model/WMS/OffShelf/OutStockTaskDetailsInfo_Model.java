@@ -79,7 +79,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private String PoNo;
     private String PoRowNo;
     private Float IsLock;
-    private String ErpVoucherNo;
     private Float IsSmallBatch;
     private String UnitName;
     private Float ScanQty;  //扫描数量
@@ -259,14 +258,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
 
     public void setTaskNo(String taskNo) {
         TaskNo = taskNo;
-    }
-
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
     }
 
     public int getIsSerial() {
@@ -792,7 +783,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeString(this.PoNo);
         dest.writeString(this.PoRowNo);
         dest.writeValue(this.IsLock);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeValue(this.IsSmallBatch);
         dest.writeString(this.UnitName);
         dest.writeValue(this.ScanQty);
@@ -872,7 +862,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.PoNo = in.readString();
         this.PoRowNo = in.readString();
         this.IsLock = (Float) in.readValue(Float.class.getClassLoader());
-        this.ErpVoucherNo = in.readString();
         this.IsSmallBatch = (Float) in.readValue(Float.class.getClassLoader());
         this.UnitName = in.readString();
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());

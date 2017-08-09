@@ -121,6 +121,7 @@ public class ReceiptionScan extends BaseActivity {
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.receiptscan_subtitle), true);
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -201,7 +202,7 @@ public class ReceiptionScan extends BaseActivity {
      */
     void GetReceiptDetail(Receipt_Model receiptModel){
         if(receiptModel!=null) {
-            txtVoucherNo.setText(receiptModel.getVoucherNo());
+            txtVoucherNo.setText(receiptModel.getErpVoucherNo());
             final ReceiptDetail_Model receiptDetailModel = new ReceiptDetail_Model();
             receiptDetailModel.setHeaderID(receiptModel.getID());
             receiptDetailModel.setErpVoucherNo(receiptModel.getErpVoucherNo());
@@ -226,6 +227,7 @@ public class ReceiptionScan extends BaseActivity {
                 receiptDetailModels = returnMsgModel.getModelJson();
                 //自动确认扫描箱号
                 if (barCodeInfos != null) {
+                    isDel=false;
                     Bindbarcode(barCodeInfos);
                 }
             } else {
@@ -247,6 +249,7 @@ public class ReceiptionScan extends BaseActivity {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 ArrayList<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
+                isDel=false;
                 Bindbarcode(barCodeInfos);
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
@@ -300,9 +303,8 @@ public class ReceiptionScan extends BaseActivity {
         CommonUtil.setEditFocus(edtRecScanBarcode);
     }
 
-
-    void Bindbarcode( ArrayList<BarCodeInfo> barCodeInfos){
-       // isDel=false;
+    boolean isDel=false;
+    void Bindbarcode(final ArrayList<BarCodeInfo> barCodeInfos){
         if (barCodeInfos != null && barCodeInfos.size() != 0) {
             for (BarCodeInfo barCodeInfo : barCodeInfos) {
                 if (barCodeInfo != null && receiptDetailModels != null) {
@@ -321,19 +323,21 @@ public class ReceiptionScan extends BaseActivity {
                             receiptDetailModels.get(index).setLstBarCode(new ArrayList<BarCodeInfo>());
                         final int barIndex = receiptDetailModels.get(index).getLstBarCode().indexOf(barCodeInfo);
                         if(barIndex!=-1) {
-                          //  if(isDel){
+                           if(isDel){
                                 RemoveBarcode(index, barIndex);
-//                            }else {
-//                                new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
-//                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(DialogInterface dialog, int which) {
-//                                                // TODO 自动生成的方法
-//                                                RemoveBarcode(index, barIndex);
-//                                                isDel = true;
-//                                            }
-//                                        }).setNegativeButton("取消", null).show();
-//                            }
+                            }else {
+                               new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
+                                       .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(DialogInterface dialog, int which) {
+                                               // TODO 自动生成的方法
+                                               //RemoveBarcode(index, barIndex);
+                                               isDel=true;
+                                               Bindbarcode(barCodeInfos);
+                                           }
+                                       }).setNegativeButton("取消", null).show();
+                               break;
+                           }
                         }
                         else {
                             if (!CheckBarcode(barCodeInfo, index))

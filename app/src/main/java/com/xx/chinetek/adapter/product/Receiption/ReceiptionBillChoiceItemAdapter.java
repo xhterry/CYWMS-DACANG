@@ -105,7 +105,7 @@ public class ReceiptionBillChoiceItemAdapter extends BaseAdapter {
         }
         OutStockTaskInfo_Model outStockTaskInfoModel=outStockTaskInfoModels.get(selectID);
         listItemView.txtTaskNo.setText(outStockTaskInfoModel.getTaskNo());
-        listItemView.txtERPVoucherNo.setText(outStockTaskInfoModel.getERPVoucherNo());
+        listItemView.txtERPVoucherNo.setText(outStockTaskInfoModel.getErpVoucherNo());
         listItemView.txtStrVoucherType.setText(outStockTaskInfoModel.getStrVoucherType());
         //listItemView.txtCompany.setText(outStockTaskInfoModel.getCompany());
        // listItemView.txtdepartment.setText(outStockTaskInfoModel.getDepartment());
