@@ -17,6 +17,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.CheckNumRefMaterial;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
@@ -265,10 +266,12 @@ public class Boxing extends BaseActivity {
     }
 
     String CheckInputQty(String num){
-        if(!CommonUtil.isFloat(num)) {
-            return getString(R.string.Error_isnotnum);
+
+        CheckNumRefMaterial checkNumRefMaterial=CheckMaterialNumFormat(num,unStockInfoModel.getUnitTypeCode(),unStockInfoModel.getDecimalLngth());
+        if(!checkNumRefMaterial.ischeck()) {
+           return checkNumRefMaterial.getErrMsg();
         }
-        Float qty=Float.parseFloat(num);
+        Float qty=checkNumRefMaterial.getCheckQty();
         if(qty>unStockInfoModel.getQty()){
             return getString(R.string.Error_QtyBiger);
         }

@@ -25,6 +25,7 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     private Float DesQty;
     private String WarehouseNo;
     private String BatchNo;
+    private String ERPStatusCode;
 
     /// <summary>
     /// ERP收货入库单
@@ -36,6 +37,14 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
     private String QuanUserNo;
     private String StrQuanUserNo;
 
+
+    public String getERPStatusCode() {
+        return ERPStatusCode;
+    }
+
+    public void setERPStatusCode(String ERPStatusCode) {
+        this.ERPStatusCode = ERPStatusCode;
+    }
 
     public Float getSampQty() {
         return SampQty;
@@ -216,12 +225,13 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         dest.writeString(this.Unit);
         dest.writeString(this.UnitName);
         dest.writeValue(this.QuanQty);
+        dest.writeValue(this.SampQty);
         dest.writeValue(this.UnQuanQty);
         dest.writeValue(this.DesQty);
         dest.writeString(this.WarehouseNo);
         dest.writeString(this.BatchNo);
+        dest.writeString(this.ERPStatusCode);
         dest.writeString(this.ErpInVoucherNo);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.QuanUserNo);
         dest.writeString(this.StrQuanUserNo);
     }
@@ -237,12 +247,13 @@ public class QualityInfo_Model extends Base_Model implements Parcelable{
         this.Unit = in.readString();
         this.UnitName = in.readString();
         this.QuanQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.SampQty = (Float) in.readValue(Float.class.getClassLoader());
         this.UnQuanQty = (Float) in.readValue(Float.class.getClassLoader());
         this.DesQty = (Float) in.readValue(Float.class.getClassLoader());
         this.WarehouseNo = in.readString();
         this.BatchNo = in.readString();
+        this.ERPStatusCode = in.readString();
         this.ErpInVoucherNo = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.QuanUserNo = in.readString();
         this.StrQuanUserNo = in.readString();
     }

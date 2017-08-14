@@ -21,6 +21,7 @@ import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.OffShelf.OffshelfScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.CheckNumRefMaterial;
 import com.xx.chinetek.model.QC.QualityDetailInfo_Model;
 import com.xx.chinetek.model.QC.QualityInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
@@ -32,6 +33,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -143,6 +145,7 @@ public class QCScan extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        TBunboxType.setChecked(true);
         qualityInfoModel=getIntent().getParcelableExtra("qualityInfoModel");
         GetQualityDetailInf(qualityInfoModel);
     }
@@ -170,19 +173,21 @@ public class QCScan extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             String num=edtunboxing.getText().toString().trim();
-            if(!CommonUtil.isFloat(num)) {
-                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+
+            CheckNumRefMaterial checkNumRefMaterial=CheckMaterialNumFormat(num,stockInfoModel.getUnitTypeCode(),stockInfoModel.getDecimalLngth());
+            if(!checkNumRefMaterial.ischeck()) {
+                MessageBox.Show(context,checkNumRefMaterial.getErrMsg());
                 return true;
             }
-            Float qty=Float.parseFloat(num);
+            Float qty=checkNumRefMaterial.getCheckQty();
           //  Float scanQty=Float.parseFloat(txtScanQty.getText().toString());
             if(qty>stockInfoModel.getQty()){
                 MessageBox.Show(context,getString(R.string.Error_PackageQtyBiger));
                 CommonUtil.setEditFocus(edtunboxing);
                 return true;
             }
-            if(qty>qualityDetailInfoModels.get(0).getSampQty()-qualityDetailInfoModels.get(0).getScanQty()){
-                MessageBox.Show(context,getString(R.string.Error_QCQtyBiger));
+            if(qty>ArithUtil.sub( qualityDetailInfoModels.get(0).getRemainQty(),qualityDetailInfoModels.get(0).getScanQty())) {
+                MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
                 CommonUtil.setEditFocus(edtunboxing);
                 return true;
             }
@@ -216,6 +221,7 @@ public class QCScan extends BaseActivity {
 //                MessageBox.Show(context, getString(R.string.Error_SampNumIsNotMatch));
 //                CommonUtil.setEditFocus(edtQCScanBarcode);
 //            } else {
+            if(qualityDetailInfoModels.get(0).getLstStock()!=null && qualityDetailInfoModels.get(0).getLstStock().size()!=0) {
                 final Map<String, String> params = new HashMap<String, String>();
                 String ModelJson = GsonUtil.parseModelToJson(qualityDetailInfoModels);
                 String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
@@ -223,7 +229,7 @@ public class QCScan extends BaseActivity {
                 params.put("ModelJson", ModelJson);
                 LogUtil.WriteLog(QCScan.class, TAG_SaveT_QuanlitySampADF, ModelJson);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_QuanlitySampADF, getString(R.string.Msg_SaveT_QuanlitySampADF), context, mHandler, RESULT_Msg_SaveT_QuanlitySampADF, null, URLModel.GetURL().SaveT_QuanlitySampADF, params, null);
-//            }
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -240,7 +246,7 @@ public class QCScan extends BaseActivity {
             if(returnMsgModel.getHeaderStatus().equals("S")){
                 StockInfo_Model stockInfoModel=returnMsgModel.getModelJson();
                 qualityDetailInfoModels.get(0).setVoucherType(9996);
-                qualityDetailInfoModels.get(0).setScanQty( qualityDetailInfoModels.get(0).getScanQty()+stockInfoModel.getQty());
+                qualityDetailInfoModels.get(0).setScanQty(ArithUtil.add( qualityDetailInfoModels.get(0).getScanQty(),stockInfoModel.getQty()));
                 qualityDetailInfoModels.get(0).getLstStock().add(0,stockInfoModel);
 //                Float scanQty=Float.parseFloat(txtScanQty.getText().toString());
 //                Float qty=Float.parseFloat(edtunboxing.getText().toString().trim());
@@ -299,9 +305,7 @@ public class QCScan extends BaseActivity {
            MessageBox.Show(context, returnMsgModel.getMessage());
            CommonUtil.setEditFocus(edtQCScanBarcode);
            if(returnMsgModel.getHeaderStatus().equals("S")) {
-               ClearFrm();
-//               if(txtSampleNum.getText().toString().equals("0.0"))
-//                   closeActiviry();
+               closeActiviry();
            }
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
@@ -339,14 +343,14 @@ public class QCScan extends BaseActivity {
                         if (!TBunboxType.isChecked()) {//整箱
                             Float scanQty = Float.parseFloat(txtScanQty.getText().toString());//以扫描数量
                             //if (stockInfoModel.getQty() >= qualityDetailInfoModels.get(0).getRemainQty() - scanQty) {
-                            if (stockInfoModel.getQty() > qualityDetailInfoModels.get(0).getSampQty() - scanQty) {
+                            if (stockInfoModel.getQty() > ArithUtil.sub(qualityDetailInfoModels.get(0).getRemainQty(),scanQty)) {
                                 MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
                                 CommonUtil.setEditFocus(edtQCScanBarcode);
                                 return;
                             } else {
                                 stockInfoModel.setPickModel(2);
                                 qualityDetailInfoModels.get(0).setVoucherType(9996);
-                                qualityDetailInfoModels.get(0).setScanQty(qualityDetailInfoModels.get(0).getScanQty() + stockInfoModel.getQty());
+                                qualityDetailInfoModels.get(0).setScanQty(ArithUtil.add(qualityDetailInfoModels.get(0).getScanQty(),stockInfoModel.getQty()));
                                 qualityDetailInfoModels.get(0).getLstStock().add(0, stockInfoModel);
                                 txtScanQty.setText(qualityDetailInfoModels.get(0).getScanQty() + "");
                                 BindListVIew(qualityDetailInfoModels.get(0).getLstStock());
@@ -387,8 +391,8 @@ public class QCScan extends BaseActivity {
     }
 
     void BindListVIew(List<StockInfo_Model> stockInfoModels){
-        txtSampleNum.setText(qualityDetailInfoModels.get(0).getSampQty()-qualityDetailInfoModels.get(0).getScanQty()+"");
-        txtQCSampleNum.setText(qualityDetailInfoModels.get(0).getSampQty()+"");
+        txtSampleNum.setText(ArithUtil.sub(qualityDetailInfoModels.get(0).getRemainQty(),qualityDetailInfoModels.get(0).getScanQty())+"");
+        txtQCSampleNum.setText(qualityDetailInfoModels.get(0).getRemainQty()+"");
         qcDetailAdapter=new QCDetailAdapter(context,stockInfoModels);
         lsvQCScan.setAdapter(qcDetailAdapter);
     }

@@ -22,10 +22,10 @@ public class SharePreferUtil {
     public static void ReadShare(Context context){
         SharedPreferences sharedPreferences=context.getSharedPreferences("Setting", Context.MODE_PRIVATE);
         if(sharedPreferences!=null) {
-//            URLModel.IPAdress=sharedPreferences.getString("IPAdress", "wms.beukay.com");
-//            URLModel.Port=sharedPreferences.getInt("Port", 9000);
-            URLModel.IPAdress=sharedPreferences.getString("IPAdress", "wmstest.beukay.com");
-            URLModel.Port=sharedPreferences.getInt("Port", 9010);
+            URLModel.IPAdress=sharedPreferences.getString("IPAdress", "wms.beukay.com");
+            URLModel.Port=sharedPreferences.getInt("Port", 9000);
+//            URLModel.IPAdress=sharedPreferences.getString("IPAdress", "wmstest.beukay.com");
+//            URLModel.Port=sharedPreferences.getInt("Port", 9010);
             URLModel.PrintIP=sharedPreferences.getString("PrintIP", "");
             URLModel.ElecIP=sharedPreferences.getString("ElecIP", "");
             URLModel.isWMS=sharedPreferences.getBoolean("isWMS", true);

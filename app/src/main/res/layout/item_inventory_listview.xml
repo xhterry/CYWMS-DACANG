@@ -19,8 +19,8 @@
                     android:id="@+id/txtCheckDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:maxLines="1"
+                    android:layout_weight="0.9"
+                    android:maxLines="2"
                     android:textColor="@color/blue"
                     android:textSize="15sp"/>
 
@@ -28,7 +28,7 @@
                     android:id="@+id/txtCheckStatus"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.1"
                     android:textColor="@color/green"
                     android:textSize="15sp"/>
         </LinearLayout>

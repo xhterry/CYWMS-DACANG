@@ -330,10 +330,13 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
 
     }
 
-    void StartScanIntent(ArrayList<OutStockTaskInfo_Model> outStockTaskInfoModel){
+    void StartScanIntent(ArrayList<OutStockTaskInfo_Model> outStockTaskInfoModels){
         Intent intent = new Intent(context, OffshelfScan.class);
         Bundle  bundle=new Bundle();
-        bundle.putParcelableArrayList("outStockTaskInfoModel",outStockTaskInfoModel);
+        for(int i=0;i<outStockTaskInfoModels.size();i++){
+            outStockTaskInfoModels.get(i).setWareHouseID(BaseApplication.userInfo.getWarehouseID());
+        }
+        bundle.putParcelableArrayList("outStockTaskInfoModel",outStockTaskInfoModels);
         intent.putExtras(bundle);
         startActivityLeft(intent);
     }

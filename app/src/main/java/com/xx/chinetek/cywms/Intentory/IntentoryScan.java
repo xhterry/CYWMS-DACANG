@@ -1,8 +1,11 @@
 package com.xx.chinetek.cywms.Intentory;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +31,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -47,12 +51,17 @@ import java.util.Map;
 public class IntentoryScan extends BaseActivity {
 
     String TAG_GetAreanobyCheckno="IntentoryScan_GetAreanobyCheckno";
+    String TAG_GetAreanobyCheckno2="IntentoryScan_GetAreanobyCheckno2";
     String TAG_GetScanInfo="IntentoryScan_GetScanInfo";
     String TAG_InsertCheckDetail="IntentoryScan_InsertCheckDetail";
 
     private final int RESULT_Msg_GetAreanobyCheckno=101;
     private final int RESULT_Msg_GetScanInfo=102;
     private final int RESULT_Msg_InsertCheckDetail=103;
+    private final int RESULT_GetAreanobyCheckno2=104;
+
+    String[] QCStatus={"待检","检验合格","检验不合格"};
+    int[] QCStatusType={1,3,4};
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -65,6 +74,9 @@ public class IntentoryScan extends BaseActivity {
                 break;
             case RESULT_Msg_InsertCheckDetail:
                 AnalysisInsertCheckDetailJson((String) msg.obj);
+                break;
+            case RESULT_GetAreanobyCheckno2:
+                AnalysisGetAreanobyCheckno2Json((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -88,6 +100,8 @@ public class IntentoryScan extends BaseActivity {
     TextView txtBatch;
     @ViewInject(R.id.txt_Status)
     TextView txtStatus;
+    @ViewInject(R.id.txt_QCStatus)
+    TextView txtQCStatus;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
     @ViewInject(R.id.edt_InvScanBarcode)
@@ -106,6 +120,7 @@ public class IntentoryScan extends BaseActivity {
     CheckArea_Model checkAreaModel;//盘点货位
     ArrayList<Barcode_Model> barcodeModels;
     InventoryScanItemAdapter inventoryScanItemAdapter;
+    int StatusType=-1;
 
     @Override
     protected void initViews() {
@@ -119,6 +134,8 @@ public class IntentoryScan extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        txtQCStatus.setText(QCStatus[1]);
+        StatusType=1;
         checkModel=getIntent().getParcelableExtra("check_model");
         GetAreanobyCheckno(checkModel);
     }
@@ -130,22 +147,34 @@ public class IntentoryScan extends BaseActivity {
         {
             keyBoardCancle();
             String areaNo=edtStockScan.getText().toString().trim();
-            CheckArea_Model temp=new CheckArea_Model();
-            temp.setAREANO(areaNo);
-            if(checkAreaModels!=null) {
-                int index=checkAreaModels.indexOf(temp);
-                if (index!=-1) {
-                    checkAreaModel=checkAreaModels.get(index);
-                    CommonUtil.setEditFocus(edtInvScanBarcode);
-                    return false;
-                } else {
-                    CommonUtil.setEditFocus(edtStockScan);
-                    MessageBox.Show(context, getResources().getString(R.string.Error_Inventory_NoArtNo));
-                    return true;
-                }
+            if (!TextUtils.isEmpty(areaNo)) {
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("checkno", checkModel.getCHECKNO());
+                params.put("areano", areaNo);
+                String para = (new JSONObject(params)).toString();
+                LogUtil.WriteLog(IntentoryScan.class, TAG_GetAreanobyCheckno2, para);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreanobyCheckno2, getString(R.string.Msg_GetAreanobyCheckno2), context, mHandler, RESULT_GetAreanobyCheckno2, null, URLModel.GetURL().GetAreanobyCheckno2, params, null);
             }
+
         }
         return false;
+    }
+
+    @Event(value = R.id.txt_QCStatus,type =View.OnClickListener.class )
+    private void txtQCStatusClick(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("选择质检状态");
+        builder.setItems(QCStatus, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                txtQCStatus.setText(QCStatus[which]);
+                StatusType=which;
+            }
+        });
+        builder.show();
+
     }
 
     @Event(value =R.id.edt_InvScanBarcode,type = View.OnKeyListener.class)
@@ -153,6 +182,10 @@ public class IntentoryScan extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             keyBoardCancle();
+            if(checkAreaModel==null){
+                MessageBox.Show(context,getString(R.string.Error_StockInCorrect));
+                return true;
+            }
             String barcode = edtInvScanBarcode.getText().toString().trim();
             if (!barcode.equals("")) {
                 final Map<String, String> params = new HashMap<String, String>();
@@ -182,8 +215,17 @@ public class IntentoryScan extends BaseActivity {
                 CommonUtil.setEditFocus(edtInvNum);
                 return true;
             }
-            barcodeModels.get(0).setQty(Float.parseFloat(qty));
-            SumbitStockInfo();
+            if(StatusType!=-1) {
+                barcodeModels.get(0).setSTATUS(QCStatusType[StatusType]);
+                barcodeModels.get(0).setQty(Float.parseFloat(qty));
+                barcodeModels.get(0).setCreater(BaseApplication.userInfo.getUserName());
+                SumbitStockInfo();
+            }
+            else{
+                MessageBox.Show(context,getString(R.string.Error_SelectQcStatus));
+                CommonUtil.setEditFocus(edtInvNum);
+            }
+
         }
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
@@ -210,10 +252,9 @@ public class IntentoryScan extends BaseActivity {
     void AnalysisGetAreanobyChecknoJson(String result){
         LogUtil.WriteLog(IntentoryScan.class, TAG_GetAreanobyCheckno,result);
         ReturnMsgModelList<CheckArea_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<CheckArea_Model>>() {}.getType());
-        if(returnMsgModel.getHeaderStatus().equals("S")){
-            checkAreaModels=returnMsgModel.getModelJson();
-        }else{
+        if(!returnMsgModel.getHeaderStatus().equals("S")){
             MessageBox.Show(context,returnMsgModel.getMessage());
+           // checkAreaModels=returnMsgModel.getModelJson();
         }
     }
 
@@ -232,9 +273,10 @@ public class IntentoryScan extends BaseActivity {
                 for (int i=0;i<barcodeModels.size();i++) {
                     barcodeModels.get(i).setCHECKNO(checkModel.getCHECKNO());//盘点单号
                     barcodeModels.get(i).setAREAID(checkAreaModel.getID());//盘点库位
-                    packageNum+= barcodeModels.get(i).getQty();
+                    packageNum= ArithUtil.add(packageNum, barcodeModels.get(i).getQty());
                 }
                 edtInvNum.setText(packageNum+"");
+
                 inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
                 lsvIntentoryScan.setAdapter(inventoryScanItemAdapter);
                 if(barcodeModels.size()>1){
@@ -247,6 +289,16 @@ public class IntentoryScan extends BaseActivity {
         }else{
             MessageBox.Show(context,returnMsgModel.getMessage());
             CommonUtil.setEditFocus(edtInvScanBarcode);
+        }
+    }
+
+    void AnalysisGetAreanobyCheckno2Json(String result){
+        LogUtil.WriteLog(IntentoryScan.class, TAG_GetAreanobyCheckno2,result);
+        ReturnMsgModelList<CheckArea_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<CheckArea_Model>>() {}.getType());
+        if(returnMsgModel.getHeaderStatus().equals("S")){
+            checkAreaModel=returnMsgModel.getModelJson().get(0);
+        }else{
+            MessageBox.Show(context,returnMsgModel.getMessage());
         }
     }
 
@@ -263,6 +315,8 @@ public class IntentoryScan extends BaseActivity {
                 txtStatus.setText("");
                 txtMaterialName.setText("");
                 txtStockNum.setText("");
+                txtQCStatus.setText(QCStatus[1]);
+                StatusType=1;
                 btnPalletConfig.setVisibility(View.GONE);
                 barcodeModels=new ArrayList<>();
                 inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);

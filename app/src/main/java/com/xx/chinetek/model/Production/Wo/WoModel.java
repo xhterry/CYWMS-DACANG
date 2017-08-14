@@ -12,8 +12,6 @@ public class WoModel extends Base_Model{
 
     private String VoucherNo; //WMS工单号
 
-    private String ErpVoucherNo;//ERP工单号
-
     private String MaterialNo;
 
     private String MaterialDesc;
@@ -40,14 +38,6 @@ public class WoModel extends Base_Model{
 
     public void setVoucherNo(String voucherNo) {
         VoucherNo = voucherNo;
-    }
-
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
     }
 
     public String getMaterialNo() {
@@ -102,7 +92,6 @@ public class WoModel extends Base_Model{
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(this.VoucherNo);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeString(this.BatchNo);
@@ -114,7 +103,6 @@ public class WoModel extends Base_Model{
     protected WoModel(Parcel in) {
         super(in);
         this.VoucherNo = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.BatchNo = in.readString();

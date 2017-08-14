@@ -32,6 +32,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -388,13 +389,19 @@ public class UpShelfScanActivity extends BaseActivity {
                     inStockTaskDetailsInfoModels.get(index).setLstStockInfo(new ArrayList<StockInfo_Model>());
                 if(!inStockTaskDetailsInfoModels.get(index).getLstStockInfo().contains(StockInfo_Model))
                 {
-                    inStockTaskDetailsInfoModels.get(index).setVoucherType(9996);//生成调拨单
-                    inStockTaskDetailsInfoModels.get(index).setScanQty(inStockTaskDetailsInfoModels.get(index).getScanQty()+StockInfo_Model.getQty());
-                    txtUpShelfNum.setText(inStockTaskDetailsInfoModels.get(index).getRemainQty()+"");
-                    txtUpShelfScanNum.setText(inStockTaskDetailsInfoModels.get(index).getScanQty()+"");
-                   // edtUpShelfScanBarcode.setText(StockInfo_Model.getBarcode()+"");
-                    //StockInfo_Model.setAreaNo(edtStockScan.getText().toString().trim());
-                    inStockTaskDetailsInfoModels.get(index).getLstStockInfo().add(0,StockInfo_Model);
+                    Float qty=ArithUtil.add(inStockTaskDetailsInfoModels.get(index).getScanQty(),StockInfo_Model.getQty());
+                    if(qty<=inStockTaskDetailsInfoModels.get(index).getRemainQty()) {
+                        inStockTaskDetailsInfoModels.get(index).setVoucherType(9996);//生成调拨单
+                        inStockTaskDetailsInfoModels.get(index).setScanQty(qty);
+                        txtUpShelfNum.setText(inStockTaskDetailsInfoModels.get(index).getRemainQty() + "");
+                        txtUpShelfScanNum.setText(inStockTaskDetailsInfoModels.get(index).getScanQty() + "");
+                        // edtUpShelfScanBarcode.setText(StockInfo_Model.getBarcode()+"");
+                        //StockInfo_Model.setAreaNo(edtStockScan.getText().toString().trim());
+                        inStockTaskDetailsInfoModels.get(index).getLstStockInfo().add(0, StockInfo_Model);
+                    }else{
+                        MessageBox.Show(context, getString(R.string.Error_UpshelfQtyBiger));
+                        return false;
+                    }
                 }else{
                     MessageBox.Show(context, getString(R.string.Error_BarcodeScaned)+"|"+StockInfo_Model.getSerialNo());
                     return false;

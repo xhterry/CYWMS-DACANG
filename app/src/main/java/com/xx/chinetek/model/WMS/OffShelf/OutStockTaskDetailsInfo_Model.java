@@ -94,6 +94,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private String PartNo;
     private String MoveType;
     private String BatchNo;
+
     /// <summary>
     /// 是否指定批次
     /// </summary>
@@ -137,6 +138,8 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
        // return MaterialNo.equals(that.MaterialNo) && RowNo.equals(that.RowNo);
 
     }
+
+
 
     public Float getStockQty() {
         return StockQty;

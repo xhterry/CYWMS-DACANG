@@ -88,7 +88,7 @@ public class QCBillChioceItemAdapter extends BaseAdapter {
             listItemView = new ListItemView();
 
             // 获取list_item布局文件的视图
-            convertView = listContainer.inflate(R.layout.item_billchoice_listview,null);
+            convertView = listContainer.inflate(R.layout.item_qcbillchoice_listview,null);
             listItemView.txtTaskNo = (TextView) convertView.findViewById(R.id.txtTaskNo);
             listItemView.txtERPVoucherNo = (TextView) convertView.findViewById(R.id.txtERPVoucherNo);
             listItemView.txtStrVoucherType = (TextView) convertView.findViewById(R.id.txtStrVoucherType);
@@ -101,7 +101,7 @@ public class QCBillChioceItemAdapter extends BaseAdapter {
         QualityInfo_Model qualityInfoModel=qualityInfoModels.get(selectID);
         listItemView.txtTaskNo.setText(qualityInfoModel.getMaterialDesc());
         listItemView.txtERPVoucherNo.setText(qualityInfoModel.getErpVoucherNo());
-        listItemView.txtStrVoucherType.setText(qualityInfoModel.getStrVoucherType());
+        listItemView.txtStrVoucherType.setText(qualityInfoModel.getMaterialNo());
         listItemView.txtCompany.setText(qualityInfoModel.getStrongHoldName());
         listItemView.txtdepartment.setText(qualityInfoModel.getBatchNo());
         if (getListselected().get(position)==false) {

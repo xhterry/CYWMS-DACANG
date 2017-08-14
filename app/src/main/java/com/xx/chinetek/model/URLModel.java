@@ -35,6 +35,9 @@ public class URLModel {
     public String SaveCheckAndroid = GetWCFAdress()+"SaveCheckAndroid"; //提交盘点库位
     public String GetAreanobyCheckno = GetWCFAdress()+"GetAreanobyCheckno"; //获取可盘点库位
     public String GetScanInfo = GetWCFAdress()+"GetScanInfo"; //获取盘点条码信息
+    public String GetInfoBySerial = GetWCFAdress()+"GetInfoBySerial"; //获取盘点条码信息
+    public String SaveInfo = GetWCFAdress()+"SaveInfo"; //提交库存调整
+    public String GetAreanobyCheckno2 = GetWCFAdress()+"GetAreanobyCheckno2"; //检查盘点库位
     public String InsertCheckDetail = GetWCFAdress()+"InsertCheckDetail"; //提交盘点条码信息
     public String GetCheckDetail = GetWCFAdress()+"GetCheckDetail"; //获取已盘点条码信息
     public String GetT_OutStockReviewListADF = GetWCFAdress()+"GetT_OutStockReviewListADF"; //下架复核表头

@@ -153,19 +153,28 @@ public class IntentoryAdd extends BaseActivity {
             String areaNo=edtInventoryAreaNo.getText().toString().trim();
             if(!TextUtils.isEmpty(areaNo)&& !TextUtils.isEmpty(WareHouseNo)){
                 try {
-                    CheckArea_Model checkAreaModel=new CheckArea_Model();
+                    CheckArea_Model checkAreaModel = new CheckArea_Model();
                     checkAreaModel.setAREANO(areaNo);
                     checkAreaModel.setWarehouseno(WareHouseNo);
-                    String json=GsonUtil.parseModelToJson(checkAreaModel);
-                    Map<String, String> params = new HashMap<>();
-                    params.put("json", json);
-                    LogUtil.WriteLog(IntentoryAdd.class, TAG_GetPDNoAndroid, json);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreanoID, getString(R.string.Msg_GetAreanobyCheckno), context, mHandler, RESULT_GetAreanoID, null,  URLModel.GetURL().GetAreanoID, params, null);
+                    if (checkAreaModels.indexOf(checkAreaModel) == -1) {
+                        String json = GsonUtil.parseModelToJson(checkAreaModel);
+                        Map<String, String> params = new HashMap<>();
+                        params.put("json", json);
+                        LogUtil.WriteLog(IntentoryAdd.class, TAG_GetPDNoAndroid, json);
+                        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreanoID, getString(R.string.Msg_GetAreanobyCheckno), context, mHandler, RESULT_GetAreanoID, null, URLModel.GetURL().GetAreanoID, params, null);
+                    }else{
+                        MessageBox.Show(context,getString(R.string.Error_areanoHasScan));
+                        CommonUtil.setEditFocus(edtInventoryAreaNo);
+                        return true;
+                    }
                 } catch (Exception ex) {
                     MessageBox.Show(context, ex.getMessage());
+                    CommonUtil.setEditFocus(edtInventoryAreaNo);
+                    return true;
                 }
             }
         }
+        CommonUtil.setEditFocus(edtInventoryAreaNo);
         return false;
     }
 

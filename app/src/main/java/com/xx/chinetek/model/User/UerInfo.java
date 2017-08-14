@@ -24,6 +24,7 @@ public class UerInfo extends User implements Parcelable {
     private String ToSampAreaNo;
     private String PickWareHouseNo ;
 
+
     public String getQuanUserName() {
         return QuanUserName;
     }

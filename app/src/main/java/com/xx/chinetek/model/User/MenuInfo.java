@@ -23,6 +23,15 @@ public class MenuInfo implements Parcelable {
     private boolean BIsChecked;
     private boolean BHaveParameter;
     private String StrMenuStyle;
+    private String NodeUrl;
+
+    public String getNodeUrl() {
+        return NodeUrl;
+    }
+
+    public void setNodeUrl(String nodeUrl) {
+        NodeUrl = nodeUrl;
+    }
 
     public boolean isBHaveParameter() {
         return BHaveParameter;
@@ -145,6 +154,9 @@ public class MenuInfo implements Parcelable {
     }
 
 
+    public MenuInfo() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -167,9 +179,7 @@ public class MenuInfo implements Parcelable {
         dest.writeByte(this.BIsChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.BHaveParameter ? (byte) 1 : (byte) 0);
         dest.writeString(this.StrMenuStyle);
-    }
-
-    public MenuInfo() {
+        dest.writeString(this.NodeUrl);
     }
 
     protected MenuInfo(Parcel in) {
@@ -188,6 +198,7 @@ public class MenuInfo implements Parcelable {
         this.BIsChecked = in.readByte() != 0;
         this.BHaveParameter = in.readByte() != 0;
         this.StrMenuStyle = in.readString();
+        this.NodeUrl = in.readString();
     }
 
     public static final Creator<MenuInfo> CREATOR = new Creator<MenuInfo>() {

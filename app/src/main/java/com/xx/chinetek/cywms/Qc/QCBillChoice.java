@@ -199,6 +199,7 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     private void InitListView() {
         QualityInfo_Model qualityInfoModel=new QualityInfo_Model();
         qualityInfoModel.setStatus(1);
+        qualityInfoModel.setERPStatusCode("N");
         qualityInfoModel.setQuanUserNo(BaseApplication.userInfo.getID()+"");
         GetT_QualityList(qualityInfoModel);
     }

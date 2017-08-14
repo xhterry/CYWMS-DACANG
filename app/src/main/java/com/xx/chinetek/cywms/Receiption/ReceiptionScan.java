@@ -33,6 +33,7 @@ import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -379,14 +380,16 @@ public class ReceiptionScan extends BaseActivity {
 
 
     boolean RemoveBarcode(final  int index, final int barIndex){
-        float qty=receiptDetailModels.get(index).getScanQty()-receiptDetailModels.get(index).getLstBarCode().get(barIndex).getQty();
+        float qty=ArithUtil.sub(receiptDetailModels.get(index).getScanQty(),receiptDetailModels.get(index).getLstBarCode().get(barIndex).getQty());
+                //receiptDetailModels.get(index).getScanQty()-receiptDetailModels.get(index).getLstBarCode().get(barIndex).getQty();
         receiptDetailModels.get(index).getLstBarCode().remove(barIndex);
         receiptDetailModels.get(index).setScanQty(qty);
         return true;
     }
 
     boolean Addbarcode(int index,BarCodeInfo barCodeInfo){
-        float qty=receiptDetailModels.get(index).getScanQty()+barCodeInfo.getQty();
+        float qty= ArithUtil.add(receiptDetailModels.get(index).getScanQty(),barCodeInfo.getQty());
+                //receiptDetailModels.get(index).getScanQty()+barCodeInfo.getQty();
 
           if(qty<=receiptDetailModels.get(index).getRemainQty()) {
             receiptDetailModels.get(index).getLstBarCode().add(0, barCodeInfo);

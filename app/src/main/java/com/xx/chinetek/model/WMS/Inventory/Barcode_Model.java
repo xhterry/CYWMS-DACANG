@@ -31,6 +31,18 @@ public class Barcode_Model implements Parcelable{
     private Date EDate;
     private int BarcodeType;
     private String Creater;
+    private int STATUS;
+    private String warehousename;
+    private String warehouseno ;
+    private String AllIn  ; //用来判断是在库存还是条码表1库存，0条码
+
+    public int getSTATUS() {
+        return STATUS;
+    }
+
+    public void setSTATUS(int STATUS) {
+        this.STATUS = STATUS;
+    }
 
     public String getCreater() {
         return Creater;
@@ -94,6 +106,30 @@ public class Barcode_Model implements Parcelable{
 
     public void setIP(String IP) {
         this.IP = IP;
+    }
+
+    public String getWarehousename() {
+        return warehousename;
+    }
+
+    public void setWarehousename(String warehousename) {
+        this.warehousename = warehousename;
+    }
+
+    public String getWarehouseno() {
+        return warehouseno;
+    }
+
+    public void setWarehouseno(String warehouseno) {
+        this.warehouseno = warehouseno;
+    }
+
+    public String getAllIn() {
+        return AllIn;
+    }
+
+    public void setAllIn(String allIn) {
+        AllIn = allIn;
     }
 
     public String getLabelMark() {
@@ -231,6 +267,10 @@ public class Barcode_Model implements Parcelable{
         dest.writeLong(this.EDate != null ? this.EDate.getTime() : -1);
         dest.writeInt(this.BarcodeType);
         dest.writeString(this.Creater);
+        dest.writeInt(this.STATUS);
+        dest.writeString(this.warehousename);
+        dest.writeString(this.warehouseno);
+        dest.writeString(this.AllIn);
     }
 
     protected Barcode_Model(Parcel in) {
@@ -257,6 +297,10 @@ public class Barcode_Model implements Parcelable{
         this.EDate = tmpEDate == -1 ? null : new Date(tmpEDate);
         this.BarcodeType = in.readInt();
         this.Creater = in.readString();
+        this.STATUS = in.readInt();
+        this.warehousename = in.readString();
+        this.warehouseno = in.readString();
+        this.AllIn = in.readString();
     }
 
     public static final Creator<Barcode_Model> CREATOR = new Creator<Barcode_Model>() {

@@ -33,6 +33,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -214,6 +215,7 @@ public class CombinPallet extends BaseActivity {
         if (palletDetailModels != null && palletDetailModels.size() != 0 && palletDetailModels.get(0).getLstBarCode()!=null
                 && palletDetailModels.get(0).getLstBarCode().size()!=0) {
             palletDetailModels.get(0).setVoucherType(999);
+            palletDetailModels.get(0).setPrintIPAdress(URLModel.PrintIP);
             String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
             String modelJson = GsonUtil.parseModelToJson(palletDetailModels);
             final Map<String, String> params = new HashMap<String, String>();
@@ -255,6 +257,7 @@ public class CombinPallet extends BaseActivity {
                         if (!palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)) {
                            // palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
                             palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
+
                             palletDetailModels.get(0).getLstBarCode().add(0, barCodeInfo);
                            // palletDetailModels.get(0).setVoucherType(999);
                             palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
@@ -396,7 +399,7 @@ public class CombinPallet extends BaseActivity {
         Float sumPackageQty=0f;
         if(palletDetailModels.get(0).getLstBarCode()!=null) {
             for (BarCodeInfo barCodeInfo : palletDetailModels.get(0).getLstBarCode()) {
-                sumPackageQty += barCodeInfo.getQty();
+                sumPackageQty = ArithUtil.add(sumPackageQty,barCodeInfo.getQty());
             }
         }
        return sumPackageQty;

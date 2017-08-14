@@ -58,9 +58,9 @@ public class RequestHandler {
     }
 
     private static void onVolleyErrorResponse(VolleyError volleyError, NetWorkRequestListener listener, Handler handler, Bundle bundle) {
-        if (listener.retry()) {
-            listener.onFailed();
-        }
+//        if (listener.retry()) {
+//            listener.onFailed();
+//        }
         Message msg = handler.obtainMessage(NetworkError.NET_ERROR_CUSTOM,VolleyErrorHelper.getMessage(volleyError,context));
         msg.setData(bundle);
         handler.sendMessage(msg);
@@ -87,12 +87,12 @@ public class RequestHandler {
             final int method, final String tag, final Handler handler, final int what, final Bundle bundle,
             final String url, final Map<String, String> params, final Map<String, String> header) {
         addRequest(method, tag, handler, what, bundle, url, params, header, new DefaultRequestListener() {
-            @Override
-            public boolean retry() {
-                addRequest(method, tag, handler, what, bundle, url, params, header,
-                        retryTimer++ >= MAX_RETRY_TIME ? new DefaultRequestListener() : this);
-                return true;
-            }
+//            @Override
+//            public boolean retry() {
+//                addRequest(method, tag, handler, what, bundle, url, params, header,
+//                        retryTimer++ >= MAX_RETRY_TIME ? new DefaultRequestListener() : this);
+//                return true;
+//            }
         });
     }
 
@@ -100,18 +100,18 @@ public class RequestHandler {
             final int method, final String tag, final String LoadText, Context context, final Handler handler, final int what, final Bundle bundle,
             final String url, final Map<String, String> params, final Map<String, String> header) {
         addRequest(method, tag, handler, what, bundle, url, params, header, new DefaultDialogRequestListener(context, LoadText) {
-            @Override
-            public boolean retry() {
-//                addRequest(method, tag, handler, what, bundle, url, params, header,
-//                        retryTimer++ >= MAX_RETRY_TIME ? new DefaultDialogRequestListener(context, LoadText) : this);
-//                return true;
-                return false;
-            }
+//            @Override
+//            public boolean retry() {
+////                addRequest(method, tag, handler, what, bundle, url, params, header,
+////                        retryTimer++ >= MAX_RETRY_TIME ? new DefaultDialogRequestListener(context, LoadText) : this);
+////                return true;
+//                return false;
+//            }
         });
     }
 
     static RetryPolicy getRetryPolicy() {
-        RetryPolicy retryPolicy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultDialogRequestListener.MAX_RETRY_TIME, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         return retryPolicy;
     }
 
@@ -166,10 +166,10 @@ public class RequestHandler {
 
         }
 
-        @Override
-        public boolean retry() {
-            return false;
-        }
+//        @Override
+//         public boolean retry() {
+//            return false;
+//        }
     }
 
     /**
@@ -182,7 +182,7 @@ public class RequestHandler {
 
         void onFailed();
 
-        boolean retry();
+       // boolean retry();
     }
 
     // StringRequest request = new StringRequest(method, url, new Response.Listener<String>() {

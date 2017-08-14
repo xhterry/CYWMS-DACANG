@@ -72,6 +72,24 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private int OutstockHeaderID;
     private Boolean OKSelect;
     private int IsLimitStock;
+    private String  UnitTypeCode;
+    private String  DecimalLngth;
+
+    public String getUnitTypeCode() {
+        return UnitTypeCode;
+    }
+
+    public void setUnitTypeCode(String unitTypeCode) {
+        UnitTypeCode = unitTypeCode;
+    }
+
+    public String getDecimalLngth() {
+        return DecimalLngth;
+    }
+
+    public void setDecimalLngth(String decimalLngth) {
+        DecimalLngth = decimalLngth;
+    }
 
     public int getIsLimitStock() {
         return IsLimitStock;
@@ -587,6 +605,8 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeInt(this.OutstockHeaderID);
         dest.writeValue(this.OKSelect);
         dest.writeInt(this.IsLimitStock);
+        dest.writeString(this.UnitTypeCode);
+        dest.writeString(this.DecimalLngth);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -645,6 +665,8 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.OutstockHeaderID = in.readInt();
         this.OKSelect = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.IsLimitStock = in.readInt();
+        this.UnitTypeCode = in.readString();
+        this.DecimalLngth = in.readString();
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {

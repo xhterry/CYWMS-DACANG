@@ -216,7 +216,7 @@ public class TruckLoad extends BaseActivity {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
                 CusSup cusSup=returnMsgModel.getModelJson();
-                if(cusSup!=null && cusSup.getAddresses().size()!=0) {
+                if(cusSup!=null && cusSup.getAddresses()!=null && cusSup.getAddresses().size()!=0) {
                     SelectAddresses(cusSup.getAddresses());
                 }
             }else

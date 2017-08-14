@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+                <TextView
+                    android:id="@+id/txtTaskNo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:layout_weight="0.6"
+                    android:textColor="@color/blueviolet"
+                    android:textSize="25sp"/>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+
+                <TextView
+                    android:id="@+id/txtERPVoucherNo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:maxLines="1"
+                    android:textColor="@color/mediumseagreen"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/txtStrVoucherType"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/dodgerblue"
+                    android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+                <TextView
+                    android:id="@+id/txtCompany"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:maxLines="1"
+                    android:textColor="@color/peru"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/txtdepartment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:maxLines="1"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"/>
+
+        </LinearLayout>
+
+
+
+</LinearLayout>

@@ -20,6 +20,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.CheckNumRefMaterial;
 import com.xx.chinetek.model.Receiption.ReceiptDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
@@ -30,6 +31,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -194,12 +196,13 @@ public class MaterialChange extends BaseActivity {
         {
             keyBoardCancle();
             String num=edtUnboxing.getText().toString().trim();
-            if(!CommonUtil.isFloat(num)) {
-                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+            CheckNumRefMaterial checkNumRefMaterial=CheckMaterialNumFormat(num,stockInfoModels.get(0).getUnitTypeCode(),stockInfoModels.get(0).getDecimalLngth());
+            if(!checkNumRefMaterial.ischeck()) {
+                MessageBox.Show(context,checkNumRefMaterial.getErrMsg());
                 CommonUtil.setEditFocus(edtUnboxing);
                 return true;
             }
-            Float qty=Float.parseFloat(num); //输入数量
+            Float qty=checkNumRefMaterial.getCheckQty(); //输入数量
             Float scanQty=stockInfoModels.get(0).getQty(); //箱数量
             if(qty>scanQty){
                 MessageBox.Show(context,getString(R.string.Error_PackageQtyBiger));
@@ -209,8 +212,8 @@ public class MaterialChange extends BaseActivity {
             OutStockDetailInfo_Model outStockDetailInfoModel = new OutStockDetailInfo_Model(stockInfoModels.get(0).getMaterialNo(), stockInfoModels.get(0).getStrongHoldCode());
             int index = outStockDetailInfoModels.indexOf(outStockDetailInfoModel);
             if (index != -1){
-                Float remainqty= outStockDetailInfoModels.get(index).getOutStockQty()-
-                        outStockDetailInfoModels.get(index).getScanQty();
+                Float remainqty=ArithUtil.sub(outStockDetailInfoModels.get(index).getOutStockQty(),
+                        outStockDetailInfoModels.get(index).getScanQty());
                 if (qty >remainqty ) {
                     MessageBox.Show(context, getString(R.string.Error_offshelfQtyBiger));
                     CommonUtil.setEditFocus(edtUnboxing);
@@ -367,7 +370,7 @@ public class MaterialChange extends BaseActivity {
                     stockInfoModel.setPickModel(1);
                     stockInfoModel.setOKSelect(true);
                     outStockDetailInfoModels.get(index).
-                            setScanQty(outStockDetailInfoModels.get(index).getScanQty() + stockInfoModel.getQty());
+                            setScanQty(ArithUtil.add(outStockDetailInfoModels.get(index).getScanQty(),stockInfoModel.getQty()));
                     outStockDetailInfoModels.get(index).getLstStock().add(0, stockInfoModel);
                 }
                 break;
@@ -375,14 +378,14 @@ public class MaterialChange extends BaseActivity {
                 stockInfoModels.get(0).setPickModel(2);
                 stockInfoModels.get(0).setOKSelect(true);
                 outStockDetailInfoModels.get(index).
-                        setScanQty(outStockDetailInfoModels.get(index).getScanQty() + scanQty);
+                        setScanQty(ArithUtil.add(outStockDetailInfoModels.get(index).getScanQty(),scanQty));
                 outStockDetailInfoModels.get(index).getLstStock().add(0, stockInfoModels.get(0));
                 break;
             case 3: //拆零
                 stockInfoModels.get(0).setPickModel(3);
                 stockInfoModels.get(0).setOKSelect(true);
                 outStockDetailInfoModels.get(index).
-                        setScanQty(outStockDetailInfoModels.get(index).getScanQty() + scanQty);
+                        setScanQty(ArithUtil.add(outStockDetailInfoModels.get(index).getScanQty(), scanQty));
                 outStockDetailInfoModels.get(index).getLstStock().add(0, stockInfoModels.get(0));
                 break;
         }

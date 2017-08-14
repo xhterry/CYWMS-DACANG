@@ -133,7 +133,7 @@ public class QCMaterialChoice extends BaseActivity {
         if(!TextUtils.isEmpty(ErpVourcherNo)) {
             qualityInfoModel.setErpVoucherNo(ErpVourcherNo);
             if(!ErpVourcherNo.contains("QC"))
-            qualityInfoModel.setErpInVoucherNo(ErpVourcherNo);
+                qualityInfoModel.setErpInVoucherNo(ErpVourcherNo);
         }
 
         String ModelJson = GsonUtil.parseModelToJson(qualityInfoModel);

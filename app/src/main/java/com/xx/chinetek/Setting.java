@@ -75,8 +75,8 @@ public class Setting extends BaseActivity {
         edtPort.setText(URLModel.Port+"");
         edtPrintIP.setText(URLModel.PrintIP);
         edtElecIP.setText(URLModel.ElecIP);
-        edtIPAdress.setEnabled(false);
-        edtPort.setEnabled(false);
+//        edtIPAdress.setEnabled(false);
+//        edtPort.setEnabled(false);
         if(URLModel.isWMS) rbWMS.setChecked(true); else rbProduct.setChecked(true);
         edtTimeOut.setText(RequestHandler.SOCKET_TIMEOUT/1000+"");
         CommonUtil.setEditFocus(edtPrintIP);

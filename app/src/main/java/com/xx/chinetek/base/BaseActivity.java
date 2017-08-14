@@ -15,8 +15,13 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.CheckNumRefMaterial;
+import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.hander.IHandleMessage;
 import com.xx.chinetek.util.hander.MyHandler;
+
+import java.math.BigDecimal;
 
 import static com.xx.chinetek.base.BaseApplication.context;
 
@@ -96,6 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
 //                        BackAlter();
 //                    }
                     if(BaseApplication.isCloseActivity)
+                        closeActiviry();
+                    else
                         BackAlter();
                 }
             });
@@ -146,6 +153,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
 
     public  void closeActiviry(){
         AppManager.getAppManager().finishActivity();
+        BaseApplication.isCloseActivity=true;
         if(AppManager.getAppManager().GetActivityCount()!=0)
             context = AppManager.getAppManager().currentActivity();
     }
@@ -161,6 +169,36 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
     }
 
 
+
+   public CheckNumRefMaterial CheckMaterialNumFormat(String qty, String UnitTypeCode, String DecimalLngth){
+        CheckNumRefMaterial checkNumRefMaterial=new CheckNumRefMaterial();
+       try {
+           int unitTypeCode = Integer.parseInt(UnitTypeCode);
+           int decimalLngth = Integer.parseInt(DecimalLngth);
+
+           if (unitTypeCode == 4) {
+               if (CommonUtil.isNumeric(qty)) {
+                   checkNumRefMaterial.setIscheck(true);
+                   checkNumRefMaterial.setCheckQty(Float.parseFloat(qty));
+               } else {
+                   checkNumRefMaterial.setIscheck(false);
+                   checkNumRefMaterial.setErrMsg(getString(R.string.Error_IntRequire));
+               }
+           } else {
+               if (CommonUtil.isFloat(qty)) {
+                   checkNumRefMaterial.setIscheck(true);
+                   BigDecimal mData = new BigDecimal(qty).setScale(decimalLngth, BigDecimal.ROUND_HALF_UP);
+                   checkNumRefMaterial.setCheckQty(mData.floatValue());
+               } else {
+                   checkNumRefMaterial.setIscheck(false);
+                   checkNumRefMaterial.setErrMsg(getString(R.string.Error_isnotnum));
+               }
+           }
+       }catch (Exception ex){
+           ToastUtil.show(ex.getMessage());
+       }
+        return checkNumRefMaterial;
+    }
 
 
 

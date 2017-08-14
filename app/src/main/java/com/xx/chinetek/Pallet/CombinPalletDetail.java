@@ -29,6 +29,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -214,7 +215,7 @@ public class CombinPalletDetail extends BaseActivity {
         for(int i=0;i<outStockDetailInfoModels.size();i++){
             int index= outStockDetailInfoModels.get(i).getLstStock().indexOf(stockInfoModel);
             if(index!=-1){
-                outStockDetailInfoModels.get(i).setScanQty( outStockDetailInfoModels.get(i).getScanQty()-outStockDetailInfoModels.get(i).getLstStock().get(index).getQty());
+                outStockDetailInfoModels.get(i).setScanQty(ArithUtil.sub(outStockDetailInfoModels.get(i).getScanQty(),outStockDetailInfoModels.get(i).getLstStock().get(index).getQty()));
                 outStockDetailInfoModels.get(i).getLstStock().remove(index);
                 outStockDetailInfoModels.get(i).setOustockStatus(1);
                 break;

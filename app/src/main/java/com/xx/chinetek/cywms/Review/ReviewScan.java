@@ -35,6 +35,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -364,7 +365,7 @@ public class ReviewScan extends BaseActivity {
                     //需要删除
                     outStockDetailInfoModels.get(index).setToBatchno(StockInfo_Model.getBatchNo());
 
-                    float qty = outStockDetailInfoModels.get(index).getScanQty() + StockInfo_Model.getQty();
+                    float qty = ArithUtil.add(outStockDetailInfoModels.get(index).getScanQty(), StockInfo_Model.getQty());
                     if (qty <= outStockDetailInfoModels.get(index).getOutStockQty()) {
                         outStockDetailInfoModels.get(index).getLstStock().add(0, StockInfo_Model);
                         outStockDetailInfoModels.get(index).setScanQty(qty);

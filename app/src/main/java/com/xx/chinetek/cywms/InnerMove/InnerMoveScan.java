@@ -20,6 +20,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.cywms.UpShelf.UpShelfScanActivity;
+import com.xx.chinetek.model.CheckNumRefMaterial;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -139,15 +140,16 @@ public class InnerMoveScan extends BaseActivity {
         {
             keyBoardCancle();
             String  strqty=edtReturnQty.getText().toString();
-            if(!CommonUtil.isFloat(strqty)){
-                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+            CheckNumRefMaterial checkNumRefMaterial=CheckMaterialNumFormat(strqty,stockInfoModels.get(0).getUnitTypeCode(),stockInfoModels.get(0).getDecimalLngth());
+            if(!checkNumRefMaterial.ischeck()) {
+                MessageBox.Show(context,checkNumRefMaterial.getErrMsg());
                 CommonUtil.setEditFocus(edtReturnQty);
                 return true;
             }
             if(currentStockInfo!=null){
                 int index=stockInfoModels.indexOf(currentStockInfo.get(0));
                 if(index!=-1){
-                    Float qty=Float.parseFloat(strqty);
+                    Float qty=checkNumRefMaterial.getCheckQty();
                     Float scanQty=stockInfoModels.get(index).getQty();
                     if(qty>scanQty){
                         MessageBox.Show(context,getString(R.string.Error_PackageQtyBiger));

@@ -21,6 +21,7 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.CheckNumRefMaterial;
 import com.xx.chinetek.model.QC.QualityDetailInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
@@ -32,6 +33,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -112,6 +114,8 @@ public class OffshelfScan extends BaseActivity {
     TextView txtSugestStock;
     @ViewInject(R.id.txt_OffshelfNum)
     TextView txtOffshelfNum;
+    @ViewInject(R.id.txt_currentPickNum)
+    TextView txtcurrentPickNum;
     @ViewInject(R.id.txt_Unboxing)
     TextView txtUnboxing;
     @ViewInject(R.id.btn_OutOfStock)
@@ -158,12 +162,13 @@ public class OffshelfScan extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             String num=edtUnboxing.getText().toString().trim();
-            if(!CommonUtil.isFloat(num)) {
-                MessageBox.Show(context,getString(R.string.Error_isnotnum));
+            CheckNumRefMaterial checkNumRefMaterial=CheckMaterialNumFormat(num,stockInfoModels.get(0).getUnitTypeCode(),stockInfoModels.get(0).getDecimalLngth());
+            if(!checkNumRefMaterial.ischeck()) {
+                MessageBox.Show(context,checkNumRefMaterial.getErrMsg());
                 CommonUtil.setEditFocus(edtUnboxing);
                 return true;
             }
-            Float qty=Float.parseFloat(num); //输入数量
+            Float qty=checkNumRefMaterial.getCheckQty(); //输入数量
             Float scanQty=stockInfoModels.get(0).getQty(); //箱数量
             if(qty>scanQty){
                 MessageBox.Show(context,getString(R.string.Error_PackageQtyBiger));
@@ -172,8 +177,8 @@ public class OffshelfScan extends BaseActivity {
             }
             if(currentPickMaterialIndex!=-1) {
 
-                Float remainqty= outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getRemainQty()-
-                        outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty();
+                Float remainqty= ArithUtil.sub(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getRemainQty(),
+                        outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty());
                 if (qty >remainqty  || SumReaminQty<qty) {
                     MessageBox.Show(context, getString(R.string.Error_offshelfQtyBiger));
                     CommonUtil.setEditFocus(edtUnboxing);
@@ -389,8 +394,8 @@ public class OffshelfScan extends BaseActivity {
 
     void checkQTY(float scanQty,Boolean isPallet) {
         //根据物料查询扫描剩余数量的总数
-       Float qty= outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getRemainQty()-
-               outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty();
+       Float qty=ArithUtil.sub(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getRemainQty(),
+               outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty());
         if (qty< scanQty ||  SumReaminQty<scanQty ) {
             MessageBox.Show(context, getString(R.string.Error_offshelfQtyBiger));
             CommonUtil.setEditFocus(edtOffShelfScanbarcode);
@@ -414,20 +419,21 @@ public class OffshelfScan extends BaseActivity {
                for (StockInfo_Model stockInfoModel : stockInfoModels) {
                    stockInfoModel.setPickModel(1);
                    outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).
-                           setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty() + stockInfoModel.getQty());
+                           setScanQty(ArithUtil.add(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty(),stockInfoModel.getQty()));
                    outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getLstStockInfo().add(0, stockInfoModel);
                }
                break;
            case 2://箱子
                stockInfoModels.get(0).setPickModel(2);
                outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).
-                       setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty() + scanQty);
+                       setScanQty(ArithUtil.add(
+                               outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty() , scanQty));
                outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getLstStockInfo().add(0, stockInfoModels.get(0));
                break;
            case 3: //拆零
                stockInfoModels.get(0).setPickModel(3);
                outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).
-                       setScanQty(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty() + scanQty);
+                       setScanQty(ArithUtil.add(outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getScanQty(),scanQty));
                outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getLstStockInfo().add(0, stockInfoModels.get(0));
                break;
        }
@@ -452,13 +458,15 @@ public class OffshelfScan extends BaseActivity {
             txtMaterialName.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
             txtSugestStock.setText(outStockTaskDetailsInfoModel.getAreaNo());
             txtEDate.setText("");
-           // Float qty = outStockTaskDetailsInfoModel.getRemainQty() - outStockTaskDetailsInfoModel.getScanQty();
+            Float qty = ArithUtil.sub(outStockTaskDetailsInfoModel.getRemainQty(),outStockTaskDetailsInfoModel.getScanQty());
             FindSumQtyByMaterialNo(outStockTaskDetailsInfoModel.getMaterialNo());
             txtOffshelfNum.setText("库："+outStockTaskDetailsInfoModel.getStockQty() + "/剩：" + SumReaminQty);
+            txtcurrentPickNum.setText(qty+"");
             BindListVIew(outStockTaskDetailsInfoModels);
         }
         else {
             MessageBox.Show(context, getString(R.string.Error_PickingFinish));
+            BindListVIew(outStockTaskDetailsInfoModels);
             CommonUtil.setEditFocus(edtOffShelfScanbarcode);
         }
     }
@@ -511,15 +519,15 @@ public class OffshelfScan extends BaseActivity {
     void DistributionPickingNum(String MaterialNo,Float PickNum){
         for(int i=0;i<outStockTaskDetailsInfoModels.size();i++){
             if(outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)){
-              Float remainQty=outStockTaskDetailsInfoModels.get(i).getRemainQty()-outStockTaskDetailsInfoModels.get(i).getScanQty();
+              Float remainQty=ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty());
                  if(remainQty==0f){
                      continue;
                  }
                  if(PickNum>=remainQty){
-                     outStockTaskDetailsInfoModels.get(i).setScanQty(outStockTaskDetailsInfoModels.get(i).getScanQty()+remainQty);
-                     PickNum=PickNum-remainQty;
+                     outStockTaskDetailsInfoModels.get(i).setScanQty(ArithUtil.add(outStockTaskDetailsInfoModels.get(i).getScanQty(),remainQty));
+                     PickNum=ArithUtil.sub(PickNum,remainQty);
                  }else{
-                     outStockTaskDetailsInfoModels.get(i).setScanQty(outStockTaskDetailsInfoModels.get(i).getScanQty()+PickNum);
+                     outStockTaskDetailsInfoModels.get(i).setScanQty(ArithUtil.add(outStockTaskDetailsInfoModels.get(i).getScanQty(),PickNum));
                      break;
                  }
 
@@ -537,7 +545,7 @@ public class OffshelfScan extends BaseActivity {
             if(outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)
                     && IDList.indexOf(outStockTaskDetailsInfoModels.get(i).getID())==-1){
                 IDList.add(outStockTaskDetailsInfoModels.get(i).getID());
-                SumReaminQty=SumReaminQty+(outStockTaskDetailsInfoModels.get(i).getRemainQty()-outStockTaskDetailsInfoModels.get(i).getScanQty());
+                SumReaminQty=ArithUtil.add(SumReaminQty,ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty()));
             }
         }
     }
@@ -551,8 +559,8 @@ public class OffshelfScan extends BaseActivity {
         int index=-1;
         for(int i=0;i<size;i++){
             if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null
-            && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getStockQty()
-             &&  outStockTaskDetailsInfoModels.get(i).getRemainQty()!=0
+            && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getTaskQty()
+             && ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
             ) && !outStockTaskDetailsInfoModels.get(i).getOutOfstock() ){
                 index= i;
                 break;
@@ -566,8 +574,8 @@ public class OffshelfScan extends BaseActivity {
         int index=-1;
         for(int i=0;i<size;i++){
             if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null
-                    && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getStockQty()
-                    && outStockTaskDetailsInfoModels.get(i).getRemainQty()!=0
+                    && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getTaskQty()
+                    &&ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
             ) && outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)
                     && outStockTaskDetailsInfoModels.get(i).getStrongHoldCode().equals(StrongHoldCode)){
                 index= i;

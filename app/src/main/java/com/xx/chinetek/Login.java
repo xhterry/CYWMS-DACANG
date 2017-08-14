@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -104,40 +105,42 @@ public class Login extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             keyBoardCancle();
-            String userNo=edtUserName.getText().toString().trim();
-            if(!userNo.isEmpty()) {
-                keyBoardCancle();
-                final Map<String, String> params = new HashMap<String, String>();
-                params.put("UserNo", userNo);
-                LogUtil.WriteLog(Login.class, TAG_GetWareHouseByUserADF, userNo);
-                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetWareHouseByUserADF, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetWareHouseByUserADF, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
-
-            }
+            GetWareHouse();
         }
         return false;
     }
 
     @Event(value = R.id.txt_WareHousName,  type = View.OnClickListener.class)
     private void  txtWareHousNameOnClick(View v) {
-            keyBoardCancle();
-            SelectWareHouse();
+            GetWareHouse();
     }
 
 
     @Event(R.id.btn_Login)
     private  void  btnLoginClick(View view){
+        if(TextUtils.isEmpty(URLModel.PrintIP)){
+            MessageBox.Show(context,getString(R.string.Error_PrintIPNotSet));
+            return;
+        }
+        if(!URLModel.isWMS && TextUtils.isEmpty(URLModel.ElecIP)){
+            MessageBox.Show(context,getString(R.string.Error_PrintIPNotSet));
+            return;
+        }
         String userName=edtUserName.getText().toString().trim();
         String password=edtPassword.getText().toString().trim();
         UserInfo user = new UserInfo();
         user.setUserNo(userName);
         user.setPassWord(password);
-        if(user.CheckUserAndPass()){
-            user.setPassWord(DESUtil.encode(user.getPassWord()));
-            String userJson = GsonUtil.parseModelToJson(user);
-            LogUtil.WriteLog(Login.class, TAG,userJson);
-            Map<String, String> params = new HashMap<>();
-            params.put("UserJson", userJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG, getString(R.string.Msg_Login), context, mHandler, RESULT_GET_LOGIN_INFO, null, URLModel.GetURL().UserLoginADF, params, null);
+        if(BaseApplication.userInfo!=null) {
+            user.setWarehouseID(BaseApplication.userInfo.getWarehouseID());
+            if (user.CheckUserAndPass()) {
+                user.setPassWord(DESUtil.encode(user.getPassWord()));
+                String userJson = GsonUtil.parseModelToJson(user);
+                LogUtil.WriteLog(Login.class, TAG, userJson);
+                Map<String, String> params = new HashMap<>();
+                params.put("UserJson", userJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG, getString(R.string.Msg_Login), context, mHandler, RESULT_GET_LOGIN_INFO, null, URLModel.GetURL().UserLoginADF, params, null);
+            }
         }
     }
 
@@ -152,23 +155,24 @@ public class Login extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
             BaseApplication.userInfo=returnMsgModel.getModelJson();
             BaseApplication.userInfo.setPDAPrintIP(URLModel.PrintIP);
+            BaseApplication.userInfo.setWarehouseName(txtWareHousName.getText().toString());
             if( BaseApplication.userInfo.getReceiveAreaID()<=0){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_ReceiveAreaID));
-            }else if(BaseApplication.userInfo.getPickAreaID()<=0){
+            }else if(BaseApplication.userInfo.getPickAreaID()<=0 && URLModel.isWMS){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_PickAreaID));
-            }else if(BaseApplication.userInfo.getToSampAreaNo()==null && BaseApplication.userInfo.getToSampAreaNo().equals("")){
+            }else if(BaseApplication.userInfo.getToSampAreaNo()==null || BaseApplication.userInfo.getToSampAreaNo().equals("")){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_SampAreaNo));
-            }else if(BaseApplication.userInfo.getToSampWareHouseNo()==null && BaseApplication.userInfo.getToSampWareHouseNo().equals("")){
+            }else if(BaseApplication.userInfo.getToSampWareHouseNo()==null || BaseApplication.userInfo.getToSampWareHouseNo().equals("")){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_QuanUserNo));
+            }
+            else if(BaseApplication.userInfo.getLstMenu()==null || BaseApplication.userInfo.getLstMenu().size()==0){
+                MessageBox.Show( context,getResources().getString(R.string.Message_No_MenuList));
             }
             else{
                 SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
                 Intent intent=new Intent(context, URLModel.isWMS?MainActivity.class: com.xx.chinetek.cyproduct.MainActivity.class);
                 startActivity(intent);
             }
-
-
-
         }else
         {
             ToastUtil.show(returnMsgModel.getMessage());
@@ -219,15 +223,28 @@ public class Login extends BaseActivity {
                             String select_item = items[which].toString();
                             SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(which).getID();
                             txtWareHousName.setText(select_item);
-                            dialog.dismiss();
+                            BaseApplication.userInfo.setWarehouseID(SelectWareHouseID);
+                         dialog.dismiss();
                         }
                     }).show();
         }else{
             SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(0).getID();
             txtWareHousName.setText(BaseApplication.userInfo.getLstWarehouse().get(0).getWareHouseName());
+            BaseApplication.userInfo.setWarehouseID(SelectWareHouseID);
         }
     }
 
+
+    void GetWareHouse(){
+        String userNo=edtUserName.getText().toString().trim();
+        if(!userNo.isEmpty()) {
+            keyBoardCancle();
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("UserNo", userNo);
+            LogUtil.WriteLog(Login.class, TAG_GetWareHouseByUserADF, userNo);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetWareHouseByUserADF, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetWareHouseByUserADF, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
+        }
+    }
 
     /**
      * 检查更新

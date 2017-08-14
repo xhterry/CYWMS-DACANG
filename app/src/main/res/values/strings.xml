@@ -129,6 +129,7 @@
     <string name="VehicleNum">车牌：</string>
     <string name="Volume">体积：</string>
     <string name="Weight">重量：</string>
+    <string name="QCStatus">质检：</string>
     <string name="Number">件数：</string>
     <string name="Count">数量：</string>
     <string name="Status">状态：</string>
@@ -143,6 +144,7 @@
     <string name="ScanNumber">扫描数量：</string>
     <string name="boxNumber">拆装数量：</string>
     <string name="OffshelfNumber">下架数量：</string>
+    <string name="OffshelfPickNumber">拣货数量：</string>
     <string name="MoveNumber">移库数量：</string>
     <string name="ChanggeNumber">转换数量：</string>
     <string name="TakeSampleNumber">取样数量：</string>
@@ -204,7 +206,7 @@
     <string name="activity_pallet_PalletPrint">托盘标签打印</string>
     <string name="activity_MaterialChange_In">入库单号：</string>
     <string name="activity_MaterialChange_Out">出库单号：</string>
-    <string name="activity_login_WareHousChoice">仓库选择</string>
+    <string name="activity_login_WareHousChoice">仓库选择：</string>
     <string name="activity_Truck_TransupplierChoice">承运商选择</string>
     <string name="activity_Truck_AddressChoice">目的地选择</string>
 
@@ -235,6 +237,7 @@
     <string name="Msg_UpadteT_QualityUserADF">提交取样物料信息...</string>
     <string name="Msg_PrintQYAndroid">打印取样标签...</string>
     <string name="Msg_GetT_SerialNoByPalletADF">获取条码信息...</string>
+    <string name="Msg_GetAreanobyCheckno2">检查盘点库位...</string>
     <string name="Msg_GetAreaModelADF">获取库位信息...</string>
     <string name="Msg_GetT_GetT_QualityListADF">获取质检物料信息...</string>
     <string name="Msg_GetT_PalletADF">获取托盘条码信息...</string>
@@ -260,10 +263,11 @@
     <string name="Message_No_PickAreaID">拣货货位未配置！</string>
     <string name="Message_No_SampAreaNo">取样库位不存在！</string>
     <string name="Message_No_QuanUserNo">取样人不存在！</string>
+    <string name="Message_No_MenuList">菜单权限未配置！</string>
 
     <string name="Hit_ScanBarcode">请扫描物料条码</string>
     <string name="Hit_ScanPallet">请扫描托盘条码</string>
-    <string name="Hit_Selectwohouse">点击选择盘点仓库</string>
+    <string name="Hit_Selectwohouse">点击选择仓库</string>
 
 
     <string name="Error_materialnotMatch">该物料与托盘物料不一致！</string>
@@ -277,6 +281,11 @@
     <string name="Error_ReceivebatchError">该物料到货批次与已收到货批次不一致！</string>
     <string name="Error_CompanynotMatch">该物料据点与托盘据点不一致！</string>
     <string name="Error_AreaotnotMatch">该物料库位与托盘物料库位不一致！</string>
+    <string name="Error_BatchNoIsEmpty">厂内批次不能为空！</string>
+    <string name="Error_IntRequire">需要输入整数！</string>
+    <string name="Error_StockIsEmpty">库位不能为空！</string>
+    <string name="Error_PrintIPNotSet">请设置打印机IP地址！</string>
+    <string name="Error_EricIPNotSet">请设置电子称IP地址！</string>
     <string name="Error_materialChangenotMatch">扫描物料与单据物料不匹配！</string>
     <string name="Error_CannotReceipt">该单据未收货完成！</string>
     <string name="Error_CannotReview">该单据未复核完成！</string>
@@ -288,13 +297,17 @@
     <string name="Error_generic_error">通讯错误！</string>
     <string name="Error_Setting_IPAdressError">IP地址格式错误！</string>
     <string name="Error_isnotnum">请输入数字！</string>
+    <string name="Error_areanoHasScan">该库位已扫描！</string>
+    <string name="Error_SelectQcStatus">请选择质检状态！</string>
     <string name="Error_QtyBiger">拆箱数量超过箱内物品数量！</string>
     <string name="Error_QCQtyBiger">扫描数量已超过取样数量！</string>
     <string name="Error_materialNotMatch">扫描物料与质检物料属性不一致！</string>
     <string name="Error_StockhastMatch">扫描物料所属库位已扫描！</string>
+    <string name="Error_StockInCorrect">库位属性不正确！</string>
     <string name="Error_offshelfQtyBiger">扫描数量已超过下架数量！</string>
     <string name="Error_materialChangeQtyBiger">扫描数量已超过转料数量！</string>
     <string name="Error_PackageQtyBiger">扫描数量超过包装数量！</string>
+    <string name="Error_UpshelfQtyBiger">扫描数量超过上架数量！</string>
     <string name="Error_PackageQtyBigerThenWo">数量超过工单数量！</string>
     <string name="Error_BarcodeNotInList">此物料不在列表中！</string>
     <string name="Error_batchNONotMatch">此物料为指定批次，批次号不匹配！</string>

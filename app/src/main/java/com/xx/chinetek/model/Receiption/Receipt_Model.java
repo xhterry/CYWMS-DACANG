@@ -32,7 +32,15 @@ public class Receipt_Model extends Base_Model implements Parcelable {
     private String MoveType;
     private List<ReceiptDetail_Model> lstDetail;
     private String Note;
+    private  int  WareHouseID;
 
+    public int getWareHouseID() {
+        return WareHouseID;
+    }
+
+    public void setWareHouseID(int wareHouseID) {
+        WareHouseID = wareHouseID;
+    }
 
     public Float getIsQuality() {
         return IsQuality;
@@ -157,6 +165,7 @@ public class Receipt_Model extends Base_Model implements Parcelable {
         dest.writeString(this.MoveType);
         dest.writeTypedList(this.lstDetail);
         dest.writeString(this.Note);
+        dest.writeInt(this.WareHouseID);
     }
 
     protected Receipt_Model(Parcel in) {
@@ -172,6 +181,7 @@ public class Receipt_Model extends Base_Model implements Parcelable {
         this.MoveType = in.readString();
         this.lstDetail = in.createTypedArrayList(ReceiptDetail_Model.CREATOR);
         this.Note = in.readString();
+        this.WareHouseID = in.readInt();
     }
 
     public static final Creator<Receipt_Model> CREATOR = new Creator<Receipt_Model>() {
