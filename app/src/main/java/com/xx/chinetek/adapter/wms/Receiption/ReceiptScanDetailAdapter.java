@@ -80,6 +80,8 @@ public class ReceiptScanDetailAdapter extends BaseAdapter {
         }
         else if (receiptDetailModel.getScanQty().compareTo(receiptDetailModel.getRemainQty())==0) {
             convertView.setBackgroundResource(R.color.springgreen);
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;
     }

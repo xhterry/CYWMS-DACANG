@@ -81,6 +81,8 @@ public class ReviewScanDetailAdapter extends BaseAdapter {
         }
         else if (outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getOutStockQty())==0) {
             convertView.setBackgroundResource(R.color.springgreen);
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;
     }

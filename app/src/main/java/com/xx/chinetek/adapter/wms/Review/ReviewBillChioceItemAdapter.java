@@ -81,13 +81,15 @@ public class ReviewBillChioceItemAdapter extends BaseAdapter {
             listItemView = (ListItemView) convertView.getTag();
         }
         OutStock_Model outStockModel=outStockModels.get(selectID);
-        listItemView.txtTaskNo.setText(outStockModel.getVoucherNo());
-        listItemView.txtERPVoucherNo.setText(outStockModel.getErpVoucherNo());
+        listItemView.txtTaskNo.setText(outStockModel.getErpVoucherNo());
+        listItemView.txtERPVoucherNo.setText(outStockModel.getVoucherNo());
         listItemView.txtStrVoucherType.setText(outStockModel.getStrVoucherType());
         listItemView.txtCompany.setText(outStockModel.getStrongHoldName());
         listItemView.txtdepartment.setText(outStockModel.getDepartmentName());
         if (selectItem == position) {
             convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;
     }

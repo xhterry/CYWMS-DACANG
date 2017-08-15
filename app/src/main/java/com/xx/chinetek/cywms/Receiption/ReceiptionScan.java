@@ -227,6 +227,7 @@ public class ReceiptionScan extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 receiptDetailModels = returnMsgModel.getModelJson();
                 //自动确认扫描箱号
+                BindListVIew(receiptDetailModels);
                 if (barCodeInfos != null) {
                     isDel=false;
                     Bindbarcode(barCodeInfos);
@@ -307,52 +308,62 @@ public class ReceiptionScan extends BaseActivity {
     boolean isDel=false;
     void Bindbarcode(final ArrayList<BarCodeInfo> barCodeInfos){
         if (barCodeInfos != null && barCodeInfos.size() != 0) {
-            for (BarCodeInfo barCodeInfo : barCodeInfos) {
-                if (barCodeInfo != null && receiptDetailModels != null) {
-                    ReceiptDetail_Model receiptDetailModel = new ReceiptDetail_Model(barCodeInfo.getMaterialNo(), barCodeInfo.getRowNo(), barCodeInfo.getRowNoDel());
-                    final  int index = receiptDetailModels.indexOf(receiptDetailModel);
-                    if (index != -1) {
-                        //是否指定批次
-                        if(receiptDetailModels.get(index).getIsSpcBatch().equals("Y")){
-                            if(!receiptDetailModels.get(index).getFromBatchNo().equals(barCodeInfo.getBatchNo())){
-                                MessageBox.Show(context, getString(R.string.Error_batchNONotMatch) + "|" + barCodeInfo.getSerialNo());
+            try {
+                for (BarCodeInfo barCodeInfo : barCodeInfos) {
+                    if (barCodeInfo != null && receiptDetailModels != null) {
+                        ReceiptDetail_Model receiptDetailModel = new ReceiptDetail_Model(barCodeInfo.getMaterialNo(), barCodeInfo.getRowNo(), barCodeInfo.getRowNoDel());
+                        final int index = receiptDetailModels.indexOf(receiptDetailModel);
+                        if (index != -1) {
+                            if(!barCodeInfo.getErpVoucherNo().equals(receiptDetailModels.get(index).getErpVoucherNo())){
+                                MessageBox.Show(context,getString(R.string.Error_ErpvoucherNoMatch) + "|" + barCodeInfo.getSerialNo());
                                 break;
                             }
-                        }
 
-                       if (receiptDetailModels.get(index).getLstBarCode() == null)
-                            receiptDetailModels.get(index).setLstBarCode(new ArrayList<BarCodeInfo>());
-                        final int barIndex = receiptDetailModels.get(index).getLstBarCode().indexOf(barCodeInfo);
-                        if(barIndex!=-1) {
-                           if(isDel){
-                                RemoveBarcode(index, barIndex);
-                            }else {
-                               new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
-                                       .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                           @Override
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               // TODO 自动生成的方法
-                                               //RemoveBarcode(index, barIndex);
-                                               isDel=true;
-                                               Bindbarcode(barCodeInfos);
-                                           }
-                                       }).setNegativeButton("取消", null).show();
-                               break;
-                           }
+                            //是否指定批次
+                            if (receiptDetailModels.get(index).getIsSpcBatch().equals("Y")) {
+                                if (!receiptDetailModels.get(index).getFromBatchNo().equals(barCodeInfo.getBatchNo())) {
+                                    MessageBox.Show(context, getString(R.string.Error_batchNONotMatch) + "|" + barCodeInfo.getSerialNo());
+                                    break;
+                                }
+                            }
+
+                            if (receiptDetailModels.get(index).getLstBarCode() == null)
+                                receiptDetailModels.get(index).setLstBarCode(new ArrayList<BarCodeInfo>());
+                            final int barIndex = receiptDetailModels.get(index).getLstBarCode().indexOf(barCodeInfo);
+                            if (barIndex != -1) {
+                                if (isDel) {
+                                    RemoveBarcode(index, barIndex);
+                                } else {
+                                    new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
+                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // TODO 自动生成的方法
+                                                    //RemoveBarcode(index, barIndex);
+                                                    isDel = true;
+                                                    Bindbarcode(barCodeInfos);
+                                                }
+                                            }).setNegativeButton("取消", null).show();
+                                    break;
+                                }
+                            } else {
+                                if (!CheckBarcode(barCodeInfo, index))
+                                    break;
+                            }
+                            RefeshFrm(index);
+                        } else {
+                            MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + barCodeInfo.getSerialNo());
+                            break;
                         }
-                        else {
-                            if (!CheckBarcode(barCodeInfo, index))
-                                break;
-                        }
-                        RefeshFrm(index);
-                    } else {
-                        MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + barCodeInfo.getSerialNo());
-                        break;
                     }
-                }
 
+                }
+                InitFrm(barCodeInfos.get(0));
+            }catch (Exception ex){
+                MessageBox.Show(context,ex.getMessage());
+                CommonUtil.setEditFocus(edtRecScanBarcode);
             }
-            InitFrm(barCodeInfos.get(0));
+
         }
     }
 

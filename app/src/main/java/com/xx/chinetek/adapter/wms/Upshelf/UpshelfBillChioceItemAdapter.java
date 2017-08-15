@@ -88,6 +88,8 @@ public class UpshelfBillChioceItemAdapter extends BaseAdapter {
         listItemView.txtdepartment.setText(inStockTaskInfoModel.getDepartmentName());
         if (selectItem == position) {
             convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;
     }

@@ -116,6 +116,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         else {
             convertView.setBackgroundColor(Color.GREEN);
         }
+
         return convertView;
     }
 

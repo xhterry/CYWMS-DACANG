@@ -115,6 +115,9 @@ public class AdjustStock extends BaseActivity {
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
         barcodeModel=null;
+//        txtWarehouse.setText("包材仓库");
+//        txtQCStatus.setText("待检");
+//        edtAdjustStock.setText("DJ02");
     }
 
 
@@ -210,10 +213,14 @@ public class AdjustStock extends BaseActivity {
                     return;
                 }
             }
-           // adjustStockStr=adjustStock;
             barcodeModel.setBatchNo(adjustBatchNo);
             barcodeModel.setAreano(adjustStock);
             barcodeModel.setQty(Float.parseFloat(adjustNum));
+//            barcodeModel.setWarehouseno("AD02");
+//            barcodeModel.setWarehousename("包材仓库");
+//            barcodeModel.setSTATUS(1);
+//            barcodeModel.setAreano("DJ02");
+
             ArrayList<Barcode_Model> barcodeModels=new ArrayList<>();
             barcodeModels.add(barcodeModel);
             final Map<String, String> params = new HashMap<String, String>();
@@ -222,15 +229,22 @@ public class AdjustStock extends BaseActivity {
             params.put("man", BaseApplication.userInfo.getUserNo());
             String para = (new JSONObject(params)).toString();
             LogUtil.WriteLog(AdjustStock.class, TAG_SaveInfo, para);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveInfo, getString(R.string.Msg_InsertCheckDetail), context, mHandler, RESULT_SaveInfo, null, URLModel.GetURL().SaveInfo, params, null);
+            if(isBtnDelete){
+                new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除物料？\n" + barcodeModel.getSerialNo() )
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO 自动生成的方法
+                                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveInfo, getString(R.string.Msg_InsertCheckDetail), context, mHandler, RESULT_SaveInfo, null, URLModel.GetURL().SaveInfo, params, null);
+                            }
+                        }).setNegativeButton("取消", null).show();
+            }else{
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveInfo, getString(R.string.Msg_InsertCheckDetail), context, mHandler, RESULT_SaveInfo, null, URLModel.GetURL().SaveInfo, params, null);
 
-
+            }
         }
 
     }
-//    String WareHouseNo="";
-//    String WareHouseName="";
-//    String adjustStockStr="";
     void AnalysisGetWareHouseJson(String result) {
         try {
             LogUtil.WriteLog(AdjustStock.class, TAG_GetWareHouse, result);
@@ -272,29 +286,31 @@ public class AdjustStock extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                ArrayList<Barcode_Model> barcodeModels=returnMsgModel.getModelJson();
                 if(barcodeModels!=null && barcodeModels.size()!=0) {
-                    barcodeModel=barcodeModels.get(0);
+                    barcodeModel = barcodeModels.get(0);
+                    if(barcodeModel.getAllIn().equals("1")){
+                        MessageBox.Show(context,"扫描条码已入库！");
+                        CommonUtil.setEditFocus(edtAdjustScanBarcode);
+                        return;
+                    }
+
                     txtCompany.setText(barcodeModel.getStrongHoldName());
                     txtBatch.setText(barcodeModel.getBatchNo());
                     txtStatus.setText("");
                     txtEDate.setText("");
                     txtMaterialName.setText(barcodeModel.getMaterialDesc());
-                    txtQCStatus.setText(getQCStrStatus(barcodeModel.getSTATUS()));
-//                    if(TextUtils.isEmpty(barcodeModel.getWarehousename())){
-//                        barcodeModel.setWarehousename(WareHouseName);
-//                        barcodeModel.setWarehouseno(WareHouseNo);
-//                    }
-//                    if(TextUtils.isEmpty(barcodeModel.getAreano())){
-//                        barcodeModel.setAreano(adjustStockStr);
-//                    }
-                    txtWarehouse.setText(barcodeModel.getWarehousename());
                     txtStrongHold.setText(barcodeModel.getStrongHoldName());
                     edtAdjustBatchNo.setText(barcodeModel.getBatchNo());
                     edtAdjustNum.setText(barcodeModel.getQty() + "");
+                    txtQCStatus.setText(getQCStrStatus(barcodeModel.getSTATUS()));
+                    txtWarehouse.setText(barcodeModel.getWarehousename());
                     edtAdjustStock.setText(barcodeModel.getAreano());
-                    boolean isInsert=barcodeModel.getAllIn().equals("0");
+                    boolean isInsert = barcodeModel.getAllIn().equals("0");
                     txtStrongHold.setEnabled(!isInsert);
                     edtAdjustBatchNo.setEnabled(!isInsert);
                     edtAdjustNum.setEnabled(!isInsert);
+//                    txtWarehouse.setText("包材仓库");
+//                    txtQCStatus.setText("待检");
+//                    edtAdjustStock.setText("DJ02");
                 }
             } else
                 MessageBox.Show(context, returnMsgModel.getMessage());
@@ -311,9 +327,6 @@ public class AdjustStock extends BaseActivity {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
                 MessageBox.Show(context, returnMsgModel.getMessage());
-//                WareHouseNo=barcodeModel.getWarehouseno();
-//                WareHouseName= barcodeModel.getWarehousename();
-//                adjustStockStr=barcodeModel.getAreano();
                 barcodeModel=null;
                 edtAdjustScanBarcode.setText("");
                 edtAdjustStock.setText("");
@@ -330,6 +343,9 @@ public class AdjustStock extends BaseActivity {
                 txtStrongHold.setEnabled(true);
                 edtAdjustBatchNo.setEnabled(true);
                 edtAdjustNum.setEnabled(true);
+//                txtWarehouse.setText("包材仓库");
+//                txtQCStatus.setText("待检");
+//                edtAdjustStock.setText("DJ02");
             }else
                 MessageBox.Show(context, returnMsgModel.getMessage());
         } catch (Exception ex) {

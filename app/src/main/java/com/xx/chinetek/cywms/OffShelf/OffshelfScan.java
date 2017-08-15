@@ -44,6 +44,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,7 +230,7 @@ public class OffshelfScan extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO 自动生成的方法
                             outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).setOutOfstock(true);
-                            currentPickMaterialIndex=FindFirstCanPickMaterial();
+                             currentPickMaterialIndex=FindFirstCanPickMaterial();
                             ShowPickMaterialInfo();
                         }
                     }).setNegativeButton("取消", null).show();
@@ -288,6 +289,7 @@ public class OffshelfScan extends BaseActivity {
         ReturnMsgModelList<OutStockTaskDetailsInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<OutStockTaskDetailsInfo_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
             outStockTaskDetailsInfoModels=returnMsgModel.getModelJson();
+
             currentPickMaterialIndex=FindFirstCanPickMaterial();
             ShowPickMaterialInfo();//显示需要拣货物料
         }else
@@ -437,6 +439,7 @@ public class OffshelfScan extends BaseActivity {
                outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getLstStockInfo().add(0, stockInfoModels.get(0));
                break;
        }
+
        currentPickMaterialIndex=FindFirstCanPickMaterial();
        ShowPickMaterialInfo(); //显示下一拣货物料
    }
@@ -462,6 +465,7 @@ public class OffshelfScan extends BaseActivity {
             FindSumQtyByMaterialNo(outStockTaskDetailsInfoModel.getMaterialNo());
             txtOffshelfNum.setText("库："+outStockTaskDetailsInfoModel.getStockQty() + "/剩：" + SumReaminQty);
             txtcurrentPickNum.setText(qty+"");
+
             BindListVIew(outStockTaskDetailsInfoModels);
         }
         else {
@@ -556,6 +560,18 @@ public class OffshelfScan extends BaseActivity {
      */
     int FindFirstCanPickMaterial(){
         int size=outStockTaskDetailsInfoModels.size();
+        for(int i=0;i<size;i++) {
+            if(ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),
+                    outStockTaskDetailsInfoModels.get(i).getScanQty())==0f)
+                if(i+1<size) {
+                    if (ArithUtil.sub(outStockTaskDetailsInfoModels.get(i + 1).getRemainQty(),
+                            outStockTaskDetailsInfoModels.get(i + 1).getScanQty()) != 0f)
+                        Collections.swap(outStockTaskDetailsInfoModels, i, i + 1);
+                    else
+                        break;
+                }
+        }
+
         int index=-1;
         for(int i=0;i<size;i++){
             if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null

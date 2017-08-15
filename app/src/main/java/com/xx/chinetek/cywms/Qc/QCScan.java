@@ -305,6 +305,7 @@ public class QCScan extends BaseActivity {
            MessageBox.Show(context, returnMsgModel.getMessage());
            CommonUtil.setEditFocus(edtQCScanBarcode);
            if(returnMsgModel.getHeaderStatus().equals("S")) {
+
                closeActiviry();
            }
         } catch (Exception ex) {

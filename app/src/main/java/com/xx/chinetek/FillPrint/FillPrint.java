@@ -100,7 +100,7 @@ public class FillPrint extends BaseActivity {
         {
             keyBoardCancle();
             String code = edtLabelScanbarcode.getText().toString().trim();
-            if (!tbSample.isChecked()) {
+        //    if (!tbSample.isChecked()) {
                 int type = tbPallet.isChecked() ? 1 : 2;
                 final Map<String, String> params = new HashMap<String, String>();
                 params.put("BarCode", code);
@@ -108,9 +108,9 @@ public class FillPrint extends BaseActivity {
                 params.put("MoveType", "1"); //1：下架 2:移库
                 LogUtil.WriteLog(FillPrint.class, TAG_GetStockModelADF, code);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
-            }else{
-                CommonUtil.setEditFocus(edtLabelScanbarcode);
-            }
+//            }else{
+//                CommonUtil.setEditFocus(edtLabelScanbarcode);
+//            }
         }
         return false;
     }

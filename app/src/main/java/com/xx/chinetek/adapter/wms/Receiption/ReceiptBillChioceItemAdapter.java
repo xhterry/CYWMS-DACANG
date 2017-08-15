@@ -94,6 +94,8 @@ public class ReceiptBillChioceItemAdapter extends BaseAdapter  {
         listItemView.txtSupplier.setText(receiptModel.getSupplierName());
         if (selectItem == position) {
             convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;
     }

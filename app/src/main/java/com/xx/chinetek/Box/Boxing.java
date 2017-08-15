@@ -213,12 +213,12 @@ public class Boxing extends BaseActivity {
                     txt_EDate.setText(CommonUtil.DateToString(stockInfoModel.getEDate()));
                 }
             }catch (Exception ex){
-                ToastUtil.show(returnMsgModel.getMessage());
+                MessageBox.Show(context,returnMsgModel.getMessage());
                 CommonUtil.setEditFocus(isUnbox?edtUnboxCode:edtBoxCode);
             }
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
             CommonUtil.setEditFocus(isUnbox?edtUnboxCode:edtBoxCode);
         }
     }

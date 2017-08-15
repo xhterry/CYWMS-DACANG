@@ -281,6 +281,7 @@
     <string name="Error_ReceivebatchError">该物料到货批次与已收到货批次不一致！</string>
     <string name="Error_CompanynotMatch">该物料据点与托盘据点不一致！</string>
     <string name="Error_AreaotnotMatch">该物料库位与托盘物料库位不一致！</string>
+    <string name="Error_ErpvoucherNoMatch">该物料不在此订单中！</string>
     <string name="Error_BatchNoIsEmpty">厂内批次不能为空！</string>
     <string name="Error_IntRequire">需要输入整数！</string>
     <string name="Error_StockIsEmpty">库位不能为空！</string>

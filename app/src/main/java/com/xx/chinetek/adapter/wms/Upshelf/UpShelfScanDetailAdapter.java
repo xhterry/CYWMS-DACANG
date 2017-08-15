@@ -86,6 +86,8 @@ public class UpShelfScanDetailAdapter extends BaseAdapter {
         }
         else if (inStockTaskDetailsInfoModel.getScanQty().compareTo(inStockTaskDetailsInfoModel.getRemainQty())==0) {
             convertView.setBackgroundResource(R.color.springgreen);
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;
     }
