@@ -287,11 +287,11 @@ public class AdjustStock extends BaseActivity {
                ArrayList<Barcode_Model> barcodeModels=returnMsgModel.getModelJson();
                 if(barcodeModels!=null && barcodeModels.size()!=0) {
                     barcodeModel = barcodeModels.get(0);
-                    if(barcodeModel.getAllIn().equals("1")){
-                        MessageBox.Show(context,"扫描条码已入库！");
-                        CommonUtil.setEditFocus(edtAdjustScanBarcode);
-                        return;
-                    }
+//                    if(barcodeModel.getAllIn().equals("1")){
+//                        MessageBox.Show(context,"扫描条码已入库！");
+//                        CommonUtil.setEditFocus(edtAdjustScanBarcode);
+//                        return;
+//                    }
 
                     txtCompany.setText(barcodeModel.getStrongHoldName());
                     txtBatch.setText(barcodeModel.getBatchNo());

@@ -64,6 +64,7 @@ public class URLModel {
     public String PrintLpkApartAndroid=GetWCFAdress()+"PrintLpkApartAndroid";//打印拆零标签
     public String QYReprintAndroid=GetWCFAdress()+"QYReprintAndroid";//打印取样标签
     public String SaveT_OutStockReviewDetailADF=GetWCFAdress()+"SaveT_OutStockReviewDetailADF";//提交复核明细
+    public String GetStockByOutStockReviewByID=GetWCFAdress()+"GetStockByOutStockReviewByID";//点击获取复核明细
     public String PrintAndroid=GetWCFAdress()+"PrintAndroid";//打印期初标签
     public String Delete_PalletORBarCodeADF=GetWCFAdress()+"Delete_PalletORBarCodeADF";//删除组托信息
     public String SaveT_BarCodeToStockADF=GetWCFAdress()+"SaveT_BarCodeToStockADF";//装箱拆箱提交

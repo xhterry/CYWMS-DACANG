@@ -13,8 +13,8 @@
         <TextView
             android:id="@+id/list_OutLoacl"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:gravity="left"
             android:maxLines="1"
             android:textColor="@color/green"
@@ -24,10 +24,11 @@
         <TextView
             android:id="@+id/list_SerialNo"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:gravity="left"
             android:maxLines="1"
+            android:textAlignment="textEnd"
             android:textColor="@color/chocolate"
             android:textSize="15sp" />
     </LinearLayout>
@@ -37,15 +38,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.8">
 
-    <TextView
+        <TextView
             android:id="@+id/list_MaterialDesc"
             android:layout_width="0dp"
-            android:layout_weight="0.8"
             android:layout_height="match_parent"
+            android:layout_weight="0.8"
             android:gravity="left"
-            android:textSize="20sp"
             android:maxLines="1"
-            android:textColor="@color/blue_66f" />
+            android:textColor="@color/blue_66f"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/list_qty"

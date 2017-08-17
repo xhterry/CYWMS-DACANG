@@ -35,6 +35,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private Float TaskQty;
     private Float QualityQty;
     private Float RemainQty; //剩余拣货数量
+   // private Float PickQty; //拣货数量
     private Float ShelveQty;
     private String TaskNo;
     private Float IsQualitycomp;
@@ -82,6 +83,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     private Float IsSmallBatch;
     private String UnitName;
     private Float ScanQty;  //扫描数量
+    private Float RePickQty;  //扫描数量
     private String AreaNo;
     private String HouseNo;
     private String WareHouseNo;
@@ -139,7 +141,21 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
 
     }
 
+    public Float getRePickQty() {
+        return RePickQty;
+    }
 
+    public void setRePickQty(Float rePickQty) {
+        RePickQty = rePickQty;
+    }
+//
+//    public Float getPickQty() {
+//        return PickQty;
+//    }
+//
+//    public void setPickQty(Float pickQty) {
+//        PickQty = pickQty;
+//    }
 
     public Float getStockQty() {
         return StockQty;
@@ -742,6 +758,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeValue(this.TaskQty);
         dest.writeValue(this.QualityQty);
         dest.writeValue(this.RemainQty);
+       // dest.writeValue(this.PickQty);
         dest.writeValue(this.ShelveQty);
         dest.writeString(this.TaskNo);
         dest.writeValue(this.IsQualitycomp);
@@ -789,6 +806,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeValue(this.IsSmallBatch);
         dest.writeString(this.UnitName);
         dest.writeValue(this.ScanQty);
+        dest.writeValue(this.RePickQty);
         dest.writeString(this.AreaNo);
         dest.writeString(this.HouseNo);
         dest.writeString(this.WareHouseNo);
@@ -819,6 +837,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.TaskQty = (Float) in.readValue(Float.class.getClassLoader());
         this.QualityQty = (Float) in.readValue(Float.class.getClassLoader());
         this.RemainQty = (Float) in.readValue(Float.class.getClassLoader());
+      //  this.PickQty = (Float) in.readValue(Float.class.getClassLoader());
         this.ShelveQty = (Float) in.readValue(Float.class.getClassLoader());
         this.TaskNo = in.readString();
         this.IsQualitycomp = (Float) in.readValue(Float.class.getClassLoader());
@@ -868,6 +887,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.IsSmallBatch = (Float) in.readValue(Float.class.getClassLoader());
         this.UnitName = in.readString();
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.RePickQty = (Float) in.readValue(Float.class.getClassLoader());
         this.AreaNo = in.readString();
         this.HouseNo = in.readString();
         this.WareHouseNo = in.readString();

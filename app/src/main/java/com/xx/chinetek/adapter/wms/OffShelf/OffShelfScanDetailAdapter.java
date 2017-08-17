@@ -79,18 +79,27 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
        final OutStockTaskDetailsInfo_Model outStockTaskDetailsInfoModel=outStockTaskDetailsInfoModels.get(selectID);
         listItemView.txtbarcode.setText(outStockTaskDetailsInfoModel.getMaterialNo());
         listItemView.txtScanNum.setText("扫描数："+outStockTaskDetailsInfoModel.getScanQty());
-        listItemView.txtRemainQty.setText("拣货数："+outStockTaskDetailsInfoModel.getRemainQty());
+        listItemView.txtRemainQty.setText("可拣数："+outStockTaskDetailsInfoModel.getRePickQty());
+      //  listItemView.txtRemainQty.setText("可拣数："+outStockTaskDetailsInfoModel.getStockQty());
         listItemView.txtreferStock.setText(outStockTaskDetailsInfoModel.getAreaNo());
         listItemView.txtERPVoucherNo.setText(outStockTaskDetailsInfoModel.getErpVoucherNo());
         listItemView.txtMaterialDesc.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
         listItemView.txtbatch.setText("批："+outStockTaskDetailsInfoModel.getFromBatchNo());
+//        Float qty= ArithUtil.sub(outStockTaskDetailsInfoModel.getStockQty(),outStockTaskDetailsInfoModel.getRemainQty())<0?
+//                outStockTaskDetailsInfoModel.getStockQty():outStockTaskDetailsInfoModel.getRemainQty();
+
         if (outStockTaskDetailsInfoModel.getScanQty()!=0 &&
-                outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRemainQty())<0) {
+              //  outStockTaskDetailsInfoModel.getScanQty().compareTo(qty)<0)
+                outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRePickQty())<0) {
             convertView.setBackgroundResource(R.color.khaki);
         }
-        else if (outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRemainQty())==0) {
+       // else if (outStockTaskDetailsInfoModel.getScanQty().compareTo(qty)==0) {
+        else if (outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRePickQty())==0) {
             convertView.setBackgroundResource(R.color.springgreen);
-        }else{
+        }else if(outStockTaskDetailsInfoModel.getOutOfstock()){
+            convertView.setBackgroundResource(R.color.gray_cc);
+        }
+        else{
             convertView.setBackgroundResource(R.color.trans);
         }
         return convertView;

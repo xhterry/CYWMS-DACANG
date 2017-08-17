@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,8 +53,10 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
 
     String TAG_GetT_QualityListADF = "QCBillChoice_GetT_QualityListADF";
     String TAG_PrintQYAndroid = "QCBillChoice_PrintQYAndroid";
+    String TAG_GetT_OutBarCodeInfoForQuanADF="QCScan_GetT_OutBarCodeInfoForQuanADF";
     private final int RESULT_GetT_QualityListADF = 101;
     private final int RESULT_PrintQYAndroid = 102;
+    private final int RESULT_Msg_GetT_OutBarCodeInfoForQuanADF = 103;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -63,6 +67,9 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
                 break;
             case RESULT_PrintQYAndroid:
                 AnalysisPrintQYAndroidJson((String) msg.obj);
+                break;
+            case RESULT_Msg_GetT_OutBarCodeInfoForQuanADF:
+                AnalysisGetT_OutBarCodeInfoForQuanADFJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -95,7 +102,8 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_title), true);
         x.view().inject(this);
         btn_PrintQCLabrl.setVisibility(View.GONE);
-        edtfilterContent.setVisibility(View.GONE);
+        //edtfilterContent.setVisibility(View.GONE);
+        edtfilterContent.addTextChangedListener(TaskNoTextWatcher);
     }
 
     @Override
@@ -159,18 +167,48 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         {
             if(qualityInfoModels!=null && qualityInfoModels.size()>0) {
                 String code = edtfilterContent.getText().toString().trim();
-                //扫描单据号、检查单据列表
-                QualityInfo_Model qualityInfoModel = new QualityInfo_Model(code);
-                int index=qualityInfoModels.indexOf(qualityInfoModel);
-                if (index!=-1) {
-                    StartScanIntent(qualityInfoModels.get(index));
-                    return false;
-                }
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("BarCode", code);
+                LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_OutBarCodeInfoForQuanADF, code);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_OutBarCodeInfoForQuanADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_OutBarCodeInfoForQuanADF, null, URLModel.GetURL().GetT_OutBarCodeInfoForQuanADF, params, null);
+
+
+
+//                //扫描单据号、检查单据列表
+//                QualityInfo_Model qualityInfoModel = new QualityInfo_Model(code);
+//                int index=qualityInfoModels.indexOf(qualityInfoModel);
+//                if (index!=-1) {
+//                    StartScanIntent(qualityInfoModels.get(index));
+//                    return false;
+//                }
             }
             CommonUtil.setEditFocus(edtfilterContent);
         }
         return false;
     }
+
+    /**
+     * 文本变化事件
+     */
+    TextWatcher TaskNoTextWatcher=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(!edtfilterContent.getText().toString().equals(""))
+                qcBillChioceItemAdapter.getFilter().filter(edtfilterContent.getText().toString());
+            else{
+                BindListVIew(qualityInfoModels);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     @Event(R.id.btn_PrintQCLabrl)
     private  void btnPrintQCLabrlClick(View view){
@@ -217,6 +255,30 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
             MessageBox.Show(context, ex.getMessage());
         }
     }
+
+    void AnalysisGetT_OutBarCodeInfoForQuanADFJson(String result){
+        try {
+            LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_OutBarCodeInfoForQuanADF, result);
+            ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                stockInfoModel = returnMsgModel.getModelJson();
+                if(stockInfoModel!=null){
+                  edtfilterContent.setText(stockInfoModel.getMaterialNo());
+                    CommonUtil.setEditFocus(edtfilterContent);
+                }
+            } else {
+                edtfilterContent.setText("");
+                MessageBox.Show(context, returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(edtfilterContent);
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtfilterContent);
+        }
+
+    }
+
 
     void AnalysisGetT_QualityListADFJson(String result){
         try {

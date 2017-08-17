@@ -29,6 +29,7 @@
         <activity android:name=".Review.ReviewBillChoice" />
         <activity android:name="com.xx.chinetek.Pallet.CombinPalletDetail" />
         <activity android:name=".InnerMove.InnerMoveScan" />
+        <activity android:name=".InnerMove.InnerMoveDetail" />
         <activity android:name=".Intentory.InventoryBillChoice" />
         <activity android:name=".Intentory.IntentoryScan" />
         <activity android:name="com.xx.chinetek.Pallet.CombinPallet" />
@@ -84,7 +85,7 @@
 
         <activity android:name="com.xx.chinetek.FillPrint.InitPrint" />
         <activity android:name=".Intentory.IntentoryAdd" />
-        <activity android:name=".Qc.QCInStock"></activity>
+        <activity android:name=".Qc.QCInStock" />
     </application>
 
 </manifest>

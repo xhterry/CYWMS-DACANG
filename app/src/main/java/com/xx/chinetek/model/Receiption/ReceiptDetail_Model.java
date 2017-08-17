@@ -8,7 +8,6 @@ import com.xx.chinetek.model.Material.BarCodeInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -38,7 +37,7 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     private String IsSpcBatch;
     private String QcCode;
     private String QcDesc;
-    private List<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
+    private ArrayList<BarCodeInfo> lstBarCode=new ArrayList<BarCodeInfo>();
     private String SaleName ;
     private String VoucherNo;
     private int IsSerial;
@@ -187,11 +186,11 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
         ArrStockDate = arrStockDate;
     }
 
-    public List<BarCodeInfo> getLstBarCode() {
+    public ArrayList<BarCodeInfo> getLstBarCode() {
         return lstBarCode;
     }
 
-    public void setLstBarCode(List<BarCodeInfo> lstBarCode) {
+    public void setLstBarCode(ArrayList<BarCodeInfo> lstBarCode) {
         this.lstBarCode = lstBarCode;
     }
 

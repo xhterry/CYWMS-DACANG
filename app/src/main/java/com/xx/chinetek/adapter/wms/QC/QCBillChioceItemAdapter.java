@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
@@ -18,12 +20,13 @@ import java.util.List;
  * Created by GHOST on 2017/1/13.
  */
 
-public class QCBillChioceItemAdapter extends BaseAdapter {
+public class QCBillChioceItemAdapter extends BaseAdapter  implements Filterable {
+    private ArrayFilter mFilter;
     private Context context; // 运行上下文
-    private List<QualityInfo_Model> qualityInfoModels; // 信息集合
+    private ArrayList<QualityInfo_Model> qualityInfoModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
     private List<Boolean> listselected;//用布尔型的list记录每一行的选中状态
-
+    private ArrayList<QualityInfo_Model> mUnfilteredData;
 
     public final class ListItemView { // 自定义控件集合
 
@@ -34,7 +37,7 @@ public class QCBillChioceItemAdapter extends BaseAdapter {
         public TextView txtdepartment;
     }
 
-    public QCBillChioceItemAdapter(Context context, List<QualityInfo_Model> qualityInfoModels) {
+    public QCBillChioceItemAdapter(Context context, ArrayList<QualityInfo_Model> qualityInfoModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.qualityInfoModels = qualityInfoModels;
@@ -112,7 +115,66 @@ public class QCBillChioceItemAdapter extends BaseAdapter {
         }
         return convertView;
     }
+    @Override
+    public Filter getFilter() {
+        if (mFilter == null) {
+            mFilter = new ArrayFilter();
+        }
+        return mFilter;
+    }
 
+    private class ArrayFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence prefix) {
+            FilterResults results = new FilterResults();
+
+            if (mUnfilteredData == null) {
+                mUnfilteredData =  new ArrayList<QualityInfo_Model>(qualityInfoModels);
+            }
+
+            if (prefix == null || prefix.length() == 0) {
+                ArrayList<QualityInfo_Model> list = mUnfilteredData;
+                results.values = list;
+                results.count = list.size();
+            } else {
+                String prefixString = prefix.toString().toLowerCase();
+
+                ArrayList<QualityInfo_Model> unfilteredValues = mUnfilteredData;
+                int count = unfilteredValues.size();
+
+                ArrayList<QualityInfo_Model> newValues = new ArrayList<QualityInfo_Model>(count);
+
+                for (int i = 0; i < count; i++) {
+                    QualityInfo_Model pc = unfilteredValues.get(i);
+                    if (pc != null) {
+
+                        if(pc.getMaterialNo().toUpperCase().startsWith(prefixString.toUpperCase())){
+                            newValues.add(pc);
+                        }
+                    }
+                }
+
+                results.values = newValues;
+                results.count = newValues.size();
+            }
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+            //noinspection unchecked
+            qualityInfoModels = (ArrayList<QualityInfo_Model>) results.values;
+            if (results.count > 0) {
+                notifyDataSetChanged();
+            } else {
+                notifyDataSetInvalidated();
+            }
+        }
+
+    }
 
 
 }

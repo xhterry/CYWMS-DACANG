@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -59,11 +60,13 @@ public class ReviewScan extends BaseActivity {
     String TAG_ScanOutStockReviewByBarCodeADF="ReviewScan_ScanOutStockReviewByBarCodeADF";
     String TAG_SaveT_OutStockReviewPalletDetailADF="ReviewScan_SaveT_OutStockReviewPalletDetailADF";
     String TAG_SaveT_OutStockReviewDetailADF="ReviewScan_SaveT_OutStockReviewDetailADF";
+    String TAG_GetStockByOutStockReviewByID="ReviewScan_GetStockByOutStockReviewByID";
 
     private final int RESULT_GetT_OutStockReviewDetailListByHeaderIDADF=101;
     private final int RESULT_ScanOutStockReviewByBarCodeADF=102;
     private final int RESULT_SaveT_OutStockReviewDetailADF=103;
     private final int RESULT_Msg_SaveT_OutStockReviewPalletDetailADF=104;
+    private final int RESULT_GetStockByOutStockReviewByID=105;
 
     private final int  RequestCode_PalletDetail=10002;
 
@@ -81,6 +84,9 @@ public class ReviewScan extends BaseActivity {
                 break;
             case RESULT_SaveT_OutStockReviewDetailADF:
                 AnalysisSaveT_OutStockReviewDetailADFJson((String) msg.obj);
+                break;
+            case RESULT_GetStockByOutStockReviewByID:
+                AnalysisGetStockByOutStockReviewByIDJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -117,6 +123,7 @@ public class ReviewScan extends BaseActivity {
     ArrayList<StockInfo_Model> stockInfoModels;//扫描条码
     OutStock_Model outStockModel=null;
     ReviewScanDetailAdapter reviewScanDetailAdapter;
+    int mPosition=-1;
 
     @Override
     protected void initViews() {
@@ -131,6 +138,7 @@ public class ReviewScan extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        lsvReviewscan.setOnScrollListener(onScrollListener);
         outStockModel=getIntent().getParcelableExtra("outStock_model");
         stockInfoModels=getIntent().getParcelableArrayListExtra("stockInfoModels");
         GetOutStockDetailInfo(outStockModel);
@@ -167,15 +175,22 @@ public class ReviewScan extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Event(value =R.id.lsv_Reviewscan,type =AdapterView.OnItemClickListener.class )
+    private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        OutStockDetailInfo_Model outStockDetailInfoModel=(OutStockDetailInfo_Model)reviewScanDetailAdapter.getItem(position);
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("ID", outStockDetailInfoModel.getID()+"");
+        LogUtil.WriteLog(ReviewScan.class, TAG_GetStockByOutStockReviewByID,  outStockDetailInfoModel.getID()+"");
+        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockByOutStockReviewByID, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetStockByOutStockReviewByID, null, URLModel.GetURL().GetStockByOutStockReviewByID, params, null);
+
+    }
+
     @Event(value =R.id.edt_ReviewScanBarcode,type = View.OnKeyListener.class)
     private  boolean edtReviewScanBarcodeClick(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             String code=edtReviewScanBarcode.getText().toString().trim();
-            if(TextUtils.isEmpty(code)){
-                CommonUtil.setEditFocus(edtReviewScanBarcode);
-                return true;
-            }
+
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
             LogUtil.WriteLog(ReviewScan.class, TAG_ScanOutStockReviewByBarCodeADF, code);
@@ -236,6 +251,30 @@ public class ReviewScan extends BaseActivity {
     }
 
     /*
+    点击确认复核
+     */
+    void AnalysisGetStockByOutStockReviewByIDJson(String result){
+        LogUtil.WriteLog(ReviewScan.class, TAG_GetStockByOutStockReviewByID,result);
+        ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
+        if(returnMsgModel.getHeaderStatus().equals("S")){
+            stockInfoModels=returnMsgModel.getModelJson();
+            if(stockInfoModels!=null){
+                for (StockInfo_Model stockModel:stockInfoModels) {
+                    if(!CheckBarcode(stockModel))
+                        break;
+                }
+                InitFrm(stockInfoModels.get(0));
+            }
+           BindListVIew(outStockDetailInfoModels);
+        }else
+        {
+            MessageBox.Show(context,returnMsgModel.getMessage());
+        }
+        CommonUtil.setEditFocus(edtReviewScanBarcode);
+
+    }
+
+    /*
  处理下架复核明细
   */
     void AnalysisGetT_OutStockReviewDetailListByHeaderIDADFJson(String result){
@@ -253,7 +292,7 @@ public class ReviewScan extends BaseActivity {
             BindListVIew(outStockDetailInfoModels);
         }else
         {
-            ToastUtil.show(returnMsgModel.getMessage());
+            MessageBox.Show(context,returnMsgModel.getMessage());
         }
     }
 
@@ -429,7 +468,29 @@ public class ReviewScan extends BaseActivity {
     private void BindListVIew(ArrayList<OutStockDetailInfo_Model> outStockDetailInfoModels) {
         reviewScanDetailAdapter=new ReviewScanDetailAdapter(context,outStockDetailInfoModels);
         lsvReviewscan.setAdapter(reviewScanDetailAdapter);
-
+        if(mPosition!=-1)
+            lsvReviewscan.setSelection(mPosition);
     }
+
+
+    AbsListView.OnScrollListener onScrollListener= new AbsListView.OnScrollListener() {
+        /**
+         * 滚动状态改变时调用
+         */
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            // 不滚动时保存当前滚动到的位置
+            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                mPosition = lsvReviewscan.getFirstVisiblePosition();
+            }
+        }
+
+        /**
+         * 滚动时调用
+         */
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        }
+    };
 
 }

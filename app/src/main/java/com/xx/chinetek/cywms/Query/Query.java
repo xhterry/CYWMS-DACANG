@@ -16,8 +16,8 @@ import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -72,8 +72,14 @@ int Type=-1;
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
+        String Context=getIntent().getStringExtra("MaterialNO");
         txtname.setText(BaseApplication.toolBarTitle.Title+"号：");
         Type=getIntent().getIntExtra("Type",-1);
+        if(!TextUtils.isEmpty(Context)){
+            txtname.setVisibility(View.GONE);
+            edtqueryScanBarcode.setVisibility(View.GONE);
+            GetStockInfo(Context);
+        }
     }
 
 
@@ -82,16 +88,20 @@ int Type=-1;
         if(keyCode== KeyEvent.KEYCODE_ENTER && event.getAction()==KeyEvent.ACTION_UP){
             keyBoardCancle();
             String barcode=edtqueryScanBarcode.getText().toString().trim();
-            if(!TextUtils.isEmpty(barcode)){
-                final Map<String, String> params = new HashMap<String, String>();
-                params.put("MaterialNo", barcode);
-                params.put("ScanType", Type+"");
-                String para = (new JSONObject(params)).toString();
-                LogUtil.WriteLog(Query.class, TAG_GetStockByMaterialNoADF, para);
-                RequestHandler.addRequestWithDialog(Request.Method.POST,TAG_GetStockByMaterialNoADF,String.format(getString(R.string.Msg_QueryStockInfo),BaseApplication.toolBarTitle.Title), context, mHandler, RESULT_Msg_GetStockADF, null,  URLModel.GetURL().GetStockByMaterialNoADF, params, null);
-            }
+            GetStockInfo(barcode);
         }
         return false;
+    }
+
+    void GetStockInfo(String barcode){
+        if(!TextUtils.isEmpty(barcode)){
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("MaterialNo", barcode);
+            params.put("ScanType", Type+"");
+            String para = (new JSONObject(params)).toString();
+            LogUtil.WriteLog(Query.class, TAG_GetStockByMaterialNoADF, para);
+            RequestHandler.addRequestWithDialog(Request.Method.POST,TAG_GetStockByMaterialNoADF,String.format(getString(R.string.Msg_QueryStockInfo),BaseApplication.toolBarTitle.Title), context, mHandler, RESULT_Msg_GetStockADF, null,  URLModel.GetURL().GetStockByMaterialNoADF, params, null);
+        }
     }
 
     void AnalysisGetStockADFJson(String result){

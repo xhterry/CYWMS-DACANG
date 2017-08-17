@@ -1,12 +1,15 @@
 package com.xx.chinetek.cywms.InnerMove;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +24,7 @@ import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.cywms.UpShelf.UpShelfScanActivity;
 import com.xx.chinetek.model.CheckNumRefMaterial;
+import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -30,6 +34,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -104,6 +109,7 @@ public class InnerMoveScan extends BaseActivity {
     AreaInfo_Model OutAreaInfoModel=null;//扫描库位
     InnerMoveAdapter innerMoveAdapter;
     ArrayList<StockInfo_Model> currentStockInfo;
+    ArrayList<StockInfo_Model> ShowStock=new ArrayList<>();
 
     @Override
     protected void initViews() {
@@ -132,6 +138,32 @@ public class InnerMoveScan extends BaseActivity {
 
         }
         return false;
+    }
+
+    @Event(value = R.id.lsv_InnerMoveDetail,type =  AdapterView.OnItemClickListener.class)
+    private  boolean lsv_InnerMoveDetailItemClick(AdapterView<?> parent, View view, int position, long id){
+        if(id>=0) {
+            StockInfo_Model stockInfoModel=ShowStock.get(position);
+            ArrayList<BarCodeInfo>  barCodeInfos=new ArrayList<>();
+            if(stockInfoModel !=null && stockInfoModels !=null) {
+                for(StockInfo_Model temp:stockInfoModels){
+                    if(stockInfoModel.getMaterialNo().equals(temp.getMaterialNo())){
+                        BarCodeInfo barCodeInfo=new BarCodeInfo();
+                        barCodeInfo.setSerialNo(temp.getSerialNo());
+                        barCodeInfos.add(barCodeInfo);
+                    }
+                }
+                if(barCodeInfos.size()!=0) {
+                    Intent intent = new Intent(context, InnerMoveDetail.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("barCodeInfos", barCodeInfos);
+                    intent.putExtras(bundle);
+                    startActivityLeft(intent);
+                }
+            }
+
+        }
+        return true;
     }
 
     @Event(value = R.id.edt_ReturnQty,type = View.OnKeyListener.class)
@@ -229,7 +261,7 @@ public class InnerMoveScan extends BaseActivity {
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("ModelJson", ModelJson);
             LogUtil.WriteLog(InnerMoveScan.class, TAG_SaveT_StockADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_InStockDetailADF), context, mHandler, RESULT_SaveT_StockADF, null,  URLModel.GetURL().SaveT_StockADF, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_StockADF), context, mHandler, RESULT_SaveT_StockADF, null,  URLModel.GetURL().SaveT_StockADF, params, null);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -284,14 +316,14 @@ public class InnerMoveScan extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 OutAreaInfoModel = returnMsgModel.getModelJson();
                 BindArea();
-                BindListVIew(stockInfoModels);
-
+                checkQty();
+                BindListVIew(ShowStock);
             } else {
                 MessageBox.Show(context, returnMsgModel.getMessage());
                 CommonUtil.setEditFocus(edtMoveScanBarcode);
             }
         }catch (Exception ex) {
-            MessageBox.Show(context,ex.getMessage());
+            MessageBox.Show(context,ex.toString());
             CommonUtil.setEditFocus(edtMoveScanBarcode);
         }
 
@@ -324,18 +356,9 @@ public class InnerMoveScan extends BaseActivity {
     void BindArea(){
         if(currentStockInfo!=null && OutAreaInfoModel!=null) {
             for (int i = 0; i < currentStockInfo.size(); i++) {
-//                currentStockInfo.get(i).setAreaNo(OutAreaInfoModel.getAreaNo());
-//                currentStockInfo.get(i).setHouseNo(OutAreaInfoModel.getHouseNo());
-//                currentStockInfo.get(i).setWarehouseNo(OutAreaInfoModel.getWarehouseNo());
-//                currentStockInfo.get(i).setAreaID(OutAreaInfoModel.getID());
-//                currentStockInfo.get(i).setHouseID(OutAreaInfoModel.getHouseID());
-//                currentStockInfo.get(i).setWareHouseID(OutAreaInfoModel.getWarehouseID());
                 currentStockInfo.get(i).setStatus(OutAreaInfoModel.getIsQuality());
                 currentStockInfo.get(i).setToErpAreaNo(OutAreaInfoModel.getAreaNo());
-              //  stockInfoModels.get(i).setFromErpAreaNo(OutAreaInfoModel.getAreaNo());
                 currentStockInfo.get(i).setToErpWarehouse(OutAreaInfoModel.getWarehouseNo());
-              //  stockInfoModels.get(i).setFromErpWarehouse(OutAreaInfoModel.getWarehouseNo());
-              //  stockInfoModels.get(i).setFromBatchNo( stockInfoModels.get(i).getBatchNo());
             }
             txtCompany.setText(currentStockInfo.get(0).getStrongHoldName());
             txtStatus.setText(currentStockInfo.get(0).getStrStatus());
@@ -357,6 +380,32 @@ public class InnerMoveScan extends BaseActivity {
     }
 
 
+    void checkQty(){
+        if(ShowStock==null)
+            ShowStock=new ArrayList<>();
+        Float qty = 0f;
+        for (StockInfo_Model stockInfoModel : currentStockInfo) {
+            qty = ArithUtil.add(qty, stockInfoModel.getQty());
+        }
+        int  index=-1;
+        for (int i = 0; i < ShowStock.size(); i++) {
+            if (ShowStock.get(i).getMaterialNo().equals(currentStockInfo.get(0).getMaterialNo())) {
+                index=i;
+                break;
+            }
+        }
+        if(index!=-1)
+            ShowStock.get(index).setQty(ArithUtil.add(ShowStock.get(index).getQty(), qty));
+        else {
+            StockInfo_Model stockInfoModel=new StockInfo_Model();
+            stockInfoModel.setMaterialDesc(currentStockInfo.get(0).getMaterialDesc());
+            stockInfoModel.setMaterialNo(currentStockInfo.get(0).getMaterialNo());
+            stockInfoModel.setFromAreaNo(currentStockInfo.get(0).getFromAreaNo());
+            stockInfoModel.setQty(qty);
+            ShowStock.add(0,stockInfoModel);
+        }
+    }
+
     void intiFrm(){
         txtCompany.setText("");
         txtBatch.setText("");
@@ -367,6 +416,7 @@ public class InnerMoveScan extends BaseActivity {
         edtMoveInStock.setText("");
         edtMoveScanBarcode.setText("");
         stockInfoModels=new ArrayList<>();
+        ShowStock=new ArrayList<>();
         OutAreaInfoModel=null;
         currentStockInfo=null;
         BindListVIew(stockInfoModels);

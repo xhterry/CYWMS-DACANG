@@ -429,6 +429,7 @@ public class QCScan extends BaseActivity {
             barcodeModel.setCreater(BaseApplication.userInfo.getUserName());
             barcodeModel.setMaterialNo(stockInfoModel.getMaterialNo());
             barcodeModel.setQty(stockInfoModel.getQty());
+            barcodeModel.setBatchNo(stockInfoModel.getBatchNo());
             barcodeModel.setIP(URLModel.PrintIP);
             temp.add(0, barcodeModel);
             //  }

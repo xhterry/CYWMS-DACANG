@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Material.BarCodeInfo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ReceiptBillDetailAdapter extends BaseAdapter {
     private Context context; // 运行上下文
-    private List<BarCodeInfo> barCodeInfos; // 信息集合
+    private ArrayList<BarCodeInfo> barCodeInfos; // 信息集合
     private LayoutInflater listContainer; // 视图容器
 
     public final class ListItemView { // 自定义控件集合
@@ -27,7 +27,7 @@ public class ReceiptBillDetailAdapter extends BaseAdapter {
         public TextView txtbarcode;
     }
 
-    public ReceiptBillDetailAdapter(Context context, List<BarCodeInfo> barCodeInfos) {
+    public ReceiptBillDetailAdapter(Context context, ArrayList<BarCodeInfo> barCodeInfos) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.barCodeInfos = barCodeInfos;
