@@ -52,7 +52,16 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String ErpDocNo;
     private String PickLeaderUserNo;
     private String PickUserNo;
+    private String IsEdate; //1:不检查 2：检查
     private  int  WareHouseID;
+
+    public String getIsEdate() {
+        return IsEdate;
+    }
+
+    public void setIsEdate(String isEdate) {
+        IsEdate = isEdate;
+    }
 
     public  int  getWareHouseID() {
         return WareHouseID;
@@ -381,6 +390,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.ErpDocNo);
         dest.writeString(this.PickLeaderUserNo);
         dest.writeString(this.PickUserNo);
+        dest.writeString(this.IsEdate);
         dest.writeInt(this.WareHouseID);
     }
 
@@ -420,6 +430,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.ErpDocNo = in.readString();
         this.PickLeaderUserNo = in.readString();
         this.PickUserNo = in.readString();
+        this.IsEdate = in.readString();
         this.WareHouseID = in.readInt();
     }
 

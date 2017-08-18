@@ -94,22 +94,26 @@ public class QCMaterialChoice extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
-            List<QualityInfo_Model> temp=new ArrayList<>();
-            int size=qualityInfoModels.size();
-            for (int i=0;i<size;i++){
-                if(qcMaterialChioceItemAdapter.getStates(i)){
+            List<QualityInfo_Model> temp = new ArrayList<>();
+            int size = qualityInfoModels.size();
+            for (int i = 0; i < size; i++) {
+                if (qcMaterialChioceItemAdapter.getStates(i)) {
                     qualityInfoModels.get(i).setQuanUserNo(BaseApplication.userInfo.getQuanUserNo());
                     qualityInfoModels.get(i).setStrQuanUserNo(BaseApplication.userInfo.getQuanUserNo());
-                    temp.add(0,qualityInfoModels.get(i));
+                    temp.add(0, qualityInfoModels.get(i));
                 }
             }
-            String ModelJson = GsonUtil.parseModelToJson(temp);
-            String UserJson=GsonUtil.parseModelToJson(BaseApplication.userInfo);
-            final Map<String, String> params = new HashMap<String, String>();
-            params.put("UserJson",UserJson );
-            params.put("ModelJson", ModelJson);
-            LogUtil.WriteLog(ReceiptionScan.class, TAG_UpadteT_QualityUserADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_UpadteT_QualityUserADF, getString(R.string.Msg_UpadteT_QualityUserADF), context, mHandler, RESULT_Msg_UpadteT_QualityUserADF, null,  URLModel.GetURL().UpadteT_QualityUserADF, params, null);
+            if (temp.size() != 0) {
+                String ModelJson = GsonUtil.parseModelToJson(temp);
+                String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("UserJson", UserJson);
+                params.put("ModelJson", ModelJson);
+                LogUtil.WriteLog(ReceiptionScan.class, TAG_UpadteT_QualityUserADF, ModelJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_UpadteT_QualityUserADF, getString(R.string.Msg_UpadteT_QualityUserADF), context, mHandler, RESULT_Msg_UpadteT_QualityUserADF, null, URLModel.GetURL().UpadteT_QualityUserADF, params, null);
+            }else{
+                MessageBox.Show(context,getString(R.string.Msg_NoSelectmaterialchange));
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -204,7 +205,10 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
 
     @Event(R.id.btn_StartPicking)
     private void btnStartPickingClick(View view){
-        GetSelectTask();
+        if(!GetSelectTask()){
+            MessageBox.Show(context,getString(R.string.Error_NotSameType));
+            return;
+        }
         if(selectoutStockTaskInfoModels!=null  && selectoutStockTaskInfoModels.size()!=0){
             StartScanIntent(selectoutStockTaskInfoModels);
         }
@@ -212,13 +216,20 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
     }
 
 
-    void GetSelectTask(){
+    Boolean GetSelectTask(){
         selectoutStockTaskInfoModels = new ArrayList<>();
+        String IsEdate="";
         for (int i = 0; i < outStockTaskInfoModels.size(); i++) {
             if (offSehlfBillChoiceItemAdapter.getStates(i)) {
                 selectoutStockTaskInfoModels.add(0, outStockTaskInfoModels.get(i));
+                if(TextUtils.isEmpty(IsEdate)){
+                    IsEdate= outStockTaskInfoModels.get(i).getIsEdate();
+                }
+                if(!IsEdate.equals(outStockTaskInfoModels.get(i).getIsEdate()))
+                    return false;
             }
         }
+        return true;
     }
     /**
      * 初始化加载listview

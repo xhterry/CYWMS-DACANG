@@ -198,6 +198,9 @@
     <string name="activity_boxing_On">拆箱</string>
     <string name="activity_boxing_Off">装箱</string>
     <string name="activity_box_num">箱数：</string>
+    <string name="activity_box_Label">箱标签</string>
+    <string name="activity_Pallet_Label">托盘标签</string>
+    <string name="activity_QC_Label">取样标签</string>
     <string name="activity_boxing_barcode">装箱箱码：</string>
     <string name="activity_boxing_unbarcode">拆箱箱码：</string>
     <string name="activity_adjust_Number">调整数量：</string>
@@ -226,6 +229,7 @@
     <string name="Msg_GetCheckDetail">获取已盘点信息...</string>
     <string name="Msg_QueryStockInfo">查询%s信息...</string>
     <string name="Msg_NoSelectOffshelfTask">请选择需要分配下架任务</string>
+    <string name="Msg_NoSelectmaterialchange">请选择分配质检任务</string>
     <string name="Msg_UploadLogFile">日志文件上传中...</string>
     <string name="Msg_GetT_OutStockDetailListByHeaderIDADF">获取下架复核明细列表...</string>
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
@@ -282,6 +286,7 @@
     <string name="Error_ReceivebatchError">该物料到货批次与已收到货批次不一致！</string>
     <string name="Error_CompanynotMatch">该物料据点与托盘据点不一致！</string>
     <string name="Error_AreaotnotMatch">该物料库位与托盘物料库位不一致！</string>
+    <string name="Error_NotSameType">所选拣货单有效期检查状态不一致！</string>
     <string name="Error_ErpvoucherNoMatch">该物料不在此订单中！</string>
     <string name="Error_BatchNoIsEmpty">厂内批次不能为空！</string>
     <string name="Error_IntRequire">需要输入整数！</string>

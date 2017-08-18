@@ -184,6 +184,7 @@ public class MaterialChange extends BaseActivity {
             params.put("BarCode", code);
             params.put("ScanType", type+"");
             params.put("MoveType", "1"); //1：下架 2:移库
+            params.put("IsEdate","");
             LogUtil.WriteLog(MaterialChange.class, TAG_GetStockModelADF, code);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
         }

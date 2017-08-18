@@ -56,7 +56,7 @@ public class Setting extends BaseActivity {
     @ViewInject(R.id.rb_Product)
     RadioButton rbProduct;
 
-    final  int LogUploadIndex=1;
+    final  int LogUploadIndex=2;
 
     @Override
     protected void initViews() {
