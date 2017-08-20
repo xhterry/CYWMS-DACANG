@@ -33,6 +33,7 @@ import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -141,6 +142,9 @@ public class MaterialChange extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
             Boolean isFinishReceipt = true;
             for (OutStockDetailInfo_Model outStockDetailInfoModel : outStockDetailInfoModels) {
                 if (outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getOutStockQty()) != 0) {

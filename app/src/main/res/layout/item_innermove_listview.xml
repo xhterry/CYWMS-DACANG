@@ -39,7 +39,7 @@
         android:layout_weight="0.8">
 
         <TextView
-            android:id="@+id/list_MaterialDesc"
+            android:id="@+id/list_MaterialNo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
@@ -58,4 +58,13 @@
             android:textColor="@color/crimson"
             android:textSize="15sp" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/list_MaterialDesc"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:maxLines="1"
+        android:textColor="@color/royalblue"
+        android:textSize="15sp" />
 </LinearLayout>

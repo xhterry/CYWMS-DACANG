@@ -35,6 +35,7 @@ import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -221,7 +222,10 @@ public class QCScan extends BaseActivity {
 //                MessageBox.Show(context, getString(R.string.Error_SampNumIsNotMatch));
 //                CommonUtil.setEditFocus(edtQCScanBarcode);
 //            } else {
-            if(qualityDetailInfoModels.get(0).getLstStock()!=null && qualityDetailInfoModels.get(0).getLstStock().size()!=0) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
+            if (qualityDetailInfoModels.get(0).getLstStock() != null && qualityDetailInfoModels.get(0).getLstStock().size() != 0) {
                 final Map<String, String> params = new HashMap<String, String>();
                 String ModelJson = GsonUtil.parseModelToJson(qualityDetailInfoModels);
                 String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
@@ -230,6 +234,7 @@ public class QCScan extends BaseActivity {
                 LogUtil.WriteLog(QCScan.class, TAG_SaveT_QuanlitySampADF, ModelJson);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_QuanlitySampADF, getString(R.string.Msg_SaveT_QuanlitySampADF), context, mHandler, RESULT_Msg_SaveT_QuanlitySampADF, null, URLModel.GetURL().SaveT_QuanlitySampADF, params, null);
             }
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -25,6 +25,7 @@ public class InnerMoveAdapter extends BaseAdapter {
     public final class ListItemView { // 自定义控件集合
 
         public TextView list_OutLoacl;
+        public TextView list_MaterialNo;
         public TextView list_SerialNo;
         public TextView list_MaterialDesc;
        // public TextView list_qty;
@@ -65,6 +66,7 @@ public class InnerMoveAdapter extends BaseAdapter {
             listItemView.list_OutLoacl = (TextView) convertView.findViewById(R.id.list_OutLoacl);
             listItemView.list_SerialNo = (TextView) convertView.findViewById(R.id.list_SerialNo);
             listItemView.list_MaterialDesc = (TextView) convertView.findViewById(R.id.list_MaterialDesc);
+            listItemView.list_MaterialNo = (TextView) convertView.findViewById(R.id.list_MaterialNo);
             //listItemView.list_qty = (TextView) convertView.findViewById(R.id.list_qty);
             convertView.setTag(listItemView);
         } else {
@@ -74,9 +76,8 @@ public class InnerMoveAdapter extends BaseAdapter {
         listItemView.list_OutLoacl.setText("移出库:"+stockInfoModel.getFromAreaNo());
         //listItemView.list_SerialNo.setText("箱号:"+stockInfoModel.getSerialNo());
         listItemView.list_MaterialDesc.setText(stockInfoModel.getMaterialDesc()==null || stockInfoModel.getMaterialDesc().equals("")?stockInfoModel.getMaterialNo():stockInfoModel.getMaterialDesc());
+        listItemView.list_MaterialNo.setText(stockInfoModel.getMaterialNo());
         listItemView.list_SerialNo.setText("合计："+stockInfoModel.getQty().toString());
         return convertView;
     }
-
-
 }

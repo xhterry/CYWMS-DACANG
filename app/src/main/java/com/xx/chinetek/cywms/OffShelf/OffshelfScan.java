@@ -38,6 +38,7 @@ import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -242,6 +243,9 @@ public class OffshelfScan extends BaseActivity {
 
     @Event(R.id.btn_OutOfStock)
     private void btnOutofStockClick(View view) {
+        if (DoubleClickCheck.isFastDoubleClick(context)) {
+            return;
+        }
         if (currentPickMaterialIndex!=-1) {
             final String MaterialDesc = outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getMaterialDesc();
             final String MaterialNo = outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getMaterialNo();
@@ -268,6 +272,9 @@ public class OffshelfScan extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
             final Map<String, String> params = new HashMap<String, String>();
             String ModelJson = GsonUtil.parseModelToJson(outStockTaskDetailsInfoModels);
             String UserJson=GsonUtil.parseModelToJson(BaseApplication.userInfo);

@@ -35,6 +35,7 @@ import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -212,6 +213,9 @@ public class CombinPallet extends BaseActivity {
 
     @Event(R.id.btn_PrintPalletLabel)
     private void btnPrintPalletLabelClick(View v) {
+        if (DoubleClickCheck.isFastDoubleClick(context)) {
+            return ;
+        }
         if (palletDetailModels != null && palletDetailModels.size() != 0 && palletDetailModels.get(0).getLstBarCode()!=null
                 && palletDetailModels.get(0).getLstBarCode().size()!=0) {
             palletDetailModels.get(0).setVoucherType(999);

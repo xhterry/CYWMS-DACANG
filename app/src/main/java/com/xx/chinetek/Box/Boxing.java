@@ -26,6 +26,7 @@ import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -151,6 +152,9 @@ public class Boxing extends BaseActivity {
 
     @Event(R.id.btn_BoxConfig)
     private void BtnBoxConfigClick(View v){
+        if (DoubleClickCheck.isFastDoubleClick(context)) {
+            return;
+        }
         if(SWBox.isChecked()) {
             String num = edtBoxNum.getText().toString().trim();
             String returnMsg = CheckInputQty(num);

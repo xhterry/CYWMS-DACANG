@@ -38,6 +38,7 @@ import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -154,6 +155,9 @@ public class ReviewScan extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
             Boolean isFinishReceipt = true;
             for (OutStockDetailInfo_Model outStockDetailInfoModel : outStockDetailInfoModels) {
                 if (outStockDetailInfoModel.getScanQty().compareTo(outStockDetailInfoModel.getOutStockQty()) != 0) {
@@ -202,6 +206,9 @@ public class ReviewScan extends BaseActivity {
 
     @Event(R.id.btn_Combinepallet)
     private void btnCombinepalletClick(View view){
+        if (DoubleClickCheck.isFastDoubleClick(context)) {
+            return;
+        }
         ArrayList<OutStockDetailInfo_Model> palletDetailModels=GetPalletModels();
         if(palletDetailModels.size()!=0){
             final Map<String, String> params = new HashMap<String, String>();

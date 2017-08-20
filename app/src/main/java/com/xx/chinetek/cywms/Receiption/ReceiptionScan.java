@@ -35,6 +35,7 @@ import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -174,6 +175,9 @@ public class ReceiptionScan extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
             Boolean isFinishReceipt=true;
             //非采购订单不能多次收货
             if(receiptDetailModels!=null && receiptDetailModels.get(0).getVoucherType()!=22) {

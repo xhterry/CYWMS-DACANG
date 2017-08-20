@@ -25,6 +25,7 @@ import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -94,6 +95,9 @@ public class QCMaterialChoice extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
             List<QualityInfo_Model> temp = new ArrayList<>();
             int size = qualityInfoModels.size();
             for (int i = 0; i < size; i++) {

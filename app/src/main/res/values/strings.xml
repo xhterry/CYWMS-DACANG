@@ -1,5 +1,5 @@
 <resources>
-    <string name="activity_login_company">chinetek 上海先达 @2017</string>
+    <string name="activity_login_company">chinetek 上海辰达 @2017</string>
     <string name="app_name">WMS</string>
     <string name="version_msg">当前版本：1.0</string>
 
@@ -286,6 +286,7 @@
     <string name="Error_ReceivebatchError">该物料到货批次与已收到货批次不一致！</string>
     <string name="Error_CompanynotMatch">该物料据点与托盘据点不一致！</string>
     <string name="Error_AreaotnotMatch">该物料库位与托盘物料库位不一致！</string>
+    <string name="Error_SubmitMore">操作过于频繁！</string>
     <string name="Error_NotSameType">所选拣货单有效期检查状态不一致！</string>
     <string name="Error_ErpvoucherNoMatch">该物料不在此订单中！</string>
     <string name="Error_BatchNoIsEmpty">厂内批次不能为空！</string>
