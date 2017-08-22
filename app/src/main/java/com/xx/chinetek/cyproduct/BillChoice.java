@@ -40,6 +40,7 @@ public class BillChoice extends BaseActivity {
 
     @ViewInject(R.id.lsvChoice)
     ListView lsvChoice;
+    
 
     Context context = BillChoice.this;
     BillChioceItemAdapter billChioceItemAdapter;
