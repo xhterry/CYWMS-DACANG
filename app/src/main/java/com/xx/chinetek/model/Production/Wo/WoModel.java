@@ -4,6 +4,8 @@ import android.os.Parcel;
 
 import com.xx.chinetek.model.Base_Model;
 
+import java.util.Date;
+
 /**
  * Created by GHOST on 2017/7/18.
  */
@@ -23,6 +25,37 @@ public class WoModel extends Base_Model{
     private String Unit;
 
     private String UnitName;
+
+    private String ERPStaffNo;
+
+    private String ERPStaffName;
+
+    private Date ShipmentDate;
+
+    public String getERPStaffNo() {
+        return ERPStaffNo;
+    }
+
+    public void setERPStaffNo(String ERPStaffNo) {
+        this.ERPStaffNo = ERPStaffNo;
+    }
+
+    public String getERPStaffName() {
+        return ERPStaffName;
+    }
+
+    public void setERPStaffName(String ERPStaffName) {
+        this.ERPStaffName = ERPStaffName;
+    }
+
+    public Date getShipmentDate() {
+        return ShipmentDate;
+    }
+
+    public void setShipmentDate(Date shipmentDate) {
+        ShipmentDate = shipmentDate;
+    }
+
 
     public String getBatchNo() {
         return BatchNo;
@@ -98,6 +131,9 @@ public class WoModel extends Base_Model{
         dest.writeValue(this.ProductQty);
         dest.writeString(this.Unit);
         dest.writeString(this.UnitName);
+        dest.writeString(this.ERPStaffNo);
+        dest.writeString(this.ERPStaffName);
+        dest.writeLong(this.ShipmentDate != null ? this.ShipmentDate.getTime() : -1);
     }
 
     protected WoModel(Parcel in) {
@@ -109,6 +145,10 @@ public class WoModel extends Base_Model{
         this.ProductQty = (Float) in.readValue(Float.class.getClassLoader());
         this.Unit = in.readString();
         this.UnitName = in.readString();
+        this.ERPStaffNo = in.readString();
+        this.ERPStaffName = in.readString();
+        long tmpShipmentDate = in.readLong();
+        this.ShipmentDate = tmpShipmentDate == -1 ? null : new Date(tmpShipmentDate);
     }
 
     public static final Creator<WoModel> CREATOR = new Creator<WoModel>() {

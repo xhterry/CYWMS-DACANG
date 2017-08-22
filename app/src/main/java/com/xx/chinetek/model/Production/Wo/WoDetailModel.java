@@ -4,6 +4,8 @@ import android.os.Parcel;
 
 import com.xx.chinetek.model.Base_Model;
 
+import java.util.Date;
+
 /**
  * Created by GHOST on 2017/7/18.
  */
@@ -18,13 +20,17 @@ public class WoDetailModel extends Base_Model{
 
     private String RowNo;
 
+    private String RowNodel;
+
     private String Unit;
 
     private String UnitName;
 
     private Float ScanQty;
 
-    private String IsSpcBatch; //是否指定批次
+    private Date ShipMentDate;
+
+    private String IsspcBatch; //是否指定批次
 
     private String VoucherNo; //WMS工单号
 
@@ -35,6 +41,50 @@ public class WoDetailModel extends Base_Model{
     private String FromAreaNo;
 
     private String FromBatchNo;
+
+    private String FromERPAreaNO;
+
+    private String FromERPWarehouse;
+
+    public String getRowNodel() {
+        return RowNodel;
+    }
+
+    public void setRowNodel(String rowNodel) {
+        RowNodel = rowNodel;
+    }
+
+    public Date getShipMentDate() {
+        return ShipMentDate;
+    }
+
+    public void setShipMentDate(Date shipMentDate) {
+        ShipMentDate = shipMentDate;
+    }
+
+    public String getIsspcBatch() {
+        return IsspcBatch;
+    }
+
+    public void setIsspcBatch(String isspcBatch) {
+        IsspcBatch = isspcBatch;
+    }
+
+    public String getFromERPAreaNO() {
+        return FromERPAreaNO;
+    }
+
+    public void setFromERPAreaNO(String fromERPAreaNO) {
+        FromERPAreaNO = fromERPAreaNO;
+    }
+
+    public String getFromERPWarehouse() {
+        return FromERPWarehouse;
+    }
+
+    public void setFromERPWarehouse(String fromERPWarehouse) {
+        FromERPWarehouse = fromERPWarehouse;
+    }
 
     public String getMaterialNo() {
         return MaterialNo;
@@ -92,14 +142,6 @@ public class WoDetailModel extends Base_Model{
         ScanQty = scanQty;
     }
 
-    public String getIsSpcBatch() {
-        return IsSpcBatch;
-    }
-
-    public void setIsSpcBatch(String isSpcBatch) {
-        IsSpcBatch = isSpcBatch;
-    }
-
     public String getVoucherNo() {
         return VoucherNo;
     }
@@ -151,6 +193,14 @@ public class WoDetailModel extends Base_Model{
 
     }
 
+    public WoDetailModel() {
+
+    }
+
+    public WoDetailModel(String materialNo) {
+        this.MaterialNo=materialNo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -163,22 +213,19 @@ public class WoDetailModel extends Base_Model{
         dest.writeString(this.MaterialDesc);
         dest.writeValue(this.WoQty);
         dest.writeString(this.RowNo);
+        dest.writeString(this.RowNodel);
         dest.writeString(this.Unit);
         dest.writeString(this.UnitName);
         dest.writeValue(this.ScanQty);
-        dest.writeString(this.IsSpcBatch);
+        dest.writeLong(this.ShipMentDate != null ? this.ShipMentDate.getTime() : -1);
+        dest.writeString(this.IsspcBatch);
         dest.writeString(this.VoucherNo);
         dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.FromStorageLoc);
         dest.writeString(this.FromAreaNo);
         dest.writeString(this.FromBatchNo);
-    }
-
-    public WoDetailModel() {
-    }
-
-    public WoDetailModel(String materialNo) {
-        this.MaterialNo=materialNo;
+        dest.writeString(this.FromERPAreaNO);
+        dest.writeString(this.FromERPWarehouse);
     }
 
     protected WoDetailModel(Parcel in) {
@@ -187,15 +234,20 @@ public class WoDetailModel extends Base_Model{
         this.MaterialDesc = in.readString();
         this.WoQty = (Float) in.readValue(Float.class.getClassLoader());
         this.RowNo = in.readString();
+        this.RowNodel = in.readString();
         this.Unit = in.readString();
         this.UnitName = in.readString();
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());
-        this.IsSpcBatch = in.readString();
+        long tmpShipMentDate = in.readLong();
+        this.ShipMentDate = tmpShipMentDate == -1 ? null : new Date(tmpShipMentDate);
+        this.IsspcBatch = in.readString();
         this.VoucherNo = in.readString();
         this.ErpVoucherNo = in.readString();
         this.FromStorageLoc = in.readString();
         this.FromAreaNo = in.readString();
         this.FromBatchNo = in.readString();
+        this.FromERPAreaNO = in.readString();
+        this.FromERPWarehouse = in.readString();
     }
 
     public static final Creator<WoDetailModel> CREATOR = new Creator<WoDetailModel>() {
