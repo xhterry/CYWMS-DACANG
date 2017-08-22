@@ -62,12 +62,14 @@ public class ReviewScan extends BaseActivity {
     String TAG_SaveT_OutStockReviewPalletDetailADF="ReviewScan_SaveT_OutStockReviewPalletDetailADF";
     String TAG_SaveT_OutStockReviewDetailADF="ReviewScan_SaveT_OutStockReviewDetailADF";
     String TAG_GetStockByOutStockReviewByID="ReviewScan_GetStockByOutStockReviewByID";
+    String TAG_DeletePalletByErpVoucherNo="ReviewScan_DeletePalletByErpVoucherNo";
 
     private final int RESULT_GetT_OutStockReviewDetailListByHeaderIDADF=101;
     private final int RESULT_ScanOutStockReviewByBarCodeADF=102;
     private final int RESULT_SaveT_OutStockReviewDetailADF=103;
     private final int RESULT_Msg_SaveT_OutStockReviewPalletDetailADF=104;
     private final int RESULT_GetStockByOutStockReviewByID=105;
+    private final int RESULT_DeletePalletByErpVoucherNo=106;
 
     private final int  RequestCode_PalletDetail=10002;
 
@@ -88,6 +90,9 @@ public class ReviewScan extends BaseActivity {
                 break;
             case RESULT_GetStockByOutStockReviewByID:
                 AnalysisGetStockByOutStockReviewByIDJson((String) msg.obj);
+                break;
+            case RESULT_DeletePalletByErpVoucherNo:
+                AnalysisDeletePalletByErpVoucherNoJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -239,9 +244,24 @@ public class ReviewScan extends BaseActivity {
         }
     }
 
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("ErpVoucherNo", outStockModel.getErpVoucherNo());
+            params.put("PalletType", "2");
+            String para = (new JSONObject(params)).toString();
+            LogUtil.WriteLog(ReviewScan.class, TAG_DeletePalletByErpVoucherNo, para);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_DeletePalletByErpVoucherNo, getString(R.string.Msg_DeletePalletByErpVoucherNo), context, mHandler, RESULT_DeletePalletByErpVoucherNo, null,  URLModel.GetURL().DeletePalletByErpVoucherNo, params, null);
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
     /*
-   获取下架复核明细
-    */
+       获取下架复核明细
+        */
     void GetOutStockDetailInfo(OutStock_Model outStockModel){
         if(outStockModel!=null) {
             txtVoucherNo.setText(outStockModel.getErpVoucherNo());
@@ -279,6 +299,14 @@ public class ReviewScan extends BaseActivity {
         }
         CommonUtil.setEditFocus(edtReviewScanBarcode);
 
+    }
+
+    /*
+    删除托盘
+     */
+    void AnalysisDeletePalletByErpVoucherNoJson(String result){
+        LogUtil.WriteLog(ReviewScan.class, TAG_DeletePalletByErpVoucherNo, result);
+       // ReturnMsgModel<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<PalletDetail_Model>>() {}.getType());
     }
 
     /*

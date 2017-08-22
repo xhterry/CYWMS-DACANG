@@ -44,6 +44,7 @@ public class URLModel {
     public String GetT_InStockDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InStockDetailListByHeaderIDADF"; //收货表体
     public String GetT_InTaskDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InTaskDetailListByHeaderIDADF"; //上架表体
     public String GetT_OutStockReviewDetailListByHeaderIDADF = GetWCFAdress()+"GetT_OutStockReviewDetailListByHeaderIDADF"; //下架复核表体
+    public String DeletePalletByErpVoucherNo = GetWCFAdress()+"DeletePalletByErpVoucherNo"; //删除复核托盘
     public String SaveT_InStockDetailADF = GetWCFAdress()+"SaveT_InStockDetailADF"; //提交收货
     public String SaveT_StockADF = GetWCFAdress()+"SaveT_StockADF"; //提交移库
     public String UpadteT_QualityUserADF = GetWCFAdress()+"UpadteT_QualityUserADF"; //更新取样人
