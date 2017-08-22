@@ -212,6 +212,11 @@ public class AdjustStock extends BaseActivity {
                     CommonUtil.setEditFocus(edtAdjustNum);
                     return;
                 }
+                if(Float.parseFloat(adjustNum)==0f){
+                    MessageBox.Show(context, getString(R.string.Error_isnotzero));
+                    CommonUtil.setEditFocus(edtAdjustNum);
+                    return;
+                }
             }
             barcodeModel.setBatchNo(adjustBatchNo);
             barcodeModel.setAreano(adjustStock);

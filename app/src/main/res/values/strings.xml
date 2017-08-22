@@ -232,6 +232,7 @@
     <string name="Msg_NoSelectmaterialchange">请选择分配质检任务</string>
     <string name="Msg_UploadLogFile">日志文件上传中...</string>
     <string name="Msg_GetT_OutStockDetailListByHeaderIDADF">获取下架复核明细列表...</string>
+    <string name="Msg_DeletePalletByErpVoucherNo">删除托盘信息...</string>
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
     <string name="Msg_SaveT_InStockDetailADF">保存收货明细列表...</string>
     <string name="Msg_SaveT_StockADF">移库提交中...</string>
@@ -305,6 +306,7 @@
     <string name="Error_generic_error">通讯错误！</string>
     <string name="Error_Setting_IPAdressError">IP地址格式错误！</string>
     <string name="Error_isnotnum">请输入数字！</string>
+    <string name="Error_isnotzero">调整数量不能为0！</string>
     <string name="Error_areanoHasScan">该库位已扫描！</string>
     <string name="Error_SelectQcStatus">请选择质检状态！</string>
     <string name="Error_QtyBiger">拆箱数量超过箱内物品数量！</string>
