@@ -13,6 +13,7 @@ import com.xx.chinetek.adapter.GridViewItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
 import com.xx.chinetek.cywms.R;
@@ -57,7 +58,7 @@ public class MainActivity extends BaseActivity {
         if(textView.getText().toString().equals("生产入库"))
             intent.setClass(context, LineStockInProduct.class);
         else if(textView.getText().toString().equals("产线生产"))
-            intent.setClass(context, BillChoice.class);
+            intent.setClass(context, BillsIn.class);
         else if(textView.getText().toString().equals("生产记录"))
             intent.setClass(context, LineManage.class);
         else if(textView.getText().toString().equals("坦克投料"))
