@@ -15,14 +15,10 @@ import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
-import com.xx.chinetek.cyproduct.Receiption.CompleteProduct;
-import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Production.Wo.WoModel;
-import com.xx.chinetek.model.Receiption.SupplierModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
-import com.xx.chinetek.model.WMS.OffShelf.OutStockTaskInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -40,8 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.xx.chinetek.cywms.R.id.mSwipeLayout;
 
 /**
  * Created by ymh on 2017/8/22.

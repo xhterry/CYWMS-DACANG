@@ -167,6 +167,7 @@
     <string name="PalletNo">托盘号：</string>
     <string name="Destination">目的地：</string>
     <string name="StockNumber">库存数量：</string>
+    <string name="PrintInLabel">打印内箱标签</string>
     <string name="PrintLabel">打印外箱标签</string>
     <string name="PrintPallet">打印托盘标签</string>
     <string name="PrintTank">打印坦克标签</string>

@@ -22,7 +22,7 @@ import com.xx.chinetek.cyproduct.MaterialChange.MaterialChange;
 import com.xx.chinetek.cyproduct.OffShelf.OffshelfScan;
 import com.xx.chinetek.cyproduct.OffShelf.SemiProductScan;
 import com.xx.chinetek.cyproduct.QC.TakeSample;
-import com.xx.chinetek.cyproduct.Receiption.CompleteProduct;
+import com.xx.chinetek.cyproduct.Billinstock.CompleteProduct;
 import com.xx.chinetek.cyproduct.Receiption.ReceiptSemiProduct;
 import com.xx.chinetek.cyproduct.Receiption.ReceiptionScan;
 import com.xx.chinetek.cyproduct.Receiption.TankIn;

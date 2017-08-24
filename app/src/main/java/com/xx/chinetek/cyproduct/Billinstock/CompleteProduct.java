@@ -1,4 +1,4 @@
-package com.xx.chinetek.cyproduct.Receiption;
+package com.xx.chinetek.cyproduct.Billinstock;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.xx.chinetek.Service.SocketService;
-import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.SocketBaseActivity;
 import com.xx.chinetek.cyproduct.work.ReportOutputNum;
@@ -43,13 +42,14 @@ public class CompleteProduct extends  SocketBaseActivity {
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
+        BaseApplication.isCloseActivity=false;
 
+        txtNO.setText("MaterialNo");
+        txtdesc.setText("MaterialNo");
+        etxtBatch.setText("MaterialNo");
+        etxtBNumber.setText("MaterialNo");
 
-        txtNO.setText(getIntent().getStringExtra("MaterialNo").toString());
-        txtdesc.setText(getIntent().getStringExtra("MaterialDesc").toString());
-        etxtBatch.setText(getIntent().getStringExtra("MaterialBatch").toString());
-        etxtBNumber.setText(getIntent().getStringExtra("MaterialBNumber").toString());
-//        initVariables();//设置接收服务
+        initVariables();//设置接收服务
     }
 
 
@@ -66,7 +66,10 @@ public class CompleteProduct extends  SocketBaseActivity {
                     String message = intent.getStringExtra("message");
                     Log.v("WMSLOG_Socket", message);
                     String message1=message.split("\r\n")[0];
-                    txtWeight.setText(message1.contains("ST,GS")?message1.split(",")[2].trim():"");
+                   String[] meg =message1.split(",");
+                    if (meg.length>=3 )
+                    {txtWeight.setText(message1.contains("ST,GS")?meg[2].trim():"");}
+
                 }
             }
         };
