@@ -126,6 +126,7 @@
     <string name="EmployeeNO">人员：</string>
     <string name="barcode">条码：</string>
     <string name="InstockProductNum">入库数量：</string>
+    <string name="OutstockProductNum">出库数量：</string>
 
     <string name="company">据点：</string>
     <string name="batch">批次：</string>

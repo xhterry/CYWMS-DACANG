@@ -136,7 +136,7 @@ public class BillsIn  extends BaseActivity {
         try {
 //            String ModelJson = GsonUtil.parseModelToJson(outStockTaskInfoModel);
               Map<String, String> params = new HashMap<>();
-//            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
 //            params.put("ModelJson", ModelJson);
 //            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_InBill, getString(R.string.Msg_GetWOInfo), context, mHandler,
