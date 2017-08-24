@@ -15,6 +15,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct;
+import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.User.MenuInfo;
@@ -57,6 +58,8 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent();
         if(textView.getText().toString().equals("生产入库"))
             intent.setClass(context, LineStockInProduct.class);
+        else if(textView.getText().toString().equals("生产出库"))
+            intent.setClass(context, LineStockOutProduct.class);
         else if(textView.getText().toString().equals("产线生产"))
             intent.setClass(context, BillsIn.class);
         else if(textView.getText().toString().equals("生产记录"))

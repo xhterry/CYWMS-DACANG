@@ -51,6 +51,7 @@
     <string name="Product_returnsemiproduct_subtitle">半制品退料</string>
     <string name="Product_receiptsemiproduct_subtitle">半制品生产</string>
     <string name="Product_ProductStockin_subtitle">生产入库</string>
+    <string name="Product_ProductStockout_subtitle">生产出库</string>
     <string name="Product_Package_scan">包材扫描核对</string>
     <string name="Product_Instock">散成品生产</string>
     <string name="Product_Outstock">线边仓出库</string>

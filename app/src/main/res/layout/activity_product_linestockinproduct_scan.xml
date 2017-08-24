@@ -61,15 +61,6 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="97dp" />
 
-    <android.support.constraint.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/guideline2"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="180dp" />
-
     <TextView
         android:id="@+id/textView8"
         style="@style/TextViewComminStyle"
@@ -124,15 +115,6 @@
         android:layout_marginBottom="0dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="16dp" />
-
-    <android.support.constraint.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/guideline4"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.77"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="277dp" />
 
     <Button
         android:id="@+id/btnUpShelfDetail"

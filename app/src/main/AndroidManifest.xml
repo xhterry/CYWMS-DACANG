@@ -88,6 +88,7 @@
         <activity android:name="com.xx.chinetek.FillPrint.InitPrint" />
         <activity android:name=".Intentory.IntentoryAdd" />
         <activity android:name=".Qc.QCInStock" />
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct"></activity>
     </application>
 
 </manifest>

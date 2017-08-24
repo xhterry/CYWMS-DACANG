@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
 
+import java.util.Date;
+
 /**
  * Created by GHOST on 2017/1/13.
  */
@@ -74,6 +76,33 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
     private int IsLimitStock;
     private String  UnitTypeCode;
     private String  DecimalLngth;
+    private Date ProductDate;
+    private String SupPrdBatch;
+    private Date SupPrdDate;
+
+    public Date getProductDate() {
+        return ProductDate;
+    }
+
+    public void setProductDate(Date productDate) {
+        ProductDate = productDate;
+    }
+
+    public String getSupPrdBatch() {
+        return SupPrdBatch;
+    }
+
+    public void setSupPrdBatch(String supPrdBatch) {
+        SupPrdBatch = supPrdBatch;
+    }
+
+    public Date getSupPrdDate() {
+        return SupPrdDate;
+    }
+
+    public void setSupPrdDate(Date supPrdDate) {
+        SupPrdDate = supPrdDate;
+    }
 
     public String getUnitTypeCode() {
         return UnitTypeCode;
@@ -607,6 +636,9 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         dest.writeInt(this.IsLimitStock);
         dest.writeString(this.UnitTypeCode);
         dest.writeString(this.DecimalLngth);
+        dest.writeLong(this.ProductDate != null ? this.ProductDate.getTime() : -1);
+        dest.writeString(this.SupPrdBatch);
+        dest.writeLong(this.SupPrdDate != null ? this.SupPrdDate.getTime() : -1);
     }
 
     protected StockInfo_Model(Parcel in) {
@@ -667,6 +699,11 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
         this.IsLimitStock = in.readInt();
         this.UnitTypeCode = in.readString();
         this.DecimalLngth = in.readString();
+        long tmpProductDate = in.readLong();
+        this.ProductDate = tmpProductDate == -1 ? null : new Date(tmpProductDate);
+        this.SupPrdBatch = in.readString();
+        long tmpSupPrdDate = in.readLong();
+        this.SupPrdDate = tmpSupPrdDate == -1 ? null : new Date(tmpSupPrdDate);
     }
 
     public static final Creator<StockInfo_Model> CREATOR = new Creator<StockInfo_Model>() {
