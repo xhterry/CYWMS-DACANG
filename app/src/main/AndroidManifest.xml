@@ -55,6 +55,7 @@
         </activity>
         <!-- 生产 -->
         <activity android:name="com.xx.chinetek.cyproduct.MainActivity" />
+        <activity android:name="com.xx.chinetek.cyproduct.Billinstock.BillsIn" />
         <activity android:name="com.xx.chinetek.cyproduct.BillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct" />
         <activity android:name="com.xx.chinetek.cyproduct.WoBillChoice" />

@@ -85,11 +85,11 @@
         android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView183"
+        app:layout_constraintTop_toBottomOf="@+id/txt1"
         app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView186"
+        android:id="@+id/txtdesc"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
         app:layout_constraintHorizontal_bias="1.0" />
 
     <TextView
-        android:id="@+id/textView183"
+        android:id="@+id/txt1"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/guideline30"
-        app:layout_constraintBottom_toBottomOf="@+id/textView183"
+        app:layout_constraintBottom_toBottomOf="@+id/txt1"
         android:layout_marginBottom="0dp" />
 
     <TextView

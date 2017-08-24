@@ -128,6 +128,7 @@
 
     <string name="company">据点：</string>
     <string name="batch">批次：</string>
+    <string name="BNumber">包装量：</string>
     <string name="Bill">单号：</string>
     <string name="VehicleNum">车牌：</string>
     <string name="Volume">体积：</string>
@@ -339,4 +340,6 @@
     <string name="Error_InOrOutContentDiff">所选无订单出入单据内容不配陪！</string>
 
 
+    <!--ymh20170823-->
+    <string name="Msg_GetWOInfo">获取工单列表...</string>
 </resources>

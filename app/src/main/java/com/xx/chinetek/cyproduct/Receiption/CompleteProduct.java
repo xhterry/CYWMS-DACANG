@@ -2,27 +2,74 @@ package com.xx.chinetek.cyproduct.Receiption;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.xx.chinetek.Service.SocketService;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
+import com.xx.chinetek.base.SocketBaseActivity;
 import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.R;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_complete_product)
-public class CompleteProduct extends BaseActivity {
+public class CompleteProduct extends  SocketBaseActivity {
 
     Context context=CompleteProduct.this;
+    @ViewInject(R.id.txtNO)
+    TextView txtNO;
+
+    @ViewInject(R.id.txtdesc)
+    TextView txtdesc;
+
+    @ViewInject(R.id.etxtBatch)
+    EditText etxtBatch;
+
+    @ViewInject(R.id.etxtBNumber)
+    EditText etxtBNumber;
+
+    @ViewInject(R.id.txtWeight)
+    TextView txtWeight;
 
     @Override
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
+
+
+        txtNO.setText(getIntent().getStringExtra("MaterialNo").toString());
+        txtdesc.setText(getIntent().getStringExtra("MaterialDesc").toString());
+        etxtBatch.setText(getIntent().getStringExtra("MaterialBatch").toString());
+        etxtBNumber.setText(getIntent().getStringExtra("MaterialBNumber").toString());
+//        initVariables();//设置接收服务
+    }
+
+
+    protected void initVariables()
+    {
+        //给全局消息接收器赋值，并进行消息处理
+        mReciver = new MessageBackReciver(){
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                String action = intent.getAction();
+                if(action.equals(SocketService.MESSAGE_ACTION))
+                {
+                    String message = intent.getStringExtra("message");
+                    Log.v("WMSLOG_Socket", message);
+                    String message1=message.split("\r\n")[0];
+                    txtWeight.setText(message1.contains("ST,GS")?message1.split(",")[2].trim():"");
+                }
+            }
+        };
     }
 
     @Override

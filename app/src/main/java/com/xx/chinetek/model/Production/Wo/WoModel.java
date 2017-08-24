@@ -32,6 +32,8 @@ public class WoModel extends Base_Model{
 
     private Date ShipmentDate;
 
+
+
     public String getERPStaffNo() {
         return ERPStaffNo;
     }
