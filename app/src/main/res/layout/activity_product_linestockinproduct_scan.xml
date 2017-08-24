@@ -21,7 +21,7 @@
         android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/textView66"
+        android:id="@+id/txt_WareHousName"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,9 +33,9 @@
         android:hint="@string/Hit_Selectwohouse"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="@+id/textView63"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/textView63"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <include
         android:id="@+id/include5"

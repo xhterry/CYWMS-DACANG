@@ -83,6 +83,7 @@ public class Login extends BaseActivity {
     int SelectWareHouseID=-1;
 
     Context context=Login.this;
+    List<WareHouseInfo> lstWarehouse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +156,7 @@ public class Login extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
             BaseApplication.userInfo=returnMsgModel.getModelJson();
             BaseApplication.userInfo.setPDAPrintIP(URLModel.PrintIP);
+            BaseApplication.userInfo.setLstWarehouse(lstWarehouse);
             BaseApplication.userInfo.setWarehouseName(txtWareHousName.getText().toString());
             if( BaseApplication.userInfo.getReceiveAreaID()<=0){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_ReceiveAreaID));
@@ -207,6 +209,7 @@ public class Login extends BaseActivity {
     void SelectWareHouse(){
         if (BaseApplication.userInfo==null || BaseApplication.userInfo.getLstWarehouse() == null) return;
         List<String> wareHouses = new ArrayList<String>();
+        lstWarehouse=BaseApplication.userInfo.getLstWarehouse();
         if(BaseApplication.userInfo.getLstWarehouse().size()>1) {
             for (WareHouseInfo warehouse : BaseApplication.userInfo.getLstWarehouse()) {
                 if (warehouse.getWareHouseName() != null && !warehouse.getWareHouseName().equals("")) {
