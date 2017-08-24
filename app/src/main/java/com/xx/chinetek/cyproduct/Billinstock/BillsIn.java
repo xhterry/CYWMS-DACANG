@@ -85,7 +85,7 @@ public class BillsIn  extends BaseActivity {
 
     void AnalysisGetT_RESULT_GetT_InBillADFJson(String result){
         try {
-            LogUtil.WriteLog(QCBillChoice.class, TAG_GetT_InBill, result);
+            LogUtil.WriteLog(BillsIn.class, TAG_GetT_InBill, result);
             ReturnMsgModelList<WoModel> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WoModel>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
@@ -107,7 +107,7 @@ public class BillsIn  extends BaseActivity {
         BaseApplication.context = context;
 
         x.view().inject(this);
-        getData();
+        getData1();
 //        List<SupplierModel> supplierModels=getData();
 //        billAdapter=new BillAdapter(context,supplierModels);
 //        lsvChoice.setAdapter(billAdapter);
@@ -153,37 +153,25 @@ public class BillsIn  extends BaseActivity {
         }
     }
 
-//    List<SupplierModel> getData(){
-//        List<SupplierModel> supplierModels = new ArrayList<>();
-////        List<WoModel> WoModels = new ArrayList<>();
-//        ArrayList<WoModel> woModels= null;
-//
-//
-////        for(int i=0;i<woModels.size();i++){
-////            SupplierModel supplierModel=new SupplierModel();
-////            supplierModel.setSupplierID(woModels.get(i).getDisplayID());
-////            supplierModel.setSupplierName("SupplierName");
-////            supplierModel.setVoucherNo(woModels.get(i).getVoucherNo());
-////            supplierModel.setERPVoucherNo(woModels.get(i).getBatchNo());
-////            supplierModel.setStrVoucherType(woModels.get(i).getStrVoucherType());
-////            supplierModel.setCompany("据点");
-////            supplierModel.setDepartment("部门");
-////            supplierModels.add(supplierModel);
-////        }
-//
-//        for(int i=0;i<2;i++){
-//            SupplierModel supplierModel=new SupplierModel();
-//            supplierModel.setSupplierID("setSupplierID");
-//            supplierModel.setSupplierName("SupplierName");
-//            supplierModel.setVoucherNo("setSupplierID");
-//            supplierModel.setERPVoucherNo("setSupplierID");
-//            supplierModel.setStrVoucherType("setSupplierID");
-//            supplierModel.setCompany("据点");
-//            supplierModel.setDepartment("部门");
-//            supplierModels.add(supplierModel);
-//        }
-//        return supplierModels;
-//    }
+    void getData1(){
+        ArrayList<WoModel> WoModels = new ArrayList<>();
+
+        for(int i=0;i<2;i++){
+            WoModel woModel=new WoModel();
+            woModel.setERPStaffName("setERPStaffName");
+            woModel.setBatchNo("SupplierName");
+            woModel.setVoucherNo("setSupplierID");
+            woModel.setCompanyCode("setSupplierID");
+            woModel.setStrVoucherType("setSupplierID");
+            woModel.setErpVoucherNo("据点");
+            woModel.setDepartmentName("部门");
+            WoModels.add(woModel);
+        }
+        billAdapter=new BillAdapter(context,WoModels);
+        lsvChoice.setAdapter(billAdapter);
+
+//        return WoModels;
+    }
 
     private void BindListVIew(List<WoModel> WoModels) {
         billAdapter=new BillAdapter(context,WoModels);
