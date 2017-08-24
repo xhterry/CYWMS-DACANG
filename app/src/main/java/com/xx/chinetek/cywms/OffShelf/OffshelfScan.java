@@ -523,7 +523,8 @@ public class OffshelfScan extends BaseActivity {
             txtEDate.setText("");
             Float qty = ArithUtil.sub(outStockTaskDetailsInfoModel.getRePickQty(),outStockTaskDetailsInfoModel.getScanQty());
             FindSumQtyByMaterialNo(outStockTaskDetailsInfoModel.getMaterialNo());
-            txtOffshelfNum.setText("库："+outStockTaskDetailsInfoModel.getStockQty() + "/剩：" + SumReaminQty);
+            //"库："+outStockTaskDetailsInfoModel.getStockQty() + "/
+            txtOffshelfNum.setText("剩余拣货数：" + SumReaminQty);
             txtcurrentPickNum.setText(qty+"");
 
             BindListVIew(outStockTaskDetailsInfoModels);

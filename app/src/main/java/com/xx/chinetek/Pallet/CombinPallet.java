@@ -214,7 +214,7 @@ public class CombinPallet extends BaseActivity {
     @Event(R.id.btn_PrintPalletLabel)
     private void btnPrintPalletLabelClick(View v) {
         if (DoubleClickCheck.isFastDoubleClick(context)) {
-            return ;
+            return;
         }
         if (palletDetailModels != null && palletDetailModels.size() != 0 && palletDetailModels.get(0).getLstBarCode()!=null
                 && palletDetailModels.get(0).getLstBarCode().size()!=0) {

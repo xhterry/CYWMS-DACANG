@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:layout_margin="3dp"
-            android:textColor="@color/orange"
+            android:textColor="@color/red"
             android:maxLines="1"
             android:textSize="15sp"/>
 </LinearLayout>

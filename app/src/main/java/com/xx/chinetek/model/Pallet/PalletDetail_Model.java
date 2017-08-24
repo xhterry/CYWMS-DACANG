@@ -37,6 +37,11 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     private String BarCode;
     private int PalletType;
 
+    public void setSupplierName(String supplierName) {
+        SupplierName = supplierName;
+    }
+
+
     public String getSuppliernNo() {
         return SuppliernNo;
     }

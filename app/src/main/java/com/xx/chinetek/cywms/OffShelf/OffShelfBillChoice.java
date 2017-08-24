@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -218,14 +217,14 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
 
     Boolean GetSelectTask(){
         selectoutStockTaskInfoModels = new ArrayList<>();
-        String IsEdate="";
+        int IsEdate=-1;
         for (int i = 0; i < outStockTaskInfoModels.size(); i++) {
             if (offSehlfBillChoiceItemAdapter.getStates(i)) {
                 selectoutStockTaskInfoModels.add(0, outStockTaskInfoModels.get(i));
-                if(TextUtils.isEmpty(IsEdate)){
-                    IsEdate= outStockTaskInfoModels.get(i).getIsEdate();
+                if(IsEdate==-1){
+                    IsEdate= outStockTaskInfoModels.get(i).getVoucherType();
                 }
-                if(!IsEdate.equals(outStockTaskInfoModels.get(i).getIsEdate()))
+                if(IsEdate!=outStockTaskInfoModels.get(i).getVoucherType())
                     return false;
             }
         }

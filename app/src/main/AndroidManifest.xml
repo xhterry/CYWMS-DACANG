@@ -19,7 +19,7 @@
         <activity android:name=".Receiption.SupplierFilterActivity" />
         <activity android:name=".Receiption.ReceiptionScan" />
         <activity android:name=".Receiption.ReceiptionBillDetail" />
-        <activity android:name=".BillChoice" />
+        <!-- <activity android:name=".BillChoice" /> -->
         <activity android:name=".UpShelf.UpShelfScanActivity" />
         <activity android:name=".UpShelf.UpShelfBillChoice" />
         <activity android:name=".UpShelf.UpshelfBillDetail" />
@@ -56,6 +56,7 @@
         <!-- 生产 -->
         <activity android:name="com.xx.chinetek.cyproduct.MainActivity" />
         <activity android:name="com.xx.chinetek.cyproduct.BillChoice" />
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct" />
         <activity android:name="com.xx.chinetek.cyproduct.WoBillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.MaterialChange.MaterialChange" />
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutput" />
