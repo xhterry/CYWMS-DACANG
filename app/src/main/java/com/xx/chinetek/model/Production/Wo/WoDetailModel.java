@@ -4,7 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -47,6 +49,8 @@ public class WoDetailModel extends Base_Model implements Parcelable {
 
     private String FromERPWarehouse;
 
+    private ArrayList<StockInfo_Model> stockInfoModels;
+
     public String getRowNodel() {
         return RowNodel;
     }
@@ -85,6 +89,14 @@ public class WoDetailModel extends Base_Model implements Parcelable {
 
     public void setFromERPWarehouse(String fromERPWarehouse) {
         FromERPWarehouse = fromERPWarehouse;
+    }
+
+    public ArrayList<StockInfo_Model> getStockInfoModels() {
+        return stockInfoModels;
+    }
+
+    public void setStockInfoModels(ArrayList<StockInfo_Model> stockInfoModels) {
+        this.stockInfoModels = stockInfoModels;
     }
 
     public String getMaterialNo() {
@@ -198,6 +210,7 @@ public class WoDetailModel extends Base_Model implements Parcelable {
 
     }
 
+
     public WoDetailModel(String materialNo) {
         this.MaterialNo=materialNo;
     }
@@ -227,6 +240,7 @@ public class WoDetailModel extends Base_Model implements Parcelable {
         dest.writeString(this.FromBatchNo);
         dest.writeString(this.FromERPAreaNO);
         dest.writeString(this.FromERPWarehouse);
+        dest.writeTypedList(this.stockInfoModels);
     }
 
     protected WoDetailModel(Parcel in) {
@@ -249,6 +263,7 @@ public class WoDetailModel extends Base_Model implements Parcelable {
         this.FromBatchNo = in.readString();
         this.FromERPAreaNO = in.readString();
         this.FromERPWarehouse = in.readString();
+        this.stockInfoModels = in.createTypedArrayList(StockInfo_Model.CREATOR);
     }
 
     public static final Creator<WoDetailModel> CREATOR = new Creator<WoDetailModel>() {

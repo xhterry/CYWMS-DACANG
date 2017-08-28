@@ -18,7 +18,6 @@ import com.xx.chinetek.adapter.product.Manage.WoDetailMaterialItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
-import com.xx.chinetek.cywms.OffShelf.OffshelfScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Production.Manage.LineManageModel;
@@ -31,6 +30,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
@@ -274,9 +274,33 @@ public class ProductMaterialConfig extends BaseActivity {
                    ArrayList<StockInfo_Model> stockInfoModels = returnMsgModel.getModelJson();
                     if (stockInfoModels != null && stockInfoModels.size() != 0) {
                         //判断条码是否已经扫描
-                        StockInfo_Model  stockInfoModel=stockInfoModels.get(0);
-
-
+                        StockInfo_Model stockInfoModel = stockInfoModels.get(0);
+                        WoDetailModel woDetailModel = new WoDetailModel(stockInfoModel.getMaterialNo());
+                        int woDetailindex = woDetailModels.indexOf(woDetailModel);
+                        if (woDetailindex == -1) {
+                            MessageBox.Show(context, getString(R.string.Error_ErpvoucherNoMatch));
+                            CommonUtil.setEditFocus(edtBarcode);
+                            return;
+                        }
+                        if (woDetailModels.get(woDetailindex).getStockInfoModels() == null)
+                            woDetailModels.get(woDetailindex).setStockInfoModels(new ArrayList<StockInfo_Model>());
+                        if ( woDetailModels.get(woDetailindex).getStockInfoModels().indexOf(stockInfoModel)!= -1) {
+                            MessageBox.Show(context, getString(R.string.Error_Barcode_hasScan));
+                            CommonUtil.setEditFocus(edtBarcode);
+                            return;
+                        }
+                        Float scanQty=woDetailModels.get(woDetailindex).getScanQty();
+                        Float StockQty=stockInfoModel.getQty();
+                        Float WoQty=woDetailModels.get(woDetailindex).getWoQty();
+                        Float Qty=ArithUtil.add(scanQty,StockQty);
+                        if(WoQty<Qty){
+                            MessageBox.Show(context, getString(R.string.Error_PackageQtyBigerThenWo));
+                            CommonUtil.setEditFocus(edtBarcode);
+                            return;
+                        }
+                        woDetailModels.get(woDetailindex).setScanQty(Qty);
+                        woDetailModels.get(woDetailindex).getStockInfoModels().add(0,stockInfoModel);
+                        BindListview(woDetailModels);
                     }
                 } else {
                     MessageBox.Show(context, returnMsgModel.getMessage());

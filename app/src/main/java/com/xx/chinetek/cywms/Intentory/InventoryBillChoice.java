@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -68,8 +67,7 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(R.id.edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_PrintQCLabrl)
-    Button btnNoTask;
+
 
 
     Context context = InventoryBillChoice.this;
@@ -82,7 +80,6 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Intentory_title), false);
         x.view().inject(this);
-        btnNoTask.setVisibility(View.GONE);
     }
 
     @Override
