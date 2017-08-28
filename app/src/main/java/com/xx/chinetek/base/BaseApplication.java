@@ -33,7 +33,11 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        //Stetho.initializeWithDefaults(this); //调试工具
         x.Ext.init(this);
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        okHttpClient.networkInterceptors().add(new StethoInterceptor());
+//        mRequestQueue = Volley.newRequestQueue(this, new OkHttpStack(okHttpClient));
         mRequestQueue = Volley.newRequestQueue(this);
        // ErrorCodeParser.init();
     }

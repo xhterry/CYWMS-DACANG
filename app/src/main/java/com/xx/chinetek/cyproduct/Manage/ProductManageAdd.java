@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.Login;
 import com.xx.chinetek.adapter.product.Manage.UserInfoItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
@@ -46,7 +47,7 @@ import java.util.Map;
 @ContentView(R.layout.activity_product_manage_add)
 public class ProductManageAdd extends BaseActivity {
 
-    String TAG_GetT_UserInfoModel="ProductManageAdd_GetT_UserInfoModel";
+    String TAG_GetT_UserInfoModel="ProductManageAdd_GetWareHouseByUserADF";
     private final int RESULT_GetT_UserInfoModel=101;
 
     @Override
@@ -60,8 +61,6 @@ public class ProductManageAdd extends BaseActivity {
                 break;
         }
     }
-
-
 
 
    Context context=ProductManageAdd.this;
@@ -100,16 +99,16 @@ public class ProductManageAdd extends BaseActivity {
         super.initData();
         lineManageModel=new LineManageModel();
         lineManageModel.setUserInfos(new ArrayList<UserInfo>());
-        lineManageModel.getUserInfos().addAll(getdata());
+        //lineManageModel.getUserInfos().addAll(getdata());
         this.woModel=getIntent().getParcelableExtra("woModel");
         if(woModel!=null) {
-            txtVoucherNo.setText(woModel.getVoucherNo());
+            txtVoucherNo.setText(woModel.getErpVoucherNo());
             txtBatchNo.setText(woModel.getBatchNo());
             lineManageModel.setWoBatchNo(woModel.getBatchNo());
             lineManageModel.setWoErpVoucherNo(woModel.getErpVoucherNo());
             lineManageModel.setWoVoucherNo(woModel.getVoucherNo());
         }
-        BindListView(lineManageModel.getUserInfos());
+
     }
 
 
@@ -162,10 +161,10 @@ public class ProductManageAdd extends BaseActivity {
 
     void GetUserInfo(String userCode){
         try {
-            Map<String, String> params = new HashMap<>();
-            params.put("userCode",userCode);
-            LogUtil.WriteLog(ProductManageAdd.class, TAG_GetT_UserInfoModel, userCode);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_UserInfoModel, getString(R.string.Mag_GetT_UserInfoModel), context, mHandler, RESULT_GetT_UserInfoModel, null,  URLModel.GetURL().GetT_UserInfoModel, params, null);
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("UserNo", userCode);
+            LogUtil.WriteLog(Login.class, TAG_GetT_UserInfoModel, userCode);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_UserInfoModel, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetT_UserInfoModel, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }
@@ -187,6 +186,7 @@ public class ProductManageAdd extends BaseActivity {
                     else{
                         RemoveUser(index);
                     }
+                    BindListView(lineManageModel.getUserInfos());
                 }
 
             } else {
@@ -196,6 +196,7 @@ public class ProductManageAdd extends BaseActivity {
 
             MessageBox.Show(context,ex.getMessage());
         }
+        CommonUtil.setEditFocus(edtStaffNo);
     }
 
     void BindListView(ArrayList<UserInfo> userInfos){
@@ -216,14 +217,14 @@ public class ProductManageAdd extends BaseActivity {
         return true;
     }
 
-    ArrayList<UserInfo> getdata(){
-        ArrayList<UserInfo> stockInfoModels=new ArrayList<>();
-        for(int i=0;i<7;i++){
-            UserInfo userInfo=new UserInfo();
-            userInfo.setUserNo(i+"");
-            userInfo.setUserName("姓名12"+i);
-            stockInfoModels.add(userInfo);
-        }
-        return stockInfoModels;
-    }
+//    ArrayList<UserInfo> getdata(){
+//        ArrayList<UserInfo> stockInfoModels=new ArrayList<>();
+//        for(int i=0;i<7;i++){
+//            UserInfo userInfo=new UserInfo();
+//            userInfo.setUserNo(i+"");
+//            userInfo.setUserName("姓名12"+i);
+//            stockInfoModels.add(userInfo);
+//        }
+//        return stockInfoModels;
+//    }
 }

@@ -1,6 +1,7 @@
 package com.xx.chinetek.model.Production.Wo;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  * Created by GHOST on 2017/7/18.
  */
 
-public class WoDetailModel extends Base_Model{
+public class WoDetailModel extends Base_Model implements Parcelable{
 
     private String MaterialNo;
 
@@ -33,8 +34,6 @@ public class WoDetailModel extends Base_Model{
     private String IsspcBatch; //是否指定批次
 
     private String VoucherNo; //WMS工单号
-
-    private String ErpVoucherNo;//ERP工单号
 
     private String FromStorageLoc;
 
@@ -150,13 +149,6 @@ public class WoDetailModel extends Base_Model{
         VoucherNo = voucherNo;
     }
 
-    public String getErpVoucherNo() {
-        return ErpVoucherNo;
-    }
-
-    public void setErpVoucherNo(String erpVoucherNo) {
-        ErpVoucherNo = erpVoucherNo;
-    }
 
     public String getFromStorageLoc() {
         return FromStorageLoc;
@@ -220,7 +212,6 @@ public class WoDetailModel extends Base_Model{
         dest.writeLong(this.ShipMentDate != null ? this.ShipMentDate.getTime() : -1);
         dest.writeString(this.IsspcBatch);
         dest.writeString(this.VoucherNo);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.FromStorageLoc);
         dest.writeString(this.FromAreaNo);
         dest.writeString(this.FromBatchNo);
@@ -242,7 +233,6 @@ public class WoDetailModel extends Base_Model{
         this.ShipMentDate = tmpShipMentDate == -1 ? null : new Date(tmpShipMentDate);
         this.IsspcBatch = in.readString();
         this.VoucherNo = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.FromStorageLoc = in.readString();
         this.FromAreaNo = in.readString();
         this.FromBatchNo = in.readString();

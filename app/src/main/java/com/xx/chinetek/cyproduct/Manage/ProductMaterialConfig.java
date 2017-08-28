@@ -18,14 +18,15 @@ import com.xx.chinetek.adapter.product.Manage.WoDetailMaterialItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cywms.OffShelf.OffshelfScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Production.Manage.LineManageModel;
 import com.xx.chinetek.model.Production.Wo.WoDetailModel;
 import com.xx.chinetek.model.Production.Wo.WoModel;
-import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -46,16 +47,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.xx.chinetek.base.BaseApplication.userInfo;
 import static com.xx.chinetek.cywms.R.id.edt_ScanQty;
 
 @ContentView(R.layout.activity_product_material_config)
 public class ProductMaterialConfig extends BaseActivity {
 
     String TAG_GetWoDetailModelByWoNo="ProductMaterialConfig_GetWoDetailModelByWoNo";
-    String TAG_GetMaterialByBarcode="ProductMaterialConfig_GetMaterialByBarcode";
+    String TAG_GetStockModelADF="ProductMaterialConfig_GetMaterialByBarcode";
     private final int RESULT_GetWoDetailModelByWoNo=101;
-    private final int RESULT_GetMaterialByBarcode=102;
+    private final int RESULT_Msg_GetStockModelADF=102;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -63,8 +63,8 @@ public class ProductMaterialConfig extends BaseActivity {
             case RESULT_GetWoDetailModelByWoNo:
                 AnalysisGetWoDetailModelByWoNoJson((String) msg.obj);
                 break;
-            case RESULT_GetMaterialByBarcode:
-                AnalysisGetMaterialByBarcodeJson((String) msg.obj);
+            case RESULT_Msg_GetStockModelADF:
+                AnalysisGetStockModelADFJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -122,9 +122,6 @@ public class ProductMaterialConfig extends BaseActivity {
             txtProductLineNo.setText(lineManageModel.getProductLineNo());
             txtMaterialDesc.setText(woModel.getMaterialDesc());
             GetWoDetailModelByWoNo(woModel);
-            //测试
-            woDetailModels=getdata();
-            BindListview(woDetailModels);
         }
     }
 
@@ -156,11 +153,13 @@ public class ProductMaterialConfig extends BaseActivity {
             String barcode=edtBarcode.getText().toString().trim();
             if(!TextUtils.isEmpty(barcode)){
                 try {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("UserJson", GsonUtil.parseModelToJson(userInfo));
-                    params.put("ModelJson", barcode);
-                    LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetMaterialByBarcode, barcode);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetMaterialByBarcode, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetMaterialByBarcode, null,  URLModel.GetURL().GetMaterialByBarcode, params, null);
+                    final Map<String, String> params = new HashMap<String, String>();
+                    params.put("BarCode", barcode);
+                    params.put("ScanType", "2");
+                    params.put("MoveType", "1"); //1：下架 2:移库
+                    params.put("IsEdate", "2"); //1：不判断有效期 2:判断有效期
+                    LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetStockModelADF, barcode);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
                 } catch (Exception ex) {
                     MessageBox.Show(context, ex.getMessage());
                 }
@@ -234,11 +233,11 @@ public class ProductMaterialConfig extends BaseActivity {
 
     void GetWoDetailModelByWoNo(WoModel woModel){
         try {
-            String ModelJson = GsonUtil.parseModelToJson(woModel);
+           // String ModelJson = GsonUtil.parseModelToJson(woModel);
             Map<String, String> params = new HashMap<>();
-            params.put("UserJson", GsonUtil.parseModelToJson(userInfo));
-            params.put("ModelJson", ModelJson);
-            LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetWoDetailModelByWoNo, ModelJson);
+           // params.put("UserJson", GsonUtil.parseModelToJson(userInfo));
+            params.put("HeadId", woModel.getID()+"");
+            LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetWoDetailModelByWoNo, woModel.getID()+"");
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetWoDetailModelByWoNo, getString(R.string.Mag_GetWoDetailModelByWoNo), context, mHandler, RESULT_GetWoDetailModelByWoNo, null,  URLModel.GetURL().GetWoDetailModelByWoNo, params, null);
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
@@ -265,29 +264,26 @@ public class ProductMaterialConfig extends BaseActivity {
         }
     }
 
-    void AnalysisGetMaterialByBarcodeJson(String result){
+    void AnalysisGetStockModelADFJson(String result){
         try {
-            currentBarCodeInfo=new BarCodeInfo();
-            currentIndex=-1;
-            LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetWoDetailModelByWoNo, result);
-            ReturnMsgModel<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<BarCodeInfo>>() {
-            }.getType());
-            if (returnMsgModel.getHeaderStatus().equals("S")) {
-               this.currentBarCodeInfo = returnMsgModel.getModelJson();
-                if (currentBarCodeInfo != null ){
-                    WoDetailModel tempWoDetail=new WoDetailModel(currentBarCodeInfo.getMaterialNo());
-                    currentIndex=woDetailModels.indexOf(tempWoDetail);
-                    if(currentIndex!=-1){
-                        CommonUtil.setEditFocus(edtScanQty);
-                    }else{
-                        MessageBox.Show(context,getString(R.string.Error_BarcodeNotInList));
-                        CommonUtil.setEditFocus(edtBarcode);
-                    }
-                    BindListview(woDetailModels);
-                }
+            LogUtil.WriteLog(ProductMaterialConfig.class, TAG_GetStockModelADF, result);
+            try {
+                ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {
+                }.getType());
+                if (returnMsgModel.getHeaderStatus().equals("S")) {
+                   ArrayList<StockInfo_Model> stockInfoModels = returnMsgModel.getModelJson();
+                    if (stockInfoModels != null && stockInfoModels.size() != 0) {
+                        //判断条码是否已经扫描
+                        StockInfo_Model  stockInfoModel=stockInfoModels.get(0);
 
-            } else {
-                MessageBox.Show(context,returnMsgModel.getMessage());
+
+                    }
+                } else {
+                    MessageBox.Show(context, returnMsgModel.getMessage());
+                    CommonUtil.setEditFocus(edtBarcode);
+                }
+            } catch (Exception ex) {
+                MessageBox.Show(context, ex.getMessage());
                 CommonUtil.setEditFocus(edtBarcode);
             }
         }catch (Exception ex){
@@ -301,21 +297,6 @@ public class ProductMaterialConfig extends BaseActivity {
         lsvMaterial.setAdapter(woDetailMaterialItemAdapter);
     }
 
-    ArrayList<WoDetailModel> getdata(){
-        ArrayList<WoDetailModel> stockInfoModels=new ArrayList<>();
-        for(int i=0;i<7;i++){
-            WoDetailModel userInfo=new WoDetailModel();
-            userInfo.setVoucherNo(woModel.getVoucherNo());
-            userInfo.setErpVoucherNo(woModel.getErpVoucherNo());
-            userInfo.setMaterialNo("R23311"+i);
-            userInfo.setMaterialDesc("原料物料"+i);
-            userInfo.setFromBatchNo("批次1123"+i);
-            userInfo.setWoQty(123f);
-            userInfo.setScanQty(0f);
-            stockInfoModels.add(userInfo);
-        }
-        return stockInfoModels;
-    }
 
     public String  display() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

@@ -89,9 +89,9 @@ public class URLModel {
 
     //生产
     public String GetT_LineManageInfoModel=GetWCFAdress()+"GetT_LineManageInfoModel";//获取作业记录
-    public String GetT_WoinfoModel=GetWCFAdress()+"GetT_WoinfoModel";//获取工单任务信息
+    public String GetT_WoinfoModel=GetWCFAdress()+"GetWOInfo";//获取工单任务信息
     public String GetT_UserInfoModel=GetWCFAdress()+"GetT_UserInfoModel";//获取员工信息
-    public String GetWoDetailModelByWoNo=GetWCFAdress()+"GetWoDetailModelByWoNo";//获取工单任务明细信息
+    public String GetWoDetailModelByWoNo=GetWCFAdress()+"GetWODetailInfo";//获取工单任务明细信息
     public String GetMaterialByBarcode=GetWCFAdress()+"GetMaterialByBarcode";//工单获取条码信息
 
 }
