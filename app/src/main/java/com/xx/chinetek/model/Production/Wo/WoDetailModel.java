@@ -1,6 +1,7 @@
 package com.xx.chinetek.model.Production.Wo;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  * Created by GHOST on 2017/7/18.
  */
 
-public class WoDetailModel extends Base_Model{
+public class WoDetailModel extends Base_Model implements Parcelable {
 
     private String MaterialNo;
 

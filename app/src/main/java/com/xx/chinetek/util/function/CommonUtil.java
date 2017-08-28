@@ -32,7 +32,7 @@ public class CommonUtil {
     /**
      * 判断是否为数字
      *
-     * @param str
+     * @param
      * @return
      */
     public static boolean isNumeric(String str) {

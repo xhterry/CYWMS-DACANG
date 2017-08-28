@@ -344,4 +344,5 @@
 
     <!--ymh20170823-->
     <string name="Msg_GetWOInfo">获取工单列表...</string>
+    <string name="Msg_Print">打印条码中...</string>
 </resources>

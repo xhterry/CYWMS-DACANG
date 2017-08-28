@@ -89,9 +89,14 @@ public class URLModel {
 
     //生产
     public String GetT_LineManageInfoModel=GetWCFAdress()+"GetT_LineManageInfoModel";//获取作业记录
-    public String GetT_WoinfoModel=GetWCFAdress()+"GetT_WoinfoModel";//获取工单任务信息
+    public String GetT_WoinfoModel=GetWCFAdress()+"GetWOInfo";//获取工单任务信息
     public String GetT_UserInfoModel=GetWCFAdress()+"GetT_UserInfoModel";//获取员工信息
     public String GetWoDetailModelByWoNo=GetWCFAdress()+"GetWoDetailModelByWoNo";//获取工单任务明细信息
     public String GetMaterialByBarcode=GetWCFAdress()+"GetMaterialByBarcode";//工单获取条码信息
+
+    //生产打印
+    public String PrintLabel=GetWCFAdress()+"PrintForProductAndroid";//生产打印条码
+    public String GetBaoGongByListWoinfo=GetWCFAdress()+"PostBaoGongByListWoinfo";//生成报工单 ERP接口
+    public String GetFinishInStockByListWoinfo=GetWCFAdress()+"PostFinishInStockByListWoinfo";//生成完工入库单 ERP接口
 
 }

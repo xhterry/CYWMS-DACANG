@@ -37,12 +37,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.xx.chinetek.base.BaseApplication.userInfo;
+
 /**
  * Created by ymh on 2017/8/22.
  */
 
 @ContentView(R.layout.activity_product_bills_in)
-public class BillsIn  extends BaseActivity {
+public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     @ViewInject(R.id.mSwipeLayout)
     SwipeRefreshLayout mSwipeLayout;
@@ -101,10 +103,22 @@ public class BillsIn  extends BaseActivity {
         BaseApplication.context = context;
 
         x.view().inject(this);
-        getData1();
-//        List<SupplierModel> supplierModels=getData();
-//        billAdapter=new BillAdapter(context,supplierModels);
-//        lsvChoice.setAdapter(billAdapter);
+        getData();
+
+    }
+
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mSwipeLayout.setOnRefreshListener(this); //下拉刷新
+    }
+
+    @Override
+    public void onRefresh() {
+        WoModels=new ArrayList<>();
+        edt_filterContent.setText("");
+        getData();
     }
 
     /**
@@ -114,14 +128,16 @@ public class BillsIn  extends BaseActivity {
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(context,CompleteProduct.class);
         WoModel Model= (WoModel)billAdapter.getItem(position);
-        if(intent!=null)
+//        if(intent!=null)
+//        {
+//            startActivityLeft(intent);
+//        }
+//        else{
+            Bundle bundle=new Bundle();
+            bundle.putParcelable("WoModel",Model);
+            intent.putExtras(bundle);
             startActivityLeft(intent);
-
-        Bundle bundle=new Bundle();
-        bundle.putParcelable("WoModel",Model);
-        intent.putExtras(bundle);
-        startActivityLeft(intent);
-
+//        }
 
 //        intent.putExtra("MaterialNo","MaterialNo");
 //        intent.putExtra("MaterialDesc","MaterialDesc");
@@ -129,15 +145,12 @@ public class BillsIn  extends BaseActivity {
 //        intent.putExtra("MaterialBNumber","MaterialBNumber1");
 //        startActivityLeft(intent);
 
-
     }
 
     void getData(){
         try {
-//            String ModelJson = GsonUtil.parseModelToJson(outStockTaskInfoModel);
               Map<String, String> params = new HashMap<>();
-//            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-//            params.put("ModelJson", ModelJson);
+            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
 //            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_InBill, getString(R.string.Msg_GetWOInfo), context, mHandler,
                     RESULT_GetT_InBill, null,  URLModel.GetURL().GetT_WoinfoModel, params, null);
@@ -145,26 +158,6 @@ public class BillsIn  extends BaseActivity {
             mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
         }
-    }
-
-    void getData1(){
-        ArrayList<WoModel> WoModels = new ArrayList<>();
-
-        for(int i=0;i<2;i++){
-            WoModel woModel=new WoModel();
-            woModel.setERPStaffName("setERPStaffName");
-            woModel.setBatchNo("SupplierName");
-            woModel.setVoucherNo("setSupplierID");
-            woModel.setCompanyCode("setSupplierID");
-            woModel.setStrVoucherType("setSupplierID");
-            woModel.setErpVoucherNo("据点");
-            woModel.setDepartmentName("部门");
-            WoModels.add(woModel);
-        }
-        billAdapter=new BillAdapter(context,WoModels);
-        lsvChoice.setAdapter(billAdapter);
-
-//        return WoModels;
     }
 
     private void BindListVIew(List<WoModel> WoModels) {

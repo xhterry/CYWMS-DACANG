@@ -36,6 +36,34 @@ public class Barcode_Model implements Parcelable{
     private String warehouseno ;
     private String AllIn  ; //用来判断是在库存还是条码表1库存，0条码
 
+    private String ProductClass  ; //ymh生产班组
+    private String BoxWeight  ; //ymh包装方式
+    private String ItemQty  ; //ymh数量
+
+    public String getItemQty() {
+        return ItemQty;
+    }
+    public void setItemQty(String ItemQty) {
+        this.ItemQty = ItemQty;
+    }
+
+
+    public String getBoxWeight() {
+        return BoxWeight;
+    }
+    public void setBoxWeight(String BoxWeight) {
+        this.BoxWeight = BoxWeight;
+    }
+
+
+    public String getProductClass() {
+        return ProductClass;
+    }
+    public void setProductClass(String ProductClass) {
+        this.ProductClass = ProductClass;
+    }
+
+
     public int getSTATUS() {
         return STATUS;
     }
