@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -28,7 +27,6 @@ import com.xx.chinetek.model.QC.QualityInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
-import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
 import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
@@ -84,8 +82,8 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(R.id.edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_PrintQCLabrl)
-    Button btn_PrintQCLabrl;
+//    @ViewInject(R.id.btn_PrintQCLabrl)
+//    Button btn_PrintQCLabrl;
 
 
     Context context = QCBillChoice.this;
@@ -101,7 +99,7 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.QC_title), true);
         x.view().inject(this);
-        btn_PrintQCLabrl.setVisibility(View.GONE);
+     //   btn_PrintQCLabrl.setVisibility(View.GONE);
         //edtfilterContent.setVisibility(View.GONE);
         edtfilterContent.addTextChangedListener(TaskNoTextWatcher);
     }
@@ -210,26 +208,26 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     };
 
-    @Event(R.id.btn_PrintQCLabrl)
-    private  void btnPrintQCLabrlClick(View view){
-        ArrayList<Barcode_Model> temp=new ArrayList<>();
-        int size=qualityInfoModels.size();
-        for (int i=0;i<size;i++){
-            if(qcBillChioceItemAdapter.getStates(i)){
-                Barcode_Model barcodeModel=new Barcode_Model();
-                barcodeModel.setCreater(BaseApplication.userInfo.getUserName());
-                barcodeModel.setMaterialNo( qualityInfoModels.get(i).getMaterialNo());
-                barcodeModel.setQty( qualityInfoModels.get(i).getSampQty());
-                barcodeModel.setIP(URLModel.PrintIP);
-                temp.add(0,barcodeModel);
-            }
-        }
-        String ModelJson = GsonUtil.parseModelToJson(temp);
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("json",ModelJson );
-        LogUtil.WriteLog(QCBillChoice.class, TAG_PrintQYAndroid, ModelJson);
-        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintQYAndroid, getString(R.string.Msg_PrintQYAndroid), context, mHandler, RESULT_PrintQYAndroid, null,  URLModel.GetURL().PrintQYAndroid, params, null);
-    }
+//    @Event(R.id.btn_PrintQCLabrl)
+//    private  void btnPrintQCLabrlClick(View view){
+//        ArrayList<Barcode_Model> temp=new ArrayList<>();
+//        int size=qualityInfoModels.size();
+//        for (int i=0;i<size;i++){
+//            if(qcBillChioceItemAdapter.getStates(i)){
+//                Barcode_Model barcodeModel=new Barcode_Model();
+//                barcodeModel.setCreater(BaseApplication.userInfo.getUserName());
+//                barcodeModel.setMaterialNo( qualityInfoModels.get(i).getMaterialNo());
+//                barcodeModel.setQty( qualityInfoModels.get(i).getSampQty());
+//                barcodeModel.setIP(URLModel.PrintIP);
+//                temp.add(0,barcodeModel);
+//            }
+//        }
+//        String ModelJson = GsonUtil.parseModelToJson(temp);
+//        final Map<String, String> params = new HashMap<String, String>();
+//        params.put("json",ModelJson );
+//        LogUtil.WriteLog(QCBillChoice.class, TAG_PrintQYAndroid, ModelJson);
+//        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintQYAndroid, getString(R.string.Msg_PrintQYAndroid), context, mHandler, RESULT_PrintQYAndroid, null,  URLModel.GetURL().PrintQYAndroid, params, null);
+//    }
 
     /**
      * 初始化加载listview
@@ -327,7 +325,7 @@ public class QCBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     void initFrm(){
         gMenuItem.setTitle(getString(isQcPrint?R.string.cancel:R.string.QCprint));
         edtfilterContent.setVisibility(isQcPrint?View.GONE:View.VISIBLE);
-        btn_PrintQCLabrl.setVisibility(isQcPrint?View.VISIBLE:View.GONE);
+     //   btn_PrintQCLabrl.setVisibility(isQcPrint?View.VISIBLE:View.GONE);
         BindListVIew(qualityInfoModels);
     }
 

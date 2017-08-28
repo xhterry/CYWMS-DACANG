@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -20,8 +19,8 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.ReturnMsgModelList;
-import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.model.WMS.UpShelf.InStockTaskInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
@@ -73,8 +72,6 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(R.id.edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_PrintQCLabrl)
-    Button btnNoTask;
 
 
     Context context = UpShelfBillChoice.this;
@@ -88,7 +85,6 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.UpShelf_title), false);
         x.view().inject(this);
-        btnNoTask.setVisibility(View.GONE);
     }
 
     @Override

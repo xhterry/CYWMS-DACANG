@@ -37,8 +37,6 @@ public class WoDetailModel extends Base_Model implements Parcelable {
 
     private String VoucherNo; //WMS工单号
 
-    private String ErpVoucherNo;//ERP工单号
-
     private String FromStorageLoc;
 
     private String FromAreaNo;
