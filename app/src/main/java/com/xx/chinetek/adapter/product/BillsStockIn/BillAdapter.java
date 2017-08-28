@@ -32,7 +32,6 @@ public class BillAdapter extends BaseAdapter {
         public TextView txtERPVoucherNo;
         public TextView txtStrVoucherType;
         public TextView txtCompany;
-        public TextView txtdepartment;
     }
 
     public BillAdapter(Context context, List<WoModel> WoModels) {
@@ -70,12 +69,11 @@ public class BillAdapter extends BaseAdapter {
             listItemView = new ListItemView();
 
             // 获取list_item布局文件的视图
-            convertView = listContainer.inflate(R.layout.item_billchoice_listview,null);
+            convertView = listContainer.inflate(R.layout.item_billin_listview,null);
             listItemView.txtTaskNo = (TextView) convertView.findViewById(R.id.txtTaskNo);
             listItemView.txtERPVoucherNo = (TextView) convertView.findViewById(R.id.txtERPVoucherNo);
             listItemView.txtStrVoucherType = (TextView) convertView.findViewById(R.id.txtStrVoucherType);
             listItemView.txtCompany = (TextView) convertView.findViewById(R.id.txtCompany);
-            listItemView.txtdepartment = (TextView) convertView.findViewById(R.id.txtdepartment);
             convertView.setTag(listItemView);
         } else {
             listItemView = (ListItemView) convertView.getTag();
@@ -84,8 +82,7 @@ public class BillAdapter extends BaseAdapter {
         listItemView.txtTaskNo.setText(woModel.getVoucherNo());
         listItemView.txtERPVoucherNo.setText(woModel.getErpVoucherNo());
         listItemView.txtStrVoucherType.setText(woModel.getStrVoucherType());
-        listItemView.txtCompany.setText(woModel.getCompanyCode());
-        listItemView.txtdepartment.setText(woModel.getDepartmentName());
+        listItemView.txtCompany.setText(woModel.getMaterialDesc());
         if (selectItem == position) {
             convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
         }

@@ -94,4 +94,9 @@ public class URLModel {
     public String GetWoDetailModelByWoNo=GetWCFAdress()+"GetWODetailInfo";//获取工单任务明细信息
     public String GetMaterialByBarcode=GetWCFAdress()+"GetMaterialByBarcode";//工单获取条码信息
 
+    //生产打印
+    public String PrintLabel=GetWCFAdress()+"PrintForProductAndroid";//生产打印条码
+    public String GetBaoGongByListWoinfo=GetWCFAdress()+"PostBaoGongByListWoinfo";//生成报工单 ERP接口
+    public String GetFinishInStockByListWoinfo=GetWCFAdress()+"PostFinishInStockByListWoinfo";//生成完工入库单 ERP接口
+
 }

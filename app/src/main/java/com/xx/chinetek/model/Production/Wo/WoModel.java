@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by GHOST on 2017/7/18.
  */
 
-public class WoModel extends Base_Model implements Parcelable {
+public class WoModel extends Base_Model implements Parcelable{
 
     private String VoucherNo; //WMS工单号
 
@@ -32,6 +32,73 @@ public class WoModel extends Base_Model implements Parcelable {
     private String ERPStaffName;
 
     private Date ShipmentDate;
+
+
+    //add by 2017-8-27
+    public Float ReportQty;// 报工数量
+    public Float getReportQty() {
+        return ReportQty;
+    }
+    public void setReportQty(Float reportQty) {
+        ReportQty = reportQty;
+    }
+
+    public int JobNumber;// 作业人数
+    public int getJobNumber() {
+        return JobNumber;
+    }
+    public void setJobNumber(int jobNumber) {
+        JobNumber = jobNumber;
+    }
+
+    public Float WorkHour; // 报工工时
+    public Float getWorkHour() {
+        return WorkHour;
+    }
+    public void setWorkHour(Float workHour) {
+        WorkHour = workHour;
+    }
+
+    public String UserNo; // 报工人
+    public String getUserNo() {
+        return UserNo;
+    }
+    public void setUserNo(String userNo) {
+        UserNo = userNo;
+    }
+
+    public Float InQty;// 完工数量
+    public Float getInQty() {
+        return InQty;
+    }
+    public void setInQty(Float inQty) {
+        InQty = inQty;
+    }
+
+    public String WareHouseNo; // 仓库
+    public String getWareHouseNo() {
+        return WareHouseNo;
+    }
+    public void setWareHouseNo(String wareHouseNo) {
+        WareHouseNo = wareHouseNo;
+    }
+
+    public String AreaNo;// 储位
+    public String getAreaNo() {
+        return AreaNo;
+    }
+    public void setAreaNo(String areaNo) {
+        AreaNo = areaNo;
+    }
+
+    public String StrSupPrdDate; // 制造日期
+    public String getStrSupPrdDate() {
+        return StrSupPrdDate;
+    }
+    public void setStrSupPrdDate(String strSupPrdDate) {
+        StrSupPrdDate = strSupPrdDate;
+    }
+
 
 
 
@@ -137,6 +204,14 @@ public class WoModel extends Base_Model implements Parcelable {
         dest.writeString(this.ERPStaffNo);
         dest.writeString(this.ERPStaffName);
         dest.writeLong(this.ShipmentDate != null ? this.ShipmentDate.getTime() : -1);
+        dest.writeValue(this.ReportQty);
+        dest.writeInt(this.JobNumber);
+        dest.writeValue(this.WorkHour);
+        dest.writeString(this.UserNo);
+        dest.writeValue(this.InQty);
+        dest.writeString(this.WareHouseNo);
+        dest.writeString(this.AreaNo);
+        dest.writeString(this.StrSupPrdDate);
     }
 
     protected WoModel(Parcel in) {
@@ -152,6 +227,14 @@ public class WoModel extends Base_Model implements Parcelable {
         this.ERPStaffName = in.readString();
         long tmpShipmentDate = in.readLong();
         this.ShipmentDate = tmpShipmentDate == -1 ? null : new Date(tmpShipmentDate);
+        this.ReportQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.JobNumber = in.readInt();
+        this.WorkHour = (Float) in.readValue(Float.class.getClassLoader());
+        this.UserNo = in.readString();
+        this.InQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.WareHouseNo = in.readString();
+        this.AreaNo = in.readString();
+        this.StrSupPrdDate = in.readString();
     }
 
     public static final Creator<WoModel> CREATOR = new Creator<WoModel>() {
