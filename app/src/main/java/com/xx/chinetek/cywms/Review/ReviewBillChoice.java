@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -75,8 +74,6 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
     SwipeRefreshLayout mSwipeLayout;
     @ViewInject(edt_filterContent)
     EditText edtfilterContent;
-    @ViewInject(R.id.btn_PrintQCLabrl)
-    Button btnNoTask;
 
 
     Context context = ReviewBillChoice.this;
@@ -90,7 +87,6 @@ public class ReviewBillChoice extends BaseActivity implements SwipeRefreshLayout
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Review_title), false);
         x.view().inject(this);
-        btnNoTask.setVisibility(View.GONE);
     }
 
     @Override
