@@ -104,6 +104,7 @@
     <string name="filter">供应商筛选</string>
     <string name="QCfilter">质检取样</string>
     <string name="ReportNum">报产量</string>
+    <string name="StartProduct">开工</string>
     <string name="ReportQC">完工报检</string>
     <string name="TaskAllcote">任务分配</string>
     <string name="isPicking">拣货</string>
@@ -141,7 +142,6 @@
     <string name="Status">状态：</string>
     <string name="freight">运费：</string>
     <string name="ProductNum">产量：</string>
-    <string name="StartProduct">开始生产</string>
     <string name="PersonLeave">人员离岗</string>
     <string name="PersonAdd">人员增加</string>
     <string name="MaterialConfig">备料确认</string>
@@ -173,6 +173,7 @@
     <string name="PrintLabel">打印外箱标签</string>
     <string name="PrintPallet">打印托盘标签</string>
     <string name="PrintTank">打印坦克标签</string>
+    <string name="LineStockInMaterial">领料入库</string>
     <string name="PalletDetail_Content">长按托盘号删除托盘\n点击箱号删除单个箱号</string>
     <!--dialog-->
     <string name="return_home">是否返回主界面？</string>

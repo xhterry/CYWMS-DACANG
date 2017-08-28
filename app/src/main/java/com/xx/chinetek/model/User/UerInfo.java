@@ -24,7 +24,6 @@ public class UerInfo extends User implements Parcelable {
     private String ToSampAreaNo;
     private String PickWareHouseNo ;
 
-
     public String getQuanUserName() {
         return QuanUserName;
     }
@@ -39,6 +38,7 @@ public class UerInfo extends User implements Parcelable {
     private List<UserGroupInfo> lstUserGroup;
     private List<MenuInfo> lstMenu;
     private List<WareHouseInfo> lstWarehouse;
+    private List<QuanUserModel> lstQuanUser;
     /// <summary>
     /// 取样人编号
     /// </summary>
@@ -66,6 +66,14 @@ public class UerInfo extends User implements Parcelable {
 
     public void setToSampWareHouseNo(String toSampWareHouseNo) {
         ToSampWareHouseNo = toSampWareHouseNo;
+    }
+
+    public List<QuanUserModel> getLstQuanUser() {
+        return lstQuanUser;
+    }
+
+    public void setLstQuanUser(List<QuanUserModel> lstQuanUser) {
+        this.lstQuanUser = lstQuanUser;
     }
 
     public String getToSampAreaNo() {
@@ -218,6 +226,7 @@ public class UerInfo extends User implements Parcelable {
         dest.writeTypedList(this.lstUserGroup);
         dest.writeTypedList(this.lstMenu);
         dest.writeTypedList(this.lstWarehouse);
+        dest.writeTypedList(this.lstQuanUser);
         dest.writeString(this.QuanUserNo);
     }
 
@@ -241,6 +250,7 @@ public class UerInfo extends User implements Parcelable {
         this.lstUserGroup = in.createTypedArrayList(UserGroupInfo.CREATOR);
         this.lstMenu = in.createTypedArrayList(MenuInfo.CREATOR);
         this.lstWarehouse = in.createTypedArrayList(WareHouseInfo.CREATOR);
+        this.lstQuanUser = in.createTypedArrayList(QuanUserModel.CREATOR);
         this.QuanUserNo = in.readString();
     }
 

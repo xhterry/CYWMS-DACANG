@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Production.Wo.WoDetailModel;
+import com.xx.chinetek.model.Production.Wo.WoModel;
 import com.xx.chinetek.model.User.UserInfo;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class LineManageModel extends Base_Model implements Parcelable {
 
     private String StartTime;//工单开始时间
 
-    private ArrayList<WoDetailModel> woDetailModels=new ArrayList<>();//工单原料信息
+    private WoModel woModel;//工单原料信息
 
     private ArrayList<UserInfo> userInfos=new ArrayList<>();//人员列表
 
@@ -41,14 +41,6 @@ public class LineManageModel extends Base_Model implements Parcelable {
 
     public void setPreProductNum(Float preProductNum) {
         PreProductNum = preProductNum;
-    }
-
-    public ArrayList<WoDetailModel> getWoDetailModels() {
-        return woDetailModels;
-    }
-
-    public void setWoDetailModels(ArrayList<WoDetailModel> woDetailModels) {
-        this.woDetailModels = woDetailModels;
     }
 
     public ArrayList<UserInfo> getUserInfos() {
@@ -125,6 +117,14 @@ public class LineManageModel extends Base_Model implements Parcelable {
         EndTime = endTime;
     }
 
+    public WoModel getWoModel() {
+        return woModel;
+    }
+
+    public void setWoModel(WoModel woModel) {
+        this.woModel = woModel;
+    }
+
     public LineManageModel() {
     }
 
@@ -144,7 +144,7 @@ public class LineManageModel extends Base_Model implements Parcelable {
         dest.writeString(this.ProductLineNo);
         dest.writeString(this.ProductTeamNo);
         dest.writeString(this.StartTime);
-        dest.writeTypedList(this.woDetailModels);
+        dest.writeParcelable(this.woModel, flags);
         dest.writeTypedList(this.userInfos);
         dest.writeString(this.EndTime);
     }
@@ -159,7 +159,7 @@ public class LineManageModel extends Base_Model implements Parcelable {
         this.ProductLineNo = in.readString();
         this.ProductTeamNo = in.readString();
         this.StartTime = in.readString();
-        this.woDetailModels = in.createTypedArrayList(WoDetailModel.CREATOR);
+        this.woModel = in.readParcelable(WoModel.class.getClassLoader());
         this.userInfos = in.createTypedArrayList(UserInfo.CREATOR);
         this.EndTime = in.readString();
     }

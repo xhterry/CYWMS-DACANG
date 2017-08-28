@@ -5,8 +5,9 @@ import android.content.Context;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -46,8 +48,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.xx.chinetek.cywms.R.id.edt_ScanQty;
 
 @ContentView(R.layout.activity_product_material_config)
 public class ProductMaterialConfig extends BaseActivity {
@@ -88,15 +88,10 @@ public class ProductMaterialConfig extends BaseActivity {
     EditText edtPrePruductNum;
     @ViewInject(R.id.edt_Barcode)
     EditText edtBarcode;
-    @ViewInject(R.id.edt_ScanQty)
-    EditText edtScanQty;
     @ViewInject(R.id.lsv_Material)
     ListView lsvMaterial;
-    @ViewInject(R.id.btn_StartProduct)
-    Button btnStartProduct;
 
     LineManageModel lineManageModel;
-    WoModel woModel;
     ArrayList<WoDetailModel> woDetailModels;
     WoDetailMaterialItemAdapter woDetailMaterialItemAdapter;
     BarCodeInfo currentBarCodeInfo;//当前扫描物料
@@ -115,16 +110,34 @@ public class ProductMaterialConfig extends BaseActivity {
     protected void initData() {
         super.initData();
         this.lineManageModel=getIntent().getParcelableExtra("lineManageModel");
-        this.woModel=getIntent().getParcelableExtra("woModel");
-        if(lineManageModel!=null && woModel!=null){
-            txtVoucherNo.setText(woModel.getErpVoucherNo());
-            txtBatchNo.setText(woModel.getBatchNo());
+        if(lineManageModel!=null && lineManageModel.getWoModel()!=null){
+            txtVoucherNo.setText(lineManageModel.getWoModel().getErpVoucherNo());
+            txtBatchNo.setText(lineManageModel.getWoModel().getBatchNo());
             txtProductLineNo.setText(lineManageModel.getProductLineNo());
-            txtMaterialDesc.setText(woModel.getMaterialDesc());
-            GetWoDetailModelByWoNo(woModel);
+            txtMaterialDesc.setText(lineManageModel.getWoModel().getMaterialDesc());
+            GetWoDetailModelByWoNo(lineManageModel.getWoModel());
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_product_materialconfig, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_filter) {
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return false;
+            }
+            //提交
+            //判断是否满足齐套扫描要求
+            //提交数据
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Event(value = R.id.edt_PrePruductNum,type = View.OnKeyListener.class)
     private  boolean edtPrePruductNumClick(View view, int keyCode, KeyEvent event) {
@@ -170,7 +183,6 @@ public class ProductMaterialConfig extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             keyBoardCancle();
-            edtScanQty.setText("");
             edtBarcode.setText("");
             edtPrePruductNum.setEnabled(true);
             CommonUtil.setEditFocus(edtPrePruductNum);
@@ -180,34 +192,7 @@ public class ProductMaterialConfig extends BaseActivity {
         return false;
     }
 
-    @Event(value = edt_ScanQty,type = View.OnKeyListener.class)
-    private  boolean edtScanQtyClick(View view, int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
-        {
-            keyBoardCancle();
-            String scanQty=edtScanQty.getText().toString().trim();
-            if(CommonUtil.isFloat(scanQty)){
-                if(currentBarCodeInfo!=null) {
-                    Float qty = woDetailModels.get(currentIndex).getScanQty() + Float.parseFloat(scanQty) * currentBarCodeInfo.getOutPackQty();
-                    if (qty <= woDetailModels.get(currentIndex).getWoQty()) {
-                        woDetailModels.get(currentIndex).setScanQty(qty);
-                        BindListview(woDetailModels);
-                        edtScanQty.setText("");
-                        CommonUtil.setEditFocus(edtBarcode);
-                    } else {
-                        MessageBox.Show(context, getString(R.string.Error_PackageQtyBigerThenWo));
-                        CommonUtil.setEditFocus(edtScanQty);
-                    }
-                }
 
-            }else{
-                MessageBox.Show(context,getString(R.string.Error_isnotnum));
-                CommonUtil.setEditFocus(edtScanQty);
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Event(value = R.id.txt_ProductStartTime,type = View.OnClickListener.class )
     private void txtProductStartTimeClick(View view){
@@ -225,11 +210,6 @@ public class ProductMaterialConfig extends BaseActivity {
         },mHour,mMinute,true).show();
     }
 
-    @Event(R.id.btn_StartProduct)
-    private void btnStartProductClick(View view){
-        //判断是否满足齐套扫描要求
-        //提交数据
-    }
 
     void GetWoDetailModelByWoNo(WoModel woModel){
         try {
