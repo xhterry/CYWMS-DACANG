@@ -187,6 +187,14 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     @Event(value = {R.id.butIn,R.id.butOut,R.id.butT},type = View.OnClickListener.class)
     private void onClick(View view) {
+        if (etxtBatch.getText().toString()==""){
+            MessageBox.Show(context, "批次号不能为空！");
+            return;
+        }
+        else{
+            etxtBatch.setEnabled(false);
+        }
+
         if (R.id.butIn==view.getId())
         {
             printlabel(0);
