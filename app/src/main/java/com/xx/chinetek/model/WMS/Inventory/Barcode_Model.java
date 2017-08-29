@@ -39,6 +39,38 @@ public class Barcode_Model implements Parcelable{
     private String ProductClass  ; //ymh生产班组
     private String BoxWeight  ; //ymh包装方式
     private String ItemQty  ; //ymh数量
+    private String lineno  ; //ymh产线
+    private int BarcodeNo;//ymh
+
+    private String RelaWeight;//ymh相对比重
+    private String StoreCondition;//ymh存储条件
+    private String ProtectWay;//ymh防护措施
+
+    public String getRelaWeight() {
+        return RelaWeight;
+    }
+
+    public void setRelaWeight(String relaWeight) {
+        RelaWeight = relaWeight;
+    }
+
+    private int BoxCount;//ymh这里指大箱里面有多少小箱
+
+    public int getBarcodeNo() {
+        return BarcodeNo;
+    }
+
+    public void setBarcodeNo(int barcodeNo) {
+        BarcodeNo = barcodeNo;
+    }
+
+    public String getLineno() {
+        return lineno;
+    }
+
+    public void setLineno(String lineno) {
+        this.lineno = lineno;
+    }
 
     public String getItemQty() {
         return ItemQty;
@@ -267,7 +299,16 @@ public class Barcode_Model implements Parcelable{
     public Barcode_Model() {
     }
 
+    public int getBoxCount() {
+        return BoxCount;
+    }
+
+    public void setBoxCount(int boxCount) {
+        BoxCount = boxCount;
+    }
+
     @Override
+
     public int describeContents() {
         return 0;
     }
@@ -299,6 +340,15 @@ public class Barcode_Model implements Parcelable{
         dest.writeString(this.warehousename);
         dest.writeString(this.warehouseno);
         dest.writeString(this.AllIn);
+        dest.writeString(this.ProductClass);
+        dest.writeString(this.BoxWeight);
+        dest.writeString(this.ItemQty);
+        dest.writeString(this.lineno);
+        dest.writeInt(this.BarcodeNo);
+        dest.writeString(this.RelaWeight);
+        dest.writeString(this.StoreCondition);
+        dest.writeString(this.ProtectWay);
+        dest.writeInt(this.BoxCount);
     }
 
     protected Barcode_Model(Parcel in) {
@@ -329,6 +379,15 @@ public class Barcode_Model implements Parcelable{
         this.warehousename = in.readString();
         this.warehouseno = in.readString();
         this.AllIn = in.readString();
+        this.ProductClass = in.readString();
+        this.BoxWeight = in.readString();
+        this.ItemQty = in.readString();
+        this.lineno = in.readString();
+        this.BarcodeNo = in.readInt();
+        this.RelaWeight = in.readString();
+        this.StoreCondition = in.readString();
+        this.ProtectWay = in.readString();
+        this.BoxCount = in.readInt();
     }
 
     public static final Creator<Barcode_Model> CREATOR = new Creator<Barcode_Model>() {
