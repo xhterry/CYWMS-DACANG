@@ -54,6 +54,9 @@ public class CompleteProduct extends  SocketBaseActivity {
     @ViewInject(R.id.txtdesc)
     TextView txtdesc;
 
+    @ViewInject(R.id.txtlineno)
+    TextView txtlineno;
+
     @ViewInject(R.id.etxtBatch)
     EditText etxtBatch;
 
@@ -84,7 +87,7 @@ public class CompleteProduct extends  SocketBaseActivity {
     @Override
     public void onHandleMessage(Message msg) {
 //        mSwipeLayout.setRefreshing(false);
-        switch (msg.what) {
+     switch (msg.what) {
             case RESULT_Print_Outlabel:
                 AnalysisGetT_RESULT_Print_OutlabelADFJson((String)msg.obj);
                 break;
@@ -105,7 +108,7 @@ public class CompleteProduct extends  SocketBaseActivity {
                 MessageBox.Show(context, "打印成功！");
 
                 String serialno = returnMsgModel.getMaterialDoc();
-                modelsAll.get(modelsAll.size()).setSerialNo(serialno);
+                modelsAll.get(modelsAll.size()-1).setSerialNo(serialno);
 //                PalletDAll.get(0).getLstBarCode().get(PalletDAll.get(0).getLstBarCode().size()).setSerialNo(serialno);
 
             } else {
@@ -123,29 +126,19 @@ public class CompleteProduct extends  SocketBaseActivity {
         BaseApplication.context = context;
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
-
-//        txtNO.setText("MaterialNo");
-//        txtdesc.setText("MaterialNo");
-//        etxtBatch.setText("MaterialNo");
-//        etxtBNumber.setText("MaterialNo");
-
         initVariables();//设置接收服务
     }
 
     @Override
     protected void initData() {
         super.initData();
-//        etxtBatch.requestFocus();
-//        butIn.setVisibility(womodel.getVoucherType()==""? View.GONE:View.VISIBLE);
-//        butOut.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
-//        butT.setVisibility(isPickingAdmin?View.GONE:View.VISIBLE);
-
         womodel=getIntent().getParcelableExtra("WoModel");
-        butIn.setVisibility(womodel.getStrVoucherType()=="半制品"? View.VISIBLE:View.GONE);
-        butIOut.setVisibility(womodel.getStrVoucherType()=="半制品"? View.VISIBLE:View.GONE);
+        butIn.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+        butIOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.GONE:View.VISIBLE);
 
-        butT.setVisibility(womodel.getStrVoucherType()=="半制品"? View.GONE:View.VISIBLE);
-        butOut.setVisibility(womodel.getStrVoucherType()=="半制品"? View.GONE:View.VISIBLE);
+        butT.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
+        butOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
+
 
         GetWoModel(womodel);
     }
@@ -185,10 +178,10 @@ public class CompleteProduct extends  SocketBaseActivity {
         };
     }
 
-    @Event(value = {R.id.butIn,R.id.butOut,R.id.butT},type = View.OnClickListener.class)
+    @Event(value = {R.id.butIn,R.id.butOut,R.id.butT,R.id.butIOut},type = View.OnClickListener.class)
     private void onClick(View view) {
-        if (etxtBatch.getText().toString()==""){
-            MessageBox.Show(context, "批次号不能为空！");
+        if (etxtBatch.getText().toString().isEmpty()||txtlineno.getText().toString().isEmpty()||etxtBNumber.getText().toString().isEmpty()){
+            MessageBox.Show(context, "填写信息不能为空！");
             return;
         }
         else{
@@ -212,6 +205,7 @@ public class CompleteProduct extends  SocketBaseActivity {
             if (modelsAll.size()==0)
             {
                 MessageBox.Show(context, "没有外箱标签");
+                return;
             }else{
                 printlabel(2);
             }
@@ -220,46 +214,80 @@ public class CompleteProduct extends  SocketBaseActivity {
     }
 
     ArrayList<Barcode_Model> models =new ArrayList<>();//临时的打印标签
-    ArrayList<Barcode_Model> modelsAll =new ArrayList<>();//全部的打印标签
+    ArrayList<Barcode_Model> modelsInAll =new ArrayList<>();//全部的内箱打印标签
+    ArrayList<Barcode_Model> modelsAll =new ArrayList<>();//全部的外箱打印标签
     ArrayList<PalletDetail_Model> PalletDAll = new ArrayList<>();//托标签
     PalletDetail_Model PalletD = new PalletDetail_Model();//托标签
 
     public void printlabel(int flag) {
-
         Barcode_Model model =new Barcode_Model();
         model.setIP(URLModel.PrintIP+":9100");
-        model.setLabelMark("OutChengPin");
         model.setStrongHoldCode(womodel.getStrongHoldCode());
         model.setErpVoucherNo(womodel.getErpVoucherNo());
         model.setMaterialNo(womodel.getMaterialNo());
         model.setBatchNo(etxtBatch.getText().toString());
         model.setUnit(womodel.getUnit());
-//            model.setProductDate();//
+        model.setLineno(txtlineno.getText().toString());
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         model.setEDate(curDate);
+        model.setQty(Float.parseFloat(etxtBNumber.getText().toString()));//数量
+        String aaa=txtWeight.getText().toString();
+        if (aaa.equals("称重数量")){
+            MessageBox.Show(context, "电子称没有启动，无法获取重量！");
+            return;
+        }
+        aaa=aaa.substring(0,aaa.length()-2);
+//        Float bbb = Float.parseFloat(aaa);
+        model.setItemQty(aaa);//重量
 
         if (flag==0){
-            //半制外
-            model.setAreano("Areano");//标题
-            model.setProductClass("1111");//生产班组
+//            model.setAreano("Areano");//标题
+//            model.setProductClass("1111");//生产班组
 //            model.ProductBatch = "";//成品批号
 //            model.setQty(bbb) = 1;//数量
 //            model.BarcodeNo = 1;//第几箱总箱数
 
+            model.setLabelMark("InSanZhuang");
+            modelsInAll.add(model);
+
         }
         if (flag==1 ){
             //成品外
-//            model.setSerialNo("20170825001999");
-            model.setAreano("Areano");//标题
-            model.setProductClass("1111");//生产班组
-            model.setBoxWeight("2");//包装方式
-            model.setItemQty("3");//数量
-            String aaa=txtWeight.getText().toString();
-            aaa=aaa.substring(0,aaa.length()-2);
-            Float bbb = Float.parseFloat(aaa);
-            model.setQty(bbb);//重量
+            if (womodel.getStrVoucherType().equals("成品"))
+            {
+                model.setLabelMark("OutChengPin");
+                modelsAll.add(model);
+            }
+            if (womodel.getStrVoucherType().equals("半制品"))
+            {
+                //半制外
+                model.setLabelMark("OutBanZhi");
+                model.setSupPrdBatch(model.getBatchNo());
+                modelsAll.add(model);
+                model.setBarcodeNo(modelsAll.size());
+            }
+            if (womodel.getStrVoucherType().equals("散装物料"))
+            {
+                //散装外
+                model.setLabelMark("OutSanZhuang");
+//                model.setRelaWeight("");
+//                model.setStoreCondition();
+//                model.setProtectWay();
+                if (modelsInAll.size()==0){
+                    MessageBox.Show(context, "没有内标签！");
+                    return;
+                }
+                model.setBoxCount(modelsInAll.size());
+            }
+
             models.add(model);
-            modelsAll.add(model);
+
+//            model.setSerialNo("20170825001999");
+//            model.setAreano("Areano");//标题
+//            model.setProductClass("1111");//生产班组
+//            model.setBoxWeight("2");//包装方式
+
+
         }
         if (flag==2 ){
             ArrayList<BarCodeInfo> BarCodes =new ArrayList<>();//全部的打印标签
@@ -273,7 +301,6 @@ public class CompleteProduct extends  SocketBaseActivity {
                 barcode.setSerialNo(modelsAll.get(i).getSerialNo());
                 BarCodes.add(barcode);
             }
-
             //成品外托
             PalletD.setPrintIPAdress(URLModel.PrintIP);
             PalletD.setStrongHoldCode(model.getStrongHoldCode());
