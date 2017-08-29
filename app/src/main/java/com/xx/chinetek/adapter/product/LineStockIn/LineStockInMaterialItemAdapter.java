@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Material.BarCodeInfo;
+import com.xx.chinetek.model.Production.LineStockIn.LineStockInProductModel;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class LineStockInMaterialItemAdapter extends BaseAdapter {
     private Context context; // 运行上下文
-    private ArrayList<BarCodeInfo> barCodeInfos; // 信息集合
+    private ArrayList<LineStockInProductModel> lineStockInProductModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
 
     public final class ListItemView { // 自定义控件集合
@@ -30,21 +30,21 @@ public class LineStockInMaterialItemAdapter extends BaseAdapter {
         public TextView txtMaterialDesc;
     }
 
-    public LineStockInMaterialItemAdapter(Context context, ArrayList<BarCodeInfo> barCodeInfos) {
+    public LineStockInMaterialItemAdapter(Context context, ArrayList<LineStockInProductModel> lineStockInProductModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-        this.barCodeInfos = barCodeInfos;
+        this.lineStockInProductModels = lineStockInProductModels;
 
     }
 
     @Override
     public int getCount() {
-        return  barCodeInfos==null?0:barCodeInfos.size();
+        return  lineStockInProductModels==null?0:lineStockInProductModels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return barCodeInfos.get(position);
+        return lineStockInProductModels.get(position);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LineStockInMaterialItemAdapter extends BaseAdapter {
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
-        BarCodeInfo barCodeInfo=barCodeInfos.get(selectID);
+        LineStockInProductModel barCodeInfo=lineStockInProductModels.get(selectID);
         listItemView.txtbarcode.setText(barCodeInfo.getMaterialNo());
         listItemView.txtScanNum.setText("批次："+barCodeInfo.getBatchNo());
         listItemView.txtRemainQty.setText("收货数："+barCodeInfo.getQty());

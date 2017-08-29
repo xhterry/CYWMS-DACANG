@@ -39,6 +39,7 @@
     <string name="query_WorkNotitle">工单</string>
     <string name="OffShelf_title">下架</string>
     <string name="OffShelf_subtitle">下架扫描</string>
+    <string name="LineStockOutReturnBillChoice">退料出库</string>
     <string name="Review_title">发货复核</string>
     <string name="Review_subtitle">复核扫描</string>
     <string name="Product_Review_subtitle">发料复核</string>
@@ -242,6 +243,7 @@
     <string name="Msg_DeletePalletByErpVoucherNo">删除托盘信息...</string>
     <string name="Msg_QualityDetailListByHeaderIDADF">获取质检明细列表...</string>
     <string name="Msg_SaveT_InStockDetailADF">保存收货明细列表...</string>
+    <string name="Msg_SaveT_LineInStockProductlADF">保存生产入库数据...</string>
     <string name="Msg_SaveT_StockADF">移库提交中...</string>
     <string name="Msg_SaveT_QuanlitySampADF">保存质检明细列表...</string>
     <string name="Msg_SaveT_OutStockTaskDetailADF">保存下架明细列表...</string>

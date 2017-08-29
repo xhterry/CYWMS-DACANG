@@ -248,7 +248,7 @@ public class TruckLoad extends BaseActivity {
                 transportSupplierList.add(transportSupplierModel.getTransportSupplierID()+"|"+transportSupplierModel.getTransportSupplierName());
            }
             final String[] items = transportSupplierList.toArray(new String[0]);
-            new AlertDialog.Builder(context).setTitle(getResources().getString(R.string.activity_Truck_TransupplierChoice))// 设置对话框标题
+            new AlertDialog.Builder(context).setCancelable(false).setTitle(getResources().getString(R.string.activity_Truck_TransupplierChoice))// 设置对话框标题
                     .setIcon(android.R.drawable.ic_dialog_info)// 设置对话框图
                     .setItems(items, new DialogInterface.OnClickListener() {
                         @Override
@@ -272,7 +272,7 @@ public class TruckLoad extends BaseActivity {
                 addressesList.add(address.getAddress());
             }
             final String[] items = addressesList.toArray(new String[0]);
-            new AlertDialog.Builder(context).setTitle(getResources().getString(R.string.activity_Truck_AddressChoice))// 设置对话框标题
+            new AlertDialog.Builder(context).setCancelable(false).setTitle(getResources().getString(R.string.activity_Truck_AddressChoice))// 设置对话框标题
                     .setIcon(android.R.drawable.ic_dialog_info)// 设置对话框图
                     .setItems(items, new DialogInterface.OnClickListener() {
                         @Override
