@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.xx.chinetek.cywms.R.id.edt_LineInstockScanbarcode;
 import static com.xx.chinetek.util.dialog.ToastUtil.show;
 
 @ContentView(R.layout.activity_line_stock_in_material)
@@ -58,7 +57,7 @@ public class LineStockInMaterial extends BaseActivity {
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 show("获取请求失败_____"+ msg.obj);
-                CommonUtil.setEditFocus(edtLineInstockScanbarcode);
+                CommonUtil.setEditFocus(edtLineStockInBarcode);
                 break;
         }
     }
@@ -66,8 +65,8 @@ public class LineStockInMaterial extends BaseActivity {
 
     @ViewInject(R.id.lsv_LineStockInMaterial)
     ListView lsvLineStockInMaterial;
-    @ViewInject(edt_LineInstockScanbarcode)
-    EditText edtLineInstockScanbarcode;
+    @ViewInject(R.id.edt_LineStockInBarcode)
+    EditText edtLineStockInBarcode;
     @ViewInject(R.id.txt_Company)
     TextView txtCompany;
     @ViewInject(R.id.txt_Batch)
@@ -92,12 +91,12 @@ public class LineStockInMaterial extends BaseActivity {
         BaseApplication.isCloseActivity=false;
     }
 
-    @Event(value = edt_LineInstockScanbarcode,type = View.OnKeyListener.class)
+    @Event(value = R.id.edt_LineStockInBarcode,type = View.OnKeyListener.class)
     private  boolean edtLineInstockScanbarcode(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             keyBoardCancle();
-            String code=edtLineInstockScanbarcode.getText().toString().trim();
+            String code=edtLineStockInBarcode.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
             LogUtil.WriteLog(ReceiptionScan.class, TAG_GetT_PalletDetailByBarCodeADF, code);
@@ -152,7 +151,7 @@ public class LineStockInMaterial extends BaseActivity {
         }catch (Exception ex){
             MessageBox.Show(context,ex.toString());
         }
-        CommonUtil.setEditFocus(edtLineInstockScanbarcode);
+        CommonUtil.setEditFocus(edtLineStockInBarcode);
     }
 
     boolean isDel=false;
@@ -188,7 +187,7 @@ public class LineStockInMaterial extends BaseActivity {
                 InitFrm(barCodeInfos.get(0));
             }catch (Exception ex){
                 MessageBox.Show(context,ex.getMessage());
-                CommonUtil.setEditFocus(edtLineInstockScanbarcode);
+                CommonUtil.setEditFocus(edtLineStockInBarcode);
             }
 
         }
@@ -219,6 +218,6 @@ public class LineStockInMaterial extends BaseActivity {
         }
         if(SubmitbarCodeInfos!=null)
             BindListVIew(SubmitbarCodeInfos);
-        CommonUtil.setEditFocus(edtLineInstockScanbarcode);
+        CommonUtil.setEditFocus(edtLineStockInBarcode);
     }
 }

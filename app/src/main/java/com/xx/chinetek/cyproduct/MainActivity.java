@@ -20,6 +20,7 @@ import com.xx.chinetek.cyproduct.LineStockIn.LineStockInMaterial;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
+import com.xx.chinetek.cywms.InnerMove.InnerMoveScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.User.MenuInfo;
 
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, CombinPallet.class);
         else if(textView.getText().toString().equals("拆托"))
             intent.setClass(context, DismantlePallet.class);
+        else if(textView.getText().toString().equals("移库"))
+            intent.setClass(context, InnerMoveScan.class);
         if(intent!=null)
             startActivityLeft(intent);
 //        switch (position) {
@@ -180,6 +183,8 @@ public class MainActivity extends BaseActivity {
         itemNamesList.add("坦克投料");
         itemIconList.add(R.drawable.tankout);
         itemNamesList.add("坦克退料");
+        itemIconList.add(R.drawable.innermove);
+        itemNamesList.add("移库");
         itemIconList.add(R.drawable.materiel);
         itemNamesList.add("车间转料");
         itemIconList.add(R.drawable.takesample);

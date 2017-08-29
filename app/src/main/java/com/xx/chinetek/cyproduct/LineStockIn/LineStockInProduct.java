@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.wms.Pallet.PalletItemAdapter;
+import com.xx.chinetek.adapter.product.LineStockIn.LineStockInMaterialItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
@@ -47,16 +47,16 @@ import java.util.Map;
 @ContentView(R.layout.activity_product_linestockinproduct_scan)
 public class LineStockInProduct extends BaseActivity {
 
-    String TAG_GetT_PalletDetailByBarCodeADF="UpShelfScanActivity_GetT_ScanInStockModelADF";
+    String TAG_GetPalletDetailByBarCode_Product="LineStockInProduct_GetPalletDetailByBarCode_Product";
 
-    private final int RESULT_Msg_GetT_PalletDetailByBarCode=102;
+    private final int RESULT_Msg_GetPalletDetailByBarCode_Product=102;
 
 
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
-                     case RESULT_Msg_GetT_PalletDetailByBarCode:
-                AnalysisetT_PalletDetailByBarCodeJson((String) msg.obj);
+                     case RESULT_Msg_GetPalletDetailByBarCode_Product:
+                AnalysisetGetPalletDetailByBarCode_ProductJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -78,15 +78,13 @@ public class LineStockInProduct extends BaseActivity {
     TextView txtEDate;
     @ViewInject(R.id.txt_MaterialName)
     TextView txtMaterialName;
-    @ViewInject(R.id.txt_LineStockInNum)
-    TextView txtLineStockInNum;
     @ViewInject(R.id.txt_WareHousName)
     TextView txtWareHousName;
     @ViewInject(R.id.edt_LineStockInScanBarcode)
     EditText edtLineStockInScanBarcode;
 
     ArrayList<BarCodeInfo> SumbitbarCodeInfos=null;
-    PalletItemAdapter palletItemAdapter;
+    LineStockInMaterialItemAdapter lineStockInMaterialItemAdapter;
 
 
     @Override
@@ -117,8 +115,8 @@ public class LineStockInProduct extends BaseActivity {
             }
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
-            LogUtil.WriteLog(ReceiptionScan.class, TAG_GetT_PalletDetailByBarCodeADF, code);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCodeADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_PalletDetailByBarCode, null,  URLModel.GetURL().GetT_PalletDetailByBarCodeADF, params, null);
+            LogUtil.WriteLog(ReceiptionScan.class, TAG_GetPalletDetailByBarCode_Product, code);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCode_Product, params, null);
         }
         return false;
     }
@@ -153,8 +151,8 @@ public class LineStockInProduct extends BaseActivity {
     /*
    扫描条码
     */
-    void AnalysisetT_PalletDetailByBarCodeJson(String result){
-        LogUtil.WriteLog(LineStockInProduct.class, TAG_GetT_PalletDetailByBarCodeADF,result);
+    void AnalysisetGetPalletDetailByBarCode_ProductJson(String result){
+        LogUtil.WriteLog(LineStockInProduct.class, TAG_GetPalletDetailByBarCode_Product,result);
         ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {}.getType());
         try {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
@@ -171,7 +169,6 @@ public class LineStockInProduct extends BaseActivity {
 
     void Bindbarcode(final ArrayList<BarCodeInfo> barCodeInfos){
         if (barCodeInfos != null && barCodeInfos.size() != 0) {
-
             try {
                 if(SumbitbarCodeInfos.indexOf(barCodeInfos.get(0))!=-1){
                     MessageBox.Show(context,getString(R.string.Error_Barcode_hasScan));
@@ -226,8 +223,8 @@ public class LineStockInProduct extends BaseActivity {
     }
 
     private void BindListVIew(ArrayList<BarCodeInfo> barCodeInfos) {
-        palletItemAdapter=new PalletItemAdapter(context,barCodeInfos);
-        lsvLineStockInProduct.setAdapter(palletItemAdapter);
+        lineStockInMaterialItemAdapter=new LineStockInMaterialItemAdapter(context,barCodeInfos);
+        lsvLineStockInProduct.setAdapter(lineStockInMaterialItemAdapter);
     }
 
 
@@ -235,7 +232,6 @@ public class LineStockInProduct extends BaseActivity {
     void ClearFrm(){
         SumbitbarCodeInfos = new ArrayList<>();
         edtLineStockInScanBarcode.setText("");
-        txtLineStockInNum.setText("");
         txtCompany.setText("");
         txtBatch.setText("");
         txtEDate.setText("");

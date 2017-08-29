@@ -97,6 +97,7 @@ public class Login extends BaseActivity {
             edtUserName.setText( BaseApplication.userInfo.getUserNo());
             edtPassword.setText(DESUtil.decode( BaseApplication.userInfo.getPassWord()));
             txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());
+            lstWarehouse=BaseApplication.userInfo.getLstWarehouse();
         }
          txtVersion.setText(getString(R.string.login_Version)+(updateVersionService.getVersionCode(context)));
     }
@@ -156,7 +157,8 @@ public class Login extends BaseActivity {
         if(returnMsgModel.getHeaderStatus().equals("S")){
             BaseApplication.userInfo=returnMsgModel.getModelJson();
             BaseApplication.userInfo.setPDAPrintIP(URLModel.PrintIP);
-            BaseApplication.userInfo.setLstWarehouse(lstWarehouse);
+            if(lstWarehouse!=null && lstWarehouse.size()!=0)
+                BaseApplication.userInfo.setLstWarehouse(lstWarehouse);
             BaseApplication.userInfo.setWarehouseName(txtWareHousName.getText().toString());
             if( BaseApplication.userInfo.getReceiveAreaID()<=0){
                 MessageBox.Show( context,getResources().getString(R.string.Message_No_ReceiveAreaID));
