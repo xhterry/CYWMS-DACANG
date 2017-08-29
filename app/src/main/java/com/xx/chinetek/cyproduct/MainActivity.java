@@ -9,14 +9,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xx.chinetek.FillPrint.FillPrint;
+import com.xx.chinetek.Pallet.CombinPallet;
+import com.xx.chinetek.Pallet.DismantlePallet;
 import com.xx.chinetek.adapter.GridViewItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
+import com.xx.chinetek.cyproduct.LineStockIn.LineStockInMaterial;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
+import com.xx.chinetek.cywms.InnerMove.InnerMoveScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.User.MenuInfo;
 
@@ -60,6 +64,8 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, LineStockInProduct.class);
         else if(textView.getText().toString().equals("生产出库"))
             intent.setClass(context, LineStockOutProduct.class);
+        else if(textView.getText().toString().equals("领料入库"))
+            intent.setClass(context, LineStockInMaterial.class);
         else if(textView.getText().toString().equals("产线生产"))
             intent.setClass(context, BillsIn.class);
         else if(textView.getText().toString().equals("生产记录"))
@@ -72,6 +78,12 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, FillPrint.class);
         else if(textView.getText().toString().equals("取样"))
             intent.setClass(context, BillChoice.class);
+        else if(textView.getText().toString().equals("组托"))
+            intent.setClass(context, CombinPallet.class);
+        else if(textView.getText().toString().equals("拆托"))
+            intent.setClass(context, DismantlePallet.class);
+        else if(textView.getText().toString().equals("移库"))
+            intent.setClass(context, InnerMoveScan.class);
         if(intent!=null)
             startActivityLeft(intent);
 //        switch (position) {
@@ -163,10 +175,16 @@ public class MainActivity extends BaseActivity {
         itemNamesList.add("生产记录");
         itemIconList.add(R.drawable.receiptproduct);
         itemNamesList.add("产线生产");
+        itemIconList.add(R.drawable.combinepallet);
+        itemNamesList.add("组托");
+        itemIconList.add(R.drawable.dismantlepallet);
+        itemNamesList.add("拆托");
         itemIconList.add(R.drawable.tankin);
         itemNamesList.add("坦克投料");
         itemIconList.add(R.drawable.tankout);
         itemNamesList.add("坦克退料");
+        itemIconList.add(R.drawable.innermove);
+        itemNamesList.add("移库");
         itemIconList.add(R.drawable.materiel);
         itemNamesList.add("车间转料");
         itemIconList.add(R.drawable.takesample);

@@ -1,6 +1,8 @@
 package com.xx.chinetek.cywms.Qc;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,6 +24,7 @@ import com.xx.chinetek.model.QC.QualityInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.User.QuanUserModel;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -98,26 +101,27 @@ public class QCMaterialChoice extends BaseActivity {
             if (DoubleClickCheck.isFastDoubleClick(context)) {
                 return false;
             }
-            List<QualityInfo_Model> temp = new ArrayList<>();
-            int size = qualityInfoModels.size();
-            for (int i = 0; i < size; i++) {
-                if (qcMaterialChioceItemAdapter.getStates(i)) {
-                    qualityInfoModels.get(i).setQuanUserNo(BaseApplication.userInfo.getQuanUserNo());
-                    qualityInfoModels.get(i).setStrQuanUserNo(BaseApplication.userInfo.getQuanUserNo());
-                    temp.add(0, qualityInfoModels.get(i));
+            if (BaseApplication.userInfo.getLstQuanUser() != null){
+                final String[] person = new String[BaseApplication.userInfo.getLstQuanUser().size()];
+                for (int i=0;i<BaseApplication.userInfo.getLstQuanUser() .size();i++) {
+                    person[i]=BaseApplication.userInfo.getLstQuanUser() .get(i).getQuanUserName();
                 }
+                //选择拣货人员
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("选择取样人员");
+                builder.setItems(person, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                       SumbitQCMaterial(BaseApplication.userInfo.getLstQuanUser().get(which));
+                    }
+                });
+                builder.show();
             }
-            if (temp.size() != 0) {
-                String ModelJson = GsonUtil.parseModelToJson(temp);
-                String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
-                final Map<String, String> params = new HashMap<String, String>();
-                params.put("UserJson", UserJson);
-                params.put("ModelJson", ModelJson);
-                LogUtil.WriteLog(ReceiptionScan.class, TAG_UpadteT_QualityUserADF, ModelJson);
-                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_UpadteT_QualityUserADF, getString(R.string.Msg_UpadteT_QualityUserADF), context, mHandler, RESULT_Msg_UpadteT_QualityUserADF, null, URLModel.GetURL().UpadteT_QualityUserADF, params, null);
-            }else{
-                MessageBox.Show(context,getString(R.string.Msg_NoSelectmaterialchange));
-            }
+
+
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -132,6 +136,28 @@ public class QCMaterialChoice extends BaseActivity {
     }
 
 
+    void SumbitQCMaterial(QuanUserModel quanUserModel){
+        List<QualityInfo_Model> temp = new ArrayList<>();
+        int size = qualityInfoModels.size();
+        for (int i = 0; i < size; i++) {
+            if (qcMaterialChioceItemAdapter.getStates(i)) {
+                qualityInfoModels.get(i).setQuanUserNo(quanUserModel.getQuanUserNo());
+                qualityInfoModels.get(i).setStrQuanUserNo(quanUserModel.getQuanUserNo());
+                temp.add(0, qualityInfoModels.get(i));
+            }
+        }
+        if (temp.size() != 0) {
+            String ModelJson = GsonUtil.parseModelToJson(temp);
+            String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("UserJson", UserJson);
+            params.put("ModelJson", ModelJson);
+            LogUtil.WriteLog(ReceiptionScan.class, TAG_UpadteT_QualityUserADF, ModelJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_UpadteT_QualityUserADF, getString(R.string.Msg_UpadteT_QualityUserADF), context, mHandler, RESULT_Msg_UpadteT_QualityUserADF, null, URLModel.GetURL().UpadteT_QualityUserADF, params, null);
+        }else{
+            MessageBox.Show(context,getString(R.string.Msg_NoSelectmaterialchange));
+        }
+    }
 
     void GetT_QualityListADF(String ErpVourcherNo){
         QualityInfo_Model qualityInfoModel=new QualityInfo_Model();

@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.Login;
 import com.xx.chinetek.adapter.product.Manage.UserInfoItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
@@ -150,10 +149,11 @@ public class ProductManageAdd extends BaseActivity {
                 && !TextUtils.isEmpty(lineManageModel.getProductTeamNo())) {
             Intent intent = new Intent(context, ProductMaterialConfig.class);
             Bundle bundle = new Bundle();
+            lineManageModel.setWoModel(woModel);
             bundle.putParcelable("lineManageModel", lineManageModel);
-            bundle.putParcelable("woModel", woModel);
             intent.putExtras(bundle);
             startActivityLeft(intent);
+            closeActiviry();
         }else{
             MessageBox.Show(context,getString(R.string.Msg_edit_isNotNull));
         }
@@ -163,7 +163,7 @@ public class ProductManageAdd extends BaseActivity {
         try {
             final Map<String, String> params = new HashMap<String, String>();
             params.put("UserNo", userCode);
-            LogUtil.WriteLog(Login.class, TAG_GetT_UserInfoModel, userCode);
+            LogUtil.WriteLog(ProductManageAdd.class, TAG_GetT_UserInfoModel, userCode);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_UserInfoModel, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetT_UserInfoModel, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());

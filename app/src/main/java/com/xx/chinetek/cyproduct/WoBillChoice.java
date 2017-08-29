@@ -119,6 +119,7 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         bundle.putParcelable("woModel", woModel);
         intent.putExtras(bundle);
         startActivityLeft(intent);
+        closeActiviry();
     }
 
 

@@ -2,6 +2,7 @@ package com.xx.chinetek.cyproduct.Manage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -97,8 +98,11 @@ public class LineManage extends BaseActivity implements SwipeRefreshLayout.OnRef
 
     @Event(value = R.id.LsvLineManage,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent();
-        intent.setClass(context, ProductManage.class);
+        Intent intent = new Intent(context, ProductManage.class);
+        LineManageModel lineManageModel=(LineManageModel)lineManageItemAdapter.getItem(position);
+        Bundle bundle=new Bundle();
+        bundle.putParcelable("lineManageModel",lineManageModel);
+        intent.putExtras(bundle);
         startActivityLeft(intent);
     }
 
