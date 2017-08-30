@@ -73,8 +73,8 @@ public class WoBillChioceItemAdapter extends BaseAdapter {
             listItemView = (ListItemView) convertView.getTag();
         }
         WoModel woModel=woModels.get(selectID);
-        listItemView.txtTaskNo.setText(woModel.getVoucherNo());
-        listItemView.txtERPVoucherNo.setText(woModel.getErpVoucherNo());
+        listItemView.txtTaskNo.setText(woModel.getErpVoucherNo());
+        listItemView.txtERPVoucherNo.setText(woModel.getVoucherNo());
         listItemView.txtStrVoucherType.setText(woModel.getStrVoucherType());
         listItemView.txtCompany.setText(woModel.getStrongHoldName());
         listItemView.txtdepartment.setText(woModel.getDepartmentName());

@@ -170,20 +170,4 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         lsvChoice.setAdapter(woBillChioceItemAdapter);
     }
 
-//    ArrayList<WoModel> getData(){
-//        ArrayList<WoModel> woModels=new ArrayList<>();
-//        for(int i=0;i<10;i++){
-//            WoModel woModel=new WoModel();
-//            woModel.setVoucherNo("工单号W123099"+i);
-//            woModel.setErpVoucherNo("ERP单号E12333"+i);
-//            woModel.setBatchNo("批次号BC123"+i);
-//            woModel.setStrVoucherType("工单领料单");
-//            woModel.setStrongHoldName("据点"+i);
-//            woModel.setDepartmentName("部门"+i);
-//            woModel.setMaterialNo("M123333"+i);
-//            woModel.setMaterialDesc("工单物料名称"+i);
-//            woModels.add(woModel);
-//        }
-//        return woModels;
-//    }
 }
