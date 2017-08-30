@@ -249,7 +249,7 @@ public class OffshelfScan extends BaseActivity {
         if (currentPickMaterialIndex!=-1) {
             final String MaterialDesc = outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getMaterialDesc();
             final String MaterialNo = outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getMaterialNo();
-            new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否跳过物料：\n" +MaterialNo+"\n"+MaterialDesc + "\n拣货？")
+            new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否跳过物料：\n" +MaterialNo+"\n"+MaterialDesc + "\n拣货？")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -363,7 +363,9 @@ public class OffshelfScan extends BaseActivity {
             LogUtil.WriteLog(OffshelfScan.class, TAG_SaveT_OutStockTaskDetailADF,result);
             ReturnMsgModelList<QualityDetailInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<QualityDetailInfo_Model>>() {}.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
+                clearFrm();
                 new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage(returnMsgModel.getMessage())
+                        .setCancelable(false)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -430,6 +432,7 @@ public class OffshelfScan extends BaseActivity {
         new AlertDialog.Builder(context).setTitle("提示")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setMessage("是否删除已扫描条码？")
+                .setCancelable(false)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -466,6 +469,16 @@ public class OffshelfScan extends BaseActivity {
         }
         SetOutStockTaskDetailsInfoModels(scanQty,isPallet?1:2);
 
+    }
+
+    void clearFrm(){
+        outStockTaskInfoModels=new ArrayList<>();
+        outStockTaskDetailsInfoModels=new ArrayList<>();
+        stockInfoModels=new ArrayList<>();
+        SumReaminQty=0f; //当前拣货物料剩余拣货数量合计
+        currentPickMaterialIndex=-1;
+        IsEdate="";
+        BindListVIew(outStockTaskDetailsInfoModels);
     }
 
 

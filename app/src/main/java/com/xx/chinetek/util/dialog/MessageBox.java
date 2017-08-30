@@ -18,16 +18,16 @@ public class MessageBox {
      * @param message 需要弹出的消息
      */
     public static void Show(Context context, String message) {
-        new AlertDialog.Builder(context).setTitle("提示").setMessage(message).setPositiveButton("确定", null).show();
+        new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setMessage(message).setPositiveButton("确定", null).show();
     }
 
     public static void Show(Context context, int resourceID) {
         String msg = context.getResources().getString(resourceID);
-        new AlertDialog.Builder(context).setTitle("提示").setMessage(msg).setPositiveButton("确定", null).show();
+        new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setMessage(msg).setPositiveButton("确定", null).show();
     }
 
     public static void Show(Context context, String mString, EditText togText, AlertDialog alertDialog) {
-        alertDialog = new AlertDialog.Builder(context).setTitle("提示").setMessage(mString).setPositiveButton("确定", null).create();
+        alertDialog = new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setMessage(mString).setPositiveButton("确定", null).create();
 
         final EditText tagEditText = togText;
         alertDialog.setOnShowListener(new OnShowListener() {
@@ -42,7 +42,7 @@ public class MessageBox {
     }
 
     public static void Show(Context context, String mString, EditText togText) {
-        AlertDialog dialog = new AlertDialog.Builder(context).setTitle("提示").setMessage(mString).setPositiveButton("确定", null).create();
+        AlertDialog dialog = new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setMessage(mString).setPositiveButton("确定", null).create();
 
         final EditText tagEditText = togText;
         dialog.setOnShowListener(new OnShowListener() {
@@ -63,7 +63,7 @@ public class MessageBox {
     }
 
     public static void Show(Context context, String message, EditText recivceTEXT, EditText sendTEXT) {
-        AlertDialog dialog = new AlertDialog.Builder(context).setTitle("提示").setMessage(message).setPositiveButton("是", null).create();
+        AlertDialog dialog = new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setMessage(message).setPositiveButton("是", null).create();
         final EditText RecivceTEXT = recivceTEXT;
         final EditText SendTEXT = sendTEXT;
         dialog.setOnShowListener(new OnShowListener() {

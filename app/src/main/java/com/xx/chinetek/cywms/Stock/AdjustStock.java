@@ -140,6 +140,7 @@ public class AdjustStock extends BaseActivity {
         if(barcodeModel!=null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("选择据点");
+            builder.setCancelable(false);
             builder.setItems(StrongHoldName, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -176,6 +177,7 @@ public class AdjustStock extends BaseActivity {
         if(barcodeModel!=null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("选择质检状态");
+            builder.setCancelable(false);
             builder.setItems(QCStatus, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -235,7 +237,7 @@ public class AdjustStock extends BaseActivity {
             String para = (new JSONObject(params)).toString();
             LogUtil.WriteLog(AdjustStock.class, TAG_SaveInfo, para);
             if(isBtnDelete){
-                new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除物料？\n" + barcodeModel.getSerialNo() )
+                new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除物料？\n" + barcodeModel.getSerialNo() )
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -264,6 +266,7 @@ public class AdjustStock extends BaseActivity {
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("选择盘点所属仓库");
+                builder.setCancelable(false);
                 builder.setItems(wareHouseInfo, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

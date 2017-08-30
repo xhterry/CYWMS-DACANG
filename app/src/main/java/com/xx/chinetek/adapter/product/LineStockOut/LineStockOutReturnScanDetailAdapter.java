@@ -1,4 +1,4 @@
-package com.xx.chinetek.adapter.product.LineStockIn;
+package com.xx.chinetek.adapter.product.LineStockOut;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,18 +8,18 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Production.LineStockIn.LineStockInProductModel;
+import com.xx.chinetek.model.Production.LineStockOut.LineStockOutReturnDetail_Model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by GHOST on 2017/1/13.
  */
 
-public class LineStockInMaterialItemAdapter extends BaseAdapter {
+public class LineStockOutReturnScanDetailAdapter extends BaseAdapter {
     private Context context; // 运行上下文
-    private ArrayList<LineStockInProductModel> lineStockInProductModels; // 信息集合
+    private List<LineStockOutReturnDetail_Model> receiptDetailModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
 
     public final class ListItemView { // 自定义控件集合
@@ -30,21 +30,21 @@ public class LineStockInMaterialItemAdapter extends BaseAdapter {
         public TextView txtMaterialDesc;
     }
 
-    public LineStockInMaterialItemAdapter(Context context, ArrayList<LineStockInProductModel> lineStockInProductModels) {
+    public LineStockOutReturnScanDetailAdapter(Context context, List<LineStockOutReturnDetail_Model> receiptDetailModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-        this.lineStockInProductModels = lineStockInProductModels;
+        this.receiptDetailModels = receiptDetailModels;
 
     }
 
     @Override
     public int getCount() {
-        return  lineStockInProductModels==null?0:lineStockInProductModels.size();
+        return  receiptDetailModels==null?0:receiptDetailModels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return lineStockInProductModels.get(position);
+        return receiptDetailModels.get(position);
     }
 
     @Override
@@ -69,11 +69,20 @@ public class LineStockInMaterialItemAdapter extends BaseAdapter {
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
-        LineStockInProductModel barCodeInfo=lineStockInProductModels.get(selectID);
-        listItemView.txtbarcode.setText(barCodeInfo.getMaterialNo());
-        listItemView.txtScanNum.setText("批次："+barCodeInfo.getBatchNo());
-        listItemView.txtRemainQty.setText("收货数："+barCodeInfo.getQty());
-        listItemView.txtMaterialDesc.setText(barCodeInfo.getMaterialDesc());
+        LineStockOutReturnDetail_Model receiptDetailModel=receiptDetailModels.get(selectID);
+        listItemView.txtbarcode.setText(receiptDetailModel.getMaterialNo());
+        listItemView.txtScanNum.setText("扫描数："+receiptDetailModel.getScanQty());
+        listItemView.txtRemainQty.setText("退货数："+receiptDetailModel.getRemainQty());
+        listItemView.txtMaterialDesc.setText(receiptDetailModel.getMaterialDesc());
+        if (receiptDetailModel.getScanQty()!=0 &&
+                receiptDetailModel.getScanQty().compareTo(receiptDetailModel.getRemainQty())<0) {
+            convertView.setBackgroundResource(R.color.khaki);
+        }
+        else if (receiptDetailModel.getScanQty().compareTo(receiptDetailModel.getRemainQty())==0) {
+            convertView.setBackgroundResource(R.color.springgreen);
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
+        }
         return convertView;
     }
 

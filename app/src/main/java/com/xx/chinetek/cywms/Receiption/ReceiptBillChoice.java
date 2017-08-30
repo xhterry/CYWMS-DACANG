@@ -140,7 +140,6 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
         edtfilterContent.setText("");
         Receipt_Model receiptModel = new Receipt_Model();
         receiptModel.setStatus(1);
-        receiptModel.setStatus(1);
         GetT_InStockList(receiptModel);
     }
 

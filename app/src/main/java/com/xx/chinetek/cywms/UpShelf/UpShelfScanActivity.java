@@ -224,6 +224,7 @@ public class UpShelfScanActivity extends BaseActivity {
         if(referStocks!=null && referStocks.length!=0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("推荐库位：");
+            builder.setCancelable(false);
             builder.setItems(referStocks,null);
             builder.show();
         }

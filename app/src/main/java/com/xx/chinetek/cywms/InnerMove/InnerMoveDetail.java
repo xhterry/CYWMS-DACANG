@@ -30,7 +30,6 @@ public class InnerMoveDetail extends BaseActivity {
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.innerMove_billdetail), true);
         x.view().inject(this);
         barCodeInfos=getIntent().getParcelableArrayListExtra("barCodeInfos");
         bindListview();

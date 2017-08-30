@@ -14,6 +14,7 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:layout_weight="0.6"
+                    android:textColor="@color/limegreen"
                     android:textSize="25sp"/>
 
                 <TextView
@@ -39,7 +40,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:maxLines="1"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/blue_66f"
                     android:textSize="15sp"/>
 
         </LinearLayout>
@@ -55,7 +56,7 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:text="工单数："
-                    android:textColor="@color/turquoise"
+                    android:textColor="@color/mediumblue"
                     android:textSize="15sp" />
 
                 <TextView
@@ -73,7 +74,7 @@
                     android:layout_height="match_parent"
                     android:maxLines="1"
                     android:text="扫描数："
-                    android:textColor="@color/turquoise"
+                    android:textColor="@color/red"
                     android:textSize="15sp" />
 
                 <TextView
@@ -82,7 +83,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:maxLines="1"
-                    android:textColor="@color/forestgreen"
+                    android:textColor="@color/red"
                     android:textSize="15sp" />
 
         </LinearLayout>

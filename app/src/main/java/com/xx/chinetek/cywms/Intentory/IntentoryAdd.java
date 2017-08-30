@@ -186,7 +186,7 @@ public class IntentoryAdd extends BaseActivity {
             if(checkAreaModels!=null && checkAreaModels.size()==0){
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetWareHouse, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetWareHouse, null,  URLModel.GetURL().GetWareHouse, params, null);
             }else{
-                new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("已存在盘点库位信息，无法更改仓库！")
+                new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("已存在盘点库位信息，无法更改仓库！")
                         .setPositiveButton("确定", null).show();
             }
         } catch (Exception ex) {
@@ -263,13 +263,14 @@ public class IntentoryAdd extends BaseActivity {
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("选择盘点所属仓库");
+                builder.setCancelable(false);
                 builder.setItems(wareHouseInfo, new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
                         final int  selectID=which;
-                        new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否选择当前仓库建立盘点单？\n【"+wareHouseInfos.get(which).getWareHouseName()+"】")
+                        new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否选择当前仓库建立盘点单？\n【"+wareHouseInfos.get(which).getWareHouseName()+"】")
                                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

@@ -101,7 +101,7 @@ public class CombinPalletDetail extends BaseActivity {
     private boolean lsvGroupDetailonItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if(id>=0) {
             delPalletModel=(PalletDetail_Model)palletDetailItemAdapter.getGroup(position);
-            new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除组托数据？\n托盘号："+delPalletModel.getPalletNo())
+            new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除组托数据？\n托盘号："+delPalletModel.getPalletNo())
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -117,7 +117,7 @@ public class CombinPalletDetail extends BaseActivity {
     private boolean lsvGroupDetailonChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         delPalletModel=((PalletDetail_Model)palletDetailItemAdapter.getGroup(groupPosition));
         delBarCodeInfo= ((PalletDetail_Model)palletDetailItemAdapter.getGroup(groupPosition)).getLstBarCode().get(childPosition);
-        new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除此条序列号？\n序列号："+delBarCodeInfo.getSerialNo())
+        new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除此条序列号？\n序列号："+delBarCodeInfo.getSerialNo())
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

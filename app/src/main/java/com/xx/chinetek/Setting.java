@@ -155,7 +155,7 @@ public class Setting extends BaseActivity {
         Integer TimeOut=Integer.parseInt(edtTimeOut.getText().toString().trim())*1000;
         if(CommonUtil.MatcherIP(ElecIP)){//CommonUtil.MatcherIP(IPAdress) &&
             SharePreferUtil.SetShare(context,IPAdress,PrintIp,ElecIP,Port,TimeOut,rbWMS.isChecked());
-            new AlertDialog.Builder(context).setTitle("提示").setMessage(getResources().getString(R.string.SaveSuccess)).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setMessage(getResources().getString(R.string.SaveSuccess)).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                    closeActiviry();

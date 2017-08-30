@@ -16,6 +16,8 @@ import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.adapter.product.WoBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
+import com.xx.chinetek.cyproduct.LineStockIn.LineStockInReturn;
+import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutMaterial;
 import com.xx.chinetek.cyproduct.Manage.ProductManageAdd;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Production.Wo.WoModel;
@@ -77,7 +79,6 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
-
     }
 
     @Override
@@ -114,12 +115,19 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     @Event(value = R.id.lsvChoice,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         WoModel woModel = (WoModel) woBillChioceItemAdapter.getItem(position);
-        Intent intent = new Intent(context, ProductManageAdd.class);
+        Intent intent = new Intent();
+        if(BaseApplication.toolBarTitle.Title.equals("生产记录")) {
+            intent.setClass(context, ProductManageAdd.class);
+            closeActiviry();
+        }else if(BaseApplication.toolBarTitle.Title.equals("退料入库")){
+            intent.setClass(context, LineStockInReturn.class);
+        }else if(BaseApplication.toolBarTitle.Title.equals("领料出库")){
+            intent.setClass(context, LineStockOutMaterial.class);
+        }
         Bundle bundle = new Bundle();
         bundle.putParcelable("woModel", woModel);
         intent.putExtras(bundle);
         startActivityLeft(intent);
-        closeActiviry();
     }
 
 
@@ -162,20 +170,4 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         lsvChoice.setAdapter(woBillChioceItemAdapter);
     }
 
-//    ArrayList<WoModel> getData(){
-//        ArrayList<WoModel> woModels=new ArrayList<>();
-//        for(int i=0;i<10;i++){
-//            WoModel woModel=new WoModel();
-//            woModel.setVoucherNo("工单号W123099"+i);
-//            woModel.setErpVoucherNo("ERP单号E12333"+i);
-//            woModel.setBatchNo("批次号BC123"+i);
-//            woModel.setStrVoucherType("工单领料单");
-//            woModel.setStrongHoldName("据点"+i);
-//            woModel.setDepartmentName("部门"+i);
-//            woModel.setMaterialNo("M123333"+i);
-//            woModel.setMaterialDesc("工单物料名称"+i);
-//            woModels.add(woModel);
-//        }
-//        return woModels;
-//    }
 }

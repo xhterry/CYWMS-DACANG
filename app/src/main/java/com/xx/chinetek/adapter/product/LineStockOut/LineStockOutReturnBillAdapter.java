@@ -1,4 +1,4 @@
-package com.xx.chinetek.adapter.product;
+package com.xx.chinetek.adapter.product.LineStockOut;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,18 +8,19 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Production.Wo.WoModel;
+import com.xx.chinetek.model.Receiption.Receipt_Model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by GHOST on 2017/1/13.
  */
 
-public class WoBillChioceItemAdapter extends BaseAdapter {
+public class LineStockOutReturnBillAdapter extends BaseAdapter  {
     private Context context; // 运行上下文
-    private ArrayList<WoModel> woModels; // 信息集合
+    private List<Receipt_Model> receiptModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
+    private int selectItem = -1;
 
 
     public final class ListItemView { // 自定义控件集合
@@ -31,21 +32,25 @@ public class WoBillChioceItemAdapter extends BaseAdapter {
         public TextView txtdepartment;
     }
 
-    public WoBillChioceItemAdapter(Context context, ArrayList<WoModel> woModels) {
+    public LineStockOutReturnBillAdapter(Context context, List<Receipt_Model> receiptModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-        this.woModels = woModels;
+        this.receiptModels = receiptModels;
 
+    }
+
+    public void setSelectItem(int selectItem) {
+        this.selectItem = selectItem;
     }
 
     @Override
     public int getCount() {
-        return woModels==null?0: woModels.size();
+        return receiptModels==null?0: receiptModels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return woModels.get(position);
+        return receiptModels.get(position);
     }
 
     @Override
@@ -72,15 +77,18 @@ public class WoBillChioceItemAdapter extends BaseAdapter {
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
-        WoModel woModel=woModels.get(selectID);
-        listItemView.txtTaskNo.setText(woModel.getErpVoucherNo());
-        listItemView.txtERPVoucherNo.setText(woModel.getVoucherNo());
-        listItemView.txtStrVoucherType.setText(woModel.getStrVoucherType());
-        listItemView.txtCompany.setText(woModel.getStrongHoldName());
-        listItemView.txtdepartment.setText(woModel.getDepartmentName());
+        Receipt_Model receiptModel=receiptModels.get(selectID);
+        listItemView.txtTaskNo.setText(receiptModel.getErpVoucherNo());
+        listItemView.txtERPVoucherNo.setText(receiptModel.getVoucherNo());
+        listItemView.txtStrVoucherType.setText(receiptModel.getStrVoucherType());
+        listItemView.txtCompany.setText(receiptModel.getStrongHoldName());
+        listItemView.txtdepartment.setText(receiptModel.getDepartmentName());
+        if (selectItem == position) {
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.mediumseagreen));
+        }else{
+            convertView.setBackgroundResource(R.color.trans);
+        }
         return convertView;
     }
-
-
 
 }

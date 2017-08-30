@@ -281,6 +281,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
                 //选择拣货人员
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("选择拣货人员");
+                builder.setCancelable(false);
                 builder.setItems(person, new DialogInterface.OnClickListener()
                 {
                     @Override

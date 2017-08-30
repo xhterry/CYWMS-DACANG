@@ -105,6 +105,7 @@ public class InitPrint extends BaseActivity {
            final boolean isJD=view.getId()==R.id.edt_jd;
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(isJD?"选择据点":"选择标签类型");
+        builder.setCancelable(false);
             builder.setItems(isJD?StrongHoldName:LabelType, new DialogInterface.OnClickListener()
             {
                 @Override
