@@ -90,7 +90,10 @@
         <activity android:name=".Qc.QCInStock" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInMaterial" />
-        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnBillChoice"></activity>
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnBillChoice" />
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnScan" />
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInReturn" />
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutMaterial"></activity>
     </application>
 
 </manifest>

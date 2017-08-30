@@ -40,6 +40,8 @@
     <string name="OffShelf_title">下架</string>
     <string name="OffShelf_subtitle">下架扫描</string>
     <string name="LineStockOutReturnBillChoice">退料出库</string>
+    <string name="LineStockOutMaterial">领料出库</string>
+    <string name="LineStockInReturnBillChoice">退料入库</string>
     <string name="Review_title">发货复核</string>
     <string name="Review_subtitle">复核扫描</string>
     <string name="Product_Review_subtitle">发料复核</string>
@@ -227,7 +229,9 @@
     <string name="Msg_Inventory_Load">盘点任务信息加载中...</string>
     <string name="Msg_GetT_InStockListADF">获取收货列表...</string>
     <string name="Msg_GetT_OutStockListADF">获取发货列表...</string>
+    <string name="Msg_GetT_ReturnStockListADF">获取退料列表...</string>
     <string name="Msg_GetT_InStockDetailListByHeaderIDADF">获取收货明细列表...</string>
+    <string name="Msg_GetT_LineInStockDetail">获取退料明细列表...</string>
     <string name="Msg_GetT_InTaskDetailListByHeaderIDADF">获取上架明细列表...</string>
     <string name="Msg_GetAreanobyCheckno">获取盘点库位信息...</string>
     <string name="Msg_GetWareHouse">获取仓库信息...</string>
