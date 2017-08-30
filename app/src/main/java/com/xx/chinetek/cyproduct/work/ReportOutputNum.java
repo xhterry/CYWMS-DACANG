@@ -18,6 +18,7 @@ import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Production.Wo.WoModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -30,6 +31,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,31 +76,43 @@ public class ReportOutputNum extends BaseActivity {
         GetWoModel(womodel);
     }
 
+
     @Event(value = {R.id.butB,R.id.butO},type = View.OnClickListener.class)
     private void onClick(View view) {
+        if (editTxtNumber.getText().toString().isEmpty()){
+            MessageBox.Show(context, "填写信息不能为空！");
+            return;
+        }
+        ArrayList<WoModel> models =new ArrayList<>();
         String Path = "";
         if (R.id.butB == view.getId()) {
             womodel.setReportQty(Float.parseFloat(editTxtNumber.getText().toString()));
-
+            womodel.setUserNo(BaseApplication.userInfo.getUserNo());
+            womodel.setVoucherType(36);
             Path = URLModel.GetURL().GetBaoGongByListWoinfo;
         }
         if (R.id.butO == view.getId()) {
-
-
+            womodel.setInQty(Float.parseFloat(editTxtNumber.getText().toString()));
+            womodel.setUserNo(BaseApplication.userInfo.getUserNo());
+            womodel.setWareHouseNo(BaseApplication.userInfo.getReceiveWareHouseNo());
+            womodel.setAreaNo(BaseApplication.userInfo.getReceiveAreaNo());
+            womodel.setVoucherType(37);
             Path = URLModel.GetURL().GetFinishInStockByListWoinfo;
         }
 
-
+        models.add(womodel);
         try {
             Map<String, String> params = new HashMap<>();
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-            params.put("WoInfoJson", GsonUtil.parseModelToJson(womodel));
+            params.put("WoInfoJson", GsonUtil.parseModelToJson(models));
 //            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_ReportOutPutNum, getString(R.string.Msg_Print), context, mHandler,
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_ReportOutPutNum, getString(R.string.Msg_Post), context, mHandler,
                     RESULT_Get_ReportOutPutNum, null,  Path, params, null);
         } catch (Exception ex) {
 //                mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
+        }finally {
+            models.clear();
         }
 
     }
@@ -106,9 +120,14 @@ public class ReportOutputNum extends BaseActivity {
     String TAG_Get_ReportOutPutNum = "ReportOutPutNum_Get_ReportOutPutNum";
     private final int RESULT_Get_ReportOutPutNum = 101;
 
-
     String TAG_Get_Over = "ReportOutPutNum_Get_Over";
     private final int RESULT_Get_Over = 102;
+
+    String TAG_Get_Barcode = "ReportOutPutNum_Get_Barcode";
+    private final int RESULT_Get_Barcode = 103;
+
+    String TAG_Get_Mes = "ReportOutPutNum_Get_Mes";
+    private final int RESULT_Get_Mes = 104;
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -120,6 +139,12 @@ public class ReportOutputNum extends BaseActivity {
             case RESULT_Get_Over:
                 Analysis((String)msg.obj,TAG_Get_Over);
                 break;
+            case RESULT_Get_Mes:
+                GetMesAnalysis((String)msg.obj,TAG_Get_Mes);
+                break;
+            case RESULT_Get_Barcode:
+                GetBarcodeAnalysis((String)msg.obj,TAG_Get_Barcode);
+                break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
 //                CommonUtil.setEditFocus(edt_filterContent);
@@ -130,7 +155,39 @@ public class ReportOutputNum extends BaseActivity {
 
     void Analysis(String result,String Tag){
         try {
-            LogUtil.WriteLog(BillsIn.class, Tag, result);
+            LogUtil.WriteLog(ReportOutputNum.class, Tag, result);
+            ReturnMsgModelList<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<Base_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                MessageBox.Show(context, "提交成功！");
+
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+    void GetMesAnalysis(String result,String Tag){
+        try {
+            LogUtil.WriteLog(ReportOutputNum.class, Tag, result);
+            ReturnMsgModelList<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<Base_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                MessageBox.Show(context, "提交成功！");
+
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+    void GetBarcodeAnalysis(String result,String Tag){
+        try {
+            LogUtil.WriteLog(ReportOutputNum.class, Tag, result);
             ReturnMsgModelList<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<Base_Model>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {

@@ -46,6 +46,41 @@ public class Barcode_Model implements Parcelable{
     private String StoreCondition;//ymh存储条件
     private String ProtectWay;//ymh防护措施
 
+    public String getStoreCondition() {
+        return StoreCondition;
+    }
+
+    public void setStoreCondition(String storeCondition) {
+        StoreCondition = storeCondition;
+    }
+
+    public String getProtectWay() {
+        return ProtectWay;
+    }
+
+    public void setProtectWay(String protectWay) {
+        ProtectWay = protectWay;
+    }
+
+    public String getCompanyCode() {
+        return CompanyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        CompanyCode = companyCode;
+    }
+
+    public String getRowNoDel() {
+        return RowNoDel;
+    }
+
+    public void setRowNoDel(String rowNoDel) {
+        RowNoDel = rowNoDel;
+    }
+
+    private String CompanyCode;//ymh
+    private String RowNoDel;//ymh
+
     public String getRelaWeight() {
         return RelaWeight;
     }
@@ -308,7 +343,6 @@ public class Barcode_Model implements Parcelable{
     }
 
     @Override
-
     public int describeContents() {
         return 0;
     }
@@ -348,6 +382,8 @@ public class Barcode_Model implements Parcelable{
         dest.writeString(this.RelaWeight);
         dest.writeString(this.StoreCondition);
         dest.writeString(this.ProtectWay);
+        dest.writeString(this.CompanyCode);
+        dest.writeString(this.RowNoDel);
         dest.writeInt(this.BoxCount);
     }
 
@@ -387,6 +423,8 @@ public class Barcode_Model implements Parcelable{
         this.RelaWeight = in.readString();
         this.StoreCondition = in.readString();
         this.ProtectWay = in.readString();
+        this.CompanyCode = in.readString();
+        this.RowNoDel = in.readString();
         this.BoxCount = in.readInt();
     }
 

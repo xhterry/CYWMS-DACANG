@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/action_filter"
-        android:title="@string/ReportNum"
+        android:title="@string/ReportOver"
         android:orderInCategory="80"
         app:showAsAction="ifRoom" />
 
