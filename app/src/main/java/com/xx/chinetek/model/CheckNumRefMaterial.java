@@ -5,9 +5,9 @@ package com.xx.chinetek.model;
  */
 
 public class CheckNumRefMaterial {
-    private  boolean ischeck;
-    private  Float CheckQty;
-    private  String ErrMsg;
+    private  boolean ischeck; //转换是否成功
+    private  Float CheckQty; //转换后数量
+    private  String ErrMsg;  //错误信息
 
     public boolean ischeck() {
         return ischeck;

@@ -271,7 +271,7 @@ public class ProductMaterialConfig extends BaseActivity {
                         }
                         Float scanQty=woDetailModels.get(woDetailindex).getScanQty();
                         Float StockQty=stockInfoModel.getQty();
-                        Float WoQty=woDetailModels.get(woDetailindex).getWoQty();
+                        Float WoQty=woDetailModels.get(woDetailindex).getRemainQty();
                         Float Qty=ArithUtil.add(scanQty,StockQty);
                         if(WoQty<Qty){
                             MessageBox.Show(context, getString(R.string.Error_PackageQtyBigerThenWo));

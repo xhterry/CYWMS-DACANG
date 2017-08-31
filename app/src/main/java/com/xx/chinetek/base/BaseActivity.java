@@ -170,6 +170,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
 
 
 
+    /*
+       判断单位对应数字输入规则
+     */
    public CheckNumRefMaterial CheckMaterialNumFormat(String qty, String UnitTypeCode, String DecimalLngth){
         CheckNumRefMaterial checkNumRefMaterial=new CheckNumRefMaterial();
        try {

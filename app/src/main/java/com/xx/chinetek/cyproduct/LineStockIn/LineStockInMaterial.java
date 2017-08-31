@@ -222,7 +222,7 @@ public class LineStockInMaterial extends BaseActivity {
                 for (BarCodeInfo barcodinfo:barCodeInfos) {
                     SumQty= ArithUtil.add(SumQty,barcodinfo.getQty());
                 }
-
+                final Float sumQty=SumQty;
                 LineStockInProductModel templineStockIn=new LineStockInProductModel(MaterialNo,BatchNo);
                 final int index=lineStockInProductModels.indexOf(templineStockIn);
                 if(index!=-1){
@@ -234,6 +234,7 @@ public class LineStockInMaterial extends BaseActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // TODO 自动生成的方法
                                         lineStockInProductModels.get(index).getBarCodeInfos().removeAll(barCodeInfos);
+                                        lineStockInProductModels.get(index).setQty(ArithUtil.sub(lineStockInProductModels.get(index).getQty(),sumQty));
                                         if( lineStockInProductModels.get(index).getBarCodeInfos().size()==0){
                                             lineStockInProductModels.remove(index);
                                         }

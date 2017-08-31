@@ -31,6 +31,8 @@ public class WoDetailModel extends Base_Model implements Parcelable {
 
     private Float ScanQty;
 
+    private Float RemainQty;
+
     private Date ShipMentDate;
 
     private String IsspcBatch; //是否指定批次
@@ -87,6 +89,14 @@ public class WoDetailModel extends Base_Model implements Parcelable {
 
     public void setFromERPWarehouse(String fromERPWarehouse) {
         FromERPWarehouse = fromERPWarehouse;
+    }
+
+    public Float getRemainQty() {
+        return RemainQty;
+    }
+
+    public void setRemainQty(Float remainQty) {
+        RemainQty = remainQty;
     }
 
     public ArrayList<StockInfo_Model> getStockInfoModels() {
@@ -229,10 +239,10 @@ public class WoDetailModel extends Base_Model implements Parcelable {
         dest.writeString(this.Unit);
         dest.writeString(this.UnitName);
         dest.writeValue(this.ScanQty);
+        dest.writeValue(this.RemainQty);
         dest.writeLong(this.ShipMentDate != null ? this.ShipMentDate.getTime() : -1);
         dest.writeString(this.IsspcBatch);
         dest.writeString(this.VoucherNo);
-        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.FromStorageLoc);
         dest.writeString(this.FromAreaNo);
         dest.writeString(this.FromBatchNo);
@@ -251,11 +261,11 @@ public class WoDetailModel extends Base_Model implements Parcelable {
         this.Unit = in.readString();
         this.UnitName = in.readString();
         this.ScanQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.RemainQty = (Float) in.readValue(Float.class.getClassLoader());
         long tmpShipMentDate = in.readLong();
         this.ShipMentDate = tmpShipMentDate == -1 ? null : new Date(tmpShipMentDate);
         this.IsspcBatch = in.readString();
         this.VoucherNo = in.readString();
-        this.ErpVoucherNo = in.readString();
         this.FromStorageLoc = in.readString();
         this.FromAreaNo = in.readString();
         this.FromBatchNo = in.readString();
