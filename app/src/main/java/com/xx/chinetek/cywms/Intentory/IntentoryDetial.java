@@ -133,6 +133,9 @@ Context context=IntentoryDetial.this;
         LogUtil.WriteLog(IntentoryDetial.class, TAG_DeleteCheckDetail,result);
         ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
         MessageBox.Show(context,returnMsgModel.getMessage());
+        if(returnMsgModel.getHeaderStatus().equals("S")){
+            InitListview(checkno);
+        }
     }
 
 }
