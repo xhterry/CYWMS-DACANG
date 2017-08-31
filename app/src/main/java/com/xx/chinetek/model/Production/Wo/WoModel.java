@@ -23,6 +23,8 @@ public class WoModel extends Base_Model implements Parcelable{
 
     private Float ProductQty;
 
+    private Float RemainQty;
+
     private String Unit;
 
     private String UnitName;
@@ -100,7 +102,13 @@ public class WoModel extends Base_Model implements Parcelable{
     }
 
 
+    public Float getRemainQty() {
+        return RemainQty;
+    }
 
+    public void setRemainQty(Float remainQty) {
+        RemainQty = remainQty;
+    }
 
     public String getERPStaffNo() {
         return ERPStaffNo;
@@ -199,6 +207,7 @@ public class WoModel extends Base_Model implements Parcelable{
         dest.writeString(this.MaterialDesc);
         dest.writeString(this.BatchNo);
         dest.writeValue(this.ProductQty);
+        dest.writeValue(this.RemainQty);
         dest.writeString(this.Unit);
         dest.writeString(this.UnitName);
         dest.writeString(this.ERPStaffNo);
@@ -221,6 +230,7 @@ public class WoModel extends Base_Model implements Parcelable{
         this.MaterialDesc = in.readString();
         this.BatchNo = in.readString();
         this.ProductQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.RemainQty = (Float) in.readValue(Float.class.getClassLoader());
         this.Unit = in.readString();
         this.UnitName = in.readString();
         this.ERPStaffNo = in.readString();

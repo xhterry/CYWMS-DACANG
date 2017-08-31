@@ -102,7 +102,7 @@ public class LineStockOutReturnScan extends BaseActivity {
         BaseApplication.context=context;
         BaseApplication.toolBarTitle=new ToolBarTitle(getString(R.string.LineStockOutReturnBillChoice),true);
         x.view().inject(this);
-        BaseApplication.isCloseActivity=true;
+        BaseApplication.isCloseActivity=false;
     }
 
     @Override
@@ -217,7 +217,7 @@ public class LineStockOutReturnScan extends BaseActivity {
                 for (BarCodeInfo barcodinfo:barCodeInfos) {
                     SumQty= ArithUtil.add(SumQty,barcodinfo.getQty());
                 }
-
+                final Float sumQty=SumQty;
                 LineStockOutReturnDetail_Model templineStockIn=new LineStockOutReturnDetail_Model(MaterialNo,BatchNo);
                 final int index=lineStockOutReturnDetailModels.indexOf(templineStockIn);
                 if(index!=-1){
@@ -231,6 +231,7 @@ public class LineStockOutReturnScan extends BaseActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // TODO 自动生成的方法
                                         lineStockOutReturnDetailModels.get(index).getLstBarCode().removeAll(barCodeInfos);
+                                        lineStockOutReturnDetailModels.get(index).setScanQty(ArithUtil.sub(lineStockOutReturnDetailModels.get(index).getScanQty(),sumQty));
                                         InitFrm(barCodeInfos.get(0));
                                         BindListVIew(lineStockOutReturnDetailModels);
                                     }

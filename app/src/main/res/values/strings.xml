@@ -239,6 +239,7 @@
     <string name="Msg_GetDeliveryInfoAndroid">获取目的地信息...</string>
     <string name="Msg_InsertCheckDetail">提交盘点信息...</string>
     <string name="Msg_GetCheckDetail">获取已盘点信息...</string>
+    <string name="Msg_DeleteCheckDetail">删除盘点信息...</string>
     <string name="Msg_QueryStockInfo">查询%s信息...</string>
     <string name="Msg_NoSelectOffshelfTask">请选择需要分配下架任务</string>
     <string name="Msg_NoSelectmaterialchange">请选择分配质检任务</string>
@@ -331,6 +332,7 @@
     <string name="Error_materialChangeQtyBiger">扫描数量已超过转料数量！</string>
     <string name="Error_PackageQtyBiger">扫描数量超过包装数量！</string>
     <string name="Error_UpshelfQtyBiger">扫描数量超过上架数量！</string>
+    <string name="Error_OutMaterialQtyBiger">扫描数量超过工单数量！</string>
     <string name="Error_PackageQtyBigerThenWo">数量超过工单数量！</string>
     <string name="Error_BarcodeNotInList">此物料不在列表中！</string>
     <string name="Error_batchNONotMatch">此物料为指定批次，批次号不匹配！</string>

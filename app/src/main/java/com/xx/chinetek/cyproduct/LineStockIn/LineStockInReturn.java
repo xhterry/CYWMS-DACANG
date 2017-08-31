@@ -29,6 +29,7 @@ public class LineStockInReturn extends SocketBaseActivity {
         BaseApplication.context = context;
         x.view().inject(this);
         initVariables();//设置接收服务
+        BaseApplication.isCloseActivity=false;
     }
 
     protected void initVariables()

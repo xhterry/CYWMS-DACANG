@@ -40,6 +40,7 @@ public class URLModel {
     public String GetAreanobyCheckno2 = GetWCFAdress()+"GetAreanobyCheckno2"; //检查盘点库位
     public String InsertCheckDetail = GetWCFAdress()+"InsertCheckDetail"; //提交盘点条码信息
     public String GetCheckDetail = GetWCFAdress()+"GetCheckDetail"; //获取已盘点条码信息
+    public String DeleteCheckDetail = GetWCFAdress()+"DeleteCheckDetail"; //删除盘点条码信息
     public String GetT_OutStockReviewListADF = GetWCFAdress()+"GetT_OutStockReviewListADF"; //下架复核表头
     public String GetT_InStockDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InStockDetailListByHeaderIDADF"; //收货表体
     public String GetT_InTaskDetailListByHeaderIDADF = GetWCFAdress()+"GetT_InTaskDetailListByHeaderIDADF"; //上架表体

@@ -75,7 +75,7 @@ public class WoDetailMaterialItemAdapter extends BaseAdapter {
         listItemView.txtMaterialNo.setText(woDetailModel.getMaterialNo());
         listItemView.txtMaterialDesc.setText(woDetailModel.getMaterialDesc());
         listItemView.txtBatchNo.setText(woDetailModel.getFromBatchNo());
-        listItemView.txtWoQty.setText(woDetailModel.getWoQty()+"");
+        listItemView.txtWoQty.setText(woDetailModel.getRemainQty()+"");
         listItemView.txtScanQty.setText(woDetailModel.getScanQty()+"");
         return convertView;
     }
