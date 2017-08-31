@@ -129,8 +129,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
     }
 
 
-    void BackAlter(){
-        new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否返回上一页面？")
+    public void BackAlter(){
+        new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setIcon(android.R.drawable.ic_dialog_info).setMessage("是否返回上一页面？")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

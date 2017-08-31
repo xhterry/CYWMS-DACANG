@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
+import com.xx.chinetek.adapter.wms.QC.QCBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.cywms.R;
@@ -96,6 +101,28 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
         }
     }
 
+    /**
+     * 文本变化事件
+     */
+    TextWatcher TextWatcher=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(!edt_filterContent.getText().toString().equals(""))
+                billAdapter.getFilter().filter(edt_filterContent.getText().toString());
+            else{
+                BindListVIew(WoModels);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     @Override
     protected void initViews() {
@@ -104,7 +131,7 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
         x.view().inject(this);
         getData();
-
+        edt_filterContent.addTextChangedListener(TextWatcher);
     }
 
 
@@ -139,11 +166,6 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
             startActivityLeft(intent);
 //        }
 
-//        intent.putExtra("MaterialNo","MaterialNo");
-//        intent.putExtra("MaterialDesc","MaterialDesc");
-//        intent.putExtra("MaterialBatch","MaterialBatch1");
-//        intent.putExtra("MaterialBNumber","MaterialBNumber1");
-//        startActivityLeft(intent);
 
     }
 
@@ -165,7 +187,6 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
         lsvChoice.setAdapter(billAdapter);
 
     }
-
 
 
 

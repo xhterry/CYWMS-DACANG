@@ -223,10 +223,21 @@ public class CombinPallet extends BaseActivity {
             String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
             String modelJson = GsonUtil.parseModelToJson(palletDetailModels);
             final Map<String, String> params = new HashMap<String, String>();
-            params.put("UserJson", userJson);
-            params.put("ModelJson", modelJson);
+
             LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, modelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_PalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_PalletDetailADF, null, URLModel.GetURL().SaveT_PalletDetailADF, params, null);
+
+            if (URLModel.isWMS){
+                params.put("UserJson", userJson);
+                params.put("ModelJson", modelJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_PalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_PalletDetailADF, null, URLModel.GetURL().SaveT_PalletDetailADF, params, null);
+            }else{
+                params.put("UserJson", userJson);
+                params.put("json", modelJson);
+                params.put("printtype", "1");
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_PalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_PalletDetailADF, null, URLModel.GetURL().SaveT_CPPalletDetailADF, params, null);
+            }
+
+
         }
     }
 

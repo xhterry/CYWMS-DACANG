@@ -355,4 +355,10 @@
     <!--ymh20170823-->
     <string name="Msg_GetWOInfo">获取工单列表...</string>
     <string name="Msg_Print">打印条码中...</string>
+    <string name="Msg_Post">提交中...</string>
+    <string name="Bi">相对比重：</string>
+    <string name="EDate">到期日期：</string>
+    <string name="ReportOver">完工</string>
+    <string name="ReportN">报工</string>
+    <string name="ReportOverInstock">完工入库</string>
 </resources>
