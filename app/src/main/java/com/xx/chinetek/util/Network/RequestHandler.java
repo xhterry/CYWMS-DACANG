@@ -15,6 +15,7 @@ import com.xx.chinetek.util.dialog.LoadingDialog;
 
 import java.util.Map;
 
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 import static com.xx.chinetek.base.BaseApplication.context;
 import static com.xx.chinetek.base.BaseApplication.getRequestQueue;
 
@@ -111,7 +112,8 @@ public class RequestHandler {
     }
 
     static RetryPolicy getRetryPolicy() {
-        RetryPolicy retryPolicy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultDialogRequestListener.MAX_RETRY_TIME, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+       // RetryPolicy retryPolicy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultDialogRequestListener.MAX_RETRY_TIME, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(SOCKET_TIMEOUT, DEFAULT_MAX_RETRIES, 0f);
         return retryPolicy;
     }
 

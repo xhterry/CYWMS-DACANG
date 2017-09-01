@@ -137,6 +137,7 @@ public class OffshelfScan extends BaseActivity {
     Float SumReaminQty=0f; //当前拣货物料剩余拣货数量合计
     int currentPickMaterialIndex=-1;
     String IsEdate="";
+
     @Override
     protected void initViews() {
         super.initViews();
@@ -556,21 +557,9 @@ public class OffshelfScan extends BaseActivity {
        // btnPrintBox.setVisibility(visiable);
     }
 
-//    Boolean CheckBarcodeScaned(){
-//        if(!tbUnboxType.isChecked()) { //整箱、整托需要检查条码是否扫描
-//            for (OutStockTaskDetailsInfo_Model temoStockTaskDetail : outStockTaskDetailsInfoModels) {
-//                if(temoStockTaskDetail.getLstStockInfo()!=null) {
-//                    if (temoStockTaskDetail.getLstStockInfo().indexOf(stockInfoModels.get(0)) != -1) {
-//                        MessageBox.Show(context, getString(R.string.Error_Barcode_hasScan));
-//                        CommonUtil.setEditFocus(edtOffShelfScanbarcode);
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-//        return true;
-//    }
-
+    /*
+    判断物料是否已经扫描
+     */
     int CheckBarcodeScaned(){
         for (int i=0;i<outStockTaskDetailsInfoModels.size();i++) {
                 if(outStockTaskDetailsInfoModels.get(i).getLstStockInfo()!=null) {
@@ -585,7 +574,8 @@ public class OffshelfScan extends BaseActivity {
     Boolean CheckStockInfo(){
         OutStockTaskDetailsInfo_Model currentOustStock = outStockTaskDetailsInfoModels.get(currentPickMaterialIndex);
         //判断是否拣货完毕
-        //if (currentOustStock.getRemainQty().compareTo(currentOustStock.getScanQty()) == 0) {
+
+        //需要修改，判断所有相同ID的行是否拣货完毕
         if (currentOustStock.getRePickQty().compareTo(currentOustStock.getScanQty()) == 0) {
             btnOutOfStock.setEnabled(false);
             MessageBox.Show(context, getString(R.string.Error_MaterialPickFinish));
@@ -649,11 +639,13 @@ public class OffshelfScan extends BaseActivity {
         MovePickFinishMaterial();
         int index=-1;
         for(int i=0;i<size;i++){
-            if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null
-            && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getTaskQty()
-            // && ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
-             && ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
-            ) && !outStockTaskDetailsInfoModels.get(i).getOutOfstock() ){
+//            if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null
+//            && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getTaskQty()
+//            // && ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
+//             && ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
+//            ) && !outStockTaskDetailsInfoModels.get(i).getOutOfstock() ){
+            if(!outStockTaskDetailsInfoModels.get(i).getPickFinish()
+                    && !outStockTaskDetailsInfoModels.get(i).getOutOfstock() ){
                 index= i;
                 break;
             }
@@ -661,29 +653,19 @@ public class OffshelfScan extends BaseActivity {
         return index;
     }
 
-    void MovePickFinishMaterial(){
-        int size=outStockTaskDetailsInfoModels.size();
-        for(int i=0;i<size;i++) {
-            if(ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(),
-                    outStockTaskDetailsInfoModels.get(i).getScanQty())==0f)
-                if(i+1<size) {
-                    if (ArithUtil.sub(outStockTaskDetailsInfoModels.get(i + 1).getRePickQty(),
-                            outStockTaskDetailsInfoModels.get(i + 1).getScanQty()) != 0f)
-                        Collections.swap(outStockTaskDetailsInfoModels, i, i + 1);
-
-                }
-        }
-    }
-
     int FindFirstCanPickMaterialByMaterialNo(String MaterialNo,String StrongHoldCode){
         int size=outStockTaskDetailsInfoModels.size();
         int index=-1;
         for(int i=0;i<size;i++){
-            if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null
-                    && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getTaskQty()
-                   // &&ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
-                    &&ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
-            ) && outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)
+//            if(outStockTaskDetailsInfoModels.get(i).getScanQty()!=null
+//                    && (outStockTaskDetailsInfoModels.get(i).getScanQty()!=outStockTaskDetailsInfoModels.get(i).getTaskQty()
+//                   // &&ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRemainQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
+//                    &&ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(),outStockTaskDetailsInfoModels.get(i).getScanQty())!=0
+//            ) && outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)
+//                    && outStockTaskDetailsInfoModels.get(i).getStrongHoldCode().equals(StrongHoldCode)){
+
+            if(!outStockTaskDetailsInfoModels.get(i).getPickFinish() //没有拣货完毕
+                    && outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)
                     && outStockTaskDetailsInfoModels.get(i).getStrongHoldCode().equals(StrongHoldCode)){
                 index= i;
                 break;
@@ -697,39 +679,22 @@ public class OffshelfScan extends BaseActivity {
         lsvPickList.setAdapter(offShelfScanDetailAdapter);
     }
 
+    /*
+   移动拣货完毕物料至末尾
+    */
+    void MovePickFinishMaterial(){
+        int size=outStockTaskDetailsInfoModels.size();
+        for(int i=0;i<size;i++) {
+            if(ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(),
+                    outStockTaskDetailsInfoModels.get(i).getScanQty())==0f)
+                if(i+1<size) {
+                    if (ArithUtil.sub(outStockTaskDetailsInfoModels.get(i + 1).getRePickQty(),
+                            outStockTaskDetailsInfoModels.get(i + 1).getScanQty()) != 0f)
+                        Collections.swap(outStockTaskDetailsInfoModels, i, i + 1);
 
-
-//    void ChanggePickQty(){
-//        if(outStockTaskDetailsInfoModels!=null) {
-//            List<Integer> IDList = new ArrayList<>();
-//            for (int i = 0; i < outStockTaskDetailsInfoModels.size(); i++) {
-//                if(outStockTaskDetailsInfoModels.get(i).getRePickQty()==null){
-//                    outStockTaskDetailsInfoModels.get(i).setRePickQty(0f);
-//                }
-//                if (IDList.indexOf(outStockTaskDetailsInfoModels.get(i).getID()) == -1) {
-//
-//                    String MaterialNo = outStockTaskDetailsInfoModels.get(i).getMaterialNo();
-//                    Float remainqty = outStockTaskDetailsInfoModels.get(i).getRemainQty();
-//                    IDList.add(outStockTaskDetailsInfoModels.get(i).getID());
-//                    int selectID = outStockTaskDetailsInfoModels.get(i).getID();
-//                    for (int j = 0; j < outStockTaskDetailsInfoModels.size(); j++) {
-//                        OutStockTaskDetailsInfo_Model outDM = outStockTaskDetailsInfoModels.get(j);
-//                        if (outDM.getMaterialNo().equals(MaterialNo)
-//                                && selectID == outDM.getID()
-//                              ) {
-//                            if (outDM.getStockQty() < remainqty) {
-//                                outStockTaskDetailsInfoModels.get(j).setRePickQty(outDM.getStockQty());
-//                                remainqty = ArithUtil.sub(remainqty, outDM.getStockQty());
-//                            } else {
-//                                outStockTaskDetailsInfoModels.get(j).setRePickQty(remainqty);
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-  //  }
+                }
+        }
+    }
 
 
 }

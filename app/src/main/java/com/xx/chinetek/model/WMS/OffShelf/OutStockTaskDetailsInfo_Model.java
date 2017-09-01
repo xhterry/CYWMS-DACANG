@@ -125,9 +125,12 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     /// 给ERP指定发货仓库
     /// </summary>
     private String ToErpWareHouse;
+
     private int FloorType;
 
+    private Boolean isOutOfstock=false; //是否缺货
 
+    private Boolean isPickFinish=false; //是否拣货完毕
 
     @Override
     public boolean equals(Object o) {
@@ -141,6 +144,14 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
 
     }
 
+    public Boolean getPickFinish() {
+        return isPickFinish;
+    }
+
+    public void setPickFinish(Boolean pickFinish) {
+        isPickFinish = pickFinish;
+    }
+
     public Float getRePickQty() {
         return RePickQty;
     }
@@ -148,14 +159,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     public void setRePickQty(Float rePickQty) {
         RePickQty = rePickQty;
     }
-//
-//    public Float getPickQty() {
-//        return PickQty;
-//    }
-//
-//    public void setPickQty(Float pickQty) {
-//        PickQty = pickQty;
-//    }
 
     public Float getStockQty() {
         return StockQty;
@@ -172,8 +175,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     public void setRowNoDel(String rowNoDel) {
         RowNoDel = rowNoDel;
     }
-
-    private Boolean isOutOfstock=false; //是否缺货
 
     public Boolean getOutOfstock() {
         return isOutOfstock;
@@ -310,7 +311,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     public void setAreaNo(String areaNo) {
         AreaNo = areaNo;
     }
-
 
     public String getCostcenter() {
         return Costcenter;
@@ -758,7 +758,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeValue(this.TaskQty);
         dest.writeValue(this.QualityQty);
         dest.writeValue(this.RemainQty);
-       // dest.writeValue(this.PickQty);
         dest.writeValue(this.ShelveQty);
         dest.writeString(this.TaskNo);
         dest.writeValue(this.IsQualitycomp);
@@ -828,6 +827,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeString(this.ToErpWareHouse);
         dest.writeInt(this.FloorType);
         dest.writeValue(this.isOutOfstock);
+        dest.writeValue(this.isPickFinish);
     }
 
     protected OutStockTaskDetailsInfo_Model(Parcel in) {
@@ -837,7 +837,6 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.TaskQty = (Float) in.readValue(Float.class.getClassLoader());
         this.QualityQty = (Float) in.readValue(Float.class.getClassLoader());
         this.RemainQty = (Float) in.readValue(Float.class.getClassLoader());
-      //  this.PickQty = (Float) in.readValue(Float.class.getClassLoader());
         this.ShelveQty = (Float) in.readValue(Float.class.getClassLoader());
         this.TaskNo = in.readString();
         this.IsQualitycomp = (Float) in.readValue(Float.class.getClassLoader());
@@ -909,6 +908,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.ToErpWareHouse = in.readString();
         this.FloorType = in.readInt();
         this.isOutOfstock = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isPickFinish = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<OutStockTaskDetailsInfo_Model> CREATOR = new Creator<OutStockTaskDetailsInfo_Model>() {
