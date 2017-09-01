@@ -57,12 +57,15 @@ public class CombinPallet extends BaseActivity {
     String TAG_GetT_PalletDetailByNoADF="CombinPallet_GetT_PalletDetailByNoADF";
     String TAG_SaveT_PalletDetailADF="CombinPallet_TAG_SaveT_PalletDetailADF";
     String TAG_PrintLpkPalletAndroid="CombinPallet_TAG_PrintLpkPalletAndroid";
+    String TAG_SaveT_ProductPalletDetailADF="CombinPallet_TAG_SaveT_ProductPalletDetailADF";//成品组托
 
     Context context=CombinPallet.this;
     private final int RESULT_GetT_SerialNoByPalletADF = 101;
     private final int RESULT_GetT_PalletDetailByNoADF = 102;
     private final int RESULT_SaveT_PalletDetailADF = 103;
     private final int RESULT_PrintLpkPalletAndroid = 104;
+    private final int RESULT_GetT_ProductPalletDetailByNoADF = 105;//成品组托
+
     boolean isBarcodeScaned=false;
 
     @Override
@@ -80,6 +83,9 @@ public class CombinPallet extends BaseActivity {
                 break;
             case RESULT_PrintLpkPalletAndroid:
                 AnalysisPrintLpkPalletAndroid((String) msg.obj);
+                break;
+            case RESULT_GetT_ProductPalletDetailByNoADF:
+                AnalysisSaveT_ProductPalletDetailADF((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -233,8 +239,14 @@ public class CombinPallet extends BaseActivity {
             }else{
                 params.put("UserJson", userJson);
                 params.put("json", modelJson);
-                params.put("printtype", "1");
-                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_PalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_SaveT_PalletDetailADF, null, URLModel.GetURL().SaveT_CPPalletDetailADF, params, null);
+                String flag="1";
+                if (palletDetailModels.get(0).getPalletNo().equals("")){
+                    flag="1";
+                }else{
+                    flag="2";
+                }
+                params.put("printtype", flag);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_ProductPalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_GetT_ProductPalletDetailByNoADF, null, URLModel.GetURL().SaveT_CPPalletDetailADF, params, null);
             }
 
 
@@ -352,6 +364,23 @@ public class CombinPallet extends BaseActivity {
                 LogUtil.WriteLog(CombinPallet.class, TAG_PrintLpkPalletAndroid, modelJson);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintLpkPalletAndroid, getString(R.string.Msg_PrintLpkPalletAndroid), context, mHandler, RESULT_PrintLpkPalletAndroid, null,  URLModel.GetURL().PrintLpkPalletAndroid, params, null);
             }
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtBarcode);
+        }
+    }
+
+
+
+    /*
+    保存成品组托信息
+     */
+    void AnalysisSaveT_ProductPalletDetailADF(String result){
+        try {
+            LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, result);
+            ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+            }.getType());
+            MessageBox.Show(context, returnMsgModel.getMessage());
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
             CommonUtil.setEditFocus(edtBarcode);

@@ -38,6 +38,7 @@ import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -113,7 +114,6 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     @Override
     public void onHandleMessage(Message msg) {
-//        mSwipeLayout.setRefreshing(false);
      switch (msg.what) {
             case RESULT_Print_Inlabel:
                 AnalysisGetT_RESULT_Print_InlabelADFJson((String)msg.obj);
@@ -193,6 +193,7 @@ public class CompleteProduct extends  SocketBaseActivity {
         BaseApplication.context = context;
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
+        CommonUtil.setEditFocus(etxtBNumber);
         initVariables();//设置接收服务
     }
 
@@ -238,7 +239,7 @@ public class CompleteProduct extends  SocketBaseActivity {
          */
     void GetWoModel(WoModel womodel){
         if(womodel!=null) {
-            txtNO.setText(womodel.getVoucherNo());
+            txtNO.setText(womodel.getErpVoucherNo());
             etxtBatch.setText(womodel.getBatchNo());
             txtdesc.setText(womodel.getMaterialDesc());
         }
@@ -261,11 +262,7 @@ public class CompleteProduct extends  SocketBaseActivity {
                    String[] meg =message1.split(",");
                     if (meg.length>=3 )
                     {txtWeight.setText(message1.contains("ST,GS")?meg[2].trim():"");}
-                    String aaa=txtWeight.getText().toString();
-                    if (aaa.equals("称重数量")){
-                        MessageBox.Show(context, "电子称没有启动，无法获取重量！");
-                        closeActiviry();
-                    }
+
                 }
             }
         };
@@ -296,6 +293,9 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     @Event(value = {R.id.butIn,R.id.butOut,R.id.butT,R.id.butIOut},type = View.OnClickListener.class)
     private void onClick(View view) {
+        if (DoubleClickCheck.isFastDoubleClick(context)) {
+            return;
+        }
         if (etxtBatch.getText().toString().isEmpty()||txtlineno.getText().toString().isEmpty()||etxtBNumber.getText().toString().isEmpty()||txtdate.getText().toString().isEmpty()){
             MessageBox.Show(context, "填写信息不能为空！");
             return;
@@ -304,7 +304,25 @@ public class CompleteProduct extends  SocketBaseActivity {
             womodel.setBatchNo(etxtBatch.getText().toString());
             etxtBatch.setEnabled(false);
         }
-        if (R.id.butIn==view.getId())
+
+
+        if (txtWeight.getText().toString().equals(""))
+        {
+            MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+            return;
+        }
+        else{
+            String Weight=txtWeight.getText().toString();
+            Weight=Weight.substring(0,Weight.length()-2);
+            if (!CommonUtil.isFloat(Weight))
+            {
+                MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+                return;
+            }
+        }
+
+
+        if(R.id.butIn==view.getId())
         {
             printlabel(0);
         }
@@ -351,11 +369,10 @@ public class CompleteProduct extends  SocketBaseActivity {
         model.setRowNoDel("1");
         String aaa=txtWeight.getText().toString();
 
-
-        if (aaa.equals("称重数量")){
-            MessageBox.Show(context, "电子称没有启动，无法获取重量！");
-            return;
-        }
+//        if (aaa.equals("称重数量")){
+//            MessageBox.Show(context, "电子称没有启动，无法获取重量！");
+//            return;
+//        }
         aaa=aaa.substring(0,aaa.length()-2);
 //        Float bbb = Float.parseFloat(aaa);
         model.setItemQty(aaa);//重量
