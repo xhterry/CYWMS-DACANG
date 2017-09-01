@@ -88,7 +88,7 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
                 outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRePickQty())<0) {
             convertView.setBackgroundResource(R.color.khaki);
         }
-        else if (outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRePickQty())==0) {
+        else if (outStockTaskDetailsInfoModel.getPickFinish()) {
             convertView.setBackgroundResource(R.color.springgreen);
         }else if(outStockTaskDetailsInfoModel.getOutOfstock()){
             convertView.setBackgroundResource(R.color.gray_cc);

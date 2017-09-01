@@ -118,15 +118,16 @@ Context context=IntentoryDetial.this;
     }
 
     void AnalysisGetCheckDetailJson(String result){
+        ArrayList<Barcode_Model> barcodeModels=new ArrayList<>();
         LogUtil.WriteLog(IntentoryDetial.class, TAG_GetCheckDetail,result);
         ReturnMsgModelList<Barcode_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<Barcode_Model>>() {}.getType());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-             ArrayList<Barcode_Model> barcodeModels=returnMsgModel.getModelJson();
-            inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
-            lsvInventoryDetail.setAdapter(inventoryScanItemAdapter);
+            barcodeModels=returnMsgModel.getModelJson();
         }else{
             MessageBox.Show(context,returnMsgModel.getMessage());
         }
+        inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
+        lsvInventoryDetail.setAdapter(inventoryScanItemAdapter);
     }
 
     void  AnalysisDeleteCheckDetailJson(String result){
@@ -137,5 +138,4 @@ Context context=IntentoryDetial.this;
             InitListview(checkno);
         }
     }
-
 }
