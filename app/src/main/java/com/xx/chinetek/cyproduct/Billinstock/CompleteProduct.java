@@ -37,6 +37,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
@@ -420,7 +421,7 @@ public class CompleteProduct extends  SocketBaseActivity {
                 model.setBoxCount(modelsInAll.size());
                 for ( int i=0;i<modelsInAll.size();i++)
                 {
-                    Sum=modelsInAll.get(i).getQty()+Sum;
+                    Sum= ArithUtil.add(modelsInAll.get(i).getQty(),Sum);
                 }
                 model.setQty(Sum);
             }
@@ -502,8 +503,7 @@ public class CompleteProduct extends  SocketBaseActivity {
 
 
 //            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, path, getString(R.string.Msg_Print), context, mHandler,
-                    Returnpath, null,  URLModel.GetURL().PrintLabel, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, path, getString(R.string.Msg_Print), context, mHandler,Returnpath, null,  URLModel.GetURL().PrintLabel, params, null);
 //                MessageBox.Show(context, "打印成功！");
         } catch (Exception ex) {
 //                mSwipeLayout.setRefreshing(false);

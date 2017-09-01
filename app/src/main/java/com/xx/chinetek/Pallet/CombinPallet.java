@@ -239,13 +239,7 @@ public class CombinPallet extends BaseActivity {
             }else{
                 params.put("UserJson", userJson);
                 params.put("json", modelJson);
-                String flag="1";
-                if (palletDetailModels.get(0).getPalletNo().equals("")){
-                    flag="1";
-                }else{
-                    flag="2";
-                }
-                params.put("printtype", flag);
+                params.put("printtype", "1");
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_ProductPalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_GetT_ProductPalletDetailByNoADF, null, URLModel.GetURL().SaveT_CPPalletDetailADF, params, null);
             }
 
