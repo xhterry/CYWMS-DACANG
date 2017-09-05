@@ -35,6 +35,35 @@ public class WoModel extends Base_Model implements Parcelable{
 
     private Date ShipmentDate;
 
+    private Float MaxProductQty;
+
+    private Float Box_Amount;
+
+    private Float Pack_Amount;
+
+    public Float getMaxProductQty() {
+        return MaxProductQty;
+    }
+
+    public void setMaxProductQty(Float maxProductQty) {
+        MaxProductQty = maxProductQty;
+    }
+
+    public Float getBox_Amount() {
+        return Box_Amount;
+    }
+
+    public void setBox_Amount(Float box_Amount) {
+        Box_Amount = box_Amount;
+    }
+
+    public Float getPack_Amount() {
+        return Pack_Amount;
+    }
+
+    public void setPack_Amount(Float pack_Amount) {
+        Pack_Amount = pack_Amount;
+    }
 
     //add by 2017-8-27
     public Float ReportQty;// 报工数量
@@ -213,6 +242,9 @@ public class WoModel extends Base_Model implements Parcelable{
         dest.writeString(this.ERPStaffNo);
         dest.writeString(this.ERPStaffName);
         dest.writeLong(this.ShipmentDate != null ? this.ShipmentDate.getTime() : -1);
+        dest.writeValue(this.MaxProductQty);
+        dest.writeValue(this.Box_Amount);
+        dest.writeValue(this.Pack_Amount);
         dest.writeValue(this.ReportQty);
         dest.writeInt(this.JobNumber);
         dest.writeValue(this.WorkHour);
@@ -237,6 +269,9 @@ public class WoModel extends Base_Model implements Parcelable{
         this.ERPStaffName = in.readString();
         long tmpShipmentDate = in.readLong();
         this.ShipmentDate = tmpShipmentDate == -1 ? null : new Date(tmpShipmentDate);
+        this.MaxProductQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.Box_Amount = (Float) in.readValue(Float.class.getClassLoader());
+        this.Pack_Amount = (Float) in.readValue(Float.class.getClassLoader());
         this.ReportQty = (Float) in.readValue(Float.class.getClassLoader());
         this.JobNumber = in.readInt();
         this.WorkHour = (Float) in.readValue(Float.class.getClassLoader());

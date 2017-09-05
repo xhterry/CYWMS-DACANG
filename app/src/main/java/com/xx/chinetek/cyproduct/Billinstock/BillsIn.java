@@ -10,9 +10,11 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
@@ -50,6 +52,9 @@ import static com.xx.chinetek.base.BaseApplication.userInfo;
 
 @ContentView(R.layout.activity_product_bills_in)
 public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+
+    @ViewInject(R.id.SW_WoType)
+    Switch SW_WoType;
 
     @ViewInject(R.id.mSwipeLayout)
     SwipeRefreshLayout mSwipeLayout;
@@ -101,6 +106,25 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
         }
     }
 
+
+
+
+    @Event(value = R.id.SW_WoType,type = CompoundButton.OnCheckedChangeListener.class)
+    private void SwWoTypeCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked)
+        {
+            //外销工单
+            getData();
+        }
+        else
+        {
+            //正常工单
+            getData();
+        }
+
+
+    }
+
     /**
      * 文本变化事件
      */
@@ -108,6 +132,8 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
+
+
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -128,7 +154,6 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-
         x.view().inject(this);
         getData();
         edt_filterContent.addTextChangedListener(TextWatcher);
@@ -153,17 +178,27 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
      */
     @Event(value = R.id.lsvChoice,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(context,CompleteProduct.class);
         WoModel Model= (WoModel)billAdapter.getItem(position);
+        if (Model.getStrVoucherType().toString().equals("半制品")){
+            Intent intent = new Intent(context,CompleteProductW.class);
+            Bundle bundle=new Bundle();
+            bundle.putParcelable("WoModel",Model);
+            intent.putExtras(bundle);
+            startActivityLeft(intent);
+        }else{
+            Intent intent = new Intent(context,CompleteProduct.class);
+            Bundle bundle=new Bundle();
+            bundle.putParcelable("WoModel",Model);
+            intent.putExtras(bundle);
+            startActivityLeft(intent);
+        }
+
 //        if(intent!=null)
 //        {
 //            startActivityLeft(intent);
 //        }
 //        else{
-            Bundle bundle=new Bundle();
-            bundle.putParcelable("WoModel",Model);
-            intent.putExtras(bundle);
-            startActivityLeft(intent);
+
 //        }
 
 
@@ -171,11 +206,19 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
     void getData(){
         try {
-              Map<String, String> params = new HashMap<>();
+            Map<String, String> params = new HashMap<>();
+            String PathUrl="";
+            if(SW_WoType.isChecked()){
+                //外销工单
+                PathUrl=URLModel.GetURL().GetT_OutWoinfoModel;
+            }else{
+                //正常工单
+                PathUrl=URLModel.GetURL().GetT_WoinfoModel;
+            }
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-//            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
+//            LogUtil.WriteLog(BillsIn.class, TAG_GetT_InBill,);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_InBill, getString(R.string.Msg_GetWOInfo), context, mHandler,
-                    RESULT_GetT_InBill, null,  URLModel.GetURL().GetT_WoinfoModel, params, null);
+                    RESULT_GetT_InBill, null,  PathUrl, params, null);
         } catch (Exception ex) {
             mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
