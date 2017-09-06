@@ -23,6 +23,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -92,6 +93,14 @@ public class ReportOutputNum extends BaseActivity {
             Path = URLModel.GetURL().GetBaoGongByListWoinfo;
         }
         if (R.id.butO == view.getId()) {
+            if (womodel.getMaxProductQty()!=null)
+            {
+                if (Float.parseFloat(editTxtNumber.getText().toString())>womodel.getMaxProductQty())
+                {
+                    MessageBox.Show(context, "成品包装报工数量不能超过最大限制数量："+ womodel.getMaxProductQty().toString());
+                    return;
+                }
+            }
             womodel.setInQty(Float.parseFloat(editTxtNumber.getText().toString()));
             womodel.setUserNo(BaseApplication.userInfo.getUserNo());
             womodel.setWareHouseNo(BaseApplication.userInfo.getReceiveWareHouseNo());

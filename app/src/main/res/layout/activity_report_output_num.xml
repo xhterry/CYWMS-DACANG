@@ -70,7 +70,7 @@
     <Button
         android:id="@+id/butO"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="390dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="24dp"
@@ -89,7 +89,7 @@
     <Button
         android:id="@+id/butB"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="390dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="24dp"

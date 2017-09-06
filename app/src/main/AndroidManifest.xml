@@ -74,6 +74,7 @@
         <activity android:name="com.xx.chinetek.cyproduct.OffShelf.OffshelfScan" />
         <activity android:name="com.xx.chinetek.cyproduct.Return.ProductReturn" />
         <activity android:name="com.xx.chinetek.cyproduct.Billinstock.CompleteProduct" />
+        <activity android:name="com.xx.chinetek.cyproduct.Billinstock.CompleteProductW" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.TankIn" />
         <activity android:name="com.xx.chinetek.cyproduct.Return.TankOut" />
         <activity android:name="com.xx.chinetek.cyproduct.Manage.ProductMaterialConfig" />

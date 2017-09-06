@@ -2,14 +2,12 @@ package com.xx.chinetek.cyproduct.Billinstock;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
@@ -37,6 +34,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
@@ -46,21 +44,17 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static com.xx.chinetek.base.BaseApplication.context;
 
 @ContentView(R.layout.activity_complete_product)
 public class CompleteProduct extends  SocketBaseActivity {
 
     Context context=CompleteProduct.this;
+
     @ViewInject(R.id.txtNO)
     TextView txtNO;
 
@@ -76,8 +70,8 @@ public class CompleteProduct extends  SocketBaseActivity {
     @ViewInject(R.id.etxtBNumber)
     EditText etxtBNumber;
 
-    @ViewInject(R.id.txtWeight)
-    TextView txtWeight;
+    @ViewInject(R.id.EditW)
+    EditText EditW;
 
     @ViewInject(R.id.butIn)
     Button butIn;
@@ -91,7 +85,7 @@ public class CompleteProduct extends  SocketBaseActivity {
     @ViewInject(R.id.butT)
     Button butT;
 
-    @ViewInject(R.id.txtBi)
+    @ViewInject(R.id.XNumber)
     EditText txtBi;
 
     @ViewInject(R.id.textView75)
@@ -187,6 +181,8 @@ public class CompleteProduct extends  SocketBaseActivity {
         }
     }
 
+
+
     @Override
     protected void initViews() {
         super.initViews();
@@ -260,8 +256,8 @@ public class CompleteProduct extends  SocketBaseActivity {
                     Log.v("WMSLOG_Socket", message);
                     String message1=message.split("\r\n")[0];
                    String[] meg =message1.split(",");
-                    if (meg.length>=3 )
-                    {txtWeight.setText(message1.contains("ST,GS")?meg[2].trim():"");}
+                    if (meg.length>=3 &&isOpenWeight)
+                    {EditW.setText(message1.contains("ST,GS")?meg[2].trim():"");}
 
                 }
             }
@@ -291,12 +287,29 @@ public class CompleteProduct extends  SocketBaseActivity {
         return new StringBuffer().append(mYear).append("-").append(mMonth).append("-").append(mDate).toString();
     }
 
+    private boolean isOpenWeight=true;
+    @Event(value = R.id.EditW,type = View.OnFocusChangeListener.class)
+    private void OnFocusChange(View view, boolean isFouse) {
+        if (isFouse)
+        {
+            EditW.setText("");
+            isOpenWeight=false;
+        }
+        else
+        {
+            if(EditW.getText().toString().equals(""))
+            {
+                isOpenWeight=true;
+            }
+        }
+     }
+
     @Event(value = {R.id.butIn,R.id.butOut,R.id.butT,R.id.butIOut},type = View.OnClickListener.class)
     private void onClick(View view) {
         if (DoubleClickCheck.isFastDoubleClick(context)) {
             return;
         }
-        if (etxtBatch.getText().toString().isEmpty()||txtlineno.getText().toString().isEmpty()||etxtBNumber.getText().toString().isEmpty()||txtdate.getText().toString().isEmpty()){
+        if (etxtBatch.getText().toString().isEmpty()||txtlineno.getText().toString().isEmpty()||etxtBNumber.getText().toString().isEmpty()){
             MessageBox.Show(context, "填写信息不能为空！");
             return;
         }
@@ -306,20 +319,20 @@ public class CompleteProduct extends  SocketBaseActivity {
         }
 
 
-        if (txtWeight.getText().toString().equals(""))
-        {
-            MessageBox.Show(context, "电子称不稳定，无法获取数据！");
-            return;
-        }
-        else{
-            String Weight=txtWeight.getText().toString();
-            Weight=Weight.substring(0,Weight.length()-2);
-            if (!CommonUtil.isFloat(Weight))
-            {
-                MessageBox.Show(context, "电子称不稳定，无法获取数据！");
-                return;
-            }
-        }
+//        if (txtWeight.getText().toString().equals(""))
+//        {
+//            MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+//            return;
+//        }
+//        else{
+//            String Weight=txtWeight.getText().toString();
+//            Weight=Weight.substring(0,Weight.length()-2);
+//            if (!CommonUtil.isFloat(Weight))
+//            {
+//                MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+//                return;
+//            }
+//        }
 
 
         if(R.id.butIn==view.getId())
@@ -367,15 +380,35 @@ public class CompleteProduct extends  SocketBaseActivity {
         model.setQty(Float.parseFloat(etxtBNumber.getText().toString()));//数量
         model.setCompanyCode(womodel.getCompanyCode());
         model.setRowNoDel("1");
-        String aaa=txtWeight.getText().toString();
 
-//        if (aaa.equals("称重数量")){
-//            MessageBox.Show(context, "电子称没有启动，无法获取重量！");
-//            return;
-//        }
-        aaa=aaa.substring(0,aaa.length()-2);
-//        Float bbb = Float.parseFloat(aaa);
-        model.setItemQty(aaa);//重量
+
+        String Weight=EditW.getText().toString();
+        if (Weight.equals(""))
+        {
+            MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+            return;
+        }
+        else{
+            if (!CommonUtil.isFloat(Weight)){
+                Weight=Weight.substring(0,Weight.length()-2);
+                if (!CommonUtil.isFloat(Weight))
+                {
+                    MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+                    return;
+                }
+                else{
+                    model.setItemQty(Weight);//重量
+                }
+            }else{
+                model.setItemQty(Weight);//重量
+            }
+
+        }
+
+
+//        String aaa=txtWeight.getText().toString();
+//        aaa=aaa.substring(0,aaa.length()-2);
+//        model.setItemQty(aaa);//重量
 
         if (flag==0){
 //            model.setAreano("Areano");//标题
@@ -395,6 +428,25 @@ public class CompleteProduct extends  SocketBaseActivity {
             //成品外
             if (womodel.getStrVoucherType().equals("成品"))
             {
+                if (Float.parseFloat(model.getItemQty())<=0)
+                {
+                    MessageBox.Show(context, "成品称重数量不能小于等于0");
+                    return;
+                }
+                if (womodel.getMaxProductQty()!=null)
+                {
+                    Float Sum=0f;
+                    for ( int i=0;i<modelsInAll.size();i++)
+                    {
+                        Sum= ArithUtil.add(modelsInAll.get(i).getQty(),Sum);
+                    }
+                    if (Sum>womodel.getMaxProductQty())
+                    {
+                        MessageBox.Show(context, "成品包装数量超过最大限制数量："+ womodel.getMaxProductQty().toString());
+                        return;
+                    }
+                }
+
                 model.setLabelMark("OutChengPin");
             }
             if (womodel.getStrVoucherType().equals("半制品"))
@@ -402,11 +454,36 @@ public class CompleteProduct extends  SocketBaseActivity {
                 //半制外
                 model.setLabelMark("OutBanZhi");
                 model.setSupPrdBatch(model.getBatchNo());
-                model.setBarcodeNo(modelsAll.size());
+                model.setBarcodeNo(modelsAll.size()+1);
             }
             if (womodel.getStrVoucherType().equals("散装物料"))
             {
                 //散装外
+                model.setItemQty("");
+
+                String We=EditW.getText().toString();
+                if (We.equals(""))
+                {
+                    MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+                    return;
+                }
+                else{
+                    if (!CommonUtil.isFloat(Weight)){
+                        We=We.substring(0,Weight.length()-2);
+                        if (!CommonUtil.isFloat(Weight))
+                        {
+                            MessageBox.Show(context, "电子称不稳定，无法获取数据！");
+                            return;
+                        }
+                        else{
+                            model.setQty(Float.parseFloat(We));//重量
+                        }
+                    }else{
+                        model.setQty(Float.parseFloat(We));//重量
+                    }
+
+                }
+
                 model.setLabelMark("OutSanZhuang");
                 model.setRelaWeight(txtBi.getText().toString());
 //                model.setRelaWeight("");
@@ -420,7 +497,7 @@ public class CompleteProduct extends  SocketBaseActivity {
                 model.setBoxCount(modelsInAll.size());
                 for ( int i=0;i<modelsInAll.size();i++)
                 {
-                    Sum=modelsInAll.get(i).getQty()+Sum;
+                    Sum= ArithUtil.add(modelsInAll.get(i).getQty(),Sum);
                 }
                 model.setQty(Sum);
             }
@@ -502,8 +579,7 @@ public class CompleteProduct extends  SocketBaseActivity {
 
 
 //            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, path, getString(R.string.Msg_Print), context, mHandler,
-                    Returnpath, null,  URLModel.GetURL().PrintLabel, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, path, getString(R.string.Msg_Print), context, mHandler,Returnpath, null,  URLModel.GetURL().PrintLabel, params, null);
 //                MessageBox.Show(context, "打印成功！");
         } catch (Exception ex) {
 //                mSwipeLayout.setRefreshing(false);

@@ -6,40 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.xx.chinetek.cyproduct.Billinstock.CompleteProduct">
 
-    <EditText
-        android:id="@+id/EditW"
-        style="@style/EditTextStyle"
-        android:layout_width="0dp"
-        android:layout_height="95dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:hint="称重数据"
-        android:textAlignment="center"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline66"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/XNumber" />
-
     <TextView
         android:id="@+id/txtdate"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-102dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="200dp"
         android:layout_marginStart="16dp"
         android:gravity="left"
         android:hint="有效期"
         app:layout_constraintBottom_toBottomOf="@+id/textView77"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.221"
         app:layout_constraintLeft_toLeftOf="@+id/guideline30"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -53,7 +33,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:hint="相对比重"
+        android:hint="一箱支数"
         app:layout_constraintBottom_toBottomOf="@+id/textView75"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toRightOf="@+id/textView77"
@@ -66,13 +46,13 @@
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/EDate"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline30"
-        app:layout_constraintTop_toBottomOf="@+id/textView71"
-        tools:text="@string/EDate" />
+        tools:text="@string/EDate"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView71" />
 
     <EditText
         android:id="@+id/txtlineno"
@@ -99,11 +79,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline30"
         tools:text="@string/LineNO"
-        android:layout_marginTop="7dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView63" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView75" />
 
     <EditText
-        android:id="@+id/etxtBNumber"
+        android:id="@+id/TNumber"
         style="@style/EditTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -111,7 +91,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:hint="包装量"
+        android:hint="一托箱数"
         app:layout_constraintBottom_toBottomOf="@+id/textView63"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/textView63"
@@ -123,12 +103,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/BNumber"
+        android:text="@string/TNumber"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline30"
         app:layout_constraintTop_toBottomOf="@+id/textView185"
-        tools:text="@string/BNumber" />
+        tools:text="@string/TNumber" />
 
     <EditText
         android:id="@+id/etxtBatch"
@@ -145,92 +125,35 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/butIn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginStart="24dp"
-        android:background="@drawable/bt_selector"
-        android:text="@string/PrintInLabel"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline53"
-        app:layout_constraintTop_toTopOf="@+id/butT"
-        app:layout_constraintBottom_toBottomOf="@+id/butT"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
         android:id="@+id/butOut"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:background="@drawable/bt_selector"
         android:text="@string/PrintLabel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline54"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline53" />
-
-    <Button
-        android:id="@+id/butIOut"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bt_selector"
-        android:text="@string/PrintLabel"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline53"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline54"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintBottom_toBottomOf="@+id/butOut" />
-
-    <Button
-        android:id="@+id/butT"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bt_selector"
-        android:text="@string/PrintPallet"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline53"
-        app:layout_constraintTop_toTopOf="@+id/guideline54"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintDimensionRatio="h,1:1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline67"
+        app:layout_constraintTop_toTopOf="@+id/guideline68"
+        android:layout_marginTop="16dp"
+        app:layout_constraintHorizontal_bias="1.0" />
 
     <TextView
         android:id="@+id/textView75"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:text="@string/Bi"
+        android:layout_marginTop="8dp"
+        android:text="@string/XNumber"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline30"
-        app:layout_constraintTop_toBottomOf="@+id/textView77"
-        tools:text="@string/Bi" />
+        app:layout_constraintTop_toBottomOf="@+id/textView63"
+        tools:text="@string/XNumber" />
 
     <TextView
         android:id="@+id/textView185"
@@ -314,27 +237,22 @@
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline53"
+        android:id="@+id/guideline65"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="horizontal" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline67"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="192dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline54"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintGuide_begin="485dp"
-        tools:layout_editor_absoluteY="485dp"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline66"
-        app:layout_constraintGuide_begin="441dp"
+        android:id="@+id/guideline68"
+        app:layout_constraintGuide_begin="476dp"
         android:orientation="horizontal" />
 
 </android.support.constraint.ConstraintLayout>

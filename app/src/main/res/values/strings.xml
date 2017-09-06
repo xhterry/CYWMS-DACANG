@@ -361,4 +361,9 @@
     <string name="ReportOver">完工</string>
     <string name="ReportN">报工</string>
     <string name="ReportOverInstock">完工入库</string>
+    <string name="activity_Wolist_type">工单类别：</string>
+    <string name="activity_Wolist_one">正常工单</string>
+    <string name="activity_Wolist_two">外销工单</string>
+    <string name="TNumber">一托箱数：</string>
+    <string name="XNumber">一箱支数：</string>
 </resources>
