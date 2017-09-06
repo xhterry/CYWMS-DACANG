@@ -277,9 +277,6 @@ public class ReviewScan extends BaseActivity {
         }
     }
 
-    /*
-    点击确认复核
-     */
     void AnalysisGetStockByOutStockReviewByIDJson(String result){
         LogUtil.WriteLog(ReviewScan.class, TAG_GetStockByOutStockReviewByID,result);
         ReturnMsgModelList<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<StockInfo_Model>>() {}.getType());
@@ -421,81 +418,158 @@ public class ReviewScan extends BaseActivity {
 
     boolean CheckBarcode(StockInfo_Model StockInfo_Model){
         if(StockInfo_Model!=null && outStockDetailInfoModels!=null) {
-            int index = -1;
+            //int index = -1;
             int size = outStockDetailInfoModels.size();
+            Float Qty=StockInfo_Model.getQty();
+            Boolean hasMaterial=false;
+          //  Boolean isReviewFinish=true;
             for (int i = 0; i < size; i++) {
-                if (outStockDetailInfoModels.get(i).getID() == StockInfo_Model.getOutstockDetailID()) {
-                    index = i;
-                    break;
+                if(Qty<=0) break;
+                if (outStockDetailInfoModels.get(i).getMaterialNo().equals(StockInfo_Model.getMaterialNo())
+                        && outStockDetailInfoModels.get(i).getStrongHoldCode().equals(StockInfo_Model.getStrongHoldCode())) {
+                    hasMaterial=true;
+                    if(!outStockDetailInfoModels.get(i).getReviewFinish()) {
+                       // isReviewFinish=false;
+                        if (outStockDetailInfoModels.get(i).getLstStock() == null)
+                            outStockDetailInfoModels.get(i).setLstStock(new ArrayList<StockInfo_Model>());
+
+                        int StockIndex = outStockDetailInfoModels.get(i).getLstStock().indexOf(StockInfo_Model);
+                        if (StockIndex != -1) {
+                            MessageBox.Show(context, getString(R.string.Error_BarcodeScaned) + "|" + StockInfo_Model.getSerialNo());
+                            return false;
+                        }
+
+                        try {
+                            Float remainQty = ArithUtil.sub(outStockDetailInfoModels.get(i).getOutStockQty(), outStockDetailInfoModels.get(i).getScanQty());
+                            Float addQty=remainQty > Qty ? Qty : remainQty;
+                            Float ScanQty = ArithUtil.add(addQty, outStockDetailInfoModels.get(i).getScanQty());
+                            Qty = ArithUtil.sub(Qty, remainQty);
+                            StockInfo_Model stockInfoModel = StockInfo_Model.clone();
+                            stockInfoModel.setQty(addQty);
+                            outStockDetailInfoModels.get(i).getLstStock().add(0, stockInfoModel);
+                            outStockDetailInfoModels.get(i).setToBatchno(StockInfo_Model.getBatchNo());
+                            outStockDetailInfoModels.get(i).setScanQty(ScanQty);
+                            outStockDetailInfoModels.get(i).setOustockStatus(1); //存在未组托条码
+                            if(ArithUtil.sub(outStockDetailInfoModels.get(i).getScanQty(),outStockDetailInfoModels.get(i).getOutStockQty())==0f)
+                                outStockDetailInfoModels.get(i).setReviewFinish(true);
+                        }catch (Exception ex){
+                            MessageBox.Show(context, ex.getMessage());
+                            return false;
+                        }
+                    }
+
                 }
             }
-            if (index != -1) {
-                if (outStockDetailInfoModels.get(index).getLstStock() == null)
-                    outStockDetailInfoModels.get(index).setLstStock(new ArrayList<StockInfo_Model>());
-
-                int StockIndex = outStockDetailInfoModels.get(index).getLstStock().indexOf(StockInfo_Model);
-                if (StockIndex == -1) {
-
-                    //需要删除
-                    outStockDetailInfoModels.get(index).setToBatchno(StockInfo_Model.getBatchNo());
-
-                    float qty = ArithUtil.add(outStockDetailInfoModels.get(index).getScanQty(), StockInfo_Model.getQty());
-                    if (qty <= outStockDetailInfoModels.get(index).getOutStockQty()) {
-                        outStockDetailInfoModels.get(index).getLstStock().add(0, StockInfo_Model);
-                        outStockDetailInfoModels.get(index).setScanQty(qty);
-                        outStockDetailInfoModels.get(index).setOustockStatus(1); //存在未组托条码
-                    } else {
-                        MessageBox.Show(context, getString(R.string.Error_ReviewFinish));
-                        return false;
-                    }
-                } else {
-                    MessageBox.Show(context, getString(R.string.Error_BarcodeScaned) + "|" + StockInfo_Model.getSerialNo());
-                    return false;
-                }
-            } else {
+            if(!hasMaterial) {
                 MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + StockInfo_Model.getSerialNo());
                 return false;
             }
+//            if(isReviewFinish){
+//                MessageBox.Show(context, getString(R.string.Error_ReviewFinish));
+//                return false;
+//            }
         }
         return true;
     }
+
+
+//    boolean CheckBarcode(StockInfo_Model StockInfo_Model){
+//        if(StockInfo_Model!=null && outStockDetailInfoModels!=null) {
+//            int index = -1;
+//            int size = outStockDetailInfoModels.size();
+//            for (int i = 0; i < size; i++) {
+//                if (outStockDetailInfoModels.get(i).getID() == StockInfo_Model.getOutstockDetailID()) {
+//                    index = i;
+//                    break;
+//                }
+//            }
+//            if (index != -1) {
+//                if (outStockDetailInfoModels.get(index).getLstStock() == null)
+//                    outStockDetailInfoModels.get(index).setLstStock(new ArrayList<StockInfo_Model>());
+//
+//                int StockIndex = outStockDetailInfoModels.get(index).getLstStock().indexOf(StockInfo_Model);
+//                if (StockIndex == -1) {
+//
+//                    //需要删除
+//                    outStockDetailInfoModels.get(index).setToBatchno(StockInfo_Model.getBatchNo());
+//
+//                    float qty = ArithUtil.add(outStockDetailInfoModels.get(index).getScanQty(), StockInfo_Model.getQty());
+//                    if (qty <= outStockDetailInfoModels.get(index).getOutStockQty()) {
+//                        outStockDetailInfoModels.get(index).getLstStock().add(0, StockInfo_Model);
+//                        outStockDetailInfoModels.get(index).setScanQty(qty);
+//                        outStockDetailInfoModels.get(index).setOustockStatus(1); //存在未组托条码
+//                    } else {
+//                        MessageBox.Show(context, getString(R.string.Error_ReviewFinish));
+//                        return false;
+//                    }
+//                } else {
+//                    MessageBox.Show(context, getString(R.string.Error_BarcodeScaned) + "|" + StockInfo_Model.getSerialNo());
+//                    return false;
+//                }
+//            } else {
+//                MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList) + "|" + StockInfo_Model.getSerialNo());
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     /*
     获取需要组托条码
      */
     ArrayList<OutStockDetailInfo_Model> GetPalletModels(){
+
         ArrayList<OutStockDetailInfo_Model> palletDetailModels=new ArrayList<>();
-        if(outStockDetailInfoModels!=null) {
-            for (OutStockDetailInfo_Model outstockDetailModel : outStockDetailInfoModels) {
-                if (outstockDetailModel.getOustockStatus() == 1) {
-                    if (outstockDetailModel.getLstStock() != null) {
-                        ArrayList<StockInfo_Model> tempStockModels = new ArrayList<>();
-                        for (StockInfo_Model stockModel : outstockDetailModel.getLstStock()) {
-                            if (stockModel.getStockBarCodeStatus() == 0) {
-                                tempStockModels.add(0, stockModel);
+        try {
+            if (outStockDetailInfoModels != null) {
+                for (OutStockDetailInfo_Model outstockDetailModel : outStockDetailInfoModels) {
+                    if (outstockDetailModel.getOustockStatus() == 1) {
+                        if (outstockDetailModel.getLstStock() != null) {
+                            OutStockDetailInfo_Model palletDetail_model = new OutStockDetailInfo_Model();
+                            palletDetail_model.setErpVoucherNo(outstockDetailModel.getErpVoucherNo());
+                            palletDetail_model.setVoucherNo(outstockDetailModel.getVoucherNo());
+                            palletDetail_model.setRowNo(outstockDetailModel.getRowNo());
+                            palletDetail_model.setRowNoDel(outstockDetailModel.getRowNoDel());
+                            palletDetail_model.setCompanyCode(outstockDetailModel.getCompanyCode());
+                            palletDetail_model.setStrongHoldCode(outstockDetailModel.getStrongHoldCode());
+                            palletDetail_model.setStrongHoldName(outstockDetailModel.getStrongHoldName());
+                            palletDetail_model.setVoucherType(999);
+                            palletDetail_model.setMaterialNo(outstockDetailModel.getMaterialNo());
+                            palletDetail_model.setMaterialNoID(outstockDetailModel.getMaterialNoID());
+                            palletDetail_model.setMaterialDesc(outstockDetailModel.getMaterialDesc());
+                            if (palletDetail_model.getLstStock() == null)
+                                palletDetail_model.setLstStock(new ArrayList<StockInfo_Model>());
+                            //  ArrayList<StockInfo_Model> tempStockModels = new ArrayList<>();
+                            for (StockInfo_Model stockModel : outstockDetailModel.getLstStock()) {
+                                StockInfo_Model stockInfoModel=stockModel.clone();
+                                int index = palletDetailModels.indexOf(palletDetail_model);
+                                if (stockInfoModel.getStockBarCodeStatus() == 0) {
+                                    if (index == -1) {
+                                        palletDetail_model.getLstStock().add(0, stockInfoModel);
+                                        palletDetailModels.add(palletDetail_model);
+                                    } else {
+                                        int stockIndex = palletDetailModels.get(index).getLstStock().indexOf(stockInfoModel);
+                                        if(stockIndex==-1){
+                                            palletDetailModels.get(index).getLstStock().add(0, stockInfoModel);
+                                        }else {
+                                            palletDetailModels.get(index).getLstStock().get(stockIndex).setQty(
+                                                    ArithUtil.add(palletDetailModels.get(index).getLstStock().get(stockIndex).getQty(), stockModel.getQty())
+                                            );
+                                        }
+                                    }
+
+                                    //   tempStockModels.add(0, stockModel);
+                                }
                             }
+//                        if (tempStockModels.size() == 0)
+//                            continue;
                         }
-                        if (tempStockModels.size() == 0)
-                            continue;
-                        OutStockDetailInfo_Model palletDetail_model = new OutStockDetailInfo_Model();
-                        palletDetail_model.setErpVoucherNo(outstockDetailModel.getErpVoucherNo());
-                        palletDetail_model.setVoucherNo(outstockDetailModel.getVoucherNo());
-                        palletDetail_model.setRowNo(outstockDetailModel.getRowNo());
-                        palletDetail_model.setRowNoDel(outstockDetailModel.getRowNoDel());
-                        palletDetail_model.setCompanyCode(outstockDetailModel.getCompanyCode());
-                        palletDetail_model.setStrongHoldCode(outstockDetailModel.getStrongHoldCode());
-                        palletDetail_model.setStrongHoldName(outstockDetailModel.getStrongHoldName());
-                        palletDetail_model.setVoucherType(999);
-                        palletDetail_model.setMaterialNo(outstockDetailModel.getMaterialNo());
-                        palletDetail_model.setMaterialNoID(outstockDetailModel.getMaterialNoID());
-                        palletDetail_model.setMaterialDesc(outstockDetailModel.getMaterialDesc());
-                        if (outstockDetailModel.getLstStock() != null && outstockDetailModel.getLstStock().size() != 0) {
-                            palletDetail_model.setLstStock(tempStockModels);
-                        }
-                        palletDetailModels.add(palletDetail_model);
                     }
                 }
             }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+            palletDetailModels=new ArrayList<>();
         }
         return palletDetailModels;
     }

@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by GHOST on 2017/1/13.
  */
 
-public class StockInfo_Model extends Base_Model implements Parcelable {//
+public class StockInfo_Model extends Base_Model implements Parcelable,Cloneable {//
     public StockInfo_Model(){
 
     }
@@ -571,6 +571,12 @@ public class StockInfo_Model extends Base_Model implements Parcelable {//
 
     }
 
+    @Override
+    public StockInfo_Model clone() throws CloneNotSupportedException {
+        StockInfo_Model stockInfoModel=null;
+        stockInfoModel=(StockInfo_Model)super.clone();
+        return stockInfoModel;
+    }
 
     @Override
     public int describeContents() {

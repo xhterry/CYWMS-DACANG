@@ -337,7 +337,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
 
 
     private void BindListVIew(List<OutStockTaskInfo_Model> outStockTaskInfoModels) {
-        offSehlfBillChoiceItemAdapter=new OffSehlfBillChoiceItemAdapter(context,outStockTaskInfoModels);
+        offSehlfBillChoiceItemAdapter=new OffSehlfBillChoiceItemAdapter(context,isPickingAdmin,outStockTaskInfoModels);
         lsvOffshelfChioce.setAdapter(offSehlfBillChoiceItemAdapter);
 
     }

@@ -83,7 +83,8 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
         listItemView.txtreferStock.setText(outStockTaskDetailsInfoModel.getAreaNo());
         listItemView.txtERPVoucherNo.setText(outStockTaskDetailsInfoModel.getErpVoucherNo());
         listItemView.txtMaterialDesc.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
-        listItemView.txtbatch.setText("批："+outStockTaskDetailsInfoModel.getFromBatchNo());
+        listItemView.txtbatch.setText((outStockTaskDetailsInfoModel.getIsSpcBatch().toUpperCase().equals("Y")?
+                "指定批：":"批：")+outStockTaskDetailsInfoModel.getFromBatchNo());
         if (outStockTaskDetailsInfoModel.getScanQty()!=0 &&
                 outStockTaskDetailsInfoModel.getScanQty().compareTo(outStockTaskDetailsInfoModel.getRePickQty())<0) {
             convertView.setBackgroundResource(R.color.khaki);

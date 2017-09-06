@@ -73,7 +73,6 @@ public class URLModel {
     public String Delete_PalletORBarCodeADF=GetWCFAdress()+"Delete_PalletORBarCodeADF";//删除组托信息
     public String SaveT_BarCodeToStockADF=GetWCFAdress()+"SaveT_BarCodeToStockADF";//装箱拆箱提交
     public String Get_PalletDetailByVoucherNo=GetWCFAdress()+"Get_PalletDetailByVoucherNo";//复核获取托盘信息
-    public String Del_PalletOrSerialNo=GetWCFAdress()+"Del_PalletOrSerialNo";//复核删除托盘信息
     public String GetT_QualityListADF=GetWCFAdress()+"GetT_QualityListADF";//获取质检表头信息
     public String ScanQualityStockADF=GetWCFAdress()+"ScanQualityStockADF";//获取质检扫描条码
     public String SaveTransportSupplierListADF=GetWCFAdress()+"SaveTransportSupplierListADF";//保存承运商

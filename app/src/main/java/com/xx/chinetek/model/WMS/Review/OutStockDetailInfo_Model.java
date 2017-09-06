@@ -41,8 +41,8 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     private String VoucherNo;
     private Float ScanQty;
     private String FromBatchNo;
-    private List<SerialNo_Model> lstSerialNo;
-    private List<StockInfo_Model> lstStock=new ArrayList<StockInfo_Model>();
+    private ArrayList<SerialNo_Model> lstSerialNo;
+    private ArrayList<StockInfo_Model> lstStock=new ArrayList<StockInfo_Model>();
     private String BatchNo;
     private int IsSerial;
     private String PartNo;
@@ -56,7 +56,8 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     private String FromErpWarehouse;
     private String ToBatchNo;
     private String ToErpWarehouse;
-    public int OustockStatus=0;//：0：StockInfo_Model不存在未组托条码  1：StockInfo_Model存在未组托条码
+    private  Boolean IsReviewFinish=false; //行是否复核完毕
+    private int OustockStatus=0;//：0：StockInfo_Model不存在未组托条码  1：StockInfo_Model存在未组托条码
 
     public String getFromErpAreaNo() {
         return FromErpAreaNo;
@@ -72,6 +73,14 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
 
     public void setFromErpWarehouse(String fromErpWarehouse) {
         FromErpWarehouse = fromErpWarehouse;
+    }
+
+    public Boolean getReviewFinish() {
+        return IsReviewFinish;
+    }
+
+    public void setReviewFinish(Boolean reviewFinish) {
+        IsReviewFinish = reviewFinish;
     }
 
     public String getToBatchNo() {
@@ -176,7 +185,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         return lstStock;
     }
 
-    public void setLstStock(List<StockInfo_Model> lstStockInfo) {
+    public void setLstStock(ArrayList<StockInfo_Model> lstStockInfo) {
         this.lstStock = lstStockInfo;
     }
 
@@ -377,7 +386,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         return lstSerialNo;
     }
 
-    public void setLstSerialNo(List<SerialNo_Model> lstSerialNo) {
+    public void setLstSerialNo(ArrayList<SerialNo_Model> lstSerialNo) {
         this.lstSerialNo = lstSerialNo;
     }
 
@@ -466,6 +475,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         dest.writeString(this.FromErpWarehouse);
         dest.writeString(this.ToBatchNo);
         dest.writeString(this.ToErpWarehouse);
+        dest.writeValue(this.IsReviewFinish);
         dest.writeInt(this.OustockStatus);
     }
 
@@ -512,6 +522,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         this.FromErpWarehouse = in.readString();
         this.ToBatchNo = in.readString();
         this.ToErpWarehouse = in.readString();
+        this.IsReviewFinish = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.OustockStatus = in.readInt();
     }
 

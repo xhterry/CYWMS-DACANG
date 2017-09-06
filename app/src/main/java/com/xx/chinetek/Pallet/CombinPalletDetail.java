@@ -1,13 +1,10 @@
 package com.xx.chinetek.Pallet;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 
 import com.android.volley.Request;
@@ -33,9 +30,7 @@ import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
-import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -97,37 +92,39 @@ public class CombinPalletDetail extends BaseActivity {
         Get_PalletDetailByVoucherNo(voucherNo);
     }
 
-    @Event(value = R.id.lsvPalletDetail,type = AdapterView.OnItemLongClickListener.class)
-    private boolean lsvGroupDetailonItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        if(id>=0) {
-            delPalletModel=(PalletDetail_Model)palletDetailItemAdapter.getGroup(position);
-            new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除组托数据？\n托盘号："+delPalletModel.getPalletNo())
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // TODO 自动生成的方法
-                            Del_PalletOrSerialNo(delPalletModel.getPalletNo(),"");
-                        }
-                    }).setNegativeButton("取消", null).show();
-        }
-        return true;
-    }
+//    @Event(value = R.id.lsvPalletDetail,type = AdapterView.OnItemLongClickListener.class)
+//    private boolean lsvGroupDetailonItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//        if(id>=0) {
+//            delPalletModel=(PalletDetail_Model)palletDetailItemAdapter.getGroup(position);
+//            new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除组托数据？\n托盘号："+delPalletModel.getPalletNo())
+//                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // TODO 自动生成的方法
+//                            Del_PalletOrSerialNo(delPalletModel);
+//                        }
+//                    }).setNegativeButton("取消", null).show();
+//        }
+//        return true;
+//    }
 
-    @Event(value = R.id.lsvPalletDetail,type = ExpandableListView.OnChildClickListener.class)
-    private boolean lsvGroupDetailonChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        delPalletModel=((PalletDetail_Model)palletDetailItemAdapter.getGroup(groupPosition));
-        delBarCodeInfo= ((PalletDetail_Model)palletDetailItemAdapter.getGroup(groupPosition)).getLstBarCode().get(childPosition);
-        new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除此条序列号？\n序列号："+delBarCodeInfo.getSerialNo())
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO 自动生成的方法
-                        Del_PalletOrSerialNo(delPalletModel.getPalletNo(),delBarCodeInfo.getSerialNo());
-                    }
-                }).setNegativeButton("取消", null).show();
-
-        return false;
-    }
+//    @Event(value = R.id.lsvPalletDetail,type = ExpandableListView.OnChildClickListener.class)
+//    private boolean lsvGroupDetailonChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+//        delBarCodeInfo= ((PalletDetail_Model)palletDetailItemAdapter.getGroup(groupPosition)).getLstBarCode().get(childPosition);
+//        new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除此条序列号？\n序列号："+delBarCodeInfo.getSerialNo())
+//                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // TODO 自动生成的方法
+//                        PalletDetail_Model palletDetailModel=new PalletDetail_Model();
+//                        palletDetailModel.setLstBarCode(new ArrayList<BarCodeInfo>());
+//                        palletDetailModel.getLstBarCode().add(delBarCodeInfo);
+//                        Del_PalletOrSerialNo(palletDetailModel);
+//                    }
+//                }).setNegativeButton("取消", null).show();
+//
+//        return false;
+//    }
 
 
     @Override
@@ -169,14 +166,15 @@ public class CombinPalletDetail extends BaseActivity {
         }
     }
 
-    private void Del_PalletOrSerialNo(final String PalletNo,final String SerialNo) {
+    private void Del_PalletOrSerialNo(PalletDetail_Model palletDetailModel) {
         final Map<String, String> params = new HashMap<String, String>();
-        params.put("PalletNo", PalletNo);
-        params.put("SerialNo", SerialNo);
-        String para = (new JSONObject(params)).toString();
-        LogUtil.WriteLog(CombinPalletDetail.class, TAG_Del_PalletOrSerialNo, para);
+        String userJson=GsonUtil.parseModelToJson(BaseApplication.userInfo);
+        String palletDetailJson=GsonUtil.parseModelToJson(palletDetailModel);
+        params.put("UserJson", userJson);
+        params.put("PalletDetailJson", palletDetailJson);
+        LogUtil.WriteLog(CombinPalletDetail.class, TAG_Del_PalletOrSerialNo, palletDetailJson);
         RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Del_PalletOrSerialNo, getString(R.string.Msg_Del_PalletOrbarcode), context, mHandler,
-                RESULT_Msg_Del_PalletOrSerialNo, null,  URLModel.GetURL().Del_PalletOrSerialNo, params, null);
+                RESULT_Msg_Del_PalletOrSerialNo, null,  URLModel.GetURL().Delete_PalletORBarCodeADF, params, null);
     }
 
     void AnalysisDel_PalletOrSerialNoJson(String result){
@@ -218,7 +216,6 @@ public class CombinPalletDetail extends BaseActivity {
                 outStockDetailInfoModels.get(i).setScanQty(ArithUtil.sub(outStockDetailInfoModels.get(i).getScanQty(),outStockDetailInfoModels.get(i).getLstStock().get(index).getQty()));
                 outStockDetailInfoModels.get(i).getLstStock().remove(index);
                 outStockDetailInfoModels.get(i).setOustockStatus(1);
-                break;
             }
         }
     }

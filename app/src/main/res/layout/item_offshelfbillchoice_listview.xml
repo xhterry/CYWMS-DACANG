@@ -40,10 +40,19 @@
                     android:id="@+id/txtERPVoucherNo"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.8"
                     android:maxLines="1"
                     android:textColor="@color/mediumseagreen"
                     android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/txtPcikName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/maroon"
+                    android:textSize="15sp" />
 
         </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.xx.chinetek.adapter.wms.OffShelf;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
     private LayoutInflater listContainer; // 视图容器
     //private int selectItem = -1;
     private List<Boolean> listselected;//用布尔型的list记录每一行的选中状态
+    boolean isPickingAdmin=false;
 
     public final class ListItemView { // 自定义控件集合
 
@@ -32,13 +34,14 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         public TextView txtStrVoucherType;
         public TextView txtCompany;
         public TextView txtdepartment;
-        public TextView txtCustoms;
+        public TextView txtPcikName;
     }
 
-    public OffSehlfBillChoiceItemAdapter(Context context, List<OutStockTaskInfo_Model> outStockTaskInfoModels) {
+    public OffSehlfBillChoiceItemAdapter(Context context,boolean isPickingAdmin, List<OutStockTaskInfo_Model> outStockTaskInfoModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.outStockTaskInfoModels = outStockTaskInfoModels;
+        this.isPickingAdmin=isPickingAdmin;
         this.setListselected(new ArrayList<Boolean>(getCount()));
         for(int i=0;i<getCount();i++)
             getListselected().add(false);//初始为false，长度和listview一样
@@ -98,7 +101,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
             listItemView.txtStrVoucherType = (TextView) convertView.findViewById(R.id.txtStrVoucherType);
             listItemView.txtCompany = (TextView) convertView.findViewById(R.id.txtCompany);
             listItemView.txtdepartment = (TextView) convertView.findViewById(R.id.txtdepartment);
-            listItemView.txtCustoms = (TextView) convertView.findViewById(R.id.txtCustoms);
+            listItemView.txtPcikName = (TextView) convertView.findViewById(R.id.txtPcikName);
             convertView.setTag(listItemView);
         } else {
             listItemView = (ListItemView) convertView.getTag();
@@ -109,6 +112,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         listItemView.txtStrVoucherType.setText(outStockTaskInfoModel.getStrVoucherType());
         listItemView.txtCompany.setText("据点："+outStockTaskInfoModel.getStrongHoldName());
         listItemView.txtdepartment.setText("部门："+outStockTaskInfoModel.getDepartmentName());
+        listItemView.txtPcikName.setText(outStockTaskInfoModel.getPickUserName());
        // listItemView.txtCustoms.setText("客户名称1，客户名称2，客户名称3，客户名称4,客户名称5,客户名称6");
         if(outStockTaskInfoModel.getIsEdate().equals("1"))
             convertView.setBackgroundResource(R.color.antiquewhite);
@@ -116,6 +120,12 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
             convertView.setBackgroundResource(R.color.khaki);
         else
             convertView.setBackgroundColor(Color.TRANSPARENT);
+
+        if(isPickingAdmin){
+            if(!TextUtils.isEmpty(outStockTaskInfoModel.getPickUserNo())){
+                convertView.setBackgroundResource(R.color.mediumseagreen);
+            }
+        }
 
         if (getListselected().get(position)==true) {
             convertView.setBackgroundColor(Color.GREEN);

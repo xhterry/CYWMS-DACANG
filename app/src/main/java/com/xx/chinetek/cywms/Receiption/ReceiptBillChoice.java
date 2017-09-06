@@ -252,7 +252,6 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
     void AnalysisGetT_InStockListJson(String result){
         try {
             LogUtil.WriteLog(ReceiptBillChoice.class, TAG_GetT_InStockList, result);
-            //Gson gson =new GsonBuilder().registerTypeAdapter(Date.class, new NetDateTimeAdapter()).setDateFormat("yyyy-MM-dd HH:mm:ss").create();
             ReturnMsgModelList<Receipt_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<Receipt_Model>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
