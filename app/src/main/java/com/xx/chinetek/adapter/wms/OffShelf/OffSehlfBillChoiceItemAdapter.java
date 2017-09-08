@@ -35,6 +35,8 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         public TextView txtCompany;
         public TextView txtdepartment;
         public TextView txtPcikName;
+        public TextView txtFloorName;
+        public TextView txtStockLeave;
     }
 
     public OffSehlfBillChoiceItemAdapter(Context context,boolean isPickingAdmin, List<OutStockTaskInfo_Model> outStockTaskInfoModels) {
@@ -102,6 +104,8 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
             listItemView.txtCompany = (TextView) convertView.findViewById(R.id.txtCompany);
             listItemView.txtdepartment = (TextView) convertView.findViewById(R.id.txtdepartment);
             listItemView.txtPcikName = (TextView) convertView.findViewById(R.id.txtPcikName);
+            listItemView.txtFloorName = (TextView) convertView.findViewById(R.id.txtFloorName);
+            listItemView.txtStockLeave = (TextView) convertView.findViewById(R.id.txtStockLeave);
             convertView.setTag(listItemView);
         } else {
             listItemView = (ListItemView) convertView.getTag();
@@ -112,7 +116,9 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         listItemView.txtStrVoucherType.setText(outStockTaskInfoModel.getStrVoucherType());
         listItemView.txtCompany.setText("据点："+outStockTaskInfoModel.getStrongHoldName());
         listItemView.txtdepartment.setText("部门："+outStockTaskInfoModel.getDepartmentName());
-        listItemView.txtPcikName.setText(outStockTaskInfoModel.getPickUserName());
+        listItemView.txtPcikName.setText("拣货人:"+outStockTaskInfoModel.getPickUserName());
+        listItemView.txtFloorName.setText("楼层："+outStockTaskInfoModel.getFloorName());
+        listItemView.txtStockLeave.setText("货位："+outStockTaskInfoModel.getHeightAreaName());
        // listItemView.txtCustoms.setText("客户名称1，客户名称2，客户名称3，客户名称4,客户名称5,客户名称6");
         if(outStockTaskInfoModel.getIsEdate().equals("1"))
             convertView.setBackgroundResource(R.color.antiquewhite);

@@ -53,8 +53,18 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String PickLeaderUserNo;
     private String PickUserNo;
     private String PickUserName;
+    private String FloorName;
+    private String HeightAreaName;
     private String IsEdate; //1:不检查 2：检查
     private  int  WareHouseID;
+
+    public String getHeightAreaName() {
+        return HeightAreaName;
+    }
+
+    public void setHeightAreaName(String heightAreaName) {
+        HeightAreaName = heightAreaName;
+    }
 
     public String getIsEdate() {
         return IsEdate;
@@ -78,6 +88,14 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
 
     public void setWareHouseID( int  wareHouseID) {
         WareHouseID = wareHouseID;
+    }
+
+    public String getFloorName() {
+        return FloorName;
+    }
+
+    public void setFloorName(String floorName) {
+        FloorName = floorName;
     }
 
     public String getPickUserNo() {
@@ -400,6 +418,8 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.PickLeaderUserNo);
         dest.writeString(this.PickUserNo);
         dest.writeString(this.PickUserName);
+        dest.writeString(this.FloorName);
+        dest.writeString(this.HeightAreaName);
         dest.writeString(this.IsEdate);
         dest.writeInt(this.WareHouseID);
     }
@@ -441,6 +461,8 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.PickLeaderUserNo = in.readString();
         this.PickUserNo = in.readString();
         this.PickUserName = in.readString();
+        this.FloorName = in.readString();
+        this.HeightAreaName = in.readString();
         this.IsEdate = in.readString();
         this.WareHouseID = in.readInt();
     }

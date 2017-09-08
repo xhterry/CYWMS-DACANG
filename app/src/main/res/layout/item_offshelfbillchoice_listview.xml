@@ -45,14 +45,7 @@
                     android:textColor="@color/mediumseagreen"
                     android:textSize="15sp"/>
 
-                <TextView
-                    android:id="@+id/txtPcikName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:maxLines="1"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/maroon"
-                    android:textSize="15sp" />
+
 
         </LinearLayout>
 
@@ -97,4 +90,44 @@
 
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/txtFloorName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/firebrick"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/txtPcikName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/maroon"
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:id="@+id/txtStockLeave"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:maxLines="1"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/darkblue"
+                    android:textSize="15sp" />
+
+        </LinearLayout>
+
+
 </LinearLayout>
