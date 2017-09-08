@@ -10,12 +10,14 @@ import java.util.Date;
  */
 
 public class Barcode_Model implements Parcelable{
+    private int id;
     public String StrongHoldCode ;
     public String StrongHoldName ;
     public int MaterialNoID ;
     public String Unit;
     private String BatchNo;
     private Float Qty;
+    private Float sqty;
     private String MaterialNo;
     private String MaterialDesc;
     private String BarCode;
@@ -45,6 +47,23 @@ public class Barcode_Model implements Parcelable{
     private String RelaWeight;//ymh相对比重
     private String StoreCondition;//ymh存储条件
     private String ProtectWay;//ymh防护措施
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Float getSQTY() {
+        return sqty;
+    }
+
+    public void setSQTY(Float SQTY) {
+        this.sqty = SQTY;
+    }
 
     public String getStoreCondition() {
         return StoreCondition;
@@ -342,6 +361,22 @@ public class Barcode_Model implements Parcelable{
         BoxCount = boxCount;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Barcode_Model that = (Barcode_Model) o;
+
+        return MaterialNo.equals(that.MaterialNo)
+                && warehouseno.equals(that.warehouseno)
+                && areano.equals(that.areano)
+                && StrongHoldCode.equals(that.StrongHoldCode)
+                && BatchNo.equals(that.BatchNo);
+
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -349,12 +384,14 @@ public class Barcode_Model implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.StrongHoldCode);
         dest.writeString(this.StrongHoldName);
         dest.writeInt(this.MaterialNoID);
         dest.writeString(this.Unit);
         dest.writeString(this.BatchNo);
         dest.writeValue(this.Qty);
+        dest.writeValue(this.sqty);
         dest.writeString(this.MaterialNo);
         dest.writeString(this.MaterialDesc);
         dest.writeString(this.BarCode);
@@ -388,12 +425,14 @@ public class Barcode_Model implements Parcelable{
     }
 
     protected Barcode_Model(Parcel in) {
+        this.id = in.readInt();
         this.StrongHoldCode = in.readString();
         this.StrongHoldName = in.readString();
         this.MaterialNoID = in.readInt();
         this.Unit = in.readString();
         this.BatchNo = in.readString();
         this.Qty = (Float) in.readValue(Float.class.getClassLoader());
+        this.sqty = (Float) in.readValue(Float.class.getClassLoader());
         this.MaterialNo = in.readString();
         this.MaterialDesc = in.readString();
         this.BarCode = in.readString();

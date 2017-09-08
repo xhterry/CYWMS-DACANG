@@ -71,7 +71,6 @@ public class AdjustStock extends BaseActivity {
 
    Context context=AdjustStock.this;
 
-
     @ViewInject(R.id.edt_AdjustScanBarcode)
     EditText  edtAdjustScanBarcode;
     @ViewInject(R.id.edt_AdjustNum)

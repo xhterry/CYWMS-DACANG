@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.adapter.wms.Intentory.InventoryFincItemAdapter;
 import com.xx.chinetek.adapter.wms.Intentory.InventoryScanItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
@@ -66,7 +67,8 @@ Context context=IntentoryDetial.this;
     @ViewInject(R.id.lsvInventoryDetail)
     ListView lsvInventoryDetail;
     InventoryScanItemAdapter inventoryScanItemAdapter;
-
+    InventoryFincItemAdapter inventoryFincItemAdapter;
+    int model=-1;
     @Override
     protected void initViews() {
         super.initViews();
@@ -80,15 +82,22 @@ Context context=IntentoryDetial.this;
     protected void initData() {
         super.initData();
         checkno= getIntent().getStringExtra("checkno");
-        InitListview(checkno);
+        model=getIntent().getIntExtra("model",-1);
+        int id=getIntent().getIntExtra("model",-1);
+        InitListview(checkno,id);
     }
 
-    private void InitListview(String checkno) {
+    private void InitListview(String checkno,int id) {
         final Map<String, String> params = new HashMap<String, String>();
-        params.put("checkno", checkno);
+        if(model==1)
+            params.put("checkno", checkno);
+        else
+            params.put("id", id+"");
         String para = (new JSONObject(params)).toString();
         LogUtil.WriteLog(IntentoryDetial.class, TAG_GetCheckDetail, para);
-        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetCheckDetail, getString(R.string.Msg_GetCheckDetail), context, mHandler, RESULT_Msg_GetCheckDetail, null,  URLModel.GetURL().GetCheckDetail, params, null);
+        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetCheckDetail,
+                getString(R.string.Msg_GetCheckDetail), context, mHandler, RESULT_Msg_GetCheckDetail,
+                null,model==1?URLModel.GetURL().GetCheckDetail:URLModel.GetURL().GetMinSerialno, params, null);
     }
 
     /*
@@ -96,7 +105,7 @@ Context context=IntentoryDetial.this;
     */
     @Event(value = R.id.lsvInventoryDetail,type =  AdapterView.OnItemLongClickListener.class)
     private  boolean lsvInventoryDetailLongClick(AdapterView<?> parent, View view, final int position, long id){
-        if(id>=0) {
+        if(id>=0 && model==1) {
             final Barcode_Model delBarcode=(Barcode_Model)inventoryScanItemAdapter.getItem(position);
             new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除盘点记录？")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -126,8 +135,13 @@ Context context=IntentoryDetial.this;
         }else{
             MessageBox.Show(context,returnMsgModel.getMessage());
         }
-        inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
-        lsvInventoryDetail.setAdapter(inventoryScanItemAdapter);
+        if(model==1) {
+            inventoryScanItemAdapter = new InventoryScanItemAdapter(context, model, barcodeModels);
+            lsvInventoryDetail.setAdapter(inventoryScanItemAdapter);
+        }else{
+            inventoryFincItemAdapter = new InventoryFincItemAdapter(context,barcodeModels);
+            lsvInventoryDetail.setAdapter(inventoryFincItemAdapter);
+        }
     }
 
     void  AnalysisDeleteCheckDetailJson(String result){
@@ -135,7 +149,7 @@ Context context=IntentoryDetial.this;
         ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
         MessageBox.Show(context,returnMsgModel.getMessage());
         if(returnMsgModel.getHeaderStatus().equals("S")){
-            InitListview(checkno);
+            InitListview(checkno,-1);
         }
     }
 }

@@ -252,6 +252,7 @@
     <string name="Msg_SaveT_StockADF">移库提交中...</string>
     <string name="Msg_SaveT_QuanlitySampADF">保存质检明细列表...</string>
     <string name="Msg_SaveT_OutStockTaskDetailADF">保存下架明细列表...</string>
+    <string name="Msg_SaveT_InventoryADF">保存盘点结果...</string>
     <string name="Msg_SaveT_ChangeMaterialADF">保存转料明细列表...</string>
     <string name="Msg_SaveT_InStockTaskDetailADF">保存上架明细列表...</string>
     <string name="Msg_UpadteT_QualityUserADF">提交取样物料信息...</string>
@@ -346,6 +347,7 @@
     <string name="Error_ReviewFinish">该物料已复核完毕！</string>
     <string name="Error_MaterialNotMatch">物料属性不一致，无法装箱！</string>
     <string name="Error_Inventory_NoArtNo">此货位号不在盘点任务中</string>
+    <string name="Error_Inventory_Nomaterial">此物料不在盘点任务中</string>
     <string name="Error_Upshelf_HasStcokNotSubmit">存在未提交数据，请先提交</string>
     <string name="Error_PickingFinish">拣货完毕！</string>
     <string name="Error_InOrOutSizeDiff">所选无订单出入单据行数不相同！</string>

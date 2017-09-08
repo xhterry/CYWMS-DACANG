@@ -74,6 +74,8 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
     ArrayList<Check_Model> check_models;//单据信息
     InventoryItemAdapter inventoryItemAdapter;
 
+    int model=-1;
+
     @Override
     protected void initViews() {
         super.initViews();
@@ -86,11 +88,13 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
     protected void initData() {
         super.initData();
         mSwipeLayout.setOnRefreshListener(this); //下拉刷新
+        model=getIntent().getIntExtra("model",0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        check_models=new ArrayList<>();
         InitListView();
     }
 
@@ -104,7 +108,8 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_linemanagel, menu);
+        if(model==1)
+            getMenuInflater().inflate(R.menu.menu_linemanagel, menu);
         return true;
     }
 
@@ -155,7 +160,8 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
         try {
             Map<String, String> params = new HashMap<>();
             LogUtil.WriteLog(InventoryBillChoice.class, TAG_GetCheckADF, "");
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetCheckADF, getString(R.string.Msg_Inventory_Load), context, mHandler, RESULT_GetCheckADF, null,  URLModel.GetURL().GetCheckADF, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetCheckADF, getString(R.string.Msg_Inventory_Load), context, mHandler,
+                    RESULT_GetCheckADF, null, model==1?URLModel.GetURL().GetCheckADF:URLModel.GetURL().GetCheckMing, params, null);
         } catch (Exception ex) {
             mSwipeLayout.setRefreshing(false);
             MessageBox.Show(context, ex.getMessage());
@@ -178,10 +184,11 @@ public class InventoryBillChoice extends BaseActivity implements SwipeRefreshLay
 
 
     void StartScanIntent(Check_Model check_model){
-        Intent intent=new Intent(context,IntentoryScan.class);
+        Intent intent=new Intent(context,model==1?IntentoryScan.class:IntentoryFinc.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("check_model",check_model);
         intent.putExtras(bundle);
+        intent.putExtra("model",model);
         startActivityLeft(intent);
     }
 

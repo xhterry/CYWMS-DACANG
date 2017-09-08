@@ -94,7 +94,8 @@
         <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnBillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnScan" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInReturn" />
-        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutMaterial"></activity>
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutMaterial" />
+        <activity android:name=".Intentory.IntentoryFinc"></activity>
     </application>
 
 </manifest>

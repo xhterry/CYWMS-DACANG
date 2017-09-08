@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
-import com.xx.chinetek.util.function.ArithUtil;
 
 import java.util.ArrayList;
 
@@ -18,26 +17,26 @@ import java.util.ArrayList;
  * Created by GHOST on 2017/1/13.
  */
 
-public class InventoryScanItemAdapter extends BaseAdapter {
+public class InventoryFincItemAdapter extends BaseAdapter {
     private Context context; // 运行上下文
     private ArrayList<Barcode_Model> barcodeModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
-    int model=-1;
 
     public final class ListItemView { // 自定义控件集合
 
         public TextView txtMaterialNo;
-        public TextView txtStock;
+        public TextView txtSerialNo;
         public TextView txtQty;
-        public TextView txtMaterialDec;
-        public TextView txtScanQty;
+        public TextView txtWarehouseno;
+        public TextView txtAreano;
+        public TextView txtBatchNo;
+        public TextView txtStrongHoldCode;
     }
 
-    public InventoryScanItemAdapter(Context context,int model, ArrayList<Barcode_Model> barcodeModels) {
+    public InventoryFincItemAdapter(Context context, ArrayList<Barcode_Model> barcodeModels) {
         this.context = context;
         listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.barcodeModels = barcodeModels;
-        this.model=model;
 
     }
 
@@ -65,39 +64,27 @@ public class InventoryScanItemAdapter extends BaseAdapter {
             listItemView = new ListItemView();
 
             // 获取list_item布局文件的视图
-            convertView = listContainer.inflate(R.layout.item_inventoryscan_listview,null);
+            convertView = listContainer.inflate(R.layout.item_inventoryfinc_listview,null);
             listItemView.txtMaterialNo = (TextView) convertView.findViewById(R.id.txtMaterialNo);
             listItemView.txtQty = (TextView) convertView.findViewById(R.id.txtQty);
-            listItemView.txtStock = (TextView) convertView.findViewById(R.id.txtStock);
-            listItemView.txtMaterialDec = (TextView) convertView.findViewById(R.id.txtMaterialDec);
-            listItemView.txtScanQty = (TextView) convertView.findViewById(R.id.txtScanQty);
+            listItemView.txtSerialNo = (TextView) convertView.findViewById(R.id.txtSerialNo);
+            listItemView.txtWarehouseno = (TextView) convertView.findViewById(R.id.txtWarehouseno);
+            listItemView.txtAreano = (TextView) convertView.findViewById(R.id.txtAreano);
+            listItemView.txtStrongHoldCode = (TextView) convertView.findViewById(R.id.txtStrongHoldCode);
+            listItemView.txtBatchNo = (TextView) convertView.findViewById(R.id.txtBatchNo);
             convertView.setTag(listItemView);
         } else {
             listItemView = (ListItemView) convertView.getTag();
         }
         Barcode_Model barcodeModel=barcodeModels.get(selectID);
         listItemView.txtMaterialNo.setText(barcodeModel.getMaterialNo());
-        listItemView.txtStock.setText("库位："+barcodeModel.getAreano());
-        listItemView.txtMaterialDec.setText(barcodeModel.getMaterialDesc());
+        listItemView.txtSerialNo.setText(barcodeModel.getSerialNo());
+        listItemView.txtWarehouseno.setText(barcodeModel.getWarehouseno());
+        listItemView.txtAreano.setText(barcodeModel.getAreano());
+        listItemView.txtStrongHoldCode.setText(barcodeModel.getStrongHoldCode());
         listItemView.txtQty.setText("数量："+barcodeModel.getQty());
-        if(model==1){
-            listItemView.txtScanQty.setVisibility(View.GONE);
-        }else{
-            listItemView.txtScanQty.setText("扫描数："+barcodeModel.getSQTY());
-        }
-        if(model==2){
-            Float remainQty= ArithUtil.sub(barcodeModel.getQty(),barcodeModel.getSQTY());
-            if(remainQty>0f)
-                convertView.setBackgroundResource(R.color.lightgreen);
-            else if(remainQty==0f)
-                convertView.setBackgroundResource(R.color.springgreen);
-            else if(remainQty<0f)
-                convertView.setBackgroundResource(R.color.firebrick);
-            if(barcodeModel.getSQTY()==null || (barcodeModel.getSQTY()!=null && barcodeModel.getSQTY()==0f)){
-                convertView.setBackgroundResource(R.color.trans);
-            }
+        listItemView.txtBatchNo.setText(barcodeModel.getBatchNo());
 
-        }
 
         return convertView;
     }

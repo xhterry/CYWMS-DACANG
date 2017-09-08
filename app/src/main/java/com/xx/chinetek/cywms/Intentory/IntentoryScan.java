@@ -121,6 +121,7 @@ public class IntentoryScan extends BaseActivity {
     ArrayList<Barcode_Model> barcodeModels;
     InventoryScanItemAdapter inventoryScanItemAdapter;
     int StatusType=-1;
+    int model=-1;
 
     @Override
     protected void initViews() {
@@ -137,6 +138,7 @@ public class IntentoryScan extends BaseActivity {
         txtQCStatus.setText(QCStatus[1]);
         StatusType=1;
         checkModel=getIntent().getParcelableExtra("check_model");
+        model=getIntent().getIntExtra("model",0);
         GetAreanobyCheckno(checkModel);
     }
 
@@ -277,7 +279,7 @@ public class IntentoryScan extends BaseActivity {
                 }
                 edtInvNum.setText(packageNum+"");
 
-                inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
+                inventoryScanItemAdapter=new InventoryScanItemAdapter(context,model,barcodeModels);
                 lsvIntentoryScan.setAdapter(inventoryScanItemAdapter);
                 if(barcodeModels.size()>1){
                     btnPalletConfig.setVisibility(View.VISIBLE);
@@ -319,7 +321,7 @@ public class IntentoryScan extends BaseActivity {
                 StatusType=1;
                 btnPalletConfig.setVisibility(View.GONE);
                 barcodeModels=new ArrayList<>();
-                inventoryScanItemAdapter=new InventoryScanItemAdapter(context,barcodeModels);
+                inventoryScanItemAdapter=new InventoryScanItemAdapter(context,model,barcodeModels);
                 lsvIntentoryScan.setAdapter(inventoryScanItemAdapter);
                 CommonUtil.setEditFocus(edtInvScanBarcode);
             }else
@@ -339,6 +341,7 @@ public class IntentoryScan extends BaseActivity {
     private void btnPalletDetailClick(View view){
         Intent intent=new Intent(context,IntentoryDetial.class);
         intent.putExtra("checkno", txtVourcherNo.getText().toString().trim());
+        intent.putExtra("model", model);
         startActivityLeft(intent);
     }
 

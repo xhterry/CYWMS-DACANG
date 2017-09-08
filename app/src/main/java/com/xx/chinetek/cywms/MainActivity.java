@@ -77,8 +77,14 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, ReviewBillChoice.class);
         else if(textView.getText().toString().equals("移库"))
             intent.setClass(context, InnerMoveScan.class);
-        else if(textView.getText().toString().equals("盘点"))
+        else if(textView.getText().toString().equals("盘点")) {
             intent.setClass(context, InventoryBillChoice.class);
+            intent.putExtra("model",1);
+        }
+        else if(textView.getText().toString().equals("财务盘点")) {
+            intent.setClass(context, InventoryBillChoice.class);
+            intent.putExtra("model",2);
+        }
         else if(textView.getText().toString().equals("查询"))
             intent.setClass(context, QueryMain.class);
         else if(textView.getText().toString().equals("组托"))
@@ -142,6 +148,8 @@ public class MainActivity extends BaseActivity {
                     case 7:
                         itemIconList.add(R.drawable.inventory);
                         itemNamesList.add("盘点");
+                        itemIconList.add(R.drawable.intentoryfinc);
+                        itemNamesList.add("财务盘点");
                         break;
                     case 8:
                         itemIconList.add(R.drawable.query);
