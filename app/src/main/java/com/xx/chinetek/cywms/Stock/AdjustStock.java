@@ -196,10 +196,19 @@ public class AdjustStock extends BaseActivity {
     @Event(value = R.id.txt_changeEData,type = View.OnClickListener.class )
     private void txtProductStartTimeClick(View view){
         if(barcodeModel!=null) {
-            final Calendar ca = Calendar.getInstance();
-            mYear = ca.get(Calendar.YEAR);
-            mMouth = ca.get(Calendar.MONTH);
-            mDay = ca.get(Calendar.DAY_OF_MONTH);
+            if (barcodeModel.getEds() == null || barcodeModel.getEds().equals("")) {
+                final Calendar ca = Calendar.getInstance();
+                mYear =ca.get(Calendar.YEAR);
+                mMouth =ca.get(Calendar.MONTH);
+                mDay = ca.get(Calendar.DAY_OF_MONTH);
+            } else {
+                String[] date = barcodeModel.getEds().split("/");
+                if (date.length >= 3) {
+                    mYear = Integer.parseInt(date[0]);
+                    mMouth = Integer.parseInt(date[1]) - 1;
+                    mDay = Integer.parseInt(date[2]);
+                }
+            }
             new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -207,8 +216,10 @@ public class AdjustStock extends BaseActivity {
                     mMouth = month + 1;
                     mDay = dayOfMonth;
                     txtchangeEData.setText(display());
+                    barcodeModel.setEds(display1());
                 }
             }, mYear, mMouth, mDay).show();
+
         }
     }
 
@@ -216,6 +227,10 @@ public class AdjustStock extends BaseActivity {
     public String  display() {
         return new StringBuffer().append(mYear).append("-").append(mMouth).append("-").append(mDay).toString();
     }
+    public String  display1() {
+        return new StringBuffer().append(mYear).append("/").append(mMouth).append("/").append(mDay).toString();
+    }
+
 
     @Event(value = {R.id.btn_Delete,R.id.btn_Submit},type = View.OnClickListener.class)
     private  void btnDelete(View view){

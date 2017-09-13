@@ -60,7 +60,7 @@ public class URLModel {
     public String GetT_SerialNoByPalletADF=GetWCFAdress()+"GetT_SerialNoByPalletADF";//获取条码信息
     public String GetT_GetT_OutBarCodeInfoByBoxADF=GetWCFAdress()+"GetT_OutBarCodeInfoByBoxADF";//获取拆托条码信息
     public String GetT_PalletDetailByNoADF=GetWCFAdress()+"GetT_PalletDetailByNoADF";//获取托盘信息
-    public String GetT_PalletDetailByBarCodeADF=GetWCFAdress()+"GetPalletDetailByBarCodeForStockOut";//库存获取托盘信息
+    public String GetT_PalletDetailByBarCodeADF=GetWCFAdress()+"GetT_PalletDetailByBarCodeADF";//库存获取托盘信息
     public String ScanOutStockReviewByBarCodeADF=GetWCFAdress()+"ScanOutStockReviewByBarCodeADF";//复核条码扫描
     public String GetT_ScanInStockModelADF=GetWCFAdress()+"GetT_ScanInStockModelADF";//上架扫描条码或者托盘条码
     public String GetAreaModelADF=GetWCFAdress()+"GetAreaModelADF";//上架扫描库位
@@ -115,5 +115,7 @@ public class URLModel {
 
 
     public String Save_StockOutADF=GetWCFAdress()+"SaveBarcodeListForStockTaskTrans";//成品出库
+    public String GetPalletDetailByBarCodeForStockOut=GetWCFAdress()+"GetPalletDetailByBarCodeForStockOut";//库存获取托盘信息
+
 
 }

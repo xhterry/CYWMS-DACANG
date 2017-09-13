@@ -91,7 +91,6 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     protected void onResume() {
         super.onResume();
         GetWoinfoModel();
-
     }
 
     @Override
