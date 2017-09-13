@@ -60,7 +60,7 @@ public class URLModel {
     public String GetT_SerialNoByPalletADF=GetWCFAdress()+"GetT_SerialNoByPalletADF";//获取条码信息
     public String GetT_GetT_OutBarCodeInfoByBoxADF=GetWCFAdress()+"GetT_OutBarCodeInfoByBoxADF";//获取拆托条码信息
     public String GetT_PalletDetailByNoADF=GetWCFAdress()+"GetT_PalletDetailByNoADF";//获取托盘信息
-    public String GetT_PalletDetailByBarCodeADF=GetWCFAdress()+"GetT_PalletDetailByBarCodeADF";//库存获取托盘信息
+    public String GetT_PalletDetailByBarCodeADF=GetWCFAdress()+"GetPalletDetailByBarCodeForStockOut";//库存获取托盘信息
     public String ScanOutStockReviewByBarCodeADF=GetWCFAdress()+"ScanOutStockReviewByBarCodeADF";//复核条码扫描
     public String GetT_ScanInStockModelADF=GetWCFAdress()+"GetT_ScanInStockModelADF";//上架扫描条码或者托盘条码
     public String GetAreaModelADF=GetWCFAdress()+"GetAreaModelADF";//上架扫描库位
@@ -108,5 +108,12 @@ public class URLModel {
     public String PrintLabel=GetWCFAdress()+"PrintForProductAndroid";//生产打印条码
     public String GetBaoGongByListWoinfo=GetWCFAdress()+"PostBaoGongByListWoinfo";//生成报工单 ERP接口
     public String GetFinishInStockByListWoinfo=GetWCFAdress()+"PostFinishInStockByListWoinfo";//生成完工入库单 ERP接口
+    public String GetBaoGongSumQtyLastQty=GetWCFAdress()+"GetBaoGongSumQtyLastQty";//根据工单号获取总报工数量和上一次报工数量 ERP接口
+    public String Insert_LineManageInfoModel=GetWCFAdress()+"Insert_LineManageInfoModel";//插入工单人员
+    public String Sync_WoinfoModel=GetWCFAdress()+"UpdateWoInfoByNo";//同步单据UpdateWoInfoByNo
+    public String GetT_WoinfoModelBack=GetWCFAdress()+"GetWoInfoByVoucherNo";//获取最新的工单
+
+
+    public String Save_StockOutADF=GetWCFAdress()+"SaveBarcodeListForStockTaskTrans";//成品出库
 
 }

@@ -49,11 +49,17 @@ public class ProductManageAdd extends BaseActivity {
     String TAG_GetT_UserInfoModel="ProductManageAdd_GetWareHouseByUserADF";
     private final int RESULT_GetT_UserInfoModel=101;
 
+    String TAG_nsert_LineManageInfoModel="ProductManageAdd_Insert_LineManageInfoModel";
+    private final int RESULT_Insert_LineManageInfoModel=102;
+
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
             case RESULT_GetT_UserInfoModel:
                 AnalysisGetT_UserInfoModelJson((String) msg.obj);
+                break;
+            case RESULT_Insert_LineManageInfoModel:
+                AnalysisInsert_UserInfoModelJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -147,13 +153,18 @@ public class ProductManageAdd extends BaseActivity {
                 && !TextUtils.isEmpty(lineManageModel.getEquipID())
                 && !TextUtils.isEmpty(lineManageModel.getProductLineNo())
                 && !TextUtils.isEmpty(lineManageModel.getProductTeamNo())) {
-            Intent intent = new Intent(context, ProductMaterialConfig.class);
-            Bundle bundle = new Bundle();
-            lineManageModel.setWoModel(woModel);
-            bundle.putParcelable("lineManageModel", lineManageModel);
-            intent.putExtras(bundle);
-            startActivityLeft(intent);
-            closeActiviry();
+
+            InsertUser(lineManageModel);
+
+
+
+//            Intent intent = new Intent(context, ProductMaterialConfig.class);
+//            Bundle bundle = new Bundle();
+//            lineManageModel.setWoModel(woModel);
+//            bundle.putParcelable("lineManageModel", lineManageModel);
+//            intent.putExtras(bundle);
+//            startActivityLeft(intent);
+//            closeActiviry();
         }else{
             MessageBox.Show(context,getString(R.string.Msg_edit_isNotNull));
         }
@@ -168,6 +179,46 @@ public class ProductManageAdd extends BaseActivity {
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }
+    }
+
+   //插入人员
+    void InsertUser(LineManageModel model){
+        try {
+            final Map<String, String> params = new HashMap<String, String>();
+            String userJson=GsonUtil.parseModelToJson(BaseApplication.userInfo);
+            String smodel=GsonUtil.parseModelToJson(model);
+            params.put("UserJson", userJson);
+            params.put("model", smodel);
+            LogUtil.WriteLog(ProductManageAdd.class, TAG_nsert_LineManageInfoModel, userJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_nsert_LineManageInfoModel, getString(R.string.Msg_Insert_User), context, mHandler, RESULT_Insert_LineManageInfoModel, null,  URLModel.GetURL().Insert_LineManageInfoModel, params, null);
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+    void AnalysisInsert_UserInfoModelJson(String result){
+        try {
+            LogUtil.WriteLog(ProductManageAdd.class, TAG_nsert_LineManageInfoModel, result);
+            ReturnMsgModel<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<String>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                MessageBox.Show(context,"人员插入成功！");
+
+                Intent intent = new Intent(context, ProductMaterialConfig.class);
+                Bundle bundle = new Bundle();
+                lineManageModel.setWoModel(woModel);
+                bundle.putParcelable("lineManageModel", lineManageModel);
+                intent.putExtras(bundle);
+                startActivityLeft(intent);
+                closeActiviry();
+
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
     }
 
     void AnalysisGetT_UserInfoModelJson(String result){

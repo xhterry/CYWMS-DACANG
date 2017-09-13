@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,14 +17,10 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.Service.SocketService;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.SocketBaseActivity;
 import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.R;
-import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Material.BarCodeInfo;
-import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Production.Wo.WoModel;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.URLModel;
@@ -34,7 +29,6 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
-import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
@@ -62,6 +56,9 @@ public class CompleteProductW extends  SocketBaseActivity {
     @ViewInject(R.id.txtdesc)
     TextView txtdesc;
 
+    @ViewInject(R.id.txtMno)
+    TextView txtMno;
+
     @ViewInject(R.id.txtlineno)
     TextView txtlineno;
 
@@ -73,6 +70,10 @@ public class CompleteProductW extends  SocketBaseActivity {
 
     @ViewInject(R.id.XNumber)
     EditText XNumber;
+
+    @ViewInject(R.id.LNumber)
+    EditText LNumber;
+
 
     @ViewInject(R.id.txtdate)
     TextView txtdate;
@@ -126,7 +127,7 @@ public class CompleteProductW extends  SocketBaseActivity {
         BaseApplication.context = context;
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
-        CommonUtil.setEditFocus(TNumber);
+        CommonUtil.setEditFocus(etxtBatch);
 
     }
 
@@ -160,7 +161,7 @@ public class CompleteProductW extends  SocketBaseActivity {
             txtNO.setText(womodel.getErpVoucherNo());
             etxtBatch.setText(womodel.getBatchNo());
             txtdesc.setText(womodel.getMaterialDesc());
-
+            txtMno.setText(womodel.getMaterialNo());
             TNumber.setText(womodel.getBox_Amount()==null?"":womodel.getBox_Amount().toString());
             XNumber.setText(womodel.getPack_Amount()==null?"":womodel.getPack_Amount().toString());
 
@@ -196,43 +197,52 @@ public class CompleteProductW extends  SocketBaseActivity {
         if (DoubleClickCheck.isFastDoubleClick(context)) {
             return;
         }
-        if (!CommonUtil.isNumeric(TNumber.getText().toString())||!CommonUtil.isNumeric(XNumber.getText().toString())||txtlineno.getText().toString().equals("")||etxtBatch.getText().toString().equals(""))
-        {
-            MessageBox.Show(context, "填写信息错误！");
-            return;
-        }
-        else{
-            womodel.setBatchNo(etxtBatch.getText().toString());
-            etxtBatch.setEnabled(false);
-        }
+        try{
+            if (!CommonUtil.isNumeric(LNumber.getText().toString())
+                    ||!CommonUtil.isNumeric(TNumber.getText().toString())
+                    ||!CommonUtil.isNumeric(XNumber.getText().toString())
+                    ||txtlineno.getText().toString().isEmpty()
+                    ||etxtBatch.getText().toString().isEmpty())
+            {
+                MessageBox.Show(context, "填写信息错误！");
+                return;
+            }
+            else{
+                womodel.setBatchNo(etxtBatch.getText().toString());
+                etxtBatch.setEnabled(false);
+            }
+            printlabel();
 
-        printlabel();
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
 
     }
-    ArrayList<Barcode_Model> models =new ArrayList<>();//临时的外箱打印标签
+
 
     public void printlabel() {
-        Barcode_Model model =new Barcode_Model();
-        model.setWarehouseno("3");
-        model.setIP(URLModel.PrintIP+":9100");
-        model.setStrongHoldCode(womodel.getStrongHoldCode());
-        model.setStrongHoldName(womodel.getStrongHoldName());
-        model.setErpVoucherNo(womodel.getErpVoucherNo());
-        model.setMaterialNo(womodel.getMaterialNo());
-        model.setBatchNo(etxtBatch.getText().toString());
-        model.setUnit(womodel.getUnit());
-        model.setLineno(txtlineno.getText().toString());
-        model.setEDate(CommonUtil.dateStrConvertDate(txtdate.getText().toString()));
-        model.setBoxCount(Integer.parseInt(TNumber.getText().toString()));//箱数
-        model.setQty(Float.parseFloat(XNumber.getText().toString()));//支数
-        model.setCompanyCode(womodel.getCompanyCode());
-        model.setRowNoDel("1");
-        model.setBarcodeType(1);
-        model.setLabelMark("OutChengPin");
-        model.setSupPrdBatch(model.getBatchNo());
-        models.add(model);
-
         try {
+            ArrayList<Barcode_Model> models =new ArrayList<>();//临时的外箱打印标签
+            Barcode_Model model =new Barcode_Model();
+            model.setWarehouseno("3");
+            model.setIP(URLModel.PrintIP+":9100");
+            model.setStrongHoldCode(womodel.getStrongHoldCode());
+            model.setStrongHoldName(womodel.getStrongHoldName());
+            model.setErpVoucherNo(womodel.getErpVoucherNo());
+            model.setMaterialNo(womodel.getMaterialNo());
+            model.setBatchNo(etxtBatch.getText().toString());
+            model.setUnit(womodel.getUnit());
+            model.setLineno(txtlineno.getText().toString());
+            model.setEDate(CommonUtil.dateStrConvertDate(txtdate.getText().toString()));
+            model.setBoxCount(Integer.parseInt(TNumber.getText().toString()));//箱数
+            model.setQty(Float.parseFloat(XNumber.getText().toString())*Integer.parseInt(TNumber.getText().toString())+Integer.parseInt(LNumber.getText().toString().isEmpty()?"0":LNumber.getText().toString()));//支数
+            model.setCompanyCode(womodel.getCompanyCode());
+            model.setRowNoDel("1");
+            model.setBarcodeType(1);
+            model.setLabelMark("OutChengPin");
+            model.setSupPrdBatch(model.getBatchNo());
+            models.add(model);
+
             Map<String, String> params = new HashMap<>();
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("json", GsonUtil.parseModelToJson(models));

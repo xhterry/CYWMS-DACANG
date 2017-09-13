@@ -71,6 +71,12 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
     String TAG_GetT_InBill = "OffShelfBillChoice_GetT_InBill";
     private final int RESULT_GetT_InBill = 101;
 
+    String TAG_GetT_Sync = "OffShelfBillChoice_GetT_Sync";
+    private final int RESULT_GetT_Sync = 102;
+
+
+    String TAG_GetT_WoninfoBack = "OffShelfBillChoice_GetT_WoninfoBack";
+    private final int RESULT_GetT_WoninfoBack = 103;
     ArrayList<WoModel> WoModels;
 
     @Override
@@ -80,11 +86,33 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
             case RESULT_GetT_InBill:
                 AnalysisGetT_RESULT_GetT_InBillADFJson((String) msg.obj);
                 break;
+            case RESULT_GetT_Sync:
+                AnalysisGetT_RESULT_GetT_SyncWoADFJson((String) msg.obj);
+                break;
+            case RESULT_GetT_WoninfoBack:
+                AnalysisGetT_RESULT_GetT_WoinfoADFJson((String) msg.obj);
+                break;
 
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
                 CommonUtil.setEditFocus(edt_filterContent);
                 break;
+        }
+    }
+    private WoModel limkWoModel = new WoModel();
+
+    void  AnalysisGetT_RESULT_GetT_WoinfoADFJson(String result){
+        try {
+            LogUtil.WriteLog(BillsIn.class, TAG_GetT_WoninfoBack, result);
+            ReturnMsgModelList<WoModel> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WoModel>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                WoModels = returnMsgModel.getModelJson();
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
         }
     }
 
@@ -98,9 +126,25 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
                 WoModels = returnMsgModel.getModelJson();
             } else {
                 MessageBox.Show(context, returnMsgModel.getMessage());
+                BindListVIew(null);
             }
             if (WoModels != null)
                 BindListVIew(WoModels);
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+    void AnalysisGetT_RESULT_GetT_SyncWoADFJson(String result){
+        try {
+            LogUtil.WriteLog(BillsIn.class, TAG_GetT_Sync, result);
+            ReturnMsgModelList<WoModel> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WoModel>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                MessageBox.Show(context, "同步单据成功，请刷新页面！");
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
         }catch (Exception ex){
             MessageBox.Show(context, ex.getMessage());
         }
@@ -144,11 +188,44 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
             }
         }
 
+
+
+
         @Override
         public void afterTextChanged(Editable s) {
 
         }
     };
+
+    @Event(value = R.id.edt_filterContent, type = View.OnKeyListener.class)
+    private boolean edtfilterOnKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String Fileter = edt_filterContent.getText().toString().trim();
+            if (!Fileter.isEmpty()){
+                Sync(Fileter);
+            }
+        }
+
+        return false;
+    }
+
+    //同步单据的方法
+    private void Sync(String Fileter){
+        try {
+            Fileter=Fileter.replace("\"","");
+            Map<String, String> params = new HashMap<>();
+//            params.put("No", GsonUtil.parseModelToJson(Fileter));
+            params.put("No", Fileter);
+            LogUtil.WriteLog(BillsIn.class, TAG_GetT_Sync,Fileter);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_Sync, getString(R.string.Msg_SycWOInfo), context, mHandler,
+                    RESULT_GetT_Sync, null, URLModel.GetURL().Sync_WoinfoModel, params, null);
+        } catch (Exception ex) {
+            mSwipeLayout.setRefreshing(false);
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
 
     @Override
     protected void initViews() {
@@ -179,30 +256,36 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
     @Event(value = R.id.lsvChoice,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         WoModel Model= (WoModel)billAdapter.getItem(position);
-        if (Model.getStrVoucherType().toString().equals("半制品")){
-            Intent intent = new Intent(context,CompleteProductW.class);
-            Bundle bundle=new Bundle();
-            bundle.putParcelable("WoModel",Model);
-            intent.putExtras(bundle);
-            startActivityLeft(intent);
+        Intent intent;
+        if(SW_WoType.isChecked()){
+            //外销工单
+            intent = new Intent(context,CompleteProductW.class);
+
         }else{
-            Intent intent = new Intent(context,CompleteProduct.class);
-            Bundle bundle=new Bundle();
-            bundle.putParcelable("WoModel",Model);
-            intent.putExtras(bundle);
-            startActivityLeft(intent);
+            //正常工单
+            intent = new Intent(context,CompleteProduct.class);
         }
-
-//        if(intent!=null)
-//        {
-//            startActivityLeft(intent);
-//        }
-//        else{
-
-//        }
-
-
+        Bundle bundle=new Bundle();
+//        getWoinfo(Model);
+        bundle.putParcelable("WoModel",Model);
+        intent.putExtras(bundle);
+        startActivityLeft(intent);
     }
+
+    void getWoinfo(WoModel model){
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("WoInfoJson", GsonUtil.parseModelToJson(model));
+//            LogUtil.WriteLog(BillsIn.class, TAG_GetT_InBill,model);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_WoninfoBack, getString(R.string.Msg_GetWOInfo), context, mHandler,
+                    RESULT_GetT_WoninfoBack, null,  URLModel.GetURL().GetT_WoinfoModelBack, params, null);
+        } catch (Exception ex) {
+            mSwipeLayout.setRefreshing(false);
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+
 
     void getData(){
         try {

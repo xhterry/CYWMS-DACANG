@@ -66,6 +66,9 @@ public class UserInfo implements Parcelable {
         return true;
     }
 
+    public UserInfo() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -79,9 +82,6 @@ public class UserInfo implements Parcelable {
         dest.writeInt(this.WarehouseID);
     }
 
-    public UserInfo() {
-    }
-
     protected UserInfo(Parcel in) {
         this.UserNo = in.readString();
         this.UserName = in.readString();
@@ -89,7 +89,7 @@ public class UserInfo implements Parcelable {
         this.WarehouseID = in.readInt();
     }
 
-    public static final Parcelable.Creator<UserInfo> CREATOR = new Parcelable.Creator<UserInfo>() {
+    public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
         @Override
         public UserInfo createFromParcel(Parcel source) {
             return new UserInfo(source);

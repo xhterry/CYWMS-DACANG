@@ -97,10 +97,11 @@ public class ReportOutputNum extends BaseActivity {
             {
                 if (Float.parseFloat(editTxtNumber.getText().toString())>womodel.getMaxProductQty())
                 {
-                    MessageBox.Show(context, "成品包装报工数量不能超过最大限制数量："+ womodel.getMaxProductQty().toString());
+                    MessageBox.Show(context, "成品包装完工入库数量不能超过最大限制数量："+ womodel.getMaxProductQty().toString());
                     return;
                 }
             }
+            womodel.setDataType(womodel.getStrVoucherType().toString().equals("成品")?"N":"Y");
             womodel.setInQty(Float.parseFloat(editTxtNumber.getText().toString()));
             womodel.setUserNo(BaseApplication.userInfo.getUserNo());
             womodel.setWareHouseNo(BaseApplication.userInfo.getReceiveWareHouseNo());
@@ -138,6 +139,9 @@ public class ReportOutputNum extends BaseActivity {
     String TAG_Get_Mes = "ReportOutPutNum_Get_Mes";
     private final int RESULT_Get_Mes = 104;
 
+    String TAG_Get_GetBaoGong = "Report_Get_GetBaoGong";
+    private final int RESULT_Get_GetBaoGong = 105;
+
     @Override
     public void onHandleMessage(Message msg) {
 //        mSwipeLayout.setRefreshing(false);
@@ -154,10 +158,30 @@ public class ReportOutputNum extends BaseActivity {
             case RESULT_Get_Barcode:
                 GetBarcodeAnalysis((String)msg.obj,TAG_Get_Barcode);
                 break;
+            case RESULT_Get_GetBaoGong:
+                GetBaoGongAnalysis((String)msg.obj,TAG_Get_GetBaoGong);
+                break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
 //                CommonUtil.setEditFocus(edt_filterContent);
                 break;
+        }
+    }
+
+    void GetBaoGongAnalysis(String result,String Tag){
+        try {
+            LogUtil.WriteLog(ReportOutputNum.class, Tag, result);
+            ReturnMsgModelList<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<String>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                String[] MessageSplit =returnMsgModel.Message.split(",");
+                txtNumber.setText(MessageSplit[0].equals("")?"0":MessageSplit[0]);
+                txtLast.setText(MessageSplit[1].equals("")?"0":MessageSplit[1]);
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
         }
     }
 
@@ -211,6 +235,21 @@ public class ReportOutputNum extends BaseActivity {
     }
 
 
+    private void GetBaoGong(){
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+            params.put("GongDan", GsonUtil.parseModelToJson(txtNo.getText().toString()));
+//            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_GetBaoGong, getString(R.string.Msg_Post), context, mHandler,
+                    RESULT_Get_GetBaoGong, null,   URLModel.GetURL().GetBaoGongSumQtyLastQty, params, null);
+        } catch (Exception ex) {
+//                mSwipeLayout.setRefreshing(false);
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+
     /*
 获取工单信息
  */
@@ -218,8 +257,7 @@ public class ReportOutputNum extends BaseActivity {
         if(womodel!=null) {
             txtNo.setText(womodel.getVoucherNo());
             txtBatch.setText(womodel.getBatchNo());
-            txtNumber.setText("111");
-            txtLast.setText("222");
+            GetBaoGong();
         }
     }
 }

@@ -41,6 +41,16 @@ public class WoModel extends Base_Model implements Parcelable{
 
     private Float Pack_Amount;
 
+    private String DataType;
+
+    public String getDataType() {
+        return DataType;
+    }
+
+    public void setDataType(String dataType) {
+        DataType = dataType;
+    }
+
     public Float getMaxProductQty() {
         return MaxProductQty;
     }
@@ -245,6 +255,7 @@ public class WoModel extends Base_Model implements Parcelable{
         dest.writeValue(this.MaxProductQty);
         dest.writeValue(this.Box_Amount);
         dest.writeValue(this.Pack_Amount);
+        dest.writeString(this.DataType);
         dest.writeValue(this.ReportQty);
         dest.writeInt(this.JobNumber);
         dest.writeValue(this.WorkHour);
@@ -272,6 +283,7 @@ public class WoModel extends Base_Model implements Parcelable{
         this.MaxProductQty = (Float) in.readValue(Float.class.getClassLoader());
         this.Box_Amount = (Float) in.readValue(Float.class.getClassLoader());
         this.Pack_Amount = (Float) in.readValue(Float.class.getClassLoader());
+        this.DataType = in.readString();
         this.ReportQty = (Float) in.readValue(Float.class.getClassLoader());
         this.JobNumber = in.readInt();
         this.WorkHour = (Float) in.readValue(Float.class.getClassLoader());

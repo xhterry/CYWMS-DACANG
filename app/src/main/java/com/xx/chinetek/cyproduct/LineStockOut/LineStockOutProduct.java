@@ -45,15 +45,19 @@ import java.util.Map;
 public class LineStockOutProduct extends BaseActivity {
 
     String TAG_GetT_PalletDetailByBarCodeADF="LineStockOutProduct_GetT_ScanInStockModelADF";
-
-
     private final int RESULT_Msg_GetT_PalletDetailByBarCode=102;
+
+    String TAG_GetT_SaveBarCodeADF="LineStockOutProduct_GetT_SaveInStockModelADF";
+    private final int RESULT_Msg_GetT_SaveBarCode=103;
 
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
             case RESULT_Msg_GetT_PalletDetailByBarCode:
                 AnalysisetT_PalletDetailByBarCodeJson((String) msg.obj);
+                break;
+            case RESULT_Msg_GetT_SaveBarCode:
+                AnalysisetT_SaveBarCodeJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -83,7 +87,7 @@ public class LineStockOutProduct extends BaseActivity {
     EditText edtLineStockOutScanBarcode;
 
 
-    ArrayList<BarCodeInfo> SumbitbarCodeInfos=null;
+    ArrayList<BarCodeInfo> SumbitbarCodeInfos=new ArrayList<>();
     PalletItemAdapter palletItemAdapter;
 
     @Override
@@ -126,10 +130,34 @@ public class LineStockOutProduct extends BaseActivity {
             }
             //提交
             if(SumbitbarCodeInfos!=null && SumbitbarCodeInfos.size()!=0){
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+                params.put("ModelJson", GsonUtil.parseModelToJson(SumbitbarCodeInfos));
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_SaveBarCodeADF, getString(R.string.Msg_GetT_SaveStouckOutADF),
+                        context, mHandler, RESULT_Msg_GetT_SaveBarCode, null,  URLModel.GetURL().Save_StockOutADF, params, null);
 
+            }else{
+                MessageBox.Show(context,"没有需要出库的成品条码！");
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    void AnalysisetT_SaveBarCodeJson(String result){
+        LogUtil.WriteLog(LineStockInProduct.class, TAG_GetT_SaveBarCodeADF,result);
+        ReturnMsgModelList<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<String>>() {}.getType());
+        try {
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                ClearFrm();
+                MessageBox.Show(context,"提交成功！");
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.toString());
+        }
+        CommonUtil.setEditFocus(edtLineStockOutScanBarcode);
     }
 
 

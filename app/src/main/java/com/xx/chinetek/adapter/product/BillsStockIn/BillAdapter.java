@@ -130,7 +130,8 @@ public class BillAdapter extends BaseAdapter  implements Filterable {
                     WoModel pc = unfilteredValues.get(i);
                     if (pc != null) {
                         int len =pc.getErpVoucherNo().toUpperCase().length();
-                        if(pc.getErpVoucherNo().toUpperCase().substring(len-4,len).startsWith(prefixString.toUpperCase())){
+//                        int LenPre = prefixString.toUpperCase().length();
+                        if(pc.getErpVoucherNo().toUpperCase().substring(len-8,len).startsWith(prefixString.toUpperCase())){
                             newValues.add(pc);
                         }
                     }

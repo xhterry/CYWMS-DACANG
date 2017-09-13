@@ -357,6 +357,7 @@
 
     <!--ymh20170823-->
     <string name="Msg_GetWOInfo">获取工单列表...</string>
+    <string name="Msg_SycWOInfo">同步工单...</string>
     <string name="Msg_Print">打印条码中...</string>
     <string name="Msg_Post">提交中...</string>
     <string name="Bi">相对比重：</string>
@@ -369,4 +370,8 @@
     <string name="activity_Wolist_two">外销工单</string>
     <string name="TNumber">一托箱数：</string>
     <string name="XNumber">一箱支数：</string>
+    <string name="LNumber">零箱支数：</string>
+    <string name="MaterialNo">物料编号：</string>
+    <string name="Msg_Insert_User">正在插入人员...</string>
+    <string name="Msg_GetT_SaveStouckOutADF">正在提交...</string>
 </resources>

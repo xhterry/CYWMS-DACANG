@@ -86,7 +86,7 @@ public class LineManage extends BaseActivity implements SwipeRefreshLayout.OnRef
     protected void onResume() {
         super.onResume();
         lineManageModels=new ArrayList<>();
-        lineManageModels=getdata();
+//        lineManageModels=getdata();
         BindListView(lineManageModels);
         GetLineManages();
     }
@@ -127,11 +127,11 @@ public class LineManage extends BaseActivity implements SwipeRefreshLayout.OnRef
 
     void GetLineManages(){
         try {
-            String ModelJson = GsonUtil.parseModelToJson(lineManageModels);
+//            String ModelJson = GsonUtil.parseModelToJson(lineManageModels);
             Map<String, String> params = new HashMap<>();
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-            params.put("ModelJson", ModelJson);
-            LogUtil.WriteLog(LineManage.class, TAG_GetT_LineManageInfoModel, ModelJson);
+//            params.put("ModelJson", ModelJson);
+//            LogUtil.WriteLog(LineManage.class, TAG_GetT_LineManageInfoModel, ModelJson);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_LineManageInfoModel, getString(R.string.Mag_GetT_LineManageInfoModel), context, mHandler, RESULT_GetT_LineManageInfoModel, null,  URLModel.GetURL().GetT_LineManageInfoModel, params, null);
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
@@ -165,19 +165,19 @@ public class LineManage extends BaseActivity implements SwipeRefreshLayout.OnRef
         LsvLineManage.setAdapter(lineManageItemAdapter);
     }
 
-    ArrayList<LineManageModel> getdata(){
-        ArrayList<LineManageModel> lineManageModels=new ArrayList<>();
-        for(int i=0;i<7;i++){
-            LineManageModel lineManageModel=new LineManageModel();
-            lineManageModel.setWoVoucherNo("W12345678"+i);
-            lineManageModel.setWoErpVoucherNo("CY1-WO-1707170000"+i);
-            lineManageModel.setWoBatchNo("批123bn");
-            lineManageModel.setEquipID("设备ID");
-            lineManageModel.setProductLineNo("产线ID");
-            lineManageModel.setProductTeamNo("班组ID");
-            lineManageModels.add(lineManageModel);
-        }
-        return lineManageModels;
-    }
+//    ArrayList<LineManageModel> getdata(){
+//        ArrayList<LineManageModel> lineManageModels=new ArrayList<>();
+//        for(int i=0;i<7;i++){
+//            LineManageModel lineManageModel=new LineManageModel();
+//            lineManageModel.setWoVoucherNo("W12345678"+i);
+//            lineManageModel.setWoErpVoucherNo("CY1-WO-1707170000"+i);
+//            lineManageModel.setWoBatchNo("批123bn");
+//            lineManageModel.setEquipID("设备ID");
+//            lineManageModel.setProductLineNo("产线ID");
+//            lineManageModel.setProductTeamNo("班组ID");
+//            lineManageModels.add(lineManageModel);
+//        }
+//        return lineManageModels;
+//    }
 
 }

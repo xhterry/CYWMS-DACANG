@@ -193,7 +193,7 @@ Context context=ProductManage.this;
             txtEquipID.setText(lineManageModel.getEquipID());
             txtGroupNo.setText(lineManageModel.getProductTeamNo());
             txtProductLineNo.setText(lineManageModel.getProductLineNo());
-            txtVoucherNo.setText(lineManageModel.getErpVoucherNo());
+            txtVoucherNo.setText(lineManageModel.getWoErpVoucherNo());
             BindListView(lineManageModel.getUserInfos());
         }
     }
