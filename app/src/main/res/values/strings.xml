@@ -238,6 +238,7 @@
     <string name="Msg_GetTransupplier">获取承运商信息...</string>
     <string name="Msg_GetDeliveryInfoAndroid">获取目的地信息...</string>
     <string name="Msg_InsertCheckDetail">提交盘点信息...</string>
+    <string name="Msg_AdjustStockSubmit">提交库存调整信息...</string>
     <string name="Msg_GetCheckDetail">获取已盘点信息...</string>
     <string name="Msg_DeleteCheckDetail">删除盘点信息...</string>
     <string name="Msg_QueryStockInfo">查询%s信息...</string>

@@ -31,6 +31,7 @@ public class Barcode_Model implements Parcelable{
     private String SupPrdBatch;
     private Date ProductDate;
     private Date EDate;
+    private String Eds;
     private int BarcodeType;
     private String Creater;
     private int STATUS;
@@ -48,6 +49,22 @@ public class Barcode_Model implements Parcelable{
     private String StoreCondition;//ymh存储条件
     private String ProtectWay;//ymh防护措施
 
+
+    public Float getSqty() {
+        return sqty;
+    }
+
+    public void setSqty(Float sqty) {
+        this.sqty = sqty;
+    }
+
+    public String getEds() {
+        return Eds;
+    }
+
+    public void setEds(String eds) {
+        Eds = eds;
+    }
 
     public int getId() {
         return id;
@@ -405,6 +422,7 @@ public class Barcode_Model implements Parcelable{
         dest.writeString(this.SupPrdBatch);
         dest.writeLong(this.ProductDate != null ? this.ProductDate.getTime() : -1);
         dest.writeLong(this.EDate != null ? this.EDate.getTime() : -1);
+        dest.writeString(this.Eds);
         dest.writeInt(this.BarcodeType);
         dest.writeString(this.Creater);
         dest.writeInt(this.STATUS);
@@ -448,6 +466,7 @@ public class Barcode_Model implements Parcelable{
         this.ProductDate = tmpProductDate == -1 ? null : new Date(tmpProductDate);
         long tmpEDate = in.readLong();
         this.EDate = tmpEDate == -1 ? null : new Date(tmpEDate);
+        this.Eds = in.readString();
         this.BarcodeType = in.readInt();
         this.Creater = in.readString();
         this.STATUS = in.readInt();

@@ -543,7 +543,7 @@ public class OffshelfScan extends BaseActivity {
                outStockTaskDetailsInfoModels.get(currentPickMaterialIndex).getLstStockInfo().add(0, stockInfoModels.get(0));
                break;
        }
-
+       stockInfoModels=new ArrayList<>();
        currentPickMaterialIndex=FindFirstCanPickMaterial();
        ShowPickMaterialInfo(); //显示下一拣货物料
    }
@@ -611,6 +611,7 @@ public class OffshelfScan extends BaseActivity {
             BindListVIew(outStockTaskDetailsInfoModels);
             CommonUtil.setEditFocus(edtOffShelfScanbarcode);
         }
+
     }
 
     void ShowUnboxing(Boolean show){
