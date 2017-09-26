@@ -17,6 +17,7 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -49,20 +50,43 @@ public class FillPrint extends BaseActivity {
     private final int RESULT_Msg_GetStockModelADF=101;
     private final int RESULT_PrintLpkPalletAndroid = 102;
 
+    String TAG_PrintT="FillPrint_TAG_PrintT";//成品托打印
+    private final int RESULT_PrintT = 103;//成品托打印
+
+    String TAG_GetCPT="FillPrint_TAG_GetCPT";//获取成品托
+    private final int RESULT_GetCPT = 104;//获取成品托
+
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
+            case RESULT_GetCPT:
+                AnalysisGetCPTADFJson((String) msg.obj);
+                break;
             case RESULT_Msg_GetStockModelADF:
                 AnalysisGetStockADFJson((String) msg.obj);
                 break;
             case RESULT_PrintLpkPalletAndroid:
                 AnalysisPrintLpkPalletAndroid((String) msg.obj);
                 break;
+            case RESULT_PrintT:
+                PrintTAnalysis((String)msg.obj,TAG_PrintT);
+                break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
                 CommonUtil.setEditFocus(edtLabelScanbarcode);
                 break;
         }
+    }
+    void AnalysisGetCPTADFJson(String result){
+        LogUtil.WriteLog(FillPrint.class, TAG_GetCPT,result);
+        ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+        }.getType());
+        if(returnMsgModel.getHeaderStatus().equals("S")){
+            txtPalletNo.setText(returnMsgModel.getTaskNo());
+        }else{
+            MessageBox.Show(context,returnMsgModel.getMessage());
+        }
+        CommonUtil.setEditFocus(edtLabelScanbarcode);
     }
 
 
@@ -78,6 +102,8 @@ public class FillPrint extends BaseActivity {
     ToggleButton tbBox;
     @ViewInject(R.id.tb_Pallet)
     ToggleButton tbPallet;
+    @ViewInject(R.id.tb_PalletY)
+    ToggleButton tbPalletY;
     @ViewInject(R.id.tb_Sample)
     ToggleButton tbSample;
     @ViewInject(R.id.edt_LabelScanbarcode)
@@ -101,24 +127,51 @@ public class FillPrint extends BaseActivity {
             keyBoardCancle();
             String code = edtLabelScanbarcode.getText().toString().trim();
             initFrm();
-            //    if (!tbSample.isChecked()) {
-            int type = tbPallet.isChecked() ? 1 : 2;
-            final Map<String, String> params = new HashMap<String, String>();
-            params.put("BarCode", code);
-            params.put("ScanType", type + "");
-            params.put("MoveType", "1"); //1：下架 2:移库
-            params.put("IsEdate", "2"); //1：不判断有效期 2:判断有效期
-            LogUtil.WriteLog(FillPrint.class, TAG_GetStockModelADF, code);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
+
+            //获取成品没有入库的托标签
+            if (tbPalletY.isChecked()) {
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("BarCode", code);
+                LogUtil.WriteLog(FillPrint.class, TAG_GetCPT, code);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetCPT, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetCPT, null, URLModel.GetURL().GetPalletNoBySerialno, params, null);
+            }else{
+                //    if (!tbSample.isChecked()) {
+                int type = tbPallet.isChecked() ? 1 : 2;
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("BarCode", code);
+                params.put("ScanType", type + "");
+                params.put("MoveType", "1"); //1：下架 2:移库
+                params.put("IsEdate", "2"); //1：不判断有效期 2:判断有效期
+                LogUtil.WriteLog(FillPrint.class, TAG_GetStockModelADF, code);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
 //            }else{
 //                CommonUtil.setEditFocus(edtLabelScanbarcode);
 //            }
+            }
         }
         return false;
     }
 
     @Event(R.id.btn_labelPrint)
     private  void btnlabelPrintClick(View view) {
+        //ymh成品托标签打印（没入库）
+        if (tbPalletY.isChecked()) {
+            if (!txtPalletNo.getText().toString().trim().isEmpty()){
+                List<PalletDetail_Model> model=new ArrayList<>();
+                PalletDetail_Model modeldetail = new PalletDetail_Model();
+                modeldetail.setTaskNo(txtPalletNo.getText().toString().trim());
+                modeldetail.setPrintIPAdress(URLModel.PrintIP);
+                model.add(modeldetail);
+                String modelJson = GsonUtil.parseModelToJson(model);
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("PalletJson", modelJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintT, getString(R.string.Msg_Print), context, mHandler, RESULT_PrintT, null, URLModel.GetURL().SaveT_YMHCPPrintADF, params, null);
+
+            }
+            return;
+        }
+
+        //正常流程
         String SerialNo = "";
         if (tbSample.isChecked()) {
             String [] Barcode=edtLabelScanbarcode.getText().toString().split("@");
@@ -147,11 +200,12 @@ public class FillPrint extends BaseActivity {
 
     }
 
-    @Event(value = {R.id.tb_Box,R.id.tb_Pallet,R.id.tb_Sample },type = CompoundButton.OnClickListener.class)
+    @Event(value = {R.id.tb_Box,R.id.tb_Pallet,R.id.tb_Sample,R.id.tb_PalletY },type = CompoundButton.OnClickListener.class)
     private void TBonCheckedChanged(View view) {
         tbBox.setChecked(view.getId()== R.id.tb_Box);
         tbPallet.setChecked(view.getId()== R.id.tb_Pallet);
         tbSample.setChecked(view.getId()== R.id.tb_Sample);
+        tbPalletY.setChecked(view.getId()== R.id.tb_PalletY);
         initFrm();
         CommonUtil.setEditFocus(edtLabelScanbarcode);
     }
@@ -186,6 +240,22 @@ public class FillPrint extends BaseActivity {
             MessageBox.Show(context, ex.getMessage());
         }
         CommonUtil.setEditFocus(edtLabelScanbarcode);
+    }
+
+    /*打印托盘标签*/
+    void PrintTAnalysis(String result,String Tag){
+        try {
+            ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+            }.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S"))
+            {
+                initFrm();
+            }
+            MessageBox.Show(context, returnMsgModel.getMessage());
+
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
     }
 
     void initFrm(){

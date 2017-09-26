@@ -6,19 +6,74 @@
     android:layout_height="match_parent"
     tools:context="com.xx.chinetek.cyproduct.work.ReportOutputNum">
 
+    <Button
+        android:id="@+id/butP"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/bt_selector"
+        android:text="@string/PrintT"
+        app:layout_constraintBottom_toTopOf="@+id/guideline76"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline74"
+        app:layout_constraintRight_toLeftOf="@+id/guideline43"
+        app:layout_constraintTop_toTopOf="@+id/guideline57"
+        app:layout_constraintVertical_bias="0.538" />
+
+    <EditText
+        android:id="@+id/editText"
+        style="@style/EditTextStyle"
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="@string/filter_content1"
+        android:inputType="textPersonName"
+        android:visibility="visible"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SW_WoType" />
+
+    <EditText
+        android:id="@+id/txtBatch"
+        style="@style/EditTextStyle"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:hint="请输入批次"
+        android:inputType="textPersonName"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView69" />
+
     <TextView
-        android:id="@+id/textView72"
+        android:id="@+id/txt_WareHousName"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:text="最后报产"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:enabled="false"
+        android:hint="@string/Hit_Selectwohouse"
         android:textAlignment="viewStart"
-        app:layout_constraintBottom_toBottomOf="@+id/textView104"
+        android:textColor="@color/darkred"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline24"
-        app:layout_constraintRight_toLeftOf="@+id/guideline43"
-        android:layout_marginStart="8dp" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
 
     <TextView
         android:id="@+id/txtNumber"
@@ -37,7 +92,7 @@
     <EditText
         android:id="@+id/editTxtNumber"
         style="@style/EditTextStyle"
-        android:layout_width="0dp"
+        android:layout_width="288dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
@@ -48,8 +103,8 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="@+id/textView106"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/textView106" />
 
     <TextView
         android:id="@+id/textView106"
@@ -69,52 +124,39 @@
 
     <Button
         android:id="@+id/butO"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="0dp"
         android:background="@drawable/bt_selector"
         android:text="@string/ReportOverInstock"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline58"
+        app:layout_constraintBottom_toTopOf="@+id/guideline76"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline43"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline57"
-        app:layout_constraintVertical_bias="0.511" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/butB"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginStart="24dp"
         android:background="@drawable/bt_selector"
-        android:text="@string/ReportN"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/zuT"
+        app:layout_constraintBottom_toTopOf="@+id/guideline76"
+        app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline58"
+        app:layout_constraintRight_toLeftOf="@+id/guideline74"
         app:layout_constraintTop_toTopOf="@+id/guideline57"
-        app:layout_constraintVertical_bias="0.518" />
-
-    <TextView
-        android:id="@+id/txtLast"
-        style="@style/TextViewComminStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:textAlignment="viewStart"
-        app:layout_constraintBottom_toBottomOf="@+id/textView104"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline43"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintVertical_bias="0.538" />
 
     <TextView
         android:id="@+id/textView104"
@@ -122,14 +164,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
-        android:text="已报数量"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="外箱数量："
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        app:layout_constraintTop_toBottomOf="@+id/txtBatch"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView69" />
 
     <TextView
         android:id="@+id/txtNo"
@@ -137,14 +179,31 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="32dp"
         android:text=""
         android:textAlignment="viewStart"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/textView66"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
+        app:layout_constraintTop_toTopOf="@+id/textView66"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:id="@+id/txtT"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/textView105"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView105" />
 
     <TextView
         android:id="@+id/textView66"
@@ -152,29 +211,29 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="32dp"
         android:text="工单号"
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_WareHousName" />
 
     <TextView
-        android:id="@+id/txtBatch"
+        android:id="@+id/textView105"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="14dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="托盘号"
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/txtNo"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/textView69"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline25"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline57" />
 
     <TextView
         android:id="@+id/textView69"
@@ -182,14 +241,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:text="生产批次"
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        app:layout_constraintTop_toBottomOf="@+id/txtNo"
+        app:layout_constraintTop_toBottomOf="@+id/textView66"
         android:layout_marginStart="8dp" />
 
     <android.support.constraint.Guideline
@@ -197,43 +256,50 @@
         android:layout_height="wrap_content"
         android:id="@+id/guideline24"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="153dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="153dp" />
+        app:layout_constraintGuide_percent="0.3984375" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline25"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="88dp"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="88dp" />
+        tools:layout_editor_absoluteX="88dp"
+        app:layout_constraintGuide_percent="0.22916667" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline43"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="135dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="249dp" />
+        app:layout_constraintGuide_percent="0.68" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline57"
-        app:layout_constraintGuide_begin="484dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="484dp"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintGuide_begin="480dp"
+        android:orientation="horizontal" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline58"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="192dp" />
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline74"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline76"
+        app:layout_constraintGuide_begin="550dp"
+        android:orientation="horizontal" />
+
 </android.support.constraint.ConstraintLayout>

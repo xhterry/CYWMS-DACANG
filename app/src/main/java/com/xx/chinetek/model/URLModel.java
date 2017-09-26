@@ -102,6 +102,7 @@ public class URLModel {
     public String GetWoDetailModelByWoNo=GetWCFAdress()+"GetWODetailInfo";//获取工单任务明细信息
     public String GetMaterialByBarcode=GetWCFAdress()+"GetMaterialByBarcode";//工单获取条码信息
     public String GetPalletDetailByBarCode_Product=GetWCFAdress()+"GetPalletDetailByBarCode_Product";//生产入库扫描条码
+
     public String SaveModeListForT_StockT=GetWCFAdress()+"SaveModeListForT_StockT";//生产入库提交
 
     //生产打印
@@ -115,5 +116,17 @@ public class URLModel {
 
 
     public String Save_StockOutADF=GetWCFAdress()+"SaveBarcodeListForStockTaskTrans";//成品出库
+    public String PrintForChaiTuoProductAndroid=GetWCFAdress()+"PrintForChaiTuoProductAndroid";//拆托标签打印
+
+    public String SaveT_YMHCPPalletDetailADF=GetWCFAdress()+"SavePalletForProductAndroid";//完工入库成品保存组托信息
+    public String SaveT_YMHCPPrintADF=GetWCFAdress()+"PrintForChaiTuoProductAndroid";//完工入库成品打印托盘
+    public String GetPalletNoBySerialno=GetWCFAdress()+"GetPalletNoBySerialno";//获取成品托盘号
+    public String GetPalletDetailByBarCodeForInStock=GetWCFAdress()+"GetPalletDetailByBarCodeForInStock";//领料入库扫描
+    public String SaveModeListForLingLiao_Stock=GetWCFAdress()+"SaveModeListForLingLiao_Stock";//根据扫描的条码集合入线边库
+    public String GetWODetailInfo=GetWCFAdress()+"GetWODetailInfo";// 根据工单ID获取工单明细数据
+    public String SaveBarcodeListInStockForTuiLiao=GetWCFAdress()+"SaveBarcodeListInStockForTuiLiao";// 根据扫描的条码集合退料入库
+
+    public String GetSystemDate=GetWCFAdress()+"GetSystemDate";//根据工单类型获取有效期yyyy-MM-dd
+
 
 }

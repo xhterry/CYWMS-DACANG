@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.google.gson.annotations.Until;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.Pallet.CombinPallet;
 import com.xx.chinetek.Service.SocketService;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.SocketBaseActivity;
@@ -101,34 +102,61 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     WoModel womodel;
 
-    String TAG_Print_Inlabel = "OffShelfBillChoice_Print_Inlabel";
+    String TAG_Print_Inlabel = "CompleteProduct_Print_Inlabel";
     private final int RESULT_Print_Inlabel = 101;
 
-    String TAG_Print_Outlabel = "OffShelfBillChoice_Print_Outlabel";
+    String TAG_Print_Outlabel = "CompleteProduct_Print_Outlabel";
     private final int RESULT_Print_Outlabel = 102;
 
-    String TAG_Print_Tlabel = "OffShelfBillChoice_Print_Tlabel";
+    String TAG_Print_Tlabel = "CompleteProduct_Print_Tlabel";
     private final int RESULT_Print_Tlabel = 103;
+
+    String TAG_GetSysDate= "CompleteProduct_GetSysDate";
+    private final int RESULT_GetSysDate = 104;
 
     @Override
     public void onHandleMessage(Message msg) {
-     switch (msg.what) {
-            case RESULT_Print_Inlabel:
-                AnalysisGetT_RESULT_Print_InlabelADFJson((String)msg.obj);
-                break;
-         case RESULT_Print_Outlabel:
-             AnalysisGetT_RESULT_Print_OutlabelADFJson((String)msg.obj);
-             break;
-         case RESULT_Print_Tlabel:
-             AnalysisGetT_RESULT_Print_TlabelADFJson((String)msg.obj);
-             break;
-
-            case NetworkError.NET_ERROR_CUSTOM:
-                ToastUtil.show("获取请求失败_____"+ msg.obj);
+        try{
+            switch (msg.what) {
+                case RESULT_Print_Inlabel:
+                    AnalysisGetT_RESULT_Print_InlabelADFJson((String)msg.obj);
+                    break;
+                case RESULT_Print_Outlabel:
+                    AnalysisGetT_RESULT_Print_OutlabelADFJson((String)msg.obj);
+                    break;
+                case RESULT_Print_Tlabel:
+                    AnalysisGetT_RESULT_Print_TlabelADFJson((String)msg.obj);
+                    break;
+                case RESULT_GetSysDate:
+                    AnalysisGetT_RESULT_GetSysDateADFJson((String)msg.obj);
+                    break;
+                case NetworkError.NET_ERROR_CUSTOM:
+                    ToastUtil.show("获取请求失败_____"+ msg.obj);
 //                CommonUtil.setEditFocus(edt_filterContent);
-                break;
+                    break;
+            }
+        }catch(Exception ex){
+            MessageBox.Show(context,"接口异常！");
+        }
+
+    }
+
+    void AnalysisGetT_RESULT_GetSysDateADFJson(String result){
+        try {
+            txtdate.setText(result);
+//            LogUtil.WriteLog(BillsIn.class, TAG_GetSysDate, result);
+//            ReturnMsgModel<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<String>>() {
+//            }.getType());
+//            if (returnMsgModel.getHeaderStatus().equals("S")) {
+//                txtdate.setText(returnMsgModel.getModelJson());
+//            } else {
+//                txtdate.setText(returnMsgModel.getMessage());
+//            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
         }
     }
+
     void AnalysisGetT_RESULT_Print_InlabelADFJson(String result){
         try {
             LogUtil.WriteLog(BillsIn.class, TAG_Print_Inlabel, result);
@@ -193,18 +221,35 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     @Override
     protected void initData() {
-        super.initData();
-        womodel=getIntent().getParcelableExtra("WoModel");
-        butIn.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
-        butIOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.GONE:View.VISIBLE);
-        butT.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
-        butOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
+        try{
+            super.initData();
+            womodel=getIntent().getParcelableExtra("WoModel");
+            butIn.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+            butIOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.GONE:View.VISIBLE);
+            butT.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
+            butOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
 
-        //相对比重
-        txtBi.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
-        textView75.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+            //相对比重
+            txtBi.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+            textView75.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
 
-        GetWoModel(womodel);
+            //butT托盘去掉
+            butT.setVisibility(View.GONE);
+            GetWoModel(womodel);
+
+            if(womodel.getStrVoucherType().equals("成品")||womodel.getStrVoucherType().equals("半制品"))
+            {
+                //获取有效期
+                Map<String, String> params = new HashMap<>();
+                params.put("woinfoType",womodel.getStrVoucherType().equals("成品")?"2":"1");//1：半制品；  2：成品
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetSysDate, getString(R.string.Msg_Print), context, mHandler,RESULT_GetSysDate, null,  URLModel.GetURL().GetSystemDate, params, null);
+
+            }
+
+        }catch(Exception ex){
+            MessageBox.Show(context,ex.toString());
+        }
+
     }
 
 
@@ -243,24 +288,29 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     protected void initVariables()
     {
-        //给全局消息接收器赋值，并进行消息处理
-        mReciver = new MessageBackReciver(){
-            @Override
-            public void onReceive(Context context, Intent intent)
-            {
-                String action = intent.getAction();
-                if(action.equals(SocketService.MESSAGE_ACTION))
+        try{
+            //给全局消息接收器赋值，并进行消息处理
+            mReciver = new MessageBackReciver(){
+                @Override
+                public void onReceive(Context context, Intent intent)
                 {
-                    String message = intent.getStringExtra("message");
-                    Log.v("WMSLOG_Socket", message);
-                    String message1=message.split("\r\n")[0];
-                   String[] meg =message1.split(",");
-                    if (meg.length>=3 &&isOpenWeight)
+                    String action = intent.getAction();
+                    if(action.equals(SocketService.MESSAGE_ACTION))
+                    {
+                        String message = intent.getStringExtra("message");
+                        Log.v("WMSLOG_Socket", message);
+                        String message1=message.split("\r\n")[0];
+                        String[] meg =message1.split(",");
+                        if (meg.length>=3 &&isOpenWeight)
 //                    {EditW.setText(message1.contains("ST,GS")?meg[2].trim():"");}
-                    {EditW.setText((message1.contains(",NT")||message1.contains("ST,GS"))?meg[2].trim():"");}
+                        {EditW.setText((message1.contains(",NT")||message1.contains("ST,GS"))?meg[2].trim():"");}
+                    }
                 }
-            }
-        };
+            };
+        }catch(Exception ex){
+            MessageBox.Show(context,"电子称异常！");
+        }
+
     }
 
     int mYear, mMonth,mDate;
@@ -268,13 +318,13 @@ public class CompleteProduct extends  SocketBaseActivity {
     private void txtProductStartTimeClick(View view){
         final Calendar ca = Calendar.getInstance();
         mYear = ca.get(Calendar.YEAR);
-        mMonth = ca.get(Calendar.MONTH)+1;
+        mMonth = ca.get(Calendar.MONTH);
         mDate=ca.get(Calendar.DAY_OF_MONTH);
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 mYear = year;
-                mMonth = month+1;
+                mMonth = month;
                 mDate=dayOfMonth;
                 txtdate.setText(display());
             }
@@ -330,13 +380,18 @@ public class CompleteProduct extends  SocketBaseActivity {
         }
         if (R.id.butT==view.getId())
         {
-            if (modelsAll.size()==0)
-            {
-                MessageBox.Show(context, "没有外箱标签");
-                return;
-            }else{
-                printlabel(2);
-            }
+            Intent intent = new Intent();
+            intent.setClass(context, CombinPallet.class);
+            startActivityLeft(intent);
+            return;
+
+//            if (modelsAll.size()==0)
+//            {
+//                MessageBox.Show(context, "没有外箱标签");
+//                return;
+//            }else{
+//                printlabel(2);
+//            }
 
         }
     }
@@ -357,10 +412,13 @@ public class CompleteProduct extends  SocketBaseActivity {
             model.setMaterialNo(womodel.getMaterialNo());
             model.setBatchNo(etxtBatch.getText().toString());
             model.setUnit(womodel.getUnit());
-            model.setLineno(txtlineno.getText().toString());
+            model.setProductClass(txtlineno.getText().toString());
             model.setEDate(CommonUtil.dateStrConvertDate(txtdate.getText().toString()));
             model.setQty(Float.parseFloat(etxtBNumber.getText().toString()));//数量
             model.setCompanyCode(womodel.getCompanyCode());
+            model.setVoucherNo(womodel.getVoucherNo());
+            model.setVoucherType(womodel.getVoucherType());
+
             model.setRowNoDel("1");
 
 
@@ -447,6 +505,7 @@ public class CompleteProduct extends  SocketBaseActivity {
                 if (womodel.getStrVoucherType().equals("散装物料"))
                 {
                     //散装外
+                    model.setSupName("1");
                     model.setItemQty("0");
 
                     String We=EditW.getText().toString();
@@ -608,10 +667,10 @@ public class CompleteProduct extends  SocketBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
-            if (womodel.getBatchNo()==null||womodel.getBatchNo().equals("")){
-                MessageBox.Show(context,"还未打印条码不能报工！");
-                return false;
-            }
+//            if (womodel.getBatchNo()==null||womodel.getBatchNo().equals("")){
+//                MessageBox.Show(context,"还未打印条码不能报工！");
+//                return false;
+//            }
             Intent intent=new Intent(context, ReportOutputNum.class);
             Bundle bundle=new Bundle();
             bundle.putParcelable("WoModel",womodel);

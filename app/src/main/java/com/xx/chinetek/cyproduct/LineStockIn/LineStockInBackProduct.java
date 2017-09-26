@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,9 +28,12 @@ import com.xx.chinetek.cywms.Receiption.ReceiptionScan;
 import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Production.LineStockIn.LineStockInProductModel;
+import com.xx.chinetek.model.Production.Wo.WoDetailModel;
+import com.xx.chinetek.model.Production.Wo.WoModel;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.User.WareHouseInfo;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -47,37 +51,50 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@ContentView(R.layout.activity_line_stock_in_material)
-public class LineStockInMaterial extends BaseActivity {
+@ContentView(R.layout.activity_product_backmaterialproduct_scan)
+public class LineStockInBackProduct extends BaseActivity {
 
-    String TAG_GetPalletDetailByBarCode_Product="LineStockInMaterial_GetPalletDetailByBarCode_Product";
-    String TAG_SaveModeListForT_StockT="LineStockInMaterial_SaveModeListForT_StockT";
+    String TAG_GetPalletDetailByBarCode_Product="LineStockInProduct_GetPalletDetailByBarCode_Product";
+    String TAG_SaveModeListForT_StockT="LineStockInProduct_SaveModeListForT_StockT";
+
     private final int RESULT_Msg_GetPalletDetailByBarCode_Product=102;
     private final int RESULT_SaveModeListForT_StockT=101;
+
+    String TAG_Get_WODetailInfo = "LineStockInBackProduct_Print_Outlabel";
+    private final int RESULT_Get_WODetailInfo = 103;
+
+    String TAG_SaveBarcodeListInStockForTuiLiao = "LineStockInBackProduct_SaveBarcodeListInStockForTuiLiao";
+    private final int RESULT_SaveBarcodeListInStockForTuiLiao = 104;
+
 
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
+            case RESULT_SaveBarcodeListInStockForTuiLiao:
+                AnalysisetSaveBarcodeListInStockForTuiLiaoJson((String) msg.obj);
+                break;
             case RESULT_SaveModeListForT_StockT:
                 AnalysisetSaveModeListForT_StockTJson((String) msg.obj);
                 break;
             case RESULT_Msg_GetPalletDetailByBarCode_Product:
-                AnalysiseGetPalletDetailByBarCode_ProductJson((String) msg.obj);
+                AnalysisetGetPalletDetailByBarCode_ProductJson((String) msg.obj);
+                break;
+            case RESULT_Get_WODetailInfo:
+                AnalysisGetT_RESULT_Get_WODetailInfoADFJson((String)msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____" + msg.obj);
-                CommonUtil.setEditFocus(edtLineStockInBarcode);
+                CommonUtil.setEditFocus(edtLineStockInScanBarcode);
                 break;
         }
     }
 
-
-    @ViewInject(R.id.lsv_LineStockInMaterial)
-    ListView lsvLineStockInMaterial;
-    @ViewInject(R.id.edt_LineStockInBarcode)
-    EditText edtLineStockInBarcode;
+    Context context = LineStockInBackProduct.this;
+    @ViewInject(R.id.lsv_LineStockInProduct)
+    ListView lsvLineStockInProduct;
     @ViewInject(R.id.txt_Company)
     TextView txtCompany;
     @ViewInject(R.id.txt_Batch)
@@ -90,36 +107,76 @@ public class LineStockInMaterial extends BaseActivity {
     TextView txtMaterialName;
     @ViewInject(R.id.txt_WareHousName)
     TextView txtWareHousName;
+    @ViewInject(R.id.edt_LineStockInScanBarcode)
+    EditText edtLineStockInScanBarcode;
 
-    Context context=LineStockInMaterial.this;
     ArrayList<LineStockInProductModel> lineStockInProductModels;
+   // ArrayList<BarCodeInfo> SumbitbarCodeInfos=null;
     LineStockInMaterialItemAdapter lineStockInMaterialItemAdapter;
+
+    WoModel womodel;
+    ArrayList<WoDetailModel> WoDetailModels;
 
     @Override
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle=new ToolBarTitle(getString(R.string.LineStockInMaterialY),true);
+        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.LineStockInReturnBillChoice), true);
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
-        lineStockInProductModels=new ArrayList<>();
-        txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());
     }
 
-    @Event(value = R.id.edt_LineStockInBarcode,type = View.OnKeyListener.class)
-    private  boolean edtLineInstockScanbarcode(View v, int keyCode, KeyEvent event) {
+    @Override
+    protected void initData() {
+        super.initData();
+        womodel=getIntent().getParcelableExtra("WoModel");
+        GetWODetailInfo(String.valueOf(womodel.getID()));
+
+        lineStockInProductModels=new ArrayList<>();
+        txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());        //SumbitbarCodeInfos=new ArrayList<>();
+        CommonUtil.setEditFocus(edtLineStockInScanBarcode);
+    }
+
+
+
+
+
+
+    //获取工单明细
+    private void GetWODetailInfo(String HID){
+        try{
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("HeadId", HID);
+            LogUtil.WriteLog(LineStockInReturn.class, TAG_Get_WODetailInfo, HID);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_WODetailInfo, getString(R.string.Msg_GetT_Wodetailinfo), context, mHandler, RESULT_Get_WODetailInfo, null,  URLModel.GetURL().GetWODetailInfo, params, null);
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.toString());
+        }
+    }
+
+
+    @Event(value =R.id.edt_LineStockInScanBarcode,type = View.OnKeyListener.class)
+    private  boolean edtLineStockInScanBarcodeClick(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
-            keyBoardCancle();
-            String code=edtLineStockInBarcode.getText().toString().trim();
+            String code = edtLineStockInScanBarcode.getText().toString().trim();
+            if (TextUtils.isEmpty(code)) {
+                CommonUtil.setEditFocus(edtLineStockInScanBarcode);
+                return true;
+            }
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
             LogUtil.WriteLog(ReceiptionScan.class, TAG_GetPalletDetailByBarCode_Product, code);
-//            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCode_Product, params, null);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCodeForInStock, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCode_Product, params, null);
         }
         return false;
     }
+
+    @Event(R.id.txt_WareHousName)
+    private void txtWareHousNameClick(View view){
+        SelectWareHouse();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,6 +192,7 @@ public class LineStockInMaterial extends BaseActivity {
             }
             //提交
             if(lineStockInProductModels!=null && lineStockInProductModels.size()!=0){
+                final Map<String, String> params = new HashMap<String, String>();
                 ArrayList<BarCodeInfo> SumbitbarCodeInfos=new ArrayList<>();
                 for (LineStockInProductModel lineStockInProduct:lineStockInProductModels) {
                     if(lineStockInProduct.getBarCodeInfos()!=null && lineStockInProduct.getBarCodeInfos().size()!=0){
@@ -142,7 +200,6 @@ public class LineStockInMaterial extends BaseActivity {
                     }
                 }
                 if(SumbitbarCodeInfos.size()!=0) {
-                    final Map<String, String> params = new HashMap<String, String>();
                     String ModelJson = GsonUtil.parseModelToJson(SumbitbarCodeInfos);
 //                UerInfo uerInfo=new UerInfo();
 //                uerInfo.setWarehouseID(SelectWareHouseID);
@@ -154,17 +211,17 @@ public class LineStockInMaterial extends BaseActivity {
                     String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
                     params.put("UserJson", UserJson);
                     params.put("ModelJson", ModelJson);
-                    LogUtil.WriteLog(ReceiptionScan.class, TAG_SaveModeListForT_StockT, ModelJson);
-//                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveModeListForT_StockT, getString(R.string.Msg_SaveT_LineInStockProductlADF), context, mHandler, RESULT_SaveModeListForT_StockT, null, URLModel.GetURL().SaveModeListForT_StockT, params, null);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveModeListForT_StockT, getString(R.string.Msg_SaveT_LineInStockProductlADF), context, mHandler, RESULT_SaveModeListForT_StockT, null, URLModel.GetURL().SaveModeListForLingLiao_Stock, params, null);
+                    LogUtil.WriteLog(LineStockInBackProduct.class, TAG_SaveBarcodeListInStockForTuiLiao, ModelJson);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveBarcodeListInStockForTuiLiao, getString(R.string.Msg_SaveT_LineInStockProductlADF), context, mHandler, RESULT_SaveBarcodeListInStockForTuiLiao, null, URLModel.GetURL().SaveBarcodeListInStockForTuiLiao, params, null);
                 }
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Event(value = R.id.lsv_LineStockInMaterial,type =  AdapterView.OnItemClickListener.class)
-    private  boolean lsvLineStockInMaterialClick(AdapterView<?> parent, View view, int position, long id){
+
+    @Event(value = R.id.lsv_LineStockInProduct,type =  AdapterView.OnItemClickListener.class)
+    private  boolean lsvLineStockInProductClick(AdapterView<?> parent, View view, int position, long id){
         if(id>=0) {
             LineStockInProductModel lineStockInProduct=(LineStockInProductModel)lineStockInMaterialItemAdapter.getItem(position);
             if (lineStockInProduct.getBarCodeInfos().size() != 0) {
@@ -178,16 +235,46 @@ public class LineStockInMaterial extends BaseActivity {
         return true;
     }
 
+    void AnalysisGetT_RESULT_Get_WODetailInfoADFJson(String result){
+        try {
+            LogUtil.WriteLog(LineStockInReturn.class, TAG_Get_WODetailInfo, result);
+            ReturnMsgModelList<WoDetailModel> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WoDetailModel>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                WoDetailModels=returnMsgModel.getModelJson();
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
     /*
    扫描条码
     */
-    void AnalysiseGetPalletDetailByBarCode_ProductJson(String result){
-        LogUtil.WriteLog(ReceiptionScan.class, TAG_GetPalletDetailByBarCode_Product,result);
+    void AnalysisetGetPalletDetailByBarCode_ProductJson(String result){
+        LogUtil.WriteLog(LineStockInBackProduct.class, TAG_GetPalletDetailByBarCode_Product,result);
+        ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {}.getType());
         try {
-            ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {
-            }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 ArrayList<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
+
+                String MaterialNo=barCodeInfos.get(0).getMaterialNo();
+                //判断扫描的物料是不是存在明细中
+                boolean flag=false;
+                for(WoDetailModel Model:WoDetailModels){
+                    if(Model.getMaterialNo().toString().equals(MaterialNo))
+                    {
+                        flag=true;
+                    }
+                }
+                if (!flag){
+                    MessageBox.Show(context, "扫描条码信息和工单明细物料不匹配！");
+                    CommonUtil.setEditFocus(edtLineStockInScanBarcode);
+                    return;
+                }
+
                 Bindbarcode(barCodeInfos);
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
@@ -195,11 +282,13 @@ public class LineStockInMaterial extends BaseActivity {
         }catch (Exception ex){
             MessageBox.Show(context,ex.toString());
         }
-        CommonUtil.setEditFocus(edtLineStockInBarcode);
+        CommonUtil.setEditFocus(edtLineStockInScanBarcode);
     }
 
-    void  AnalysisetSaveModeListForT_StockTJson(String result){
-        LogUtil.WriteLog(LineStockInProduct.class, TAG_SaveModeListForT_StockT,result);
+
+
+    void  AnalysisetSaveBarcodeListInStockForTuiLiaoJson(String result){
+        LogUtil.WriteLog(LineStockInBackProduct.class, TAG_SaveBarcodeListInStockForTuiLiao,result);
         ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
         try {
             MessageBox.Show(context,returnMsgModel.getMessage());
@@ -209,9 +298,22 @@ public class LineStockInMaterial extends BaseActivity {
         }catch (Exception ex){
             MessageBox.Show(context,ex.toString());
         }
-        CommonUtil.setEditFocus(edtLineStockInBarcode);
+        CommonUtil.setEditFocus(edtLineStockInScanBarcode);
     }
 
+    void  AnalysisetSaveModeListForT_StockTJson(String result){
+        LogUtil.WriteLog(LineStockInBackProduct.class, TAG_SaveModeListForT_StockT,result);
+        ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
+        try {
+            MessageBox.Show(context,returnMsgModel.getMessage());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                ClearFrm();
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.toString());
+        }
+        CommonUtil.setEditFocus(edtLineStockInScanBarcode);
+    }
 
     void Bindbarcode(final ArrayList<BarCodeInfo> barCodeInfos){
         if (barCodeInfos != null && barCodeInfos.size() != 0) {
@@ -229,7 +331,7 @@ public class LineStockInMaterial extends BaseActivity {
                 if(index!=-1){
                     if(lineStockInProductModels.get(index).getBarCodeInfos().indexOf(barCodeInfos.get(0))!=-1){
                         //MessageBox.Show(context,getString(R.string.Error_Barcode_hasScan));
-                        new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
+                        new AlertDialog.Builder(context) .setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage("是否删除已扫描条码？")
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -259,17 +361,31 @@ public class LineStockInMaterial extends BaseActivity {
                 BindListVIew(lineStockInProductModels);
             }catch (Exception ex){
                 MessageBox.Show(context,ex.getMessage());
-                CommonUtil.setEditFocus(edtLineStockInBarcode);
+                CommonUtil.setEditFocus(edtLineStockInScanBarcode);
             }
 
         }
     }
 
 
-    private void BindListVIew(ArrayList<LineStockInProductModel> lineStockInProductModels) {
-        lineStockInMaterialItemAdapter=new LineStockInMaterialItemAdapter(context,lineStockInProductModels);
-        lsvLineStockInMaterial.setAdapter(lineStockInMaterialItemAdapter);
-    }
+    /*
+   提交入库
+    */
+//    void AnalysisSaveT_InStockTaskDetailADFJson(String result){
+//        try {
+//            LogUtil.WriteLog(LineStockInProduct.class, TAG_SaveT_InStockTaskDetailADF,result);
+//            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+//            }.getType());
+//            MessageBox.Show(context, returnMsgModel.getMessage());
+//            if(returnMsgModel.getHeaderStatus().equals("S")) {
+//                ClearFrm();
+//                GetInStockTaskDetail(inStockTaskInfoModel);
+//            }
+//            CommonUtil.setEditFocus(edtUpShelfScanBarcode);
+//        } catch (Exception ex) {
+//            MessageBox.Show(context, ex.getMessage());
+//        }
+//    }
 
     void InitFrm(BarCodeInfo barCodeInfo){
         try {
@@ -282,13 +398,20 @@ public class LineStockInMaterial extends BaseActivity {
             }
         }catch (Exception ex){
             MessageBox.Show(context,ex.getMessage());
-            CommonUtil.setEditFocus(edtLineStockInBarcode);
+            CommonUtil.setEditFocus(edtLineStockInScanBarcode);
         }
     }
 
+    private void BindListVIew(ArrayList<LineStockInProductModel> lineStockInProductModels) {
+        lineStockInMaterialItemAdapter=new LineStockInMaterialItemAdapter(context,lineStockInProductModels);
+        lsvLineStockInProduct.setAdapter(lineStockInMaterialItemAdapter);
+    }
+
+
+
     void ClearFrm(){
         lineStockInProductModels = new ArrayList<>();
-        edtLineStockInBarcode.setText("");
+        edtLineStockInScanBarcode.setText("");
         txtCompany.setText("");
         txtBatch.setText("");
         txtEDate.setText("");
@@ -296,4 +419,38 @@ public class LineStockInMaterial extends BaseActivity {
         txtMaterialName.setText("");
         BindListVIew(lineStockInProductModels);
     }
+
+
+    int  SelectWareHouseID=-1;
+    void SelectWareHouse(){
+        if (BaseApplication.userInfo==null || BaseApplication.userInfo.getLstWarehouse() == null) return;
+        List<String> wareHouses = new ArrayList<String>();
+        if(BaseApplication.userInfo.getLstWarehouse().size()>1) {
+            for (WareHouseInfo warehouse : BaseApplication.userInfo.getLstWarehouse()) {
+                if (warehouse.getWareHouseName() != null && !warehouse.getWareHouseName().equals("")) {
+                    wareHouses.add(warehouse.getWareHouseName());
+                }
+            }
+            final String[] items = wareHouses.toArray(new String[0]);
+            new AlertDialog.Builder(context) .setCancelable(false).setTitle(getResources().getString(R.string.activity_login_WareHousChoice))// 设置对话框标题
+                    .setIcon(android.R.drawable.ic_dialog_info)// 设置对话框图
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO 自动生成的方法存根
+                            String select_item = items[which].toString();
+                            SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(which).getID();
+                            txtWareHousName.setText(select_item);
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }else{
+            SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(0).getID();
+            txtWareHousName.setText(BaseApplication.userInfo.getLstWarehouse().get(0).getWareHouseName());
+        }
+    }
+
+
+
+
 }

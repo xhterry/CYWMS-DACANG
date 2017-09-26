@@ -27,6 +27,15 @@ public class BarCodeInfo extends Base_Model implements Parcelable{
     private Float Qty;
     private int NoPack;
     private Float PrintQty;
+
+    public String getLabelMark() {
+        return LabelMark;
+    }
+
+    public void setLabelMark(String labelMark) {
+        LabelMark = labelMark;
+    }
+
     private String BarCode;
     private int BarcodeType;
     private String SerialNo;
@@ -55,7 +64,34 @@ public class BarCodeInfo extends Base_Model implements Parcelable{
     private Float PalletQty;
     private int PalletType;
 
+    private String Unit;
+    private String ProductClass  ; //ymh生产班组
+    private String RelaWeight; //相对比重
+    private String LabelMark; //标记
 
+    public String getRelaWeight() {
+        return RelaWeight;
+    }
+
+    public void setRelaWeight(String relaWeight) {
+        RelaWeight = relaWeight;
+    }
+
+    public String getProductClass() {
+        return ProductClass;
+    }
+
+    public void setProductClass(String productClass) {
+        ProductClass = productClass;
+    }
+
+    public String getUnit() {
+        return Unit;
+    }
+
+    public void setUnit(String unit) {
+        Unit = unit;
+    }
 
     public String getRowNoDel() {
         return RowNoDel;

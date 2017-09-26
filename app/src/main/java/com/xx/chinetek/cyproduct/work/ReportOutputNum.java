@@ -1,7 +1,11 @@
 package com.xx.chinetek.cyproduct.work;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Message;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,13 +13,16 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.Pallet.CombinPallet;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
+import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Production.Wo.WoModel;
+import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
 import com.xx.chinetek.model.WMS.Inventory.Barcode_Model;
@@ -24,6 +31,8 @@ import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.ArithUtil;
+import com.xx.chinetek.util.function.CommonUtil;
+import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
 
@@ -34,6 +43,7 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ContentView(R.layout.activity_report_output_num)
@@ -43,18 +53,28 @@ public class ReportOutputNum extends BaseActivity {
 
     @ViewInject(R.id.txtNo)
     TextView txtNo;
+
+    @ViewInject(R.id.txtT)
+    TextView txtT;
+
     @ViewInject(R.id.txtBatch)
-    TextView txtBatch;
+    EditText txtBatch;
     @ViewInject(R.id.txtNumber)
     TextView txtNumber;
-    @ViewInject(R.id.txtLast)
-    TextView txtLast;
+//    @ViewInject(R.id.txtLast)
+//    TextView txtLast;
     @ViewInject(R.id.editTxtNumber)
     EditText editTxtNumber;
 
+    @ViewInject(R.id.editText)
+    EditText edtBarcode;
+
+    @ViewInject(R.id.txt_WareHousName)
+    TextView txtWareHousName;
+    @ViewInject(R.id.butP)
+    Button butP;
     @ViewInject(R.id.butB)
     Button butB;
-
     @ViewInject(R.id.butO)
     Button butO;
 
@@ -67,63 +87,267 @@ public class ReportOutputNum extends BaseActivity {
         super.initViews();
         BaseApplication.context = context;
         x.view().inject(this);
+
+
+
+
     }
 
     @Override
     protected void initData() {
-        super.initData();
-        womodel=getIntent().getParcelableExtra("WoModel");
+        palletDetailModels=new ArrayList<>();
+        palletDetailModels.add(new PalletDetail_Model());
+        palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());
 
+        super.initData();
+        CommonUtil.setEditFocus(edtBarcode);
+        womodel=getIntent().getParcelableExtra("WoModel");
+        butB.setVisibility(womodel.getStrVoucherType().toString().equals("成品")? View.VISIBLE:View.GONE);
+        butP.setVisibility(womodel.getStrVoucherType().toString().equals("成品")? View.VISIBLE:View.GONE);
+
+        txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());
         GetWoModel(womodel);
     }
 
+    @Event(value = R.id.editText, type = View.OnKeyListener.class)
+    private boolean edtfilterOnKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String barcode = edtBarcode.getText().toString().trim();
+                try{
+                    final Map<String, String> params = new HashMap<String, String>();
+                    params.put("Barcode", barcode);
+                    params.put("PalletModel", "1");
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
+                    return false;
+                }catch (Exception ex){
+                    MessageBox.Show(context,ex.toString());
+                }
+        }
+        return false;
+    }
 
-    @Event(value = {R.id.butB,R.id.butO},type = View.OnClickListener.class)
+
+    List<PalletDetail_Model> palletDetailModels;
+    /*
+    解析物料条码扫描
+     */
+    void AnalysisGetT_SerialNoByPalletAD(String result){
+        LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF,result);
+        try {
+            ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                PalletDetail_Model palletDetailModel = returnMsgModel.getModelJson().get(0);
+                BarCodeInfo barCodeM = palletDetailModel.getLstBarCode().get(0);
+                String Fileter=barCodeM.getErpVoucherNo();
+                if (!Fileter.equals(txtNo.getText().toString()))
+                {
+                    MessageBox.Show(context, "扫描条码信息和工单号不一致！");
+                    CommonUtil.setEditFocus(edtBarcode);
+                    return;
+                }
+                //判断组托条件：批次、据点、库位、物料相同才能组托
+                if (palletDetailModels.get(0).getLstBarCode() != null) {// &&
+                    for (BarCodeInfo barCodeInfo : palletDetailModel.getLstBarCode()) {
+                        if (palletDetailModels.get(0).getLstBarCode().size() != 0) {
+                            if(palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)){
+                                MessageBox.Show(context, getString(R.string.Error_Contain_Barcode));
+                                CommonUtil.setEditFocus(edtBarcode);
+                                return;
+                            }
+                            String checkError = CheckPalletCondition(barCodeInfo);
+                            if (!TextUtils.isEmpty(checkError)) {
+                                MessageBox.Show(context, checkError);
+                                CommonUtil.setEditFocus(edtBarcode);
+                                return;
+                            }
+                            barCodeInfo.setPalletno(palletDetailModels.get(0).getLstBarCode().get(0).getPalletno());
+                        }
+                        if (!palletDetailModels.get(0).getLstBarCode().contains(barCodeInfo)) {
+                            // palletDetailModels.get(0).setPalletNo(barCodeInfo.getPalletno());
+                            palletDetailModels.get(0).setPalletType(barCodeInfo.getPalletType());
+
+                            palletDetailModels.get(0).getLstBarCode().add(0, barCodeInfo);
+                            // palletDetailModels.get(0).setVoucherType(999);
+                            palletDetailModels.get(0).setStrongHoldCode(barCodeInfo.getStrongHoldCode());
+                            palletDetailModels.get(0).setStrongHoldName(barCodeInfo.getStrongHoldName());
+                            palletDetailModels.get(0).setCompanyCode(barCodeInfo.getCompanyCode());
+                            palletDetailModels.get(0).setMaterialNo(barCodeInfo.getMaterialNo());
+                            palletDetailModels.get(0).setBatchNo(barCodeInfo.getBatchNo());
+                            palletDetailModels.get(0).setSupPrdBatch(barCodeInfo.getSupPrdBatch());
+                            palletDetailModels.get(0).setSuppliernNo(barCodeInfo.getSupCode());
+                            palletDetailModels.get(0).setSuppliernName(barCodeInfo.getSupName());
+                            palletDetailModels.get(0).setErpVoucherNo(barCodeInfo.getErpVoucherNo());
+                            palletDetailModels.get(0).setAreaID(barCodeInfo.getAreaID());
+                        }
+                    }
+                }
+                BarCodeInfo barCodeInfo = palletDetailModel.getLstBarCode().get(0);
+                txtBatch.setText(barCodeInfo.getBatchNo());
+
+                float sumAll=0;
+                for (BarCodeInfo barCodemodel : palletDetailModels.get(0).getLstBarCode()) {
+                    sumAll= ArithUtil.add(sumAll,barCodemodel.getQty());
+                }
+                editTxtNumber.setText(String.valueOf(sumAll));
+                txtNumber.setText(String.valueOf(palletDetailModels.get(0).getLstBarCode().size()));
+
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+            }
+        }catch (Exception e){
+            MessageBox.Show(context,e.toString());
+        }finally {
+            CommonUtil.setEditFocus(edtBarcode);
+        }
+        CommonUtil.setEditFocus(edtBarcode);
+    }
+
+    String CheckPalletCondition(BarCodeInfo  barCodeInfo) {
+        if (palletDetailModels.get(0).getPalletType() == 0) {
+            if (!palletDetailModels.get(0).getErpVoucherNo().equals(barCodeInfo.getErpVoucherNo()))
+                return getString(R.string.Error_VourcherNonotMatch);
+            if(!palletDetailModels.get(0).getSuppliernNo().equals(barCodeInfo.getSupCode())){
+                return getString(R.string.Error_SuppilerNoMatch);
+            }
+        } else if (palletDetailModels.get(0).getAreaID() != (barCodeInfo.getAreaID()))
+            return getString(R.string.Error_AreaotnotMatch);
+        //收货组托判断组托条件：批次、据点、物料、订单相同才能组托
+        //在库组托判断库位相同才能组托
+        //getPalletType为0：收货组托
+        //新增：判断物料是否已组托 插入：判断物料所在托盘属性是否与现有托盘属性一致才能组托
+        if (barCodeInfo.getPalletType() != 0)
+            return getString(R.string.Error_Contain_Barcode);
+//        if (SWPallet.isChecked() && palletDetailModels.get(0).getPalletType() != barCodeInfo.getPalletType())
+//            return getString(R.string.Error_PalletypenotMatch);//.getLstBarCode().get(0)
+        if (!palletDetailModels.get(0).getMaterialNo().equals(barCodeInfo.getMaterialNo()))
+            return getString(R.string.Error_materialnotMatch);
+        else if (barCodeInfo.getBatchNo()==null || !palletDetailModels.get(0).getBatchNo().equals(barCodeInfo.getBatchNo()))
+            return getString(R.string.Error_BartchnotMatch);
+        else if (barCodeInfo.getSupPrdBatch()==null || !palletDetailModels.get(0).getSupPrdBatch().equals(barCodeInfo.getSupPrdBatch()))
+            return getString(R.string.Error_ProductBartchnotMatch);
+        else if (!palletDetailModels.get(0).getStrongHoldCode().equals(barCodeInfo.getStrongHoldCode()))
+            return getString(R.string.Error_CompanynotMatch);
+        return "";
+    }
+
+
+    //检查库位是否正确
+    protected boolean Check() {
+        boolean checkflag=false;
+        if (womodel.getStrVoucherType().toString().equals("成品")&&BaseApplication.userInfo.getPickWareHouseNo().equals("AD03")){
+            checkflag=true;
+        }
+        if((!womodel.getStrVoucherType().toString().equals("成品"))&&(!BaseApplication.userInfo.getPickWareHouseNo().equals("AD03"))){
+            checkflag=true;
+        }
+        return checkflag;
+
+    }
+
+    @Event(value = {R.id.butB,R.id.butO,R.id.butP},type = View.OnClickListener.class)
     private void onClick(View view) {
-        if (editTxtNumber.getText().toString().isEmpty()){
+        if (R.id.butP == view.getId()) {
+            if (!TaskNo.isEmpty()){
+                List<PalletDetail_Model> model=new ArrayList<>();
+                PalletDetail_Model modeldetail = new PalletDetail_Model();
+                modeldetail.setTaskNo(TaskNo);
+                modeldetail.setPrintIPAdress(URLModel.PrintIP);
+                model.add(modeldetail);
+                String modelJson = GsonUtil.parseModelToJson(model);
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("PalletJson", modelJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_PrintT, getString(R.string.Msg_Print), context, mHandler, RESULT_PrintT, null, URLModel.GetURL().SaveT_YMHCPPrintADF, params, null);
+
+            }
+            return;
+        }
+        if (editTxtNumber.getText().toString().isEmpty()||txtBatch.getText().toString().isEmpty()){
             MessageBox.Show(context, "填写信息不能为空！");
             return;
         }
         ArrayList<WoModel> models =new ArrayList<>();
+        womodel.setBatchNo(txtBatch.getText().toString());
         String Path = "";
         if (R.id.butB == view.getId()) {
-            womodel.setReportQty(Float.parseFloat(editTxtNumber.getText().toString()));
-            womodel.setUserNo(BaseApplication.userInfo.getUserNo());
-            womodel.setVoucherType(36);
-            Path = URLModel.GetURL().GetBaoGongByListWoinfo;
+//            womodel.setReportQty(Float.parseFloat(editTxtNumber.getText().toString()));
+//            womodel.setUserNo(BaseApplication.userInfo.getUserNo());
+//            womodel.setVoucherType(36);
+//            Path = URLModel.GetURL().GetBaoGongByListWoinfo;
+
+
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return;
+            }
+            if (palletDetailModels != null && palletDetailModels.size() != 0 && palletDetailModels.get(0).getLstBarCode()!=null
+                    && palletDetailModels.get(0).getLstBarCode().size()!=0) {
+                palletDetailModels.get(0).setVoucherType(999);
+                palletDetailModels.get(0).setPrintIPAdress(URLModel.PrintIP);
+                String userJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
+                String modelJson = GsonUtil.parseModelToJson(palletDetailModels);
+                final Map<String, String> params = new HashMap<String, String>();
+
+//                LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, modelJson);
+                params.put("UserJson", userJson);
+                params.put("json", modelJson);
+//                params.put("printtype", "1");
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_ProductPalletDetailADF, getString(R.string.Msg_SaveT_PalletDetailADF), context, mHandler, RESULT_GetT_ProductPalletDetailByNoADF, null, URLModel.GetURL().SaveT_YMHCPPalletDetailADF, params, null);
+
+
+            }
+         return;
         }
         if (R.id.butO == view.getId()) {
-            if (womodel.getMaxProductQty()!=null)
-            {
-                if (Float.parseFloat(editTxtNumber.getText().toString())>womodel.getMaxProductQty())
-                {
-                    MessageBox.Show(context, "成品包装完工入库数量不能超过最大限制数量："+ womodel.getMaxProductQty().toString());
+            if (womodel.getStrVoucherType().toString().equals("成品") && palletDetailModels != null && palletDetailModels.size() != 0 && palletDetailModels.get(0).getLstBarCode()!=null
+                    && palletDetailModels.get(0).getLstBarCode().size()!=0){
+                MessageBox.Show(context, "扫描的外箱还没有组托");
+                return;
+            }else{
+                if (Check()){
+//                    if (womodel.getMaxProductQty()!=null)
+//                    {
+//                        if (Float.parseFloat(editTxtNumber.getText().toString())>womodel.getMaxProductQty())
+//                        {
+//                            MessageBox.Show(context, "成品包装完工入库数量不能超过最大限制数量："+ womodel.getMaxProductQty().toString());
+//                            return;
+//                        }
+//                    }
+                    womodel.setDataType(womodel.getStrVoucherType().toString().equals("成品")?"N":"Y");
+                    womodel.setInQty(Float.parseFloat(editTxtNumber.getText().toString()));
+                    womodel.setUserNo(BaseApplication.userInfo.getUserNo());
+                    womodel.setWareHouseNo(BaseApplication.userInfo.getReceiveWareHouseNo());
+                    womodel.setAreaNo(BaseApplication.userInfo.getReceiveAreaNo());
+                    womodel.setVoucherType(37);
+                    Path = URLModel.GetURL().GetFinishInStockByListWoinfo;
+                }else{
+                    MessageBox.Show(context, "登录人员所属的仓库没有完工入库的权限！");
                     return;
                 }
+
+                models.add(womodel);
+                try {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+                    params.put("WoInfoJson", GsonUtil.parseModelToJson(models));
+//            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_ReportOutPutNum, getString(R.string.Msg_Post), context, mHandler,
+                            RESULT_Get_ReportOutPutNum, null,  Path, params, null);
+                } catch (Exception ex) {
+//                mSwipeLayout.setRefreshing(false);
+                    MessageBox.Show(context, ex.getMessage());
+                }finally {
+                    models.clear();
+                }
             }
-            womodel.setDataType(womodel.getStrVoucherType().toString().equals("成品")?"N":"Y");
-            womodel.setInQty(Float.parseFloat(editTxtNumber.getText().toString()));
-            womodel.setUserNo(BaseApplication.userInfo.getUserNo());
-            womodel.setWareHouseNo(BaseApplication.userInfo.getReceiveWareHouseNo());
-            womodel.setAreaNo(BaseApplication.userInfo.getReceiveAreaNo());
-            womodel.setVoucherType(37);
-            Path = URLModel.GetURL().GetFinishInStockByListWoinfo;
+
+
+
+
         }
 
-        models.add(womodel);
-        try {
-            Map<String, String> params = new HashMap<>();
-            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-            params.put("WoInfoJson", GsonUtil.parseModelToJson(models));
-//            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_ReportOutPutNum, getString(R.string.Msg_Post), context, mHandler,
-                    RESULT_Get_ReportOutPutNum, null,  Path, params, null);
-        } catch (Exception ex) {
-//                mSwipeLayout.setRefreshing(false);
-            MessageBox.Show(context, ex.getMessage());
-        }finally {
-            models.clear();
-        }
+
 
     }
 
@@ -142,10 +366,22 @@ public class ReportOutputNum extends BaseActivity {
     String TAG_Get_GetBaoGong = "Report_Get_GetBaoGong";
     private final int RESULT_Get_GetBaoGong = 105;
 
+    String TAG_GetT_PalletDetailByNoADF="CombinPallet_GetT_PalletDetailByNoADF";
+    private final int RESULT_GetT_SerialNoByPalletADF = 106;
+
+    String TAG_SaveT_ProductPalletDetailADF="CombinPallet_TAG_SaveT_ProductPalletDetailADF";//成品组托
+    private final int RESULT_GetT_ProductPalletDetailByNoADF = 107;//成品组托
+
+    String TAG_PrintT="ReportOutput_TAG_PrintT";//组托打印
+    private final int RESULT_PrintT = 108;//组托打印
+
     @Override
     public void onHandleMessage(Message msg) {
 //        mSwipeLayout.setRefreshing(false);
         switch (msg.what) {
+            case RESULT_GetT_SerialNoByPalletADF:
+                AnalysisGetT_SerialNoByPalletAD((String) msg.obj);
+                break;
             case RESULT_Get_ReportOutPutNum:
                 Analysis((String)msg.obj,TAG_Get_ReportOutPutNum);
                 break;
@@ -158,8 +394,14 @@ public class ReportOutputNum extends BaseActivity {
             case RESULT_Get_Barcode:
                 GetBarcodeAnalysis((String)msg.obj,TAG_Get_Barcode);
                 break;
-            case RESULT_Get_GetBaoGong:
-                GetBaoGongAnalysis((String)msg.obj,TAG_Get_GetBaoGong);
+            case RESULT_PrintT:
+                PrintTAnalysis((String)msg.obj,TAG_PrintT);
+                break;
+//            case RESULT_Get_GetBaoGong:
+//                GetBaoGongAnalysis((String)msg.obj,TAG_Get_GetBaoGong);
+//                break;
+            case RESULT_GetT_ProductPalletDetailByNoADF:
+                AnalysisSaveT_ProductPalletDetailADF((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -168,22 +410,67 @@ public class ReportOutputNum extends BaseActivity {
         }
     }
 
-    void GetBaoGongAnalysis(String result,String Tag){
+
+    /*打印托盘标签*/
+    void PrintTAnalysis(String result,String Tag){
         try {
-            LogUtil.WriteLog(ReportOutputNum.class, Tag, result);
-            ReturnMsgModelList<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<String>>() {
+            ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
-            if (returnMsgModel.getHeaderStatus().equals("S")) {
-                String[] MessageSplit =returnMsgModel.Message.split(",");
-                txtNumber.setText(MessageSplit[0].equals("")?"0":MessageSplit[0]);
-                txtLast.setText(MessageSplit[1].equals("")?"0":MessageSplit[1]);
-            } else {
-                MessageBox.Show(context, returnMsgModel.getMessage());
+            if(returnMsgModel.getHeaderStatus().equals("S"))
+            {
+                TaskNo="";
+                txtT.setText("");
             }
-        }catch (Exception ex){
+            MessageBox.Show(context, returnMsgModel.getMessage());
+
+        } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtBarcode);
         }
     }
+
+private String TaskNo="";
+    /*
+保存成品组托信息
+ */
+    void AnalysisSaveT_ProductPalletDetailADF(String result){
+        try {
+            ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+            }.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S"))
+            {
+                TaskNo=returnMsgModel.getTaskNo();
+                MessageBox.Show(context, "组托成功，托盘号："+TaskNo);
+                txtT.setText(String.valueOf(TaskNo));
+                InitFrm();
+            }
+            else{
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+            CommonUtil.setEditFocus(edtBarcode);
+        }
+    }
+
+
+//    void GetBaoGongAnalysis(String result,String Tag){
+//        try {
+//            LogUtil.WriteLog(ReportOutputNum.class, Tag, result);
+//            ReturnMsgModelList<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<String>>() {
+//            }.getType());
+//            if (returnMsgModel.getHeaderStatus().equals("S")) {
+//                String[] MessageSplit =returnMsgModel.Message.split(",");
+//                txtNumber.setText(MessageSplit[0].equals("")?"0":MessageSplit[0]);
+//                txtLast.setText(MessageSplit[1].equals("")?"0":MessageSplit[1]);
+//            } else {
+//                MessageBox.Show(context, returnMsgModel.getMessage());
+//            }
+//        }catch (Exception ex){
+//            MessageBox.Show(context, ex.getMessage());
+//        }
+//    }
 
 
     void Analysis(String result,String Tag){
@@ -193,7 +480,10 @@ public class ReportOutputNum extends BaseActivity {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 MessageBox.Show(context, "提交成功！");
-
+                InitFrm();
+                txtBatch.setText("");
+                txtNumber.setText("");
+                editTxtNumber.setText("");
             } else {
                 MessageBox.Show(context, returnMsgModel.getMessage());
             }
@@ -235,19 +525,19 @@ public class ReportOutputNum extends BaseActivity {
     }
 
 
-    private void GetBaoGong(){
-        try {
-            Map<String, String> params = new HashMap<>();
-            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-            params.put("GongDan", GsonUtil.parseModelToJson(txtNo.getText().toString()));
-//            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_GetBaoGong, getString(R.string.Msg_Post), context, mHandler,
-                    RESULT_Get_GetBaoGong, null,   URLModel.GetURL().GetBaoGongSumQtyLastQty, params, null);
-        } catch (Exception ex) {
-//                mSwipeLayout.setRefreshing(false);
-            MessageBox.Show(context, ex.getMessage());
-        }
-    }
+//    private void GetBaoGong(){
+//        try {
+//            Map<String, String> params = new HashMap<>();
+//            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+//            params.put("GongDan", txtNo.getText().toString());
+////            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
+//            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_GetBaoGong, getString(R.string.Msg_Post), context, mHandler,
+//                    RESULT_Get_GetBaoGong, null,   URLModel.GetURL().GetBaoGongSumQtyLastQty, params, null);
+//        } catch (Exception ex) {
+////                mSwipeLayout.setRefreshing(false);
+//            MessageBox.Show(context, ex.getMessage());
+//        }
+//    }
 
 
     /*
@@ -255,9 +545,18 @@ public class ReportOutputNum extends BaseActivity {
  */
     void GetWoModel(WoModel womodel){
         if(womodel!=null) {
-            txtNo.setText(womodel.getVoucherNo());
+            txtNo.setText(womodel.getErpVoucherNo());
             txtBatch.setText(womodel.getBatchNo());
-            GetBaoGong();
+//            GetBaoGong();
         }
+    }
+
+
+    void InitFrm(){
+        palletDetailModels=new ArrayList<>();
+        palletDetailModels.add(new PalletDetail_Model());
+        palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());
+        edtBarcode.setText("");
+
     }
 }

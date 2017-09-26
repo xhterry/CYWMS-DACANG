@@ -374,6 +374,9 @@ public class CombinPallet extends BaseActivity {
             LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, result);
             ReturnMsgModel<Base_Model> returnMsgModel =  GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
+            if(returnMsgModel.getHeaderStatus().equals("S")) {
+                InitFrm();
+            }
             MessageBox.Show(context, returnMsgModel.getMessage());
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());

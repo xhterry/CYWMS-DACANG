@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,11 +19,14 @@ import android.widget.Switch;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.Pallet.CombinPallet;
 import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
 import com.xx.chinetek.adapter.wms.QC.QCBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.Material.BarCodeInfo;
+import com.xx.chinetek.model.Pallet.PalletDetail_Model;
 import com.xx.chinetek.model.Production.Wo.WoModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -77,6 +81,10 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
     String TAG_GetT_WoninfoBack = "OffShelfBillChoice_GetT_WoninfoBack";
     private final int RESULT_GetT_WoninfoBack = 103;
+
+
+    String TAG_GetT_PalletDetailByNoADF="CombinPallet_GetT_PalletDetailByNoADF";
+    private final int RESULT_GetT_SerialNoByPalletADF = 104;
     ArrayList<WoModel> WoModels;
 
     @Override
@@ -92,7 +100,9 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
             case RESULT_GetT_WoninfoBack:
                 AnalysisGetT_RESULT_GetT_WoinfoADFJson((String) msg.obj);
                 break;
-
+            case RESULT_GetT_SerialNoByPalletADF:
+                AnalysisGetT_SerialNoByPalletAD((String) msg.obj);
+                break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
                 CommonUtil.setEditFocus(edt_filterContent);
@@ -141,7 +151,8 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
             ReturnMsgModelList<WoModel> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WoModel>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
-                MessageBox.Show(context, "同步单据成功，请刷新页面！");
+                MessageBox.Show(context, "同步单据成功");
+                getData();
             } else {
                 MessageBox.Show(context, returnMsgModel.getMessage());
             }
@@ -155,16 +166,16 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
     @Event(value = R.id.SW_WoType,type = CompoundButton.OnCheckedChangeListener.class)
     private void SwWoTypeCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)
-        {
-            //外销工单
-            getData();
-        }
-        else
-        {
-            //正常工单
-            getData();
-        }
+//        if (isChecked)
+//        {
+//            //外销工单
+//            getData();
+//        }
+//        else
+//        {
+//            //正常工单
+//            getData();
+//        }
 
 
     }
@@ -202,14 +213,72 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
             keyBoardCancle();
+            //区分扫描的是条码，工单
             String Fileter = edt_filterContent.getText().toString().trim();
-            if (!Fileter.isEmpty()){
-                Sync(Fileter);
+            if (Fileter.length()!=18) {
+                try{
+                    String barcode=edt_filterContent.getText().toString().trim();
+                    final Map<String, String> params = new HashMap<String, String>();
+                    params.put("Barcode", barcode);
+                    params.put("PalletModel", "1");
+                    LogUtil.WriteLog(BillsIn.class, TAG_GetT_PalletDetailByNoADF, barcode);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
+                    return false;
+                }catch (Exception ex){
+                    MessageBox.Show(context,ex.toString());
+                }
+//                if (barCodeInfo!=null){
+//                    Fileter=barCodeInfo.getErpVoucherNo();
+//                    edt_filterContent.setText(Fileter);
+//                }
             }
+
+
+            boolean flag = true;
+            for(int i=0;i<WoModels.size();i++)
+            {
+                if(WoModels.get(i).getErpVoucherNo().equals(Fileter))
+                {
+                    flag=false;
+                }
+            }
+            if (flag){
+                if (!Fileter.isEmpty()){
+                    Sync(Fileter);
+                }
+            }
+
         }
 
         return false;
     }
+
+
+    /*
+  解析物料条码扫描
+   */
+    void AnalysisGetT_SerialNoByPalletAD(String result){
+        LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF,result);
+        try {
+            ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                PalletDetail_Model palletDetailModel = returnMsgModel.getModelJson().get(0);
+                BarCodeInfo barCodeInfo = palletDetailModel.getLstBarCode().get(0);
+                String Fileter=barCodeInfo.getErpVoucherNo();
+                edt_filterContent.setText(Fileter);
+
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+            }
+        }catch (Exception e){
+            MessageBox.Show(context,e.toString());
+        }
+    }
+
+
+
+
 
     //同步单据的方法
     private void Sync(String Fileter){
@@ -291,13 +360,13 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
         try {
             Map<String, String> params = new HashMap<>();
             String PathUrl="";
-            if(SW_WoType.isChecked()){
-                //外销工单
-                PathUrl=URLModel.GetURL().GetT_OutWoinfoModel;
-            }else{
+//            if(SW_WoType.isChecked()){
+//                //外销工单
+//                PathUrl=URLModel.GetURL().GetT_OutWoinfoModel;
+//            }else{
                 //正常工单
                 PathUrl=URLModel.GetURL().GetT_WoinfoModel;
-            }
+//            }
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
 //            LogUtil.WriteLog(BillsIn.class, TAG_GetT_InBill,);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_InBill, getString(R.string.Msg_GetWOInfo), context, mHandler,

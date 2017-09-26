@@ -33,6 +33,16 @@ public class Barcode_Model implements Parcelable{
     private Date EDate;
     private String Eds;
     private int BarcodeType;
+
+    public String getVoucherNo() {
+        return VoucherNo;
+    }
+
+    public void setVoucherNo(String voucherNo) {
+        VoucherNo = voucherNo;
+    }
+
+
     private String Creater;
     private int STATUS;
     private String warehousename;
@@ -46,8 +56,29 @@ public class Barcode_Model implements Parcelable{
     private int BarcodeNo;//ymh
 
     private String RelaWeight;//ymh相对比重
-    private String StoreCondition;//ymh存储条件
+    private String StoreCondition;//
+    private String SupName;//ymh 生产日期周六区分
+
+    public String getSupName() {
+        return SupName;
+    }
+
+    public void setSupName(String supName) {
+        SupName = supName;
+    }
+
+    public int getVoucherType() {
+        return VoucherType;
+    }
+
+    public void setVoucherType(int voucherType) {
+        VoucherType = voucherType;
+    }
+
     private String ProtectWay;//ymh防护措施
+
+    private String VoucherNo;//ymh
+    private int VoucherType;//ymh
 
 
     public Float getSqty() {

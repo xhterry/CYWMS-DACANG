@@ -19,6 +19,7 @@ import com.xx.chinetek.adapter.wms.Pallet.PalletItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.Material.BarCodeInfo;
@@ -57,6 +58,9 @@ public class DismantlePallet extends BaseActivity {
     private final int RESULT_GetT_PalletADF = 102;
     private final int RESULT_Delete_PalletORBarCodeADF = 103;
 
+    String TAG_Print_Tlabel = "OffShelfBillChoice_Print_Tlabel";
+    private final int RESULT_Print_Tlabel = 104;
+
     @Override
     public void onHandleMessage(Message msg) {
 
@@ -70,6 +74,10 @@ public class DismantlePallet extends BaseActivity {
             case RESULT_Delete_PalletORBarCodeADF:
                 AnalysisDelete_PalletORBarCodeADF((String) msg.obj);
                 break;
+            case RESULT_Print_Tlabel:
+                AnalysisGetT_RESULT_Print_TlabelADFJson((String) msg.obj);
+                break;
+
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
                 CommonUtil.setEditFocus(edtBarcode);
@@ -150,6 +158,22 @@ public class DismantlePallet extends BaseActivity {
         return false;
     }
 
+    void AnalysisGetT_RESULT_Print_TlabelADFJson(String result){
+        try {
+            LogUtil.WriteLog(BillsIn.class, TAG_Print_Tlabel, result);
+            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                ClearFrm();
+                MessageBox.Show(context, "托盘条码打印成功！");
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
 
     /*
     提交
@@ -208,6 +232,7 @@ public class DismantlePallet extends BaseActivity {
 //    }
 //
 
+    ArrayList<PalletDetail_Model> palletDetailModelsLast;
     /*
     解析托盘条码扫描
      */
@@ -276,9 +301,28 @@ public class DismantlePallet extends BaseActivity {
             ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
             }.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
-                ClearFrm();
+
+                String PalletNoy=txtPalletNo.getText().toString();
+                if(!TextUtils.isEmpty(PalletNoy)){
+                    //打印托盘标签
+                    ArrayList<PalletDetail_Model> palletDetailModelsLast =new ArrayList<>();
+                    PalletDetail_Model mo = new PalletDetail_Model();
+                    mo.setPrintIPAdress(URLModel.PrintIP);
+                    mo.setTaskNo(PalletNoy);
+                    palletDetailModelsLast.add(mo);
+                    final Map<String, String> params = new HashMap<String, String>();
+                    params.put("PalletJson", GsonUtil.parseModelToJson(palletDetailModelsLast));
+
+//                LogUtil.WriteLog(CombinPallet.class, TAG_Print_Tlabel, modelJson);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Print_Tlabel, getString(R.string.Msg_Print), context, mHandler,RESULT_Print_Tlabel, null,  URLModel.GetURL().PrintForChaiTuoProductAndroid, params, null);
+
+                }
+
             }
-            MessageBox.Show(context, returnMsgModel.getMessage());
+            else{
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }

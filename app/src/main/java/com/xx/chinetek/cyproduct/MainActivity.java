@@ -21,8 +21,10 @@ import com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnBillChoice;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
+import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.InnerMove.InnerMoveScan;
 import com.xx.chinetek.cywms.Qc.QCBillChoice;
+import com.xx.chinetek.cywms.Qc.QCInStock;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.User.MenuInfo;
 import com.xx.chinetek.util.function.CommonUtil;
@@ -63,9 +65,9 @@ public class MainActivity extends BaseActivity {
         LinearLayout linearLayout=(LinearLayout) gridView.getAdapter().getView(position,view,null);
         TextView textView=(TextView)linearLayout.getChildAt(1);
         Intent intent = new Intent();
-        if(textView.getText().toString().equals("生产入库"))
+        if(textView.getText().toString().equals("交接入库"))
             intent.setClass(context, LineStockInProduct.class);
-        else if(textView.getText().toString().equals("领料入库"))
+        else if(textView.getText().toString().equals("发料接收"))
             intent.setClass(context, LineStockInMaterial.class);
         else if(textView.getText().toString().equals("退料入库")) {
            BaseApplication.toolBarTitle=new ToolBarTitle(getString(R.string.LineStockInReturnBillChoice),true);
@@ -73,7 +75,7 @@ public class MainActivity extends BaseActivity {
         }
         else if(textView.getText().toString().equals("退料出库"))
             intent.setClass(context, LineStockOutReturnBillChoice.class);
-        else if(textView.getText().toString().equals("生产出库"))
+        else if(textView.getText().toString().equals("装车扫描"))
             intent.setClass(context, LineStockOutProduct.class);
         else if(textView.getText().toString().equals("领料出库")) {
             BaseApplication.toolBarTitle=new ToolBarTitle(getString(R.string.LineStockOutMaterial),true);
@@ -81,6 +83,8 @@ public class MainActivity extends BaseActivity {
         }
         else if(textView.getText().toString().equals("产线生产"))
             intent.setClass(context, BillsIn.class);
+            //intent.setClass(context, ReportOutputNum.class);
+
         else if(textView.getText().toString().equals("生产记录"))
             intent.setClass(context, LineManage.class);
         else if(textView.getText().toString().equals("坦克投料"))
@@ -92,7 +96,7 @@ public class MainActivity extends BaseActivity {
         else if(textView.getText().toString().equals("组托"))
             intent.setClass(context, CombinPallet.class);
         else if(textView.getText().toString().equals("取样"))
-            intent.setClass(context, QCBillChoice.class);
+            intent.setClass(context, QCInStock.class);
         else if(textView.getText().toString().equals("拆托"))
             intent.setClass(context, DismantlePallet.class);
         else if(textView.getText().toString().equals("移库"))
@@ -120,7 +124,7 @@ public class MainActivity extends BaseActivity {
                 switch (Node) {
                     case 15:
                         itemIconList.add(R.drawable.receiption);
-                        itemNamesList.add("领料入库");
+                        itemNamesList.add("发料接收");
                         break;
                     case 16:
                         itemIconList.add(R.drawable.returnmaterial);
@@ -128,7 +132,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 17:
                         itemIconList.add(R.drawable.receiptsemiproduct);
-                        itemNamesList.add("生产入库");
+                        itemNamesList.add("交接入库");
                         break;
                     case 18:
                         itemIconList.add(R.drawable.packagematerial);
@@ -140,7 +144,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 20:
                         itemIconList.add(R.drawable.deliveryproduct);
-                        itemNamesList.add("生产出库");
+                        itemNamesList.add("装车扫描");
                         break;
                     case 21:
                         itemIconList.add(R.drawable.productmanage);

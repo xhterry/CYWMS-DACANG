@@ -7,21 +7,53 @@
     tools:context="com.xx.chinetek.cyproduct.Manage.ProductManageAdd">
 
 
+    <EditText
+        android:id="@+id/edt_Batch"
+        style="@style/EditTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:hint="输入批次"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline27"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView103">
+
+        <requestFocus />
+
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView103"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/batch"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline27"
+        app:layout_constraintTop_toBottomOf="@+id/textView117" />
+
     <Button
         android:id="@+id/btn_MaterialConfig"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="24dp"
         android:background="@drawable/bt_selector"
         android:text="@string/MaterialConfig"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline71" />
 
     <TextView
         android:id="@+id/textView120"
@@ -33,14 +65,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline27"
-        app:layout_constraintTop_toBottomOf="@+id/textView119" />
+        app:layout_constraintTop_toBottomOf="@+id/textView103" />
 
     <TextView
         android:id="@+id/textView121"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="8dp"
         android:text="@string/GroupNO"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -64,14 +96,18 @@
         style="@style/EditTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
-        android:hint="请扫描设备号"
+        android:layout_marginTop="0dp"
+        android:hint="请输入班组"
         app:layout_constraintBottom_toBottomOf="@+id/textView121"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/textView121"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView121">
 
         <requestFocus />
 
@@ -106,9 +142,10 @@
         android:layout_marginStart="16dp"
         android:hint="请扫描产线"
         app:layout_constraintBottom_toBottomOf="@+id/textView120"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/textView120"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="0dp">
 
         <requestFocus />
 
@@ -215,7 +252,7 @@
         android:id="@+id/lsv_Person"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
@@ -226,5 +263,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_StaffNo"
         app:layout_constraintVertical_bias="1.0" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline71"
+        app:layout_constraintGuide_begin="559dp"
+        android:orientation="horizontal" />
 
 </android.support.constraint.ConstraintLayout>

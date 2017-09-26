@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Production.Wo.WoModel;
 
@@ -16,10 +19,12 @@ import java.util.ArrayList;
  * Created by GHOST on 2017/1/13.
  */
 
-public class WoBillChioceItemAdapter extends BaseAdapter {
+public class WoBillChioceItemAdapter extends BaseAdapter implements Filterable {
     private Context context; // 运行上下文
     private ArrayList<WoModel> woModels; // 信息集合
     private LayoutInflater listContainer; // 视图容器
+    private ArrayList<WoModel> mUnfilteredData;
+    private ArrayFilter mFilter;
 
 
     public final class ListItemView { // 自定义控件集合
@@ -54,6 +59,14 @@ public class WoBillChioceItemAdapter extends BaseAdapter {
     }
 
     @Override
+    public Filter getFilter() {
+        if (mFilter == null) {
+            mFilter = new WoBillChioceItemAdapter.ArrayFilter();
+        }
+        return mFilter;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int selectID = position;
         // 自定义视图
@@ -79,6 +92,71 @@ public class WoBillChioceItemAdapter extends BaseAdapter {
         listItemView.txtCompany.setText(woModel.getStrongHoldName());
         listItemView.txtdepartment.setText(woModel.getDepartmentName());
         return convertView;
+    }
+
+
+    private class ArrayFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence prefix) {
+            FilterResults results = new FilterResults();
+
+            if (mUnfilteredData == null) {
+                mUnfilteredData =  new ArrayList<WoModel>(woModels);
+            }
+
+            if (prefix == null || prefix.length() == 0) {
+                ArrayList<WoModel> list = mUnfilteredData;
+                results.values = list;
+                results.count = list.size();
+            } else {
+                String prefixString = prefix.toString().toLowerCase();
+
+                ArrayList<WoModel> unfilteredValues = mUnfilteredData;
+                int count = unfilteredValues.size();
+
+                ArrayList<WoModel> newValues = new ArrayList<WoModel>(count);
+
+                for (int i = 0; i < count; i++) {
+                    WoModel pc = unfilteredValues.get(i);
+                    if (pc != null) {
+                        int len =pc.getErpVoucherNo().toUpperCase().length();
+                        int LenPre = prefixString.toUpperCase().length();
+                        if (LenPre<=8)
+                        {
+                            if(pc.getErpVoucherNo().toUpperCase().substring(len-8,len).startsWith(prefixString.toUpperCase())){
+                                newValues.add(pc);
+                            }
+                        }
+                        if (LenPre==18)
+                        {
+                            if(pc.getErpVoucherNo().toUpperCase().substring(0,len).startsWith(prefixString.toUpperCase())){
+                                newValues.add(pc);
+                            }
+                        }
+
+                    }
+                }
+
+                results.values = newValues;
+                results.count = newValues.size();
+            }
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+            //noinspection unchecked
+            woModels = (ArrayList<WoModel>) results.values;
+            if (results.count > 0) {
+                notifyDataSetChanged();
+            } else {
+                notifyDataSetInvalidated();
+            }
+        }
+
     }
 
 

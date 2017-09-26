@@ -374,4 +374,11 @@
     <string name="MaterialNo">物料编号：</string>
     <string name="Msg_Insert_User">正在插入人员...</string>
     <string name="Msg_GetT_SaveStouckOutADF">正在提交...</string>
+    <string name="zuT">组托</string>
+    <string name="PrintT">打印</string>
+    <string name="activity_CPP_Label">成品托盘</string>
+    <string name="LineStockInMaterialY">发料接收</string>
+    <string name="PrintBackLable">打印退料标签</string>
+    <string name="BackMaterial">退料</string>
+    <string name="Msg_GetT_Wodetailinfo">获取工单明细信息...</string>
 </resources>

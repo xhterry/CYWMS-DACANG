@@ -86,6 +86,9 @@ public class ProductManageAdd extends BaseActivity {
     EditText edtTeamNo;
     @ViewInject(R.id.edt_StaffNo)
     EditText edtStaffNo;
+    @ViewInject(R.id.edt_Batch)
+    EditText edtBatch;
+
 
     WoModel woModel;
     LineManageModel lineManageModel;
@@ -117,7 +120,7 @@ public class ProductManageAdd extends BaseActivity {
     }
 
 
-    @Event(value = {R.id.edt_EquipID,R.id.edt_ProductLineNo,R.id.edt_TeamNo,R.id.edt_StaffNo},type = View.OnKeyListener.class)
+    @Event(value = {R.id.edt_EquipID,R.id.edt_ProductLineNo,R.id.edt_TeamNo,R.id.edt_StaffNo,R.id.edt_Batch},type = View.OnKeyListener.class)
     private  boolean onKeyClick(View view, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
@@ -132,6 +135,9 @@ public class ProductManageAdd extends BaseActivity {
             switch (view.getId()){
                 case R.id.edt_EquipID:
                     lineManageModel.setEquipID(code);
+                    break;
+                case R.id.edt_Batch:
+                    lineManageModel.setWoBatchNo(code);
                     break;
                 case R.id.edt_ProductLineNo:
                     lineManageModel.setProductLineNo(code);
@@ -152,7 +158,8 @@ public class ProductManageAdd extends BaseActivity {
         if(lineManageModel.getUserInfos()!=null && lineManageModel.getUserInfos().size()>0
                 && !TextUtils.isEmpty(lineManageModel.getEquipID())
                 && !TextUtils.isEmpty(lineManageModel.getProductLineNo())
-                && !TextUtils.isEmpty(lineManageModel.getProductTeamNo())) {
+                && !TextUtils.isEmpty(lineManageModel.getProductTeamNo())
+                && !TextUtils.isEmpty(lineManageModel.getWoBatchNo())) {
 
             InsertUser(lineManageModel);
 

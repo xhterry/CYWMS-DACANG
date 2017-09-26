@@ -91,15 +91,20 @@ public class CompleteProductW extends  SocketBaseActivity {
 
     @Override
     public void onHandleMessage(Message msg) {
-     switch (msg.what) {
-         case RESULT_Print_OutlabelW:
-             AnalysisGetT_RESULT_Print_OutlabelWADFJson((String)msg.obj);
-             break;
-         case NetworkError.NET_ERROR_CUSTOM:
-                ToastUtil.show("获取请求失败_____"+ msg.obj);
+        try{
+            switch (msg.what) {
+                case RESULT_Print_OutlabelW:
+                    AnalysisGetT_RESULT_Print_OutlabelWADFJson((String)msg.obj);
+                    break;
+                case NetworkError.NET_ERROR_CUSTOM:
+                    ToastUtil.show("获取请求失败_____"+ msg.obj);
 //                CommonUtil.setEditFocus(edt_filterContent);
-                break;
+                    break;
+            }
+        }catch(Exception ex){
+            MessageBox.Show(context,"接口异常！");
         }
+
     }
 
 
@@ -174,13 +179,13 @@ public class CompleteProductW extends  SocketBaseActivity {
     private void txtProductStartTimeClick(View view){
         final Calendar ca = Calendar.getInstance();
         mYear = ca.get(Calendar.YEAR);
-        mMonth = ca.get(Calendar.MONTH)+1;
+        mMonth = ca.get(Calendar.MONTH);
         mDate=ca.get(Calendar.DAY_OF_MONTH);
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 mYear = year;
-                mMonth = month+1;
+                mMonth = month;
                 mDate=dayOfMonth;
                 txtdate.setText(display());
             }
@@ -232,7 +237,7 @@ public class CompleteProductW extends  SocketBaseActivity {
             model.setMaterialNo(womodel.getMaterialNo());
             model.setBatchNo(etxtBatch.getText().toString());
             model.setUnit(womodel.getUnit());
-            model.setLineno(txtlineno.getText().toString());
+            model.setProductClass(txtlineno.getText().toString());
             model.setEDate(CommonUtil.dateStrConvertDate(txtdate.getText().toString()));
             model.setBoxCount(Integer.parseInt(TNumber.getText().toString()));//箱数
             model.setQty(Float.parseFloat(XNumber.getText().toString())*Integer.parseInt(TNumber.getText().toString())+Integer.parseInt(LNumber.getText().toString().isEmpty()?"0":LNumber.getText().toString()));//支数
@@ -241,6 +246,10 @@ public class CompleteProductW extends  SocketBaseActivity {
             model.setBarcodeType(1);
             model.setLabelMark("OutChengPin");
             model.setSupPrdBatch(model.getBatchNo());
+
+            model.setVoucherNo(womodel.getVoucherNo());
+            model.setVoucherType(womodel.getVoucherType());
+
             models.add(model);
 
             Map<String, String> params = new HashMap<>();

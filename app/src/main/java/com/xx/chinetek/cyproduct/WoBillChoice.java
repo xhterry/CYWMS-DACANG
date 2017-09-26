@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +15,7 @@ import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
 import com.xx.chinetek.adapter.product.WoBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
@@ -38,6 +41,7 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.xx.chinetek.cywms.R.id.edt_filterContent;
@@ -85,6 +89,7 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     protected  void initData(){
         super.initData();
         mSwipeLayout.setOnRefreshListener(this); //下拉刷新
+        edtfilterContent.addTextChangedListener(TextWatcher);
     }
 
     @Override
@@ -93,6 +98,35 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         GetWoinfoModel();
 
     }
+
+    /**
+     * 文本变化事件
+     */
+    TextWatcher TextWatcher=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(!edtfilterContent.getText().toString().equals(""))
+                woBillChioceItemAdapter.getFilter().filter(edtfilterContent.getText().toString());
+            else{
+                BindListView(woModels);
+            }
+        }
+
+
+
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
 
     @Override
     public void onRefresh() {
@@ -108,6 +142,8 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
         }
         return false;
     }
+
+
 
     /**
      * Listview item点击事件

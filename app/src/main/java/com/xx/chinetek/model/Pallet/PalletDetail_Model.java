@@ -19,7 +19,7 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     public PalletDetail_Model(){
 
     }
-
+    private String TaskNo;
     private String VoucherNo;
     private String RowNo;
     private String PalletNo;
@@ -31,6 +31,15 @@ public class PalletDetail_Model extends Base_Model  implements Parcelable {
     private String SupPrdBatch ;
     private int AreaID;
     public String SuppliernNo;
+
+    public String getTaskNo() {
+        return TaskNo;
+    }
+
+    public void setTaskNo(String taskNo) {
+        TaskNo = taskNo;
+    }
+
     public String SupplierName;
     private ArrayList<BarCodeInfo> lstBarCode;
     private ArrayList<StockInfo_Model> lstStockInfo;

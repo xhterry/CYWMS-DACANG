@@ -27,6 +27,7 @@ import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
+import com.xx.chinetek.util.function.ArithUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
@@ -168,6 +169,7 @@ public class LineStockOutProduct extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 ArrayList<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
                 Bindbarcode(barCodeInfos);
+
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
             }
@@ -185,10 +187,16 @@ public class LineStockOutProduct extends BaseActivity {
                     MessageBox.Show(context,getString(R.string.Error_Barcode_hasScan));
                     return;
                 }
+                float sumAll=0;
                 for (BarCodeInfo barCodeInfo : barCodeInfos) {
                     SumbitbarCodeInfos.add(0,barCodeInfo);
                 }
+                for (BarCodeInfo barCodeInfo : SumbitbarCodeInfos) {
+                    sumAll= ArithUtil.add(sumAll,barCodeInfo.getQty());
+                }
+                txtLineOutStockNum.setText(String.valueOf(sumAll));
                 InitFrm(barCodeInfos.get(0));
+                BaseApplication.userInfo.setEmail(barCodeInfos.get(0).getErpVoucherNo());//ymh 加字段
                 BindListVIew(SumbitbarCodeInfos);
             }catch (Exception ex){
                 MessageBox.Show(context,ex.getMessage());
