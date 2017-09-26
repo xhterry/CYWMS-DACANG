@@ -412,7 +412,7 @@ public class UpShelfScanActivity extends BaseActivity {
                     return false;
                 }
             }else{
-                MessageBox.Show(context, R.string.Error_BarcodeNotInList+"|"+StockInfo_Model.getSerialNo());
+                MessageBox.Show(context, getString(R.string.Error_BarcodeNotInList)+"|"+StockInfo_Model.getSerialNo());
                 return false;
             }
         }
