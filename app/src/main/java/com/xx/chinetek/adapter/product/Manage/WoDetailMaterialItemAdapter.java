@@ -77,6 +77,16 @@ public class WoDetailMaterialItemAdapter extends BaseAdapter {
         listItemView.txtBatchNo.setText(woDetailModel.getFromBatchNo());
         listItemView.txtWoQty.setText(woDetailModel.getRemainQty()+"");
         listItemView.txtScanQty.setText(woDetailModel.getScanQty()+"");
+        if (woDetailModel.getScanQty()!=0 &&
+                woDetailModel.getRemainQty().compareTo(woDetailModel.getScanQty())<0) {
+            convertView.setBackgroundResource(R.color.khaki);
+        }
+        else if (woDetailModel.getRemainQty().compareTo(woDetailModel.getScanQty())==0) {
+            convertView.setBackgroundResource(R.color.springgreen);
+        }
+        else{
+            convertView.setBackgroundResource(R.color.trans);
+        }
         return convertView;
     }
 

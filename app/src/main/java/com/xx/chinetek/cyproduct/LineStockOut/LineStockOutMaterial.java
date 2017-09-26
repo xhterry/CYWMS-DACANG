@@ -95,7 +95,7 @@ public class LineStockOutMaterial extends BaseActivity {
     ToggleButton tbPalletType;
     @ViewInject(R.id.tb_BoxType)
     ToggleButton tbBoxType;
-    @ViewInject(R.id.edt_LineStockOutScanBarcode)
+    @ViewInject(R.id.edt_LineStockOutBarcode)
     EditText edtLineStockOutScanBarcode;
     @ViewInject(R.id.edt_Unboxing)
     EditText edtUnboxing;
@@ -128,10 +128,11 @@ public class LineStockOutMaterial extends BaseActivity {
         tbPalletType.setChecked(view.getId()== R.id.tb_PalletType);
         tbBoxType.setChecked(view.getId()== R.id.tb_BoxType);
         ShowUnboxing(view.getId()== R.id.tb_UnboxType);
+        stockInfoModels=new ArrayList<>();
     }
 
 
-    @Event(value =R.id.edt_LineStockOutScanBarcode,type = View.OnKeyListener.class)
+    @Event(value =R.id.edt_LineStockOutBarcode,type = View.OnKeyListener.class)
     private  boolean edtLineStockOutScanBarcodeClick(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
@@ -319,12 +320,6 @@ public class LineStockOutMaterial extends BaseActivity {
                 WoDetailModel tempWodetail=new WoDetailModel(MaterialNo);
                 final int index=woDetailModels.indexOf(tempWodetail);
                 if(index!=-1){
-
-                    if(ArithUtil.add(woDetailModels.get(index).getScanQty(),SumQty)>woDetailModels.get(index).getRemainQty()){
-                        MessageBox.Show(context,getString(R.string.Error_OutMaterialQtyBiger));
-                        return;
-                    }
-
                     if(woDetailModels.get(index).getStockInfoModels()==null)
                         woDetailModels.get(index).setStockInfoModels(new ArrayList<StockInfo_Model>());
                     if(woDetailModels.get(index).getStockInfoModels().indexOf(stockInfoModels.get(0))!=-1){
@@ -342,6 +337,12 @@ public class LineStockOutMaterial extends BaseActivity {
                                 }).setNegativeButton("取消", null).show();
                         return;
                     }
+                    if(ArithUtil.add(woDetailModels.get(index).getScanQty(),SumQty)>woDetailModels.get(index).getRemainQty()){
+                        MessageBox.Show(context,getString(R.string.Error_OutMaterialQtyBiger));
+                        return;
+                    }
+
+
                     woDetailModels.get(index).setScanQty(ArithUtil.add(woDetailModels.get(index).getScanQty(),SumQty));
                     woDetailModels.get(index).getStockInfoModels().addAll(0,stockInfoModels);
                 }else{
