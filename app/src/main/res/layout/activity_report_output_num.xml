@@ -9,19 +9,19 @@
     <Button
         android:id="@+id/butP"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginStart="24dp"
         android:background="@drawable/bt_selector"
         android:text="@string/PrintT"
-        app:layout_constraintBottom_toTopOf="@+id/guideline76"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline74"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintRight_toLeftOf="@+id/guideline43"
         app:layout_constraintTop_toTopOf="@+id/guideline57"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintVertical_bias="0.542"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline74" />
 
     <EditText
         android:id="@+id/editText"
@@ -31,7 +31,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="@string/filter_content1"
         android:inputType="textPersonName"
@@ -39,21 +38,8 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SW_WoType" />
-
-    <EditText
-        android:id="@+id/txtBatch"
-        style="@style/EditTextStyle"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="请输入批次"
-        android:inputType="textPersonName"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView69" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/txt_WareHousName"
@@ -89,23 +75,6 @@
         app:layout_constraintTop_toTopOf="@+id/textView104"
         android:layout_marginEnd="8dp" />
 
-    <EditText
-        android:id="@+id/editTxtNumber"
-        style="@style/EditTextStyle"
-        android:layout_width="288dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:ems="10"
-        android:hint="请输入本次产量"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/textView106"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/textView106" />
-
     <TextView
         android:id="@+id/textView106"
         style="@style/TextViewComminStyle"
@@ -125,38 +94,35 @@
     <Button
         android:id="@+id/butO"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginStart="24dp"
         android:background="@drawable/bt_selector"
         android:text="@string/ReportOverInstock"
-        app:layout_constraintBottom_toTopOf="@+id/guideline76"
-        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline43"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline57"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.542" />
 
     <Button
         android:id="@+id/butB"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginStart="24dp"
         android:background="@drawable/bt_selector"
         android:text="@string/zuT"
-        app:layout_constraintBottom_toTopOf="@+id/guideline76"
-        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline74"
         app:layout_constraintTop_toTopOf="@+id/guideline57"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintVertical_bias="0.542" />
 
     <TextView
         android:id="@+id/textView104"
@@ -188,6 +154,38 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline25"
         app:layout_constraintTop_toTopOf="@+id/textView66"
         android:layout_marginTop="0dp" />
+
+    <TextView
+        android:id="@+id/txtBatch"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView69" />
+
+    <TextView
+        android:id="@+id/editTxtNumber"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView106" />
 
     <TextView
         android:id="@+id/txtT"
@@ -278,8 +276,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline57"
-        app:layout_constraintGuide_begin="480dp"
-        android:orientation="horizontal" />
+        app:layout_constraintGuide_begin="484dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="484dp"
+        tools:layout_editor_absoluteX="0dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
@@ -294,12 +294,5 @@
         android:id="@+id/guideline74"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.33" />
-
-    <android.support.constraint.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/guideline76"
-        app:layout_constraintGuide_begin="550dp"
-        android:orientation="horizontal" />
 
 </android.support.constraint.ConstraintLayout>
