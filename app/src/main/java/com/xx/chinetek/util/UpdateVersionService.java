@@ -28,6 +28,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+import static com.xx.chinetek.base.BaseApplication.context;
+
 /**
  * 检测安装更新文件的助手类
  *
@@ -45,7 +47,7 @@ public class UpdateVersionService {
         return  "http://"+ URLModel.IPAdress+":"+URLModel.Port+"/"+LastContent;
     }
     private boolean cancelUpdate = false;// 是否取消下载
-    private Context context;
+    //private Context context;
     private TextView txtVersion;
     private Dialog downLoadDialog;
     private Handler handler = new Handler() {// 跟心ui
@@ -78,7 +80,7 @@ public class UpdateVersionService {
      */
     public UpdateVersionService(Context context) {
         super();
-        this.context = context;
+       // this.context = context;
     }
 
     /**

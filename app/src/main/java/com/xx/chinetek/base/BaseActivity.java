@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.CheckNumRefMaterial;
+import com.xx.chinetek.util.UpdateVersionService;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.hander.IHandleMessage;
@@ -43,6 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
         AppManager.getAppManager().addActivity(this); //添加当前Activity到avtivity管理类
         mHandler = new MyHandler<>(this);
         BaseApplication.isCloseActivity=true;
+        updateVersionService = new UpdateVersionService(context);// 创建更新业务对象
         initViews(); //自定义的方法
         initData();
     }
@@ -51,12 +54,15 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
      * 初始化控件
      */
     protected void initViews() {
+
     }
 
     /**
      * 初始化数据
      */
     protected void initData() {
+        if(BaseApplication.isCloseActivity)
+            checkUpdate();
     }
 
 
@@ -203,9 +209,37 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
         return checkNumRefMaterial;
     }
 
+    public UpdateVersionService updateVersionService;
 
+    /**
+     * 检查更新
+     */
+    public void checkUpdate() {
 
+        new Thread() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                super.run();
+                if (updateVersionService.isUpdate()) {
+                    handler.sendEmptyMessage(0);
+                }// 调用检查更新的方法,如果可以更新.就更新.不能更新就提示已经是最新的版本了
+                else {
+                    handler.sendEmptyMessage(1);
+                }
+            }
+        }.start();
+    }
 
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    updateVersionService.showDownloadDialog();
+                    break;
+            }
+        };
+    };
 
 
 
