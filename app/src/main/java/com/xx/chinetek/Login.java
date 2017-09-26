@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -27,7 +25,6 @@ import com.xx.chinetek.model.User.WareHouseInfo;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.SharePreferUtil;
-import com.xx.chinetek.util.UpdateVersionService;
 import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.dialog.ToastUtil;
 import com.xx.chinetek.util.function.CommonUtil;
@@ -55,7 +52,7 @@ public class Login extends BaseActivity {
     private static final int RESULT_GET_LOGIN_INFO = 101;
     private static final int RESULT_GetWareHouseByUserADF = 102;
 
-    private UpdateVersionService updateVersionService;
+
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -84,14 +81,17 @@ public class Login extends BaseActivity {
 
     Context context=Login.this;
     List<WareHouseInfo> lstWarehouse;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//      }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initViews() {
         BaseApplication.context = context;
         x.view().inject(this);
         SharePreferUtil.ReadShare(context);
-        checkUpdate();
         SharePreferUtil.ReadUserShare(context);
         if( BaseApplication.userInfo!=null){
             edtUserName.setText( BaseApplication.userInfo.getUserNo());
@@ -99,7 +99,9 @@ public class Login extends BaseActivity {
             txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());
             lstWarehouse=BaseApplication.userInfo.getLstWarehouse();
         }
-         txtVersion.setText(getString(R.string.login_Version)+(updateVersionService.getVersionCode(context)));
+        txtVersion.setText(getString(R.string.login_Version)+(updateVersionService.getVersionCode(context)));
+
+        super.initViews();
     }
 
     @Event(value = R.id.edt_UserName, type = View.OnKeyListener.class)
@@ -252,33 +254,5 @@ public class Login extends BaseActivity {
         }
     }
 
-    /**
-     * 检查更新
-     */
-    private void checkUpdate() {
-        updateVersionService = new UpdateVersionService(context);// 创建更新业务对象
-        new Thread() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                super.run();
-                if (updateVersionService.isUpdate()) {
-                    handler.sendEmptyMessage(0);
-                }// 调用检查更新的方法,如果可以更新.就更新.不能更新就提示已经是最新的版本了
-                else {
-                    handler.sendEmptyMessage(1);
-                }
-            }
-        }.start();
-    }
 
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    updateVersionService.showDownloadDialog();
-                    break;
-            }
-        };
-    };
 }
