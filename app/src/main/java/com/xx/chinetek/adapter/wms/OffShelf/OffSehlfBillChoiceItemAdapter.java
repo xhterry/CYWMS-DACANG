@@ -37,6 +37,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         public TextView txtPcikName;
         public TextView txtFloorName;
         public TextView txtStockLeave;
+        public TextView txtVouUser;
     }
 
     public OffSehlfBillChoiceItemAdapter(Context context,boolean isPickingAdmin, List<OutStockTaskInfo_Model> outStockTaskInfoModels) {
@@ -103,6 +104,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
             listItemView.txtStrVoucherType = (TextView) convertView.findViewById(R.id.txtStrVoucherType);
             listItemView.txtCompany = (TextView) convertView.findViewById(R.id.txtCompany);
             listItemView.txtdepartment = (TextView) convertView.findViewById(R.id.txtdepartment);
+            listItemView.txtVouUser = (TextView) convertView.findViewById(R.id.txtVouUser);
             listItemView.txtPcikName = (TextView) convertView.findViewById(R.id.txtPcikName);
             listItemView.txtFloorName = (TextView) convertView.findViewById(R.id.txtFloorName);
             listItemView.txtStockLeave = (TextView) convertView.findViewById(R.id.txtStockLeave);
@@ -119,6 +121,7 @@ public class OffSehlfBillChoiceItemAdapter extends BaseAdapter {
         listItemView.txtPcikName.setText("拣货人:"+outStockTaskInfoModel.getPickUserName());
         listItemView.txtFloorName.setText("楼层："+outStockTaskInfoModel.getFloorName());
         listItemView.txtStockLeave.setText("货位："+outStockTaskInfoModel.getHeightAreaName());
+        listItemView.txtVouUser.setText("制单人："+outStockTaskInfoModel.getVouUser());
        // listItemView.txtCustoms.setText("客户名称1，客户名称2，客户名称3，客户名称4,客户名称5,客户名称6");
         if(outStockTaskInfoModel.getIsEdate().equals("1"))
             convertView.setBackgroundResource(R.color.antiquewhite);
