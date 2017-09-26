@@ -51,6 +51,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.qos.logback.core.joran.spi.ElementSelector;
+
 
 @ContentView(R.layout.activity_complete_product)
 public class CompleteProduct extends  SocketBaseActivity {
@@ -141,8 +143,15 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     }
 
+    private int LYear=-1;
+    private int LMouth=-1;
+    private int LDate=-1;
     void AnalysisGetT_RESULT_GetSysDateADFJson(String result){
         try {
+            String[] StrB = result.split("-");
+            LYear =Integer.parseInt(StrB[0]);
+            LMouth =Integer.parseInt(StrB[1]);
+            LDate =Integer.parseInt(StrB[2]);
             txtdate.setText(result);
 //            LogUtil.WriteLog(BillsIn.class, TAG_GetSysDate, result);
 //            ReturnMsgModel<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<String>>() {
@@ -317,14 +326,21 @@ public class CompleteProduct extends  SocketBaseActivity {
     @Event(value = R.id.txtdate,type = View.OnClickListener.class )
     private void txtProductStartTimeClick(View view){
         final Calendar ca = Calendar.getInstance();
-        mYear = ca.get(Calendar.YEAR);
-        mMonth = ca.get(Calendar.MONTH);
-        mDate=ca.get(Calendar.DAY_OF_MONTH);
+        if(LYear==-1||LMouth==-1||LDate==-1)
+        {
+            mYear = ca.get(Calendar.YEAR);
+            mMonth = ca.get(Calendar.MONTH);
+            mDate=ca.get(Calendar.DAY_OF_MONTH);
+        }else{
+            mYear = LYear;
+            mMonth = LMouth-1;
+            mDate=LDate;
+        }
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 mYear = year;
-                mMonth = month;
+                mMonth = month+1;
                 mDate=dayOfMonth;
                 txtdate.setText(display());
             }

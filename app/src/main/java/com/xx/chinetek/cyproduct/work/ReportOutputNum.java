@@ -58,13 +58,13 @@ public class ReportOutputNum extends BaseActivity {
     TextView txtT;
 
     @ViewInject(R.id.txtBatch)
-    EditText txtBatch;
+    TextView txtBatch;
     @ViewInject(R.id.txtNumber)
     TextView txtNumber;
 //    @ViewInject(R.id.txtLast)
 //    TextView txtLast;
     @ViewInject(R.id.editTxtNumber)
-    EditText editTxtNumber;
+TextView editTxtNumber;
 
     @ViewInject(R.id.editText)
     EditText edtBarcode;
@@ -325,12 +325,16 @@ public class ReportOutputNum extends BaseActivity {
                     MessageBox.Show(context, "登录人员所属的仓库没有完工入库的权限！");
                     return;
                 }
-
                 models.add(womodel);
                 try {
+                    if(barcodemodel==null||barcodemodel.size()==0){
+                        MessageBox.Show(context, "扫描条码还没有组托，不能完工入库");
+                        return;
+                    }
                     Map<String, String> params = new HashMap<>();
                     params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
                     params.put("WoInfoJson", GsonUtil.parseModelToJson(models));
+                    params.put("BarcodeJson",GsonUtil.parseModelToJson(barcodemodel));
 //            LogUtil.WriteLog(OffShelfBillChoice.class, TAG_GetT_OutTaskListADF, ModelJson);
                     RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_ReportOutPutNum, getString(R.string.Msg_Post), context, mHandler,
                             RESULT_Get_ReportOutPutNum, null,  Path, params, null);
@@ -552,7 +556,12 @@ private String TaskNo="";
     }
 
 
+    private List<BarCodeInfo> barcodemodel= new ArrayList<BarCodeInfo>() ;
     void InitFrm(){
+        //完工入库使用
+        barcodemodel= new ArrayList<BarCodeInfo>();
+        barcodemodel=palletDetailModels.get(0).getLstBarCode();
+
         palletDetailModels=new ArrayList<>();
         palletDetailModels.add(new PalletDetail_Model());
         palletDetailModels.get(0).setLstBarCode(new ArrayList<BarCodeInfo>());

@@ -144,18 +144,18 @@ public class CompleteProductW extends  SocketBaseActivity {
     }
 
 
-    @Override
-    public void BackAlter() {
-        String Msg="";
-        new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setIcon(android.R.drawable.ic_dialog_info).setMessage(Msg)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO 自动生成的方法
-                        closeActiviry();
-                    }
-                }).setNegativeButton("取消", null).show();
-        }
+//    @Override
+//    public void BackAlter() {
+//        String Msg="";
+//        new AlertDialog.Builder(context).setTitle("提示").setCancelable(false).setIcon(android.R.drawable.ic_dialog_info).setMessage(Msg)
+//                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // TODO 自动生成的方法
+//                        closeActiviry();
+//                    }
+//                }).setNegativeButton("取消", null).show();
+//        }
 
 
     /*
@@ -185,7 +185,7 @@ public class CompleteProductW extends  SocketBaseActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 mYear = year;
-                mMonth = month;
+                mMonth = month+1;
                 mDate=dayOfMonth;
                 txtdate.setText(display());
             }

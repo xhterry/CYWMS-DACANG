@@ -87,10 +87,10 @@ public class MainActivity extends BaseActivity {
 
         else if(textView.getText().toString().equals("生产记录"))
             intent.setClass(context, LineManage.class);
-        else if(textView.getText().toString().equals("坦克投料"))
-            intent.setClass(context, BillChoice.class);
-        else if(textView.getText().toString().equals("坦克退料"))
-            intent.setClass(context, BillChoice.class);
+//        else if(textView.getText().toString().equals("坦克投料"))
+//            intent.setClass(context, BillChoice.class);
+//        else if(textView.getText().toString().equals("坦克退料"))
+//            intent.setClass(context, BillChoice.class);
         else if(textView.getText().toString().equals("标签补打"))
             intent.setClass(context, FillPrint.class);
         else if(textView.getText().toString().equals("组托"))
@@ -154,14 +154,14 @@ public class MainActivity extends BaseActivity {
                         itemIconList.add(R.drawable.receiptproduct);
                         itemNamesList.add("产线生产");
                         break;
-                    case 23:
-                        itemIconList.add(R.drawable.tankin);
-                        itemNamesList.add("坦克投料");
-                        break;
-                    case 24:
-                        itemIconList.add(R.drawable.tankout);
-                        itemNamesList.add("坦克退料");
-                        break;
+//                    case 23:
+//                        itemIconList.add(R.drawable.tankin);
+//                        itemNamesList.add("坦克投料");
+//                        break;
+//                    case 24:
+//                        itemIconList.add(R.drawable.tankout);
+//                        itemNamesList.add("坦克退料");
+//                        break;
                     case 9:
                         itemIconList.add(R.drawable.combinepallet);
                         itemNamesList.add("组托");
