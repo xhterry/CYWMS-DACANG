@@ -187,11 +187,11 @@ public class QCScan extends BaseActivity {
                 CommonUtil.setEditFocus(edtunboxing);
                 return true;
             }
-            if(qty>ArithUtil.sub( qualityDetailInfoModels.get(0).getRemainQty(),qualityDetailInfoModels.get(0).getScanQty())) {
-                MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
-                CommonUtil.setEditFocus(edtunboxing);
-                return true;
-            }
+//            if(qty>ArithUtil.sub( qualityDetailInfoModels.get(0).getRemainQty(),qualityDetailInfoModels.get(0).getScanQty())) {
+//                MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
+//                CommonUtil.setEditFocus(edtunboxing);
+//                return true;
+//            }
             //拆零
             stockInfoModel.setPickModel(3);
             stockInfoModel.setAmountQty(qty);
@@ -349,11 +349,11 @@ public class QCScan extends BaseActivity {
                         if (!TBunboxType.isChecked()) {//整箱
                             Float scanQty = Float.parseFloat(txtScanQty.getText().toString());//以扫描数量
                             //if (stockInfoModel.getQty() >= qualityDetailInfoModels.get(0).getRemainQty() - scanQty) {
-                            if (stockInfoModel.getQty() > ArithUtil.sub(qualityDetailInfoModels.get(0).getRemainQty(),scanQty)) {
-                                MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
-                                CommonUtil.setEditFocus(edtQCScanBarcode);
-                                return;
-                            } else {
+//                            if (stockInfoModel.getQty() > ArithUtil.sub(qualityDetailInfoModels.get(0).getRemainQty(),scanQty)) {
+//                                MessageBox.Show(context, getString(R.string.Error_QCQtyBiger));
+//                                CommonUtil.setEditFocus(edtQCScanBarcode);
+//                                return;
+//                            } else {
                                 stockInfoModel.setPickModel(2);
                                 qualityDetailInfoModels.get(0).setVoucherType(9996);
                                 qualityDetailInfoModels.get(0).setScanQty(ArithUtil.add(qualityDetailInfoModels.get(0).getScanQty(),stockInfoModel.getQty()));
@@ -362,7 +362,7 @@ public class QCScan extends BaseActivity {
                                 BindListVIew(qualityDetailInfoModels.get(0).getLstStock());
                                 //打印质检标签
                                 PrintQCLabel(stockInfoModel);
-                            }
+                            //}
                         }
                         CommonUtil.setEditFocus(TBunboxType.isChecked() ? edtunboxing : edtQCScanBarcode);
                     } else {

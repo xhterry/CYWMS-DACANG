@@ -326,6 +326,7 @@ public class ReviewScan extends BaseActivity {
         {
             MessageBox.Show(context,returnMsgModel.getMessage());
         }
+        CommonUtil.setEditFocus(edtReviewScanBarcode);
     }
 
     /*
@@ -340,8 +341,10 @@ public class ReviewScan extends BaseActivity {
                 MessageBox.Show(context,returnMsgModel.getMessage());
                 //更改实体类组托状态
                 for (int i=0;i<outStockDetailInfoModels.size();i++) {
-                    for(int j=0;j<outStockDetailInfoModels.get(i).getLstStock().size();j++){
-                        outStockDetailInfoModels.get(i).getLstStock().get(j).setStockBarCodeStatus(1);
+                    if(outStockDetailInfoModels.get(i).getLstStock()!=null) {
+                        for (int j = 0; j < outStockDetailInfoModels.get(i).getLstStock().size(); j++) {
+                            outStockDetailInfoModels.get(i).getLstStock().get(j).setStockBarCodeStatus(1);
+                        }
                     }
                     outStockDetailInfoModels.get(i).setOustockStatus(0);
                 }

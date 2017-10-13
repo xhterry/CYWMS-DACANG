@@ -165,6 +165,8 @@ public class QCMaterialChoice extends BaseActivity {
         qualityInfoModel.setVoucherType(20);
         qualityInfoModel.setStockType(10);
         qualityInfoModel.setStatus(1);
+        qualityInfoModel.setERPStatus("N");
+        qualityInfoModel.setERPStatusCode("N");
         if(!TextUtils.isEmpty(ErpVourcherNo)) {
             qualityInfoModel.setErpVoucherNo(ErpVourcherNo);
             if(!ErpVourcherNo.contains("QC"))

@@ -240,8 +240,6 @@ public class UpShelfScanActivity extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 inStockTaskDetailsInfoModels = returnMsgModel.getModelJson();
                 BindListVIew(inStockTaskDetailsInfoModels);
-
-
 //            //自动确认扫描箱号 删除，上架需要扫描库位
 //            if(stockInfoModels!=null ) {
 //                for (StockInfo_Model stockInfoModel : stockInfoModels) {
@@ -257,6 +255,7 @@ public class UpShelfScanActivity extends BaseActivity {
         }catch (Exception ex){
             MessageBox.Show(context, ex.getMessage());
         }
+        CommonUtil.setEditFocus(edtUpShelfScanBarcode);
     }
 
 
@@ -353,9 +352,20 @@ public class UpShelfScanActivity extends BaseActivity {
             MessageBox.Show(context, returnMsgModel.getMessage());
             if(returnMsgModel.getHeaderStatus().equals("S")) {
                 ClearFrm();
-                GetInStockTaskDetail(inStockTaskInfoModel);
+//                Boolean isFinish = true;
+//                for (InStockTaskDetailsInfo_Model inStockTaskDetail : inStockTaskDetailsInfoModels) {
+//                    if (inStockTaskDetail.getScanQty().compareTo(inStockTaskDetail.getRemainQty()) != 0) {
+//                        isFinish = false;
+//                        break;
+//                    }
+//                }
+//                if (isFinish) {
+//                    closeActiviry();
+//                } else {
+                    GetInStockTaskDetail(inStockTaskInfoModel);
+               // }
             }
-            CommonUtil.setEditFocus(edtUpShelfScanBarcode);
+
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }
