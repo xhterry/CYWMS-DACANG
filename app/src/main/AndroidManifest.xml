@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity android:name="com.xx.chinetek.MainActivity" />
         <activity android:name="com.xx.chinetek.Setting" />
         <activity android:name=".Receiption.ReceiptBillChoice" />
         <activity android:name=".Receiption.SupplierFilterActivity" />
@@ -54,7 +54,6 @@
             </intent-filter>
         </activity>
         <!-- 生产 -->
-        <activity android:name="com.xx.chinetek.cyproduct.MainActivity" />
         <activity android:name="com.xx.chinetek.cyproduct.Billinstock.BillsIn" />
         <activity android:name="com.xx.chinetek.cyproduct.BillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct" />
@@ -64,7 +63,6 @@
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutputNum" />
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportBaojian" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionScan" />
-        <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptBillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionBillDetail" />
         <activity android:name="com.xx.chinetek.cyproduct.QC.TakeSample" />
         <activity android:name="com.xx.chinetek.cyproduct.Review.ReviewScan" />

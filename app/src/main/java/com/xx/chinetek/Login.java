@@ -15,7 +15,6 @@ import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
-import com.xx.chinetek.cywms.MainActivity;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.URLModel;
@@ -176,7 +175,7 @@ public class Login extends BaseActivity {
             }
             else{
                 SharePreferUtil.SetUserShare(context, BaseApplication.userInfo);
-                Intent intent=new Intent(context, URLModel.isWMS?MainActivity.class: com.xx.chinetek.cyproduct.MainActivity.class);
+                Intent intent=new Intent(context, MainActivity.class);
                 startActivity(intent);
             }
         }else
