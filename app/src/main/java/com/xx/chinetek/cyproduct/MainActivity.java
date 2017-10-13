@@ -15,18 +15,26 @@ import com.xx.chinetek.adapter.GridViewItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cyproduct.Adjust.AdjustCP;
 import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInMaterial;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInProduct;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnBillChoice;
+import com.xx.chinetek.cyproduct.LineStockOut.Zcj;
 import com.xx.chinetek.cyproduct.Manage.LineManage;
 import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.InnerMove.InnerMoveScan;
+import com.xx.chinetek.cywms.OffShelf.OffShelfBillChoice;
 import com.xx.chinetek.cywms.Qc.QCBillChoice;
 import com.xx.chinetek.cywms.Qc.QCInStock;
+import com.xx.chinetek.cywms.Query.QueryMain;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.cywms.Review.ReviewBillChoice;
+import com.xx.chinetek.cywms.Stock.AdjustStock;
+import com.xx.chinetek.cywms.UpShelf.UpShelfBillChoice;
 import com.xx.chinetek.model.User.MenuInfo;
+import com.xx.chinetek.util.dialog.MessageBox;
 import com.xx.chinetek.util.function.CommonUtil;
 
 import org.xutils.view.annotation.ContentView;
@@ -50,13 +58,18 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        super.initViews();
-        BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.app_product),false);
-        x.view().inject(this);
-        List<Map<String, Object>> data_list = getData();
-        adapter = new GridViewItemAdapter(context,data_list);
-        gridView.setAdapter(adapter);
+        try{
+            super.initViews();
+            BaseApplication.context = context;
+            BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.app_product),false);
+            x.view().inject(this);
+            List<Map<String, Object>> data_list = getData();
+            adapter = new GridViewItemAdapter(context,data_list);
+            gridView.setAdapter(adapter);
+        }catch (Exception ex){
+            MessageBox.Show(context,"页面加载错误："+ex.getMessage());
+        }
+
     }
 
 
@@ -65,6 +78,8 @@ public class MainActivity extends BaseActivity {
         LinearLayout linearLayout=(LinearLayout) gridView.getAdapter().getView(position,view,null);
         TextView textView=(TextView)linearLayout.getChildAt(1);
         Intent intent = new Intent();
+        if(textView.getText().toString().equals("调拨出库"))
+            intent.setClass(context, AdjustCP.class);
         if(textView.getText().toString().equals("交接入库"))
             intent.setClass(context, LineStockInProduct.class);
         else if(textView.getText().toString().equals("发料接收"))
@@ -101,6 +116,16 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, DismantlePallet.class);
         else if(textView.getText().toString().equals("移库"))
             intent.setClass(context, InnerMoveScan.class);
+        else if(textView.getText().toString().equals("库存调整"))
+            intent.setClass(context, AdjustStock.class);
+        else if(textView.getText().toString().equals("制成检"))
+            intent.setClass(context, Zcj.class);
+        else if(textView.getText().toString().equals("上架"))
+            intent.setClass(context, UpShelfBillChoice.class);
+        else if(textView.getText().toString().equals("下架"))
+            intent.setClass(context, OffShelfBillChoice.class);
+        else if(textView.getText().toString().equals("查询"))
+            intent.setClass(context, QueryMain.class);
         if(intent!=null)
             startActivityLeft(intent);
     }
@@ -122,6 +147,22 @@ public class MainActivity extends BaseActivity {
                 if (!CommonUtil.isNumeric(nodUrl)) continue;
                 int Node = Integer.parseInt(nodUrl);
                 switch (Node) {
+                    case 3:
+                        itemIconList.add(R.drawable.upshelves);
+                        itemNamesList.add("上架");
+                        break;
+                    case 4:
+                        itemIconList.add(R.drawable.offshelf);
+                        itemNamesList.add("下架");
+                        break;
+                    case 8:
+                        itemIconList.add(R.drawable.query);
+                        itemNamesList.add("查询");
+                        break;
+                    case 14:
+                        itemIconList.add(R.drawable.adjustment);
+                        itemNamesList.add("库存调整");
+                        break;
                     case 15:
                         itemIconList.add(R.drawable.receiption);
                         itemNamesList.add("发料接收");
@@ -162,6 +203,14 @@ public class MainActivity extends BaseActivity {
 //                        itemIconList.add(R.drawable.tankout);
 //                        itemNamesList.add("坦克退料");
 //                        break;
+                   case 25:
+                        itemIconList.add(R.drawable.adjustment);
+                        itemNamesList.add("调拨出库");
+                        break;
+                    case 26:
+                        itemIconList.add(R.drawable.qc);
+                        itemNamesList.add("制成检");
+                        break;
                     case 9:
                         itemIconList.add(R.drawable.combinepallet);
                         itemNamesList.add("组托");

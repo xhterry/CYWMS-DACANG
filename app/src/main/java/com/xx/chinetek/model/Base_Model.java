@@ -416,15 +416,4 @@ public class Base_Model implements Parcelable {
         this.StockType = in.readInt();
     }
 
-    public static final Creator<Base_Model> CREATOR = new Creator<Base_Model>() {
-        @Override
-        public Base_Model createFromParcel(Parcel source) {
-            return new Base_Model(source);
-        }
-
-        @Override
-        public Base_Model[] newArray(int size) {
-            return new Base_Model[size];
-        }
-    };
 }

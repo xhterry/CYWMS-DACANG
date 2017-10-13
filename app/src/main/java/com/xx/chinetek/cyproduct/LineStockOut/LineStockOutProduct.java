@@ -32,6 +32,7 @@ import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
+import com.xx.chinetek.model.WMS.Stock.AreaInfo_Model;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -50,6 +51,9 @@ public class LineStockOutProduct extends BaseActivity {
 
     String TAG_GetT_SaveBarCodeADF="LineStockOutProduct_GetT_SaveInStockModelADF";
     private final int RESULT_Msg_GetT_SaveBarCode=103;
+
+
+
 
     @Override
     public void onHandleMessage(Message msg) {
@@ -87,7 +91,6 @@ public class LineStockOutProduct extends BaseActivity {
     @ViewInject(R.id.edt_LineStockOutScanBarcode)
     EditText edtLineStockOutScanBarcode;
 
-
     ArrayList<BarCodeInfo> SumbitbarCodeInfos=new ArrayList<>();
     PalletItemAdapter palletItemAdapter;
 
@@ -95,10 +98,12 @@ public class LineStockOutProduct extends BaseActivity {
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_ProductStockout_subtitle), true);
+        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_ProductStockout_subtitleYMH), true);
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
     }
+
+
 
     @Event(value =R.id.edt_LineStockOutScanBarcode,type = View.OnKeyListener.class)
     private  boolean edtLineStockOutScanBarcodeClick(View v, int keyCode, KeyEvent event) {
@@ -112,7 +117,7 @@ public class LineStockOutProduct extends BaseActivity {
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
             LogUtil.WriteLog(ReceiptionScan.class, TAG_GetT_PalletDetailByBarCodeADF, code);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCodeADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_PalletDetailByBarCode, null,  URLModel.GetURL().GetT_PalletDetailByBarCodeADF, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCodeADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_PalletDetailByBarCode, null,  URLModel.GetURL().GetPalletDetailByBarCodeForStockOut, params, null);
         }
         return false;
     }
@@ -160,6 +165,10 @@ public class LineStockOutProduct extends BaseActivity {
         }
         CommonUtil.setEditFocus(edtLineStockOutScanBarcode);
     }
+
+
+
+
 
 
     void AnalysisetT_PalletDetailByBarCodeJson(String result){

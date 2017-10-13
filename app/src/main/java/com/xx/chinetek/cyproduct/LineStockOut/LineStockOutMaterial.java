@@ -19,14 +19,18 @@ import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.adapter.product.Manage.WoDetailMaterialItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
+import com.xx.chinetek.cyproduct.Adjust.AdjustCP;
 import com.xx.chinetek.cyproduct.Manage.ProductMaterialConfig;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.CheckNumRefMaterial;
 import com.xx.chinetek.model.Production.Wo.WoDetailModel;
 import com.xx.chinetek.model.Production.Wo.WoModel;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.User.UerInfo;
+import com.xx.chinetek.model.User.UserInfo;
 import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
@@ -57,9 +61,19 @@ public class LineStockOutMaterial extends BaseActivity {
     private final int RESULT_Msg_GetStockModelADF=102;
     private final int RESULT_SaveT_BarCodeToStockADF = 104;
 
+    String TAG_SaveBarcodeListOutStockForLingLiao="LineStockOutMaterial_SaveBarcodeListOutStockForLingLiaoADF";
+    private final int RESULT_SaveBarcodeListOutStockForLingLiao=105;
+
+
+
+
+
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
+            case RESULT_SaveBarcodeListOutStockForLingLiao:
+                AnalysisSaveBarcodeListOutStockForLingLiao((String) msg.obj);
+                break;
             case RESULT_GetWoDetailModelByWoNo:
                 AnalysisGetWoDetailModelByWoNoJson((String) msg.obj);
                 break;
@@ -95,7 +109,7 @@ public class LineStockOutMaterial extends BaseActivity {
     ToggleButton tbPalletType;
     @ViewInject(R.id.tb_BoxType)
     ToggleButton tbBoxType;
-    @ViewInject(R.id.edt_LineStockOutBarcode)
+    @ViewInject(R.id.edt_LineStockOutScanBarcode)
     EditText edtLineStockOutScanBarcode;
     @ViewInject(R.id.edt_Unboxing)
     EditText edtUnboxing;
@@ -115,10 +129,12 @@ public class LineStockOutMaterial extends BaseActivity {
         BaseApplication.isCloseActivity=false;
     }
 
+    WoModel woModel;
+
     @Override
     protected void initData() {
         super.initData();
-        WoModel woModel=getIntent().getParcelableExtra("woModel");
+        woModel=getIntent().getParcelableExtra("woModel");
         GetWoDetailModelByWoNo(woModel);
     }
 
@@ -132,7 +148,7 @@ public class LineStockOutMaterial extends BaseActivity {
     }
 
 
-    @Event(value =R.id.edt_LineStockOutBarcode,type = View.OnKeyListener.class)
+    @Event(value =R.id.edt_LineStockOutScanBarcode,type = View.OnKeyListener.class)
     private  boolean edtLineStockOutScanBarcodeClick(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
         {
@@ -145,7 +161,13 @@ public class LineStockOutMaterial extends BaseActivity {
             params.put("MoveType", "1"); //1：下架 2:移库
             params.put("IsEdate", "2"); //1：不判断有效期 2:判断有效期
             LogUtil.WriteLog(LineStockOutMaterial.class, TAG_GetStockModelADF, code);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
+//            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
+            if(woModel.getStrVoucherType().equals("散装物料")){
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
+            }else{
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF_Product, params, null);
+            }
+
         }
         return false;
     }
@@ -173,10 +195,10 @@ public class LineStockOutMaterial extends BaseActivity {
                 final int index=woDetailModels.indexOf(tempWodetail);
                 if(index!=-1) {
 
-                    if (ArithUtil.add(woDetailModels.get(index).getScanQty(), qty) > woDetailModels.get(index).getRemainQty()) {
-                        MessageBox.Show(context, getString(R.string.Error_OutMaterialQtyBiger));
-                        return true;
-                    }
+//                    if (ArithUtil.add(woDetailModels.get(index).getScanQty(), qty) > woDetailModels.get(index).getRemainQty()) {
+//                        MessageBox.Show(context, getString(R.string.Error_OutMaterialQtyBiger));
+//                        return true;
+//                    }
                 }
                 //拆零
                 stockInfoModels.get(0).setPickModel(3);
@@ -189,8 +211,8 @@ public class LineStockOutMaterial extends BaseActivity {
                 params.put("strNewBarCode", "");
                 params.put("PrintFlag", "1"); //1：打印 2：不打印
                 LogUtil.WriteLog(LineStockOutMaterial.class, TAG_SaveT_BarCodeToStockADF, strOldBarCode);
-                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null, URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
-
+//              RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null, URLModel.GetURL().SaveT_BarCodeToStockADF, params, null);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_BarCodeToStockADF, getString(R.string.Msg_SaveT_BarCodeToStockADF), context, mHandler, RESULT_SaveT_BarCodeToStockADF, null, URLModel.GetURL().SaveNewBarcodeToStockForChaiXiang, params, null);
 
             } else {
                 MessageBox.Show(context, getString(R.string.Hit_ScanBarcode));
@@ -215,6 +237,29 @@ public class LineStockOutMaterial extends BaseActivity {
             if (DoubleClickCheck.isFastDoubleClick(context)) {
                 return false;
             }
+            try {
+                Map<String, String> params = new HashMap<>();
+                UerInfo User = BaseApplication.userInfo;
+                User.setErpVoucherNo(woModel.getErpVoucherNo().toString());
+                User.setSex(woModel.getID());
+                String userJson = GsonUtil.parseModelToJson(User);
+                ArrayList<StockInfo_Model> allstocks = new ArrayList<>();
+                if(woDetailModels!=null){
+                    for (int i=0;i<woDetailModels.size();i++){
+                        if(woDetailModels.get(i).getStockInfoModels()!=null){
+                            for (int j=0;j<woDetailModels.get(i).getStockInfoModels().size();j++){
+                                allstocks.add(woDetailModels.get(i).getStockInfoModels().get(j));
+                            }
+                        }
+                    }
+                }
+                String ModelJson = GsonUtil.parseModelToJson(allstocks);
+                params.put("UserJson", userJson);
+                params.put("ModelJson", ModelJson);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveBarcodeListOutStockForLingLiao, getString(R.string.Mag_GetWoDetailModelByWoNo), context, mHandler, RESULT_SaveBarcodeListOutStockForLingLiao, null, URLModel.GetURL().SaveBarcodeListOutStockForLingLiao, params, null);
+            } catch (Exception ex) {
+                MessageBox.Show(context, ex.getMessage());
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -232,6 +277,30 @@ public class LineStockOutMaterial extends BaseActivity {
             }
         }
     }
+
+    void  AnalysisSaveBarcodeListOutStockForLingLiao(String result){
+        try {
+            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
+            MessageBox.Show(context,returnMsgModel.getMessage());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                ClearFrm();
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.toString());
+        }
+    }
+
+    //清空数据
+    void ClearFrm(){
+        if(woDetailModels!=null){
+            for (int i=0;i<woDetailModels.size();i++){
+                woDetailModels.get(i).setStockInfoModels(new ArrayList<StockInfo_Model>());
+                woDetailModels.get(i).setScanQty(0f);
+            }
+        }
+        BindListview(woDetailModels);
+    }
+
 
     void  AnalysisGetWoDetailModelByWoNoJson(String result){
         try {
@@ -294,6 +363,7 @@ public class LineStockOutMaterial extends BaseActivity {
             LogUtil.WriteLog(LineStockOutMaterial.class, TAG_SaveT_BarCodeToStockADF, result);
             ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {
             }.getType());
+            edtLineStockOutScanBarcode.setText("");
             if(returnMsgModel.getHeaderStatus().equals("S")){
                 StockInfo_Model stockInfoModel=returnMsgModel.getModelJson();
                 stockInfoModels=new ArrayList<>();
@@ -337,10 +407,10 @@ public class LineStockOutMaterial extends BaseActivity {
                                 }).setNegativeButton("取消", null).show();
                         return;
                     }
-                    if(ArithUtil.add(woDetailModels.get(index).getScanQty(),SumQty)>woDetailModels.get(index).getRemainQty()){
-                        MessageBox.Show(context,getString(R.string.Error_OutMaterialQtyBiger));
-                        return;
-                    }
+//                    if(ArithUtil.add(woDetailModels.get(index).getScanQty(),SumQty)>woDetailModels.get(index).getRemainQty()){
+//                        MessageBox.Show(context,getString(R.string.Error_OutMaterialQtyBiger));
+//                        return;
+//                    }
 
 
                     woDetailModels.get(index).setScanQty(ArithUtil.add(woDetailModels.get(index).getScanQty(),SumQty));

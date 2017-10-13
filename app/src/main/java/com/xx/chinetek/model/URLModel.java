@@ -127,6 +127,40 @@ public class URLModel {
     public String SaveBarcodeListInStockForTuiLiao=GetWCFAdress()+"SaveBarcodeListInStockForTuiLiao";// 根据扫描的条码集合退料入库
 
     public String GetSystemDate=GetWCFAdress()+"GetSystemDate";//根据工单类型获取有效期yyyy-MM-dd
-
     public String GetPalletDetailByBarCodeForStockOut=GetWCFAdress()+"GetPalletDetailByBarCodeForStockOut";//库存获取托盘信息
+    public String PostBaoJianByListWoinfo=GetWCFAdress()+"PostBaoJianByListWoinfo";//报检
+    public String GetBatchNoBySerialnoForOnly=GetWCFAdress()+"GetBatchNoBySerialnoForOnly";//根据条码获取批次(不从库存表查询)
+
+
+    //生产计划
+    public String StartWork=GetWCFAdress()+"StartWork";//开工string UserJson, string modelid
+    public String OverWork=GetWCFAdress()+"OverWork";//结束工单string UserJson, string modelid
+    public String UpdateLineManageUser=GetWCFAdress()+"UpdateLineManageUser";//添加删除用户string model, string userno, string flag
+    public String SuspendOrReWork=GetWCFAdress()+"SuspendOrReWork";//暂停或者开始工单string UserJson, string modelid, string Flag
+    public String GetLinemanagestate = GetWCFAdress()+"GetLinemanagestate"; //判断计划状态
+    public String SaveBarcodeListForQiTao = GetWCFAdress()+"SaveBarcodeListForQiTao"; //记录齐套数据并更新工单明细数据（齐套）
+    public String IsLINEMANAGEID = GetWCFAdress()+"IsLINEMANAGEID"; //判断人员是否存在计划
+
+    //生成调拨单
+    public String GetStockInfoByBarcodeForDiaoBo=GetWCFAdress()+"GetStockInfoByBarcodeForDiaoBo";//调拨扫描条码
+    public String Post_DBOutStockERPADF=GetWCFAdress()+"Post_DBOutStockERPADF";//生成调拨单
+
+    public String GetChengDataByErpVoucherNoBatchno=GetWCFAdress()+"GetChengDataByErpVoucherNoBatchno";//生产扣料倒扣（散装品倒扣原料---特勒多秤读取）
+    public String PostDaoKouForChengPinOrSemi=GetWCFAdress()+"PostDaoKouForChengPinOrSemi";//生产扣料倒扣（成品和半制品倒扣过账---领料和退料）
+    public String SaveNewBarcodeToStockForChaiXiang=GetWCFAdress()+"SaveNewBarcodeToStockForChaiXiang";//拆零并打印条码
+    public String SaveBarcodeListOutStockForLingLiao=GetWCFAdress()+"SaveBarcodeListOutStockForLingLiao";//提交
+    public String GetWoBanGongListByErpVoucherNoForBaoJian=GetWCFAdress()+"GetWoBanGongListByErpVoucherNoForBaoJian";//获取报检列表
+    public String SaveT_StockADF_Product = GetWCFAdress()+"SaveT_StockADF_Product"; //ymh提交移库
+    public String GetT_SerialNoADF = GetWCFAdress()+"GetT_SerialNoADF"; //收货获取条码信息(不支持托盘，只是单个条码信息)
+    public String GetKouLiaoRecord = GetWCFAdress()+"GetKouLiaoRecord"; //判断工单号是否已经扣料过
+    public String GetStockModelADF_Product = GetWCFAdress()+"GetStockModelADF_Product"; //领料出库扫描
+
+
+    //制成检
+    public String SaveNewBarcodeToStockForZhiChengJian = GetWCFAdress()+"SaveNewBarcodeToStockForZhiChengJian"; //制成检拆零并打印条码
+    public String Post_DBZaRuInStockERPADF = GetWCFAdress()+"Post_DBZaRuInStockERPADF"; //生成杂入单  UserJson  StockInfoJson
+
+
+
+
 }

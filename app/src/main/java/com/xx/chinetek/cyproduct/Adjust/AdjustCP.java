@@ -1,4 +1,4 @@
-package com.xx.chinetek.cyproduct.LineStockIn;
+package com.xx.chinetek.cyproduct.Adjust;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
-import com.xx.chinetek.adapter.product.LineStockIn.LineStockInMaterialItemAdapter;
+import com.xx.chinetek.adapter.product.LineStockIn.LineStockInMaterialItemymhAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
@@ -26,8 +26,7 @@ import com.xx.chinetek.cywms.InnerMove.InnerMoveDetail;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.cywms.Receiption.ReceiptionScan;
 import com.xx.chinetek.model.Base_Model;
-import com.xx.chinetek.model.Material.BarCodeInfo;
-import com.xx.chinetek.model.Production.LineStockIn.LineStockInProductModel;
+import com.xx.chinetek.model.Production.LineStockIn.LineStockInProductModelymh;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -41,6 +40,7 @@ import com.xx.chinetek.util.function.CommonUtil;
 import com.xx.chinetek.util.function.DoubleClickCheck;
 import com.xx.chinetek.util.function.GsonUtil;
 import com.xx.chinetek.util.log.LogUtil;
+import com.xx.chinetek.model.WMS.Stock.StockInfo_Model;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -52,8 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ContentView(R.layout.activity_product_linestockinproduct_scan)
-public class LineStockInProduct extends BaseActivity {
+@ContentView(R.layout.activity_product_adjustcp)
+public class AdjustCP extends BaseActivity {
 
     String TAG_GetPalletDetailByBarCode_Product="LineStockInProduct_GetPalletDetailByBarCode_Product";
     String TAG_SaveModeListForT_StockT="LineStockInProduct_SaveModeListForT_StockT";
@@ -78,7 +78,7 @@ public class LineStockInProduct extends BaseActivity {
         }
     }
 
-    Context context = LineStockInProduct.this;
+    Context context = AdjustCP.this;
     @ViewInject(R.id.lsv_LineStockInProduct)
     ListView lsvLineStockInProduct;
     @ViewInject(R.id.txt_Company)
@@ -96,16 +96,16 @@ public class LineStockInProduct extends BaseActivity {
     @ViewInject(R.id.edt_LineStockInScanBarcode)
     EditText edtLineStockInScanBarcode;
 
-    ArrayList<LineStockInProductModel> lineStockInProductModels;
+    ArrayList<LineStockInProductModelymh> lineStockInProductModels;
    // ArrayList<BarCodeInfo> SumbitbarCodeInfos=null;
-    LineStockInMaterialItemAdapter lineStockInMaterialItemAdapter;
+   LineStockInMaterialItemymhAdapter lineStockInMaterialItemAdapter;
 
 
     @Override
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_ProductStockin_subtitleYMH), true);
+        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_Product_adjustCPYMH), true);
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
     }
@@ -113,7 +113,6 @@ public class LineStockInProduct extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
-     //   SelectWareHouse();
         lineStockInProductModels=new ArrayList<>();
         txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());        //SumbitbarCodeInfos=new ArrayList<>();
         CommonUtil.setEditFocus(edtLineStockInScanBarcode);
@@ -131,7 +130,7 @@ public class LineStockInProduct extends BaseActivity {
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
             LogUtil.WriteLog(ReceiptionScan.class, TAG_GetPalletDetailByBarCode_Product, code);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCode_Product, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetStockInfoByBarcodeForDiaoBo, params, null);
         }
         return false;
     }
@@ -157,26 +156,20 @@ public class LineStockInProduct extends BaseActivity {
             //提交
             if(lineStockInProductModels!=null && lineStockInProductModels.size()!=0){
                 final Map<String, String> params = new HashMap<String, String>();
-                ArrayList<BarCodeInfo> SumbitbarCodeInfos=new ArrayList<>();
-                for (LineStockInProductModel lineStockInProduct:lineStockInProductModels) {
+                ArrayList<StockInfo_Model> SumbitbarCodeInfos=new ArrayList<>();
+                for (LineStockInProductModelymh lineStockInProduct:lineStockInProductModels) {
                     if(lineStockInProduct.getBarCodeInfos()!=null && lineStockInProduct.getBarCodeInfos().size()!=0){
                         SumbitbarCodeInfos.addAll(0,lineStockInProduct.getBarCodeInfos());
                     }
                 }
                 if(SumbitbarCodeInfos.size()!=0) {
                     String ModelJson = GsonUtil.parseModelToJson(SumbitbarCodeInfos);
-//                UerInfo uerInfo=new UerInfo();
-//                uerInfo.setWarehouseID(SelectWareHouseID);
-//                uerInfo.setWarehouseID(BaseApplication.userInfo.getWarehouseID());
-//                uerInfo.setUserNo(BaseApplication.userInfo.getUserNo());
-//                uerInfo.setUserName(BaseApplication.userInfo.getUserName());
-//                uerInfo.setReceiveAreaNo(BaseApplication.userInfo.getReceiveAreaNo());
-//                uerInfo.setReceiveAreaID(BaseApplication.userInfo.getReceiveAreaID());
+
                     String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
                     params.put("UserJson", UserJson);
-                    params.put("ModelJson", ModelJson);
+                    params.put("StockInfoJson", ModelJson);
                     LogUtil.WriteLog(ReceiptionScan.class, TAG_SaveModeListForT_StockT, ModelJson);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveModeListForT_StockT, getString(R.string.Msg_SaveT_LineInStockProductlADF), context, mHandler, RESULT_SaveModeListForT_StockT, null, URLModel.GetURL().SaveModeListForT_StockT, params, null);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveModeListForT_StockT, getString(R.string.Msg_SaveT_LineInStockProductlYMHADF), context, mHandler, RESULT_SaveModeListForT_StockT, null, URLModel.GetURL().Post_DBOutStockERPADF, params, null);
                 }
             }
         }
@@ -187,9 +180,9 @@ public class LineStockInProduct extends BaseActivity {
     @Event(value = R.id.lsv_LineStockInProduct,type =  AdapterView.OnItemClickListener.class)
     private  boolean lsvLineStockInProductClick(AdapterView<?> parent, View view, int position, long id){
         if(id>=0) {
-            LineStockInProductModel lineStockInProduct=(LineStockInProductModel)lineStockInMaterialItemAdapter.getItem(position);
+            LineStockInProductModelymh lineStockInProduct=(LineStockInProductModelymh)lineStockInMaterialItemAdapter.getItem(position);
             if (lineStockInProduct.getBarCodeInfos().size() != 0) {
-                Intent intent = new Intent(context, InnerMoveDetail.class);
+                Intent intent = new Intent(context, InnerMoveDetailymh.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("barCodeInfos", lineStockInProduct.getBarCodeInfos());
                 intent.putExtras(bundle);
@@ -203,12 +196,14 @@ public class LineStockInProduct extends BaseActivity {
    扫描条码
     */
     void AnalysisetGetPalletDetailByBarCode_ProductJson(String result){
-        LogUtil.WriteLog(LineStockInProduct.class, TAG_GetPalletDetailByBarCode_Product,result);
-        ReturnMsgModelList<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<BarCodeInfo>>() {}.getType());
         try {
+            LogUtil.WriteLog(AdjustCP.class, TAG_GetPalletDetailByBarCode_Product,result);
+            ReturnMsgModel<StockInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<StockInfo_Model>>() {}.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
-                ArrayList<BarCodeInfo> barCodeInfos = returnMsgModel.getModelJson();
-                Bindbarcode(barCodeInfos);
+                StockInfo_Model barCodeInfos = returnMsgModel.getModelJson();
+                ArrayList<StockInfo_Model> stocks = new ArrayList();
+                stocks.add(barCodeInfos);
+                Bindbarcode(stocks);
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
             }
@@ -219,9 +214,9 @@ public class LineStockInProduct extends BaseActivity {
     }
 
     void  AnalysisetSaveModeListForT_StockTJson(String result){
-        LogUtil.WriteLog(LineStockInProduct.class, TAG_SaveModeListForT_StockT,result);
-        ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
         try {
+            LogUtil.WriteLog(AdjustCP.class, TAG_SaveModeListForT_StockT,result);
+            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {}.getType());
             MessageBox.Show(context,returnMsgModel.getMessage());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 ClearFrm();
@@ -232,18 +227,18 @@ public class LineStockInProduct extends BaseActivity {
         CommonUtil.setEditFocus(edtLineStockInScanBarcode);
     }
 
-    void Bindbarcode(final ArrayList<BarCodeInfo> barCodeInfos){
+    void Bindbarcode(final ArrayList<StockInfo_Model> barCodeInfos){
         if (barCodeInfos != null && barCodeInfos.size() != 0) {
             try {
                 String MaterialNo=barCodeInfos.get(0).getMaterialNo();
                 String BatchNo=barCodeInfos.get(0).getBatchNo();
                 String MaterialDesc=barCodeInfos.get(0).getMaterialDesc();
                 Float SumQty=0f;
-                for (BarCodeInfo barcodinfo:barCodeInfos) {
+                for (StockInfo_Model barcodinfo:barCodeInfos) {
                     SumQty= ArithUtil.add(SumQty,barcodinfo.getQty());
                 }
                 final Float sumQty=SumQty;
-                LineStockInProductModel templineStockIn=new LineStockInProductModel(MaterialNo,BatchNo);
+                LineStockInProductModelymh templineStockIn=new LineStockInProductModelymh(MaterialNo,BatchNo);
                 final int index=lineStockInProductModels.indexOf(templineStockIn);
                 if(index!=-1){
                     if(lineStockInProductModels.get(index).getBarCodeInfos().indexOf(barCodeInfos.get(0))!=-1){
@@ -270,7 +265,7 @@ public class LineStockInProduct extends BaseActivity {
                     templineStockIn.setMaterialDesc(MaterialDesc);
                     templineStockIn.setQty(SumQty);
                     if(templineStockIn.getBarCodeInfos()==null)
-                        templineStockIn.setBarCodeInfos(new ArrayList<BarCodeInfo>());
+                        templineStockIn.setBarCodeInfos(new ArrayList<StockInfo_Model>());
                     templineStockIn.getBarCodeInfos().addAll(0,barCodeInfos);
                     lineStockInProductModels.add(0,templineStockIn);
                 }
@@ -285,26 +280,8 @@ public class LineStockInProduct extends BaseActivity {
     }
 
 
-    /*
-   提交入库
-    */
-//    void AnalysisSaveT_InStockTaskDetailADFJson(String result){
-//        try {
-//            LogUtil.WriteLog(LineStockInProduct.class, TAG_SaveT_InStockTaskDetailADF,result);
-//            ReturnMsgModel<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<Base_Model>>() {
-//            }.getType());
-//            MessageBox.Show(context, returnMsgModel.getMessage());
-//            if(returnMsgModel.getHeaderStatus().equals("S")) {
-//                ClearFrm();
-//                GetInStockTaskDetail(inStockTaskInfoModel);
-//            }
-//            CommonUtil.setEditFocus(edtUpShelfScanBarcode);
-//        } catch (Exception ex) {
-//            MessageBox.Show(context, ex.getMessage());
-//        }
-//    }
 
-    void InitFrm(BarCodeInfo barCodeInfo){
+    void InitFrm(StockInfo_Model barCodeInfo){
         try {
             if (barCodeInfo != null) {
                 txtCompany.setText(barCodeInfo.getStrongHoldName());
@@ -319,8 +296,8 @@ public class LineStockInProduct extends BaseActivity {
         }
     }
 
-    private void BindListVIew(ArrayList<LineStockInProductModel> lineStockInProductModels) {
-        lineStockInMaterialItemAdapter=new LineStockInMaterialItemAdapter(context,lineStockInProductModels);
+    private void BindListVIew(ArrayList<LineStockInProductModelymh> lineStockInProductModels) {
+        lineStockInMaterialItemAdapter=new LineStockInMaterialItemymhAdapter(context,lineStockInProductModels);
         lsvLineStockInProduct.setAdapter(lineStockInMaterialItemAdapter);
     }
 

@@ -52,12 +52,12 @@
         android:id="@+id/textView83"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
-        android:layout_marginTop="8dp"
         android:text="@string/barcode"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline59"
-        app:layout_constraintTop_toBottomOf="@+id/textView76" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp" />
 
     <EditText
         android:id="@+id/edt_LineStockOutScanBarcode"
@@ -77,58 +77,6 @@
         app:layout_constraintLeft_toRightOf="@+id/textView83"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <ToggleButton
-        android:id="@+id/tb_BoxType"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:checked="true"
-        android:text="ToggleButton"
-        android:textOff="@string/AllPackage"
-        android:textOn="@string/AllPackage"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline61"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/tb_PalletType"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:checked="false"
-        android:text="ToggleButton"
-        android:textOff="@string/AllPallet"
-        android:textOn="@string/AllPallet"
-        app:layout_constraintBottom_toBottomOf="@+id/tb_BoxType"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline61"
-        app:layout_constraintRight_toLeftOf="@+id/guideline62" />
-
-    <ToggleButton
-        android:id="@+id/tb_UnboxType"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:checked="false"
-        android:text="ToggleButton"
-        android:textOff="@string/unboxing"
-        android:textOn="@string/unboxing"
-        app:layout_constraintBottom_toBottomOf="@+id/tb_BoxType"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline62"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginBottom="-8dp" />
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline61"
         android:layout_width="wrap_content"
@@ -147,33 +95,6 @@
         tools:layout_editor_absoluteX="238dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/textView76"
-        style="@style/TextViewComminStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/Bill"
-        app:layout_constraintRight_toLeftOf="@+id/guideline59"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/tb_BoxType" />
-
-    <TextView
-        android:id="@+id/txt_VoucherNo"
-        style="@style/TextViewComminStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:gravity="left"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/textView76"
-        app:layout_constraintLeft_toRightOf="@+id/textView76"
-        app:layout_constraintRight_toRightOf="parent" />
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline59"
         android:layout_width="wrap_content"
@@ -188,15 +109,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include5"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>

@@ -23,6 +23,7 @@ import com.xx.chinetek.Pallet.CombinPallet;
 import com.xx.chinetek.Service.SocketService;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.SocketBaseActivity;
+import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Base_Model;
@@ -100,6 +101,12 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     @ViewInject(R.id.txtdate)
     TextView txtdate;
+
+    @ViewInject(R.id.txtSC)
+    TextView txtSC;
+
+    @ViewInject(R.id.textView118)
+    TextView textView118;
 
 
     WoModel womodel;
@@ -220,12 +227,18 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     @Override
     protected void initViews() {
-        super.initViews();
-        BaseApplication.context = context;
-        x.view().inject(this);
-        BaseApplication.isCloseActivity=false;
-        CommonUtil.setEditFocus(etxtBatch);
-        initVariables();//设置接收服务
+        try{
+            super.initViews();
+            BaseApplication.context = context;
+            BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_ProductYMH), true);
+            x.view().inject(this);
+            BaseApplication.isCloseActivity=false;
+            CommonUtil.setEditFocus(etxtBatch);
+            initVariables();//设置接收服务
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
     }
 
     @Override
@@ -233,24 +246,42 @@ public class CompleteProduct extends  SocketBaseActivity {
         try{
             super.initData();
             womodel=getIntent().getParcelableExtra("WoModel");
-            butIn.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+
+            //临时用
+            String flag=getIntent().getStringExtra("flag");//临时"1"正常"0"
+            txtSC.setVisibility(flag.equals("1")? View.VISIBLE:View.GONE);
+            textView118.setVisibility(flag.equals("1")? View.VISIBLE:View.GONE);
+
+
+//            butIn.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+            butIn.setVisibility((womodel.getStrVoucherType().equals("散装物料")||womodel.getStrVoucherType().equals("原料"))? View.VISIBLE:View.GONE);
             butIOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.GONE:View.VISIBLE);
             butT.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
             butOut.setVisibility(womodel.getStrVoucherType().equals("成品")? View.VISIBLE:View.GONE);
 
             //相对比重
-            txtBi.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
-            textView75.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+//            txtBi.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+//            textView75.setVisibility(womodel.getStrVoucherType().equals("散装物料")? View.VISIBLE:View.GONE);
+            txtBi.setVisibility((womodel.getStrVoucherType().equals("散装物料")||womodel.getStrVoucherType().equals("原料"))? View.VISIBLE:View.GONE);
+            textView75.setVisibility((womodel.getStrVoucherType().equals("散装物料")||womodel.getStrVoucherType().equals("原料"))? View.VISIBLE:View.GONE);
 
             //butT托盘去掉
             butT.setVisibility(View.GONE);
             GetWoModel(womodel);
 
-            if(womodel.getStrVoucherType().equals("成品")||womodel.getStrVoucherType().equals("半制品"))
+//            if(womodel.getStrVoucherType().equals("成品")||womodel.getStrVoucherType().equals("半制品")||womodel.getStrVoucherType().equals("散装物料"))
+                if(womodel.getStrVoucherType().equals("成品")||womodel.getStrVoucherType().equals("半制品")||womodel.getStrVoucherType().equals("散装物料")||womodel.getStrVoucherType().equals("原料"))
             {
                 //获取有效期
+                String Wotype="0";
+                if(womodel.getStrVoucherType().equals("成品")){Wotype="2";}
+                if(womodel.getStrVoucherType().equals("半制品")){Wotype="1";}
+//                if(womodel.getStrVoucherType().equals("散装物料")){Wotype="3";}
+                if(womodel.getStrVoucherType().equals("散装物料")||womodel.getStrVoucherType().equals("原料")){Wotype="3";}
                 Map<String, String> params = new HashMap<>();
-                params.put("woinfoType",womodel.getStrVoucherType().equals("成品")?"2":"1");//1：半制品；  2：成品
+                params.put("woinfoType",Wotype);//1：半制品；  2：成品  3：散装物料
+                params.put("QualityMonth",String.valueOf(womodel.getQualityMonth()));
+                params.put("QualityDay",String.valueOf(womodel.getQualityDay()));
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetSysDate, getString(R.string.Msg_Print), context, mHandler,RESULT_GetSysDate, null,  URLModel.GetURL().GetSystemDate, params, null);
 
             }
@@ -348,6 +379,29 @@ public class CompleteProduct extends  SocketBaseActivity {
 
     }
 
+
+    //临时用
+    int LLYear, LLMonth,LLDate;
+    @Event(value = R.id.txtSC,type = View.OnClickListener.class )
+    private void txtProductClick(View view){
+        final Calendar ca = Calendar.getInstance();
+        LLYear = ca.get(Calendar.YEAR);
+        LLMonth = ca.get(Calendar.MONTH);
+        LLDate=ca.get(Calendar.DAY_OF_MONTH);
+        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                LLYear = year;
+                LLMonth = month+1;
+                LLDate=dayOfMonth;
+                txtSC.setText(Ldisplay());
+            }
+        },LLYear, LLMonth,LLDate).show();
+    }
+    public String  Ldisplay() {
+        return new StringBuffer().append(LLYear).append("-").append(LLMonth).append("-").append(LLDate).toString();
+    }
+
     public String  display() {
         return new StringBuffer().append(mYear).append("-").append(mMonth).append("-").append(mDate).toString();
     }
@@ -437,6 +491,11 @@ public class CompleteProduct extends  SocketBaseActivity {
 
             model.setRowNoDel("1");
 
+            //临时用
+            if (!(txtSC.getText().toString().isEmpty()||txtSC.getText()==null)){
+                model.setProductDate(CommonUtil.dateStrConvertDate(txtSC.getText().toString()));
+            }
+
 
             String Weight=EditW.getText().toString();
             if (Weight.equals(""))
@@ -462,18 +521,9 @@ public class CompleteProduct extends  SocketBaseActivity {
             }
 
 
-//        String aaa=txtWeight.getText().toString();
-//        aaa=aaa.substring(0,aaa.length()-2);
-//        model.setItemQty(aaa);//重量
-
             if (flag==0){
                 model.setQty(Float.parseFloat(model.getItemQty()));
                 model.setItemQty(etxtBNumber.getText().toString());
-//            model.setAreano("Areano");//标题
-//            model.setProductClass("1111");//生产班组
-//            model.ProductBatch = "";//成品批号
-//            model.setQty(bbb) = 1;//数量
-//            model.BarcodeNo = 1;//第几箱总箱数
                 model.setBarcodeType(0);
                 model.setBarcodeNo(modelsInAll.size()+1);
                 model.setRelaWeight(txtBi.getText().toString());
@@ -518,7 +568,8 @@ public class CompleteProduct extends  SocketBaseActivity {
                     model.setSupPrdBatch(model.getBatchNo());
                     model.setBarcodeNo(modelsAll.size()+1);
                 }
-                if (womodel.getStrVoucherType().equals("散装物料"))
+//                if (womodel.getStrVoucherType().equals("散装物料"))
+                    if (womodel.getStrVoucherType().equals("散装物料")||womodel.getStrVoucherType().equals("原料"))
                 {
                     //散装外
                     model.setSupName("1");

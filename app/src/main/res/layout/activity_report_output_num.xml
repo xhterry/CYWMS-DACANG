@@ -6,6 +6,73 @@
     android:layout_height="match_parent"
     tools:context="com.xx.chinetek.cyproduct.work.ReportOutputNum">
 
+    <TextView
+        android:id="@+id/txtNumT"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        app:layout_constraintHorizontal_bias="0.991"
+        app:layout_constraintLeft_toRightOf="@+id/txtNumTC"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView72" />
+
+    <TextView
+        android:id="@+id/textView72"
+        style="@style/TextViewComminStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="入库数/工单数："
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline24"
+        app:layout_constraintTop_toBottomOf="@+id/textView104" />
+
+    <EditText
+        android:id="@+id/editKu"
+        style="@style/EditTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="请扫描货位条码"
+        android:inputType="textPersonName"
+        android:visibility="visible"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/textView116"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView116" />
+
+    <TextView
+        android:id="@+id/textView116"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        android:text="库       位："
+        app:layout_constraintBottom_toTopOf="@+id/textView105"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline25" />
+
     <Button
         android:id="@+id/butP"
         android:layout_width="wrap_content"
@@ -35,11 +102,11 @@
         android:hint="@string/filter_content1"
         android:inputType="textPersonName"
         android:visibility="visible"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/txt_WareHousName"
@@ -70,26 +137,27 @@
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline25"
-        app:layout_constraintRight_toLeftOf="@+id/guideline24"
+        app:layout_constraintRight_toLeftOf="@+id/guideline43"
         app:layout_constraintBottom_toBottomOf="@+id/textView104"
         app:layout_constraintTop_toTopOf="@+id/textView104"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView106"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/ProductNum"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="产       量："
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        app:layout_constraintTop_toBottomOf="@+id/textView104"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView72" />
 
     <Button
         android:id="@+id/butO"
@@ -105,7 +173,8 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline43"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline57"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintVertical_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.542" />
 
     <Button
         android:id="@+id/butB"
@@ -131,7 +200,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="外箱数量："
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
@@ -172,6 +241,22 @@
         app:layout_constraintTop_toTopOf="@+id/textView69" />
 
     <TextView
+        android:id="@+id/txtNumTC"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/textView72"
+        app:layout_constraintTop_toTopOf="@+id/textView72"
+        app:layout_constraintRight_toLeftOf="@+id/guideline43" />
+
+    <TextView
         android:id="@+id/editTxtNumber"
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
@@ -209,13 +294,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:text="工单号"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="工  单  号："
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/txt_WareHousName" />
 
     <TextView
@@ -223,15 +308,15 @@
         style="@style/TextViewComminStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:text="托盘号"
+        android:text="托  盘  号："
         android:textAlignment="viewStart"
+        app:layout_constraintBottom_toTopOf="@+id/guideline57"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline57" />
+        app:layout_constraintRight_toLeftOf="@+id/guideline25" />
 
     <TextView
         android:id="@+id/textView69"
@@ -239,15 +324,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
-        android:text="生产批次"
+        android:text="生产批次："
         android:textAlignment="viewStart"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline25"
-        app:layout_constraintTop_toBottomOf="@+id/textView66"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView66" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
@@ -261,9 +346,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/guideline25"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="88dp"
-        app:layout_constraintGuide_percent="0.22916667" />
+        app:layout_constraintGuide_percent="0.28" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"

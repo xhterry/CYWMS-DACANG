@@ -6,6 +6,36 @@
     android:layout_height="match_parent"
     tools:context="com.xx.chinetek.cyproduct.Billinstock.CompleteProduct">
 
+    <TextView
+        android:id="@+id/txtSC"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:gravity="left"
+        android:hint="生产日期"
+        app:layout_constraintBottom_toBottomOf="@+id/textView118"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline30"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/textView118"
+        style="@style/TextViewComminStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="生产日期："
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline30"
+        app:layout_constraintTop_toBottomOf="@+id/textView75"
+        tools:text="生产日期：" />
+
     <EditText
         android:id="@+id/EditW"
         style="@style/EditTextStyle"

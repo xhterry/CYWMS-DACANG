@@ -52,9 +52,16 @@ public class ProductManageAdd extends BaseActivity {
     String TAG_nsert_LineManageInfoModel="ProductManageAdd_Insert_LineManageInfoModel";
     private final int RESULT_Insert_LineManageInfoModel=102;
 
+    String TAG_GetT_IsLINEMANAGEID="ProductManageAdd_IsLINEMANAGEID";
+    private final int RESULT_IsLINEMANAGEID=103;
+
+
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
+            case RESULT_IsLINEMANAGEID:
+                Analysis_IsLINEMANAGEIDJson((String) msg.obj);
+                break;
             case RESULT_GetT_UserInfoModel:
                 AnalysisGetT_UserInfoModelJson((String) msg.obj);
                 break;
@@ -155,16 +162,18 @@ public class ProductManageAdd extends BaseActivity {
 
     @Event(R.id.btn_MaterialConfig)
     private void btnMaterialConfigClick(View view){
-        if(lineManageModel.getUserInfos()!=null && lineManageModel.getUserInfos().size()>0
-                && !TextUtils.isEmpty(lineManageModel.getEquipID())
-                && !TextUtils.isEmpty(lineManageModel.getProductLineNo())
-                && !TextUtils.isEmpty(lineManageModel.getProductTeamNo())
-                && !TextUtils.isEmpty(lineManageModel.getWoBatchNo())) {
+        try{
+            lineManageModel.setEquipID(edtEquipID.getText().toString());
+            lineManageModel.setProductLineNo(edtProductLineNo.getText().toString());
+            lineManageModel.setProductTeamNo(edtTeamNo.getText().toString());
+            lineManageModel.setWoBatchNo(edtBatch.getText().toString());
 
-            InsertUser(lineManageModel);
+            if(lineManageModel.getUserInfos()!=null && lineManageModel.getUserInfos().size()>0
+                    && !TextUtils.isEmpty(lineManageModel.getProductLineNo())
+                    && !TextUtils.isEmpty(lineManageModel.getProductTeamNo())
+                    && !TextUtils.isEmpty(lineManageModel.getWoBatchNo())) {
 
-
-
+                InsertUser(lineManageModel);
 //            Intent intent = new Intent(context, ProductMaterialConfig.class);
 //            Bundle bundle = new Bundle();
 //            lineManageModel.setWoModel(woModel);
@@ -172,8 +181,22 @@ public class ProductManageAdd extends BaseActivity {
 //            intent.putExtras(bundle);
 //            startActivityLeft(intent);
 //            closeActiviry();
-        }else{
-            MessageBox.Show(context,getString(R.string.Msg_edit_isNotNull));
+            }else{
+                MessageBox.Show(context,getString(R.string.Msg_edit_isNotNull));
+            }
+    }catch (Exception ex){
+        MessageBox.Show(context,ex.getMessage());
+    }
+    }
+
+
+    void IsLINEMANAGEID(String userCode){
+        try {
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("user", userCode);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_IsLINEMANAGEID, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_IsLINEMANAGEID, null,  URLModel.GetURL().IsLINEMANAGEID, params, null);
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
         }
     }
 
@@ -182,7 +205,7 @@ public class ProductManageAdd extends BaseActivity {
             final Map<String, String> params = new HashMap<String, String>();
             params.put("UserNo", userCode);
             LogUtil.WriteLog(ProductManageAdd.class, TAG_GetT_UserInfoModel, userCode);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_UserInfoModel, getString(R.string.Msg_GetWareHouse), context, mHandler, RESULT_GetT_UserInfoModel, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_UserInfoModel, "获取人员信息", context, mHandler, RESULT_GetT_UserInfoModel, null,  URLModel.GetURL().GetWareHouseByUserADF, params, null);
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
         }
@@ -228,6 +251,40 @@ public class ProductManageAdd extends BaseActivity {
 
     }
 
+    void Analysis_IsLINEMANAGEIDJson(String result){
+        try {
+            LogUtil.WriteLog(ProductManageAdd.class, TAG_GetT_IsLINEMANAGEID, result);
+            ReturnMsgModel<String> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<String>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                if(returnMsgModel.getModelJson().equals("1")){
+                    //不能插入
+                    MessageBox.Show(context,"该人员已经存在其他计划中，不能添加！");
+                    if(limuser!=null){
+                            if(lineManageModel.getUserInfos()==null)
+                                lineManageModel.setUserInfos(new ArrayList<UserInfo>());
+                            int index= lineManageModel.getUserInfos().indexOf(limuser);
+                            if(index==-1) {}
+                            else{
+                                lineManageModel.getUserInfos().remove(index);
+                                BindListView(lineManageModel.getUserInfos());
+                            }
+                            BindListView(lineManageModel.getUserInfos());
+                        }
+
+                }
+            }
+
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
+    }
+
+
+
+
+    public UserInfo limuser= new UserInfo();
     void AnalysisGetT_UserInfoModelJson(String result){
         try {
             LogUtil.WriteLog(ProductManageAdd.class, TAG_GetT_UserInfoModel, result);
@@ -235,12 +292,15 @@ public class ProductManageAdd extends BaseActivity {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 UserInfo userInfo = returnMsgModel.getModelJson();
+                limuser=userInfo;
                 if (userInfo != null ){
                   if(lineManageModel.getUserInfos()==null)
                       lineManageModel.setUserInfos(new ArrayList<UserInfo>());
                     int index= lineManageModel.getUserInfos().indexOf(userInfo);
-                    if(index==-1)
-                        lineManageModel.getUserInfos().add(0,userInfo);
+                    if(index==-1) {
+                        lineManageModel.getUserInfos().add(0, userInfo);
+                        IsLINEMANAGEID(userInfo.getUserNo());
+                    }
                     else{
                         RemoveUser(index);
                     }

@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.SocketBaseActivity;
+import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Production.Wo.WoModel;
@@ -130,6 +131,7 @@ public class CompleteProductW extends  SocketBaseActivity {
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
+        BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_ProductYMH), true);
         x.view().inject(this);
         BaseApplication.isCloseActivity=false;
         CommonUtil.setEditFocus(etxtBatch);

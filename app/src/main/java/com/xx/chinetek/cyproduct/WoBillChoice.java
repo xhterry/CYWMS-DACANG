@@ -19,6 +19,7 @@ import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
 import com.xx.chinetek.adapter.product.WoBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
+import com.xx.chinetek.cyproduct.Billinstock.BillsIn;
 import com.xx.chinetek.cyproduct.LineStockIn.LineStockInReturn;
 import com.xx.chinetek.cyproduct.LineStockOut.LineStockOutMaterial;
 import com.xx.chinetek.cyproduct.Manage.ProductManageAdd;
@@ -54,11 +55,17 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     String TAG_GetT_WoinfoModel="WoBillChoice_GetT_WoinfoModel";
     private final int RESULT_GetT_WoinfoModel=101;
 
+    String TAG_GetT_Sync = "OffShelfBillChoice_GetT_Sync";
+    private final int RESULT_GetT_Sync = 102;
+
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
             case RESULT_GetT_WoinfoModel:
                 AnalysisGetT_WoinfoModelJson((String) msg.obj);
+                break;
+            case RESULT_GetT_Sync:
+                AnalysisGetT_RESULT_GetT_SyncWoADFJson((String) msg.obj);
                 break;
             case NetworkError.NET_ERROR_CUSTOM:
                 ToastUtil.show("获取请求失败_____"+ msg.obj);
@@ -80,16 +87,26 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
 
     @Override
     protected void initViews() {
-        super.initViews();
-        BaseApplication.context = context;
-        x.view().inject(this);
+        try{
+            super.initViews();
+            BaseApplication.context = context;
+            x.view().inject(this);
+        }catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+
     }
 
     @Override
     protected  void initData(){
-        super.initData();
-        mSwipeLayout.setOnRefreshListener(this); //下拉刷新
-        edtfilterContent.addTextChangedListener(TextWatcher);
+        try{
+            super.initData();
+            mSwipeLayout.setOnRefreshListener(this); //下拉刷新
+            edtfilterContent.addTextChangedListener(TextWatcher);
+        }catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+
     }
 
     @Override
@@ -149,20 +166,25 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     @Event(value = R.id.lsvChoice,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        WoModel woModel = (WoModel) woBillChioceItemAdapter.getItem(position);
-        Intent intent = new Intent();
-        if(BaseApplication.toolBarTitle.Title.equals("生产记录")) {
-            intent.setClass(context, ProductManageAdd.class);
-            closeActiviry();
-        }else if(BaseApplication.toolBarTitle.Title.equals("退料入库")){
-            intent.setClass(context, LineStockInReturn.class);
-        }else if(BaseApplication.toolBarTitle.Title.equals("领料出库")){
-            intent.setClass(context, LineStockOutMaterial.class);
+        try {
+            WoModel woModel = (WoModel) woBillChioceItemAdapter.getItem(position);
+            Intent intent = new Intent();
+            if(BaseApplication.toolBarTitle.Title.equals("生产记录")) {
+                intent.setClass(context, ProductManageAdd.class);
+                closeActiviry();
+            }else if(BaseApplication.toolBarTitle.Title.equals("退料入库")){
+                intent.setClass(context, LineStockInReturn.class);
+            }else if(BaseApplication.toolBarTitle.Title.equals("领料出库")){
+                intent.setClass(context, LineStockOutMaterial.class);
+            }
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("woModel", woModel);
+            intent.putExtras(bundle);
+            startActivityLeft(intent);
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
         }
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("woModel", woModel);
-        intent.putExtras(bundle);
-        startActivityLeft(intent);
+
     }
 
 
@@ -201,8 +223,74 @@ public class WoBillChoice extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     void BindListView(ArrayList<WoModel> woModels){
-        woBillChioceItemAdapter=new WoBillChioceItemAdapter(context,woModels);
-        lsvChoice.setAdapter(woBillChioceItemAdapter);
+        try {
+            woBillChioceItemAdapter=new WoBillChioceItemAdapter(context,woModels);
+            lsvChoice.setAdapter(woBillChioceItemAdapter);
+        } catch (Exception ex) {
+            MessageBox.Show(context, ex.getMessage());
+        }
+
+
+    }
+
+    //同步单据的方法
+    private void Sync(String Fileter){
+        try {
+            Fileter=Fileter.replace("\"","");
+            Map<String, String> params = new HashMap<>();
+//            params.put("No", GsonUtil.parseModelToJson(Fileter));
+            params.put("No", Fileter);
+            LogUtil.WriteLog(BillsIn.class, TAG_GetT_Sync,Fileter);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_Sync, getString(R.string.Msg_SycWOInfo), context, mHandler,
+                    RESULT_GetT_Sync, null, URLModel.GetURL().Sync_WoinfoModel, params, null);
+        } catch (Exception ex) {
+            mSwipeLayout.setRefreshing(false);
+            MessageBox.Show(context, ex.getMessage());
+        }
+    }
+
+    @Event(value = R.id.edt_filterContent, type = View.OnKeyListener.class)
+    private boolean edtyfilterOnKey(View v, int keyCode, KeyEvent event) {
+        try {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+            {
+                keyBoardCancle();
+                String Fileter = edtfilterContent.getText().toString().trim();
+                boolean flag = true;
+                for(int i=0;i<woModels.size();i++)
+                {
+                    if(woModels.get(i).getErpVoucherNo().equals(Fileter))
+                    {
+                        flag=false;
+                    }
+                }
+                if (flag){
+                    if (!Fileter.isEmpty()){
+                        Sync(Fileter);
+                    }
+                }
+
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
+        return false;
+    }
+
+    void AnalysisGetT_RESULT_GetT_SyncWoADFJson(String result){
+        try {
+            LogUtil.WriteLog(BillsIn.class, TAG_GetT_Sync, result);
+            ReturnMsgModelList<WoModel> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<WoModel>>() {
+            }.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                MessageBox.Show(context, "同步单据成功");
+                GetWoinfoModel();
+            } else {
+                MessageBox.Show(context, returnMsgModel.getMessage());
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context, ex.getMessage());
+        }
     }
 
 }

@@ -266,7 +266,7 @@ public class InnerMoveScan extends BaseActivity {
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("ModelJson", ModelJson);
             LogUtil.WriteLog(InnerMoveScan.class, TAG_SaveT_StockADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_StockADF), context, mHandler, RESULT_SaveT_StockADF, null,  URLModel.GetURL().SaveT_StockADF, params, null);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_StockADF), context, mHandler, RESULT_SaveT_StockADF, null,URLModel.isWMS ? URLModel.GetURL().SaveT_StockADF:URLModel.GetURL().SaveT_StockADF_Product, params, null);
         }
         return super.onOptionsItemSelected(item);
     }

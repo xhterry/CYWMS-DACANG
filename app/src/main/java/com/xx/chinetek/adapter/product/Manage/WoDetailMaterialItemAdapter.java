@@ -75,13 +75,13 @@ public class WoDetailMaterialItemAdapter extends BaseAdapter {
         listItemView.txtMaterialNo.setText(woDetailModel.getMaterialNo());
         listItemView.txtMaterialDesc.setText(woDetailModel.getMaterialDesc());
         listItemView.txtBatchNo.setText(woDetailModel.getFromBatchNo());
-        listItemView.txtWoQty.setText(woDetailModel.getRemainQty()+"");
-        listItemView.txtScanQty.setText(woDetailModel.getScanQty()+"");
-        if (woDetailModel.getScanQty()!=0 &&
-                woDetailModel.getRemainQty().compareTo(woDetailModel.getScanQty())<0) {
+        listItemView.txtWoQty.setText((woDetailModel.getWoQty()==null?"0":woDetailModel.getWoQty())+"");
+        listItemView.txtScanQty.setText((woDetailModel.getScanQty()==null?"0":woDetailModel.getScanQty())+"");
+        if ((woDetailModel.getScanQty()==null?"0":woDetailModel.getScanQty())!="0" &&
+                (woDetailModel.getWoQty()==null?"0":woDetailModel.getWoQty().toString()).compareTo((woDetailModel.getScanQty()==null?"0":woDetailModel.getScanQty()).toString())<0) {
             convertView.setBackgroundResource(R.color.khaki);
         }
-        else if (woDetailModel.getRemainQty().compareTo(woDetailModel.getScanQty())==0) {
+        else if ((woDetailModel.getWoQty()==null?"0":woDetailModel.getWoQty().toString()).compareTo((woDetailModel.getScanQty()==null?"0":woDetailModel.getScanQty()).toString())==0) {
             convertView.setBackgroundResource(R.color.springgreen);
         }
         else{

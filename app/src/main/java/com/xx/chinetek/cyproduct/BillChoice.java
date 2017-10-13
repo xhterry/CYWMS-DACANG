@@ -25,6 +25,7 @@ import com.xx.chinetek.cyproduct.Return.TankOut;
 import com.xx.chinetek.cyproduct.Review.ReviewScan;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Receiption.SupplierModel;
+import com.xx.chinetek.util.dialog.MessageBox;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -46,14 +47,19 @@ public class BillChoice extends BaseActivity {
 
     @Override
     protected void initViews() {
-        super.initViews();
-        BaseApplication.context = context;
+        try{
+            super.initViews();
+            BaseApplication.context = context;
 
-        x.view().inject(this);
+            x.view().inject(this);
 
-        List<SupplierModel> supplierModels=getData();
-        billChioceItemAdapter=new BillChioceItemAdapter(context,supplierModels);
-        lsvChoice.setAdapter(billChioceItemAdapter);
+            List<SupplierModel> supplierModels=getData();
+            billChioceItemAdapter=new BillChioceItemAdapter(context,supplierModels);
+            lsvChoice.setAdapter(billChioceItemAdapter);
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
     }
 
     /**

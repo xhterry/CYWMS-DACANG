@@ -43,6 +43,47 @@ public class WoModel extends Base_Model implements Parcelable{
 
     private String DataType;
 
+    private int QualityMonth;// 有效期月
+
+    private int QualityDay;// 有效期天
+
+    public Float getScanReportQty() {
+        return ScanReportQty;
+    }
+
+    public void setScanReportQty(Float scanReportQty) {
+        ScanReportQty = scanReportQty;
+    }
+
+    private Float ScanReportQty;// 有效期天
+
+    public String getWo_Batch() {
+        return Wo_Batch;
+    }
+
+    public void setWo_Batch(String wo_Batch) {
+        Wo_Batch = wo_Batch;
+    }
+
+    private String Wo_Batch;
+
+
+    public int getQualityMonth() {
+        return QualityMonth;
+    }
+
+    public void setQualityMonth(int qualityMonth) {
+        QualityMonth = qualityMonth;
+    }
+
+    public int getQualityDay() {
+        return QualityDay;
+    }
+
+    public void setQualityDay(int qualityDay) {
+        QualityDay = qualityDay;
+    }
+
     public String getDataType() {
         return DataType;
     }
@@ -256,6 +297,10 @@ public class WoModel extends Base_Model implements Parcelable{
         dest.writeValue(this.Box_Amount);
         dest.writeValue(this.Pack_Amount);
         dest.writeString(this.DataType);
+        dest.writeInt(this.QualityMonth);
+        dest.writeInt(this.QualityDay);
+        dest.writeValue(this.ScanReportQty);
+        dest.writeString(this.Wo_Batch);
         dest.writeValue(this.ReportQty);
         dest.writeInt(this.JobNumber);
         dest.writeValue(this.WorkHour);
@@ -284,6 +329,10 @@ public class WoModel extends Base_Model implements Parcelable{
         this.Box_Amount = (Float) in.readValue(Float.class.getClassLoader());
         this.Pack_Amount = (Float) in.readValue(Float.class.getClassLoader());
         this.DataType = in.readString();
+        this.QualityMonth = in.readInt();
+        this.QualityDay = in.readInt();
+        this.ScanReportQty = (Float) in.readValue(Float.class.getClassLoader());
+        this.Wo_Batch = in.readString();
         this.ReportQty = (Float) in.readValue(Float.class.getClassLoader());
         this.JobNumber = in.readInt();
         this.WorkHour = (Float) in.readValue(Float.class.getClassLoader());

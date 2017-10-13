@@ -381,4 +381,11 @@
     <string name="PrintBackLable">打印退料标签</string>
     <string name="BackMaterial">退料</string>
     <string name="Msg_GetT_Wodetailinfo">获取工单明细信息...</string>
+    <string name="Product_ProductStockin_subtitleYMH">交接入库</string>
+    <string name="Product_ProductStockout_subtitleYMH">装车扫描</string>
+    <string name="Product_ProductYMH">产线生产</string>
+    <string name="Msg_GetUser">获取人员信息...</string>
+    <string name="ReportQCY">生成报检单</string>
+    <string name="Product_Product_adjustCPYMH">调拨出库</string>
+    <string name="Msg_SaveT_LineInStockProductlYMHADF">调拨数据提交中...</string>
 </resources>

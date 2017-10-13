@@ -23,6 +23,15 @@ public class UerInfo extends User implements Parcelable {
     private String ToSampWareHouseNo;
     private String ToSampAreaNo;
     private String PickWareHouseNo ;
+    private String ErpVoucherNo;
+
+    public String getErpVoucherNo() {
+        return ErpVoucherNo;
+    }
+
+    public void setErpVoucherNo(String erpVoucherNo) {
+        ErpVoucherNo = erpVoucherNo;
+    }
 
     public String getQuanUserName() {
         return QuanUserName;
@@ -221,6 +230,7 @@ public class UerInfo extends User implements Parcelable {
         dest.writeString(this.ToSampWareHouseNo);
         dest.writeString(this.ToSampAreaNo);
         dest.writeString(this.PickWareHouseNo);
+        dest.writeString(this.ErpVoucherNo);
         dest.writeString(this.PickAreaNo);
         dest.writeString(this.QuanUserName);
         dest.writeTypedList(this.lstUserGroup);
@@ -245,6 +255,7 @@ public class UerInfo extends User implements Parcelable {
         this.ToSampWareHouseNo = in.readString();
         this.ToSampAreaNo = in.readString();
         this.PickWareHouseNo = in.readString();
+        this.ErpVoucherNo = in.readString();
         this.PickAreaNo = in.readString();
         this.QuanUserName = in.readString();
         this.lstUserGroup = in.createTypedArrayList(UserGroupInfo.CREATOR);

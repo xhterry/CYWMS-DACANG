@@ -24,6 +24,7 @@ import com.xx.chinetek.adapter.product.BillsStockIn.BillAdapter;
 import com.xx.chinetek.adapter.wms.QC.QCBillChioceItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
+import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.model.Material.BarCodeInfo;
 import com.xx.chinetek.model.Pallet.PalletDetail_Model;
@@ -192,11 +193,16 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(!edt_filterContent.getText().toString().equals(""))
-                billAdapter.getFilter().filter(edt_filterContent.getText().toString());
-            else{
-                BindListVIew(WoModels);
+            try{
+                if(!edt_filterContent.getText().toString().equals(""))
+                    billAdapter.getFilter().filter(edt_filterContent.getText().toString());
+                else{
+                    BindListVIew(WoModels);
+                }
+            }catch (Exception ex){
+                MessageBox.Show(context,ex.getMessage());
             }
+
         }
 
 
@@ -210,47 +216,52 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
     @Event(value = R.id.edt_filterContent, type = View.OnKeyListener.class)
     private boolean edtfilterOnKey(View v, int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
-        {
-            keyBoardCancle();
-            //区分扫描的是条码，工单
-            String Fileter = edt_filterContent.getText().toString().trim();
-            if (Fileter.length()!=18) {
-                try{
-                    String barcode=edt_filterContent.getText().toString().trim();
-                    final Map<String, String> params = new HashMap<String, String>();
-                    params.put("Barcode", barcode);
-                    params.put("PalletModel", "1");
-                    LogUtil.WriteLog(BillsIn.class, TAG_GetT_PalletDetailByNoADF, barcode);
-                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
-                    return false;
-                }catch (Exception ex){
-                    MessageBox.Show(context,ex.toString());
-                }
+        try{
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+            {
+                keyBoardCancle();
+                //区分扫描的是条码，工单
+                String Fileter = edt_filterContent.getText().toString().trim();
+                if (Fileter.length()!=18) {
+                    try{
+                        String barcode=edt_filterContent.getText().toString().trim();
+                        final Map<String, String> params = new HashMap<String, String>();
+                        params.put("Barcode", barcode);
+                        params.put("PalletModel", "1");
+                        LogUtil.WriteLog(BillsIn.class, TAG_GetT_PalletDetailByNoADF, barcode);
+                        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByNoADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetT_SerialNoByPalletADF, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
+                        return false;
+                    }catch (Exception ex){
+                        MessageBox.Show(context,ex.toString());
+                    }
 //                if (barCodeInfo!=null){
 //                    Fileter=barCodeInfo.getErpVoucherNo();
 //                    edt_filterContent.setText(Fileter);
 //                }
-            }
+                }
 
 
-            boolean flag = true;
-            for(int i=0;i<WoModels.size();i++)
-            {
-                if(WoModels.get(i).getErpVoucherNo().equals(Fileter))
+                boolean flag = true;
+                for(int i=0;i<WoModels.size();i++)
                 {
-                    flag=false;
+                    if(WoModels.get(i).getErpVoucherNo().equals(Fileter))
+                    {
+                        flag=false;
+                    }
                 }
-            }
-            if (flag){
-                if (!Fileter.isEmpty()){
-                    Sync(Fileter);
+                if (flag){
+                    if (!Fileter.isEmpty()){
+                        Sync(Fileter);
+                    }
                 }
-            }
 
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
         }
 
         return false;
+
     }
 
 
@@ -258,8 +269,8 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
   解析物料条码扫描
    */
     void AnalysisGetT_SerialNoByPalletAD(String result){
-        LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF,result);
         try {
+            LogUtil.WriteLog(CombinPallet.class, TAG_GetT_PalletDetailByNoADF,result);
             ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
@@ -298,18 +309,29 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
 
     @Override
     protected void initViews() {
-        super.initViews();
-        BaseApplication.context = context;
-        x.view().inject(this);
-        getData();
-        edt_filterContent.addTextChangedListener(TextWatcher);
+        try{
+            super.initViews();
+            BaseApplication.context = context;
+            BaseApplication.toolBarTitle = new ToolBarTitle( getString(R.string.Product_ProductYMH), true);
+            x.view().inject(this);
+            getData();
+            edt_filterContent.addTextChangedListener(TextWatcher);
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
     }
 
 
     @Override
     protected void initData() {
-        super.initData();
-        mSwipeLayout.setOnRefreshListener(this); //下拉刷新
+        try{
+            super.initData();
+            mSwipeLayout.setOnRefreshListener(this); //下拉刷新
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
     }
 
     @Override
@@ -324,21 +346,30 @@ public class BillsIn  extends BaseActivity implements SwipeRefreshLayout.OnRefre
      */
     @Event(value = R.id.lsvChoice,type =  AdapterView.OnItemClickListener.class)
     private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        WoModel Model= (WoModel)billAdapter.getItem(position);
-        Intent intent;
-        if(SW_WoType.isChecked()){
-            //外销工单
-            intent = new Intent(context,CompleteProductW.class);
+        try{
+            WoModel Model= (WoModel)billAdapter.getItem(position);
+            Intent intent;
+            if(SW_WoType.isChecked()){
+                //外销工单
+                intent = new Intent(context,CompleteProductW.class);
 
-        }else{
-            //正常工单
-            intent = new Intent(context,CompleteProduct.class);
-        }
-        Bundle bundle=new Bundle();
+            }else{
+                //正常工单
+                intent = new Intent(context,CompleteProduct.class);
+            }
+            Bundle bundle=new Bundle();
 //        getWoinfo(Model);
-        bundle.putParcelable("WoModel",Model);
-        intent.putExtras(bundle);
-        startActivityLeft(intent);
+            bundle.putParcelable("WoModel",Model);
+
+//        bundle.putString("flag",switch1.isChecked()?"1":"0");
+            bundle.putString("flag","0");
+
+            intent.putExtras(bundle);
+            startActivityLeft(intent);
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.getMessage());
+        }
+
     }
 
     void getWoinfo(WoModel model){

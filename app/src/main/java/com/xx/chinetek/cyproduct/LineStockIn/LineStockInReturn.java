@@ -85,6 +85,7 @@ public class LineStockInReturn extends SocketBaseActivity {
         womodel=getIntent().getParcelableExtra("woModel");
         txtNo.setText(womodel.getErpVoucherNo().toString());
         txtName.setText(womodel.getMaterialDesc().toString());
+        editNum.setText("0");
         GetWODetailInfo(String.valueOf(womodel.getID()));
 
     }
@@ -190,14 +191,13 @@ public class LineStockInReturn extends SocketBaseActivity {
             try{
                 String Fileter = editBarcode.getText().toString().trim();
                 final Map<String, String> params = new HashMap<String, String>();
-                params.put("Barcode", Fileter);
-                params.put("PalletModel", "1");
-                LogUtil.WriteLog(BillsIn.class, TAG_Get_barcode, Fileter);
-                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_barcode, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Get_barcode, null,  URLModel.GetURL().GetT_PalletDetailByNoADF, params, null);
+                params.put("SerialNo", Fileter);
+                LogUtil.WriteLog(LineStockInReturn.class, TAG_Get_barcode, Fileter);
+                RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Get_barcode, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Get_barcode, null,  URLModel.GetURL().GetT_SerialNoADF, params, null);
                 return false;
-            }catch (Exception ex){
-                MessageBox.Show(context,ex.toString());
-            }
+                }catch (Exception ex){
+                    MessageBox.Show(context,ex.toString());
+                }
             }
 
         return false;
@@ -205,22 +205,28 @@ public class LineStockInReturn extends SocketBaseActivity {
 
     @Event(value = {R.id.button6},type = View.OnClickListener.class)
     private void onClick(View view) {
-        if (DoubleClickCheck.isFastDoubleClick(context)) {
-            return;
+        try{
+            if (DoubleClickCheck.isFastDoubleClick(context)) {
+                return;
+            }
+//            editNum.setText("0");
+            if (txtBatch.getText().toString().isEmpty()||
+                    txtNo.getText().toString().isEmpty()||
+//                    txtMaName.getText().toString().isEmpty()||
+                    txtName.getText().toString().isEmpty()||
+                    editNum.getText().toString().isEmpty()){
+                MessageBox.Show(context, "填写信息不能为空！");
+                return;
+            }
+
+            if (!CommonUtil.isFloat(editNum.getText().toString())){
+                MessageBox.Show(context, "数量格式错误！");
+                return;
+            }
+            printlabel();
+        }catch(Exception ex){
+            MessageBox.Show(context, ex.toString());
         }
-        if (txtBatch.getText().toString().isEmpty()||
-                txtNo.getText().toString().isEmpty()||
-                txtMaName.getText().toString().isEmpty()||
-                txtName.getText().toString().isEmpty()||
-                editNum.getText().toString().isEmpty()){
-            MessageBox.Show(context, "填写信息不能为空！");
-            return;
-        }
-        if (!CommonUtil.isFloat(editNum.getText().toString())){
-            MessageBox.Show(context, "数量格式错误！");
-            return;
-        }
-        printlabel();
 
 
     }
@@ -232,11 +238,10 @@ public class LineStockInReturn extends SocketBaseActivity {
     void AnalysisGetT_SerialNoByPalletAD(String result){
         LogUtil.WriteLog(CombinPallet.class, TAG_Get_barcode,result);
         try {
-            ReturnMsgModelList<PalletDetail_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<PalletDetail_Model>>() {
+            ReturnMsgModel<BarCodeInfo> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<BarCodeInfo>>() {
             }.getType());
             if (returnMsgModel.getHeaderStatus().equals("S")) {
-                PalletDetail_Model palletDetailModel = returnMsgModel.getModelJson().get(0);
-                barCodeM = palletDetailModel.getLstBarCode().get(0);
+                barCodeM = returnMsgModel.getModelJson();
                 //判断扫描的物料是不是存在明细中
                 boolean flag=false;
                 for(WoDetailModel Model:WoDetailModels){
@@ -252,6 +257,12 @@ public class LineStockInReturn extends SocketBaseActivity {
                 }
                 txtBatch.setText(barCodeM.getBatchNo());
                 txtMaName.setText(barCodeM.getMaterialDesc());
+//                if(barCodeM.getLabelMark().toString().equals("OutSanZhuang")||barCodeM.getLabelMark().toString().equals("OutR")){
+//                    editNum.setText("");
+//                }else{
+//                    editNum.setText(barCodeM.getQty().toString());
+//                }
+//                editNum.setText(barCodeM.getQty().toString());
             } else {
                 MessageBox.Show(context,returnMsgModel.getMessage());
             }
@@ -269,20 +280,58 @@ public class LineStockInReturn extends SocketBaseActivity {
             ArrayList<Barcode_Model> models =new ArrayList<>();//临时的外箱打印标签
 
             Barcode_Model model =new Barcode_Model();
+            model.setRowNoDel(barCodeM.getRowNoDel());;//ymh
+//            model.setProtectWay(barCodeM.getprot);;//ymh防护措施
+            model.setVoucherNo(barCodeM.getVoucherNo());;//ymh
+            model.setVoucherType(barCodeM.getVoucherType());;//ymh
+            model.setCreater(barCodeM.getCreater());;
+            model.setSTATUS(barCodeM.getStatus());
+//            model.setwarehousename();
+//            model.setwarehouseno() ;
+//            model.setAllIn(barCodeM.get)  ; //用来判断是在库存还是条码表1库存，0条码
+            model.setProductClass(barCodeM.getProductClass())  ; //ymh生产班组
+//            model.setBoxWeight(barCodeM.getb)  ; //ymh包装方式
+//            model.setItemQty()  ; //ymh数量
+//            model.setLineno(barCodeM.getlin);  ; //ymh产线
+            model.setBarcodeNo(barCodeM.getBarcodeNo());//ymh
+            model.setRelaWeight(barCodeM.getRelaWeight());//ymh相对比重
+            model.setStoreCondition(barCodeM.getStoreconDition());//
+            model.setSupName(barCodeM.getSupName());//ymh 生产日期周六区分
+//            model.setid();
+            model.setMaterialNoID(barCodeM.getMaterialNoID()) ;
+//            model.setBatchNo(barCodeM.getBatchNo());
+//            model.setSqty(barCodeM.getsq);
+            model.setMaterialDesc(barCodeM.getMaterialDesc());
+            model.setBarCode(barCodeM.getBarCode());
+//            model.setCHECKNO(barCodeM.getch) ;
+            model.setAREAID(barCodeM.getAreaID()) ;
+//            model.setAreano(barCodeM.getar);
+            model.setSerialNo(barCodeM.getSerialNo());
+            model.setLabelMark(barCodeM.getLabelMark());
+            model.setSupPrdBatch(barCodeM.getSupPrdBatch());
+            model.setProductDate(barCodeM.getProductDate());
+//            model.setEds(barCodeM.geted);
+            model.setBarcodeType(barCodeM.getBarcodeType());
+
+
             model.setIP(URLModel.PrintIP+":9100");
-            model.setStrongHoldCode(womodel.getStrongHoldCode());
-            model.setStrongHoldName(womodel.getStrongHoldName());
-            model.setErpVoucherNo(womodel.getErpVoucherNo());
-            model.setMaterialNo(womodel.getMaterialNo());
-            model.setBatchNo(txtBatch.getText().toString());
-            model.setUnit(womodel.getUnit());
+            model.setStrongHoldCode(barCodeM.getStrongHoldCode());
+            model.setStrongHoldName(barCodeM.getStrongHoldName());
+            model.setErpVoucherNo(barCodeM.getErpVoucherNo());
+            model.setMaterialNo(barCodeM.getMaterialNo());
+            model.setUnit(barCodeM.getUnit());
             model.setProductClass(barCodeM.getProductClass());
             model.setEDate(barCodeM.getEDate());
-            model.setQty(Float.parseFloat(editNum.getText().toString()));//数量
-            model.setCompanyCode(womodel.getCompanyCode());
-            model.setVoucherNo(womodel.getVoucherNo());
-            model.setVoucherType(womodel.getVoucherType());
+            model.setCompanyCode(barCodeM.getCompanyCode());
+            model.setVoucherNo(barCodeM.getVoucherNo());
+            model.setVoucherType(barCodeM.getVoucherType());
             model.setRowNoDel("1");
+
+
+
+            model.setBatchNo(txtBatch.getText().toString());
+            model.setQty(Float.parseFloat(editNum.getText().toString()));//数量
+
 
 
             String Weight=txtWeight.getText().toString();
@@ -307,32 +356,38 @@ public class LineStockInReturn extends SocketBaseActivity {
                 }
 
             }
+            if(model.getQty()==0f&&Float.parseFloat(model.getItemQty())!=0f){
+                model.setQty(Float.parseFloat(model.getItemQty()));
+            }
+
 
 //            if (flag==1 ){
-                model.setBarcodeType(1);
-                if (barCodeM.getLabelMark().toString().equals("OutBanZhi"))
-                {
-                    //半制外
-                    model.setLabelMark("OutBanZhi");
-                    model.setSupPrdBatch(model.getBatchNo());
-                    model.setBarcodeNo(1);
-                }
-                if (barCodeM.getLabelMark().toString().equals("OutSanZhuang"))
-                {
-                    //散装外
-                    model.setItemQty("0");
-                    model.setLabelMark("OutSanZhuang");
-                    model.setRelaWeight(barCodeM.getRelaWeight());
-
-                }
-                if (barCodeM.getLabelMark().toString().equals("OutR"))
-                {
-                    //原材料
-                    model.setItemQty("0");
-                    model.setLabelMark("OutR");
-                    model.setRelaWeight(barCodeM.getRelaWeight());
-
-                }
+//                model.setBarcodeType(1);
+//                if (barCodeM.getLabelMark().toString().equals("OutBanZhi"))
+//                {
+//                    //半制外
+//                    model.setLabelMark("OutBanZhi");
+//                    model.setSupPrdBatch(model.getBatchNo());
+//                    model.setBarcodeNo(1);
+//                }
+//                if (barCodeM.getLabelMark().toString().equals("OutSanZhuang"))
+//                {
+//                    //散装外
+//                    model.setQty(Float.parseFloat(model.getItemQty()));
+//                    model.setItemQty("0");
+//                    model.setLabelMark("OutSanZhuang");
+//                    model.setRelaWeight(barCodeM.getRelaWeight());
+//
+//                }
+//                if (barCodeM.getLabelMark().toString().equals("OutR"))
+//                {
+//                    //原材料
+//                    model.setQty(Float.parseFloat(model.getItemQty()));
+//                    model.setItemQty("0");
+//                    model.setLabelMark("OutR");
+//                    model.setRelaWeight(barCodeM.getRelaWeight());
+//
+//                }
                 models.add(model);
 //            }
             String path="";

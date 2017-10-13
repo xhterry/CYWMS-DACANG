@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import com.xx.chinetek.adapter.product.LineStockIn.LineStockInMaterialItemAdapte
 import com.xx.chinetek.base.BaseActivity;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
+import com.xx.chinetek.cyproduct.work.ReportOutputNum;
 import com.xx.chinetek.cywms.InnerMove.InnerMoveDetail;
 import com.xx.chinetek.cywms.R;
 import com.xx.chinetek.cywms.Receiption.ReceiptionScan;
@@ -30,6 +32,8 @@ import com.xx.chinetek.model.Production.LineStockIn.LineStockInProductModel;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
+import com.xx.chinetek.model.User.UerInfo;
+import com.xx.chinetek.model.WMS.Stock.AreaInfo_Model;
 import com.xx.chinetek.util.Network.NetworkError;
 import com.xx.chinetek.util.Network.RequestHandler;
 import com.xx.chinetek.util.dialog.MessageBox;
@@ -57,9 +61,15 @@ public class LineStockInMaterial extends BaseActivity {
     private final int RESULT_Msg_GetPalletDetailByBarCode_Product=102;
     private final int RESULT_SaveModeListForT_StockT=101;
 
+    String TAG_GetAreaModelADF="LineStockInMaterial_GetT_SaveInStockModelADF";
+    private final int RESULT_Msg_GetAreaModelADF=103;
+
     @Override
     public void onHandleMessage(Message msg) {
         switch (msg.what) {
+            case RESULT_Msg_GetAreaModelADF:
+                AnalysisetT_GetAreaModelADFJson((String) msg.obj);
+                break;
             case RESULT_SaveModeListForT_StockT:
                 AnalysisetSaveModeListForT_StockTJson((String) msg.obj);
                 break;
@@ -78,6 +88,8 @@ public class LineStockInMaterial extends BaseActivity {
     ListView lsvLineStockInMaterial;
     @ViewInject(R.id.edt_LineStockInBarcode)
     EditText edtLineStockInBarcode;
+    @ViewInject(R.id.editArea)
+    EditText editArea;
     @ViewInject(R.id.txt_Company)
     TextView txtCompany;
     @ViewInject(R.id.txt_Batch)
@@ -104,6 +116,7 @@ public class LineStockInMaterial extends BaseActivity {
         BaseApplication.isCloseActivity=false;
         lineStockInProductModels=new ArrayList<>();
         txtWareHousName.setText(BaseApplication.userInfo.getWarehouseName());
+        CommonUtil.setEditFocus(editArea);
     }
 
     @Event(value = R.id.edt_LineStockInBarcode,type = View.OnKeyListener.class)
@@ -117,6 +130,26 @@ public class LineStockInMaterial extends BaseActivity {
             LogUtil.WriteLog(ReceiptionScan.class, TAG_GetPalletDetailByBarCode_Product, code);
 //            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCode_Product, params, null);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetPalletDetailByBarCode_Product, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetPalletDetailByBarCode_Product, null,  URLModel.GetURL().GetPalletDetailByBarCodeForInStock, params, null);
+        }
+        return false;
+    }
+
+    @Event(value = R.id.editArea,type = View.OnKeyListener.class)
+    private  boolean edtarea(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP)// 如果为Enter键
+        {
+            keyBoardCancle();
+            String code = editArea.getText().toString().trim();
+            if (TextUtils.isEmpty(code)) {
+                CommonUtil.setEditFocus(editArea);
+                return true;
+            }
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+            params.put("AreaNo", code);
+            LogUtil.WriteLog(ReportOutputNum.class, TAG_GetAreaModelADF, code);
+            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreaModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetAreaModelADF, null,  URLModel.GetURL().GetAreaModelADF, params, null);
+
         }
         return false;
     }
@@ -144,14 +177,20 @@ public class LineStockInMaterial extends BaseActivity {
                 if(SumbitbarCodeInfos.size()!=0) {
                     final Map<String, String> params = new HashMap<String, String>();
                     String ModelJson = GsonUtil.parseModelToJson(SumbitbarCodeInfos);
-//                UerInfo uerInfo=new UerInfo();
-//                uerInfo.setWarehouseID(SelectWareHouseID);
-//                uerInfo.setWarehouseID(BaseApplication.userInfo.getWarehouseID());
-//                uerInfo.setUserNo(BaseApplication.userInfo.getUserNo());
-//                uerInfo.setUserName(BaseApplication.userInfo.getUserName());
-//                uerInfo.setReceiveAreaNo(BaseApplication.userInfo.getReceiveAreaNo());
-//                uerInfo.setReceiveAreaID(BaseApplication.userInfo.getReceiveAreaID());
-                    String UserJson = GsonUtil.parseModelToJson(BaseApplication.userInfo);
+
+                    //设置入库的货位ID
+                    UerInfo user = BaseApplication.userInfo;
+                    if(!WgFlag)
+                    {
+                        MessageBox.Show(context, "没有扫描正确库位！");
+                        return false;
+                    }
+                    user.setReceiveAreaID(LReceiveAreaID);
+                    user.setWarehouseID(LWarehouseID);
+                    user.setReceiveHouseID(LReceiveHouseID);
+
+
+                    String UserJson = GsonUtil.parseModelToJson(user);
                     params.put("UserJson", UserJson);
                     params.put("ModelJson", ModelJson);
                     LogUtil.WriteLog(ReceiptionScan.class, TAG_SaveModeListForT_StockT, ModelJson);
@@ -176,6 +215,35 @@ public class LineStockInMaterial extends BaseActivity {
             }
         }
         return true;
+    }
+
+    private int LReceiveAreaID=0;
+    private int LReceiveHouseID=0;
+    private int LWarehouseID=0;
+    private boolean WgFlag=false;
+    void AnalysisetT_GetAreaModelADFJson(String result){
+        try {
+            LogUtil.WriteLog(LineStockInMaterial.class, TAG_GetAreaModelADF,result);
+            ReturnMsgModel<AreaInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModel<AreaInfo_Model>>() {}.getType());
+            if (returnMsgModel.getHeaderStatus().equals("S")) {
+                LReceiveAreaID=returnMsgModel.getModelJson().getID();
+                LReceiveHouseID=returnMsgModel.getModelJson().getHouseID();
+                LWarehouseID=returnMsgModel.getModelJson().getWarehouseID();
+                if(String.valueOf(BaseApplication.userInfo.getWarehouseID()).equals(String.valueOf(LWarehouseID))){
+                    WgFlag=true;
+                }else{
+                    MessageBox.Show(context,"扫描的货位不在登陆人的仓库下！");
+                    editArea.setText("");
+                    CommonUtil.setEditFocus(editArea);
+                }
+            } else {
+                MessageBox.Show(context,returnMsgModel.getMessage());
+                CommonUtil.setEditFocus(editArea);
+            }
+        }catch (Exception ex){
+            MessageBox.Show(context,ex.toString());
+        }
+        CommonUtil.setEditFocus(edtLineStockInBarcode);
     }
 
     /*

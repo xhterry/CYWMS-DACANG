@@ -62,6 +62,7 @@
         <activity android:name="com.xx.chinetek.cyproduct.MaterialChange.MaterialChange" />
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutput" />
         <activity android:name="com.xx.chinetek.cyproduct.work.ReportOutputNum" />
+        <activity android:name="com.xx.chinetek.cyproduct.work.ReportBaojian" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionScan" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptBillChoice" />
         <activity android:name="com.xx.chinetek.cyproduct.Receiption.ReceiptionBillDetail" />
@@ -89,6 +90,8 @@
         <activity android:name="com.xx.chinetek.FillPrint.InitPrint" />
         <activity android:name=".Intentory.IntentoryAdd" />
         <activity android:name=".Qc.QCInStock" />
+        <activity android:name="com.xx.chinetek.cyproduct.Adjust.AdjustCP" />
+        <activity android:name="com.xx.chinetek.cyproduct.Adjust.InnerMoveDetailymh" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutProduct" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInMaterial" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutReturnBillChoice" />
@@ -96,6 +99,7 @@
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInReturn" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockIn.LineStockInBackProduct" />
         <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.LineStockOutMaterial" />
+        <activity android:name="com.xx.chinetek.cyproduct.LineStockOut.Zcj" />
         <activity android:name=".Intentory.IntentoryFinc"></activity>
     </application>
 
