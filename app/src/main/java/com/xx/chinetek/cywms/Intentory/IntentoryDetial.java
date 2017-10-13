@@ -75,7 +75,6 @@ Context context=IntentoryDetial.this;
         BaseApplication.context = context;
         BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.Intentory_detail), true);
         x.view().inject(this);
-
     }
 
     @Override
@@ -83,7 +82,7 @@ Context context=IntentoryDetial.this;
         super.initData();
         checkno= getIntent().getStringExtra("checkno");
         model=getIntent().getIntExtra("model",-1);
-        int id=getIntent().getIntExtra("model",-1);
+        int id=getIntent().getIntExtra("id",-1);
         InitListview(checkno,id);
     }
 
