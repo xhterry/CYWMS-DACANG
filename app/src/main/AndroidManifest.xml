@@ -33,6 +33,7 @@
         <activity android:name=".Intentory.InventoryBillChoice" />
         <activity android:name=".Intentory.IntentoryScan" />
         <activity android:name="com.xx.chinetek.Pallet.CombinPallet" />
+        <activity android:name="com.xx.chinetek.Pallet.CombinPalletSupplier" />
         <activity android:name=".Intentory.IntentoryDetial" />
         <activity android:name="com.xx.chinetek.Pallet.DismantlePallet" />
         <activity android:name="com.xx.chinetek.Box.Boxing" />

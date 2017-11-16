@@ -155,6 +155,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
     private void InitListView() {
         InStockTaskInfo_Model inStockTaskInfoModel=new InStockTaskInfo_Model();
         inStockTaskInfoModel.setStatus(1);
+        inStockTaskInfoModel.setWareHouseID(BaseApplication.userInfo.getWarehouseID());
         GetT_InStockTaskInfoList(inStockTaskInfoModel);
     }
 
@@ -164,6 +165,7 @@ public class UpShelfBillChoice extends BaseActivity implements SwipeRefreshLayou
             Map<String, String> params = new HashMap<>();
             params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             params.put("ModelJson", ModelJson);
+           // params.put("WareHouseID",BaseApplication.userInfo.getWarehouseID()+"");
             LogUtil.WriteLog(UpShelfBillChoice.class, TAG_GetT_InTaskListADF, ModelJson);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_InTaskListADF, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_InTaskListADF, null,  URLModel.GetURL().GetT_InTaskListADF, params, null);
         } catch (Exception ex) {

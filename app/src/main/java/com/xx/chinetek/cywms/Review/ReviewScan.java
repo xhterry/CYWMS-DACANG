@@ -372,6 +372,8 @@ public class ReviewScan extends BaseActivity {
                 stockInfoModels=returnMsgModel.getModelJson();
                 if(stockInfoModels!=null){
                     for (StockInfo_Model stockModel:stockInfoModels) {
+                        if(!checkID(stockModel))
+                            break;
                         if(!CheckBarcode(stockModel))
                             break;
                     }
@@ -419,10 +421,33 @@ public class ReviewScan extends BaseActivity {
         }
     }
 
+    boolean checkID(StockInfo_Model stockInfoModel){
+        boolean isContainID=false;
+        for (OutStockDetailInfo_Model outStockDetailInfoModel: outStockDetailInfoModels){
+            if(outStockDetailInfoModel.getID()==stockInfoModel.getOutstockDetailID()){
+                isContainID=true;
+                break;
+            }
+        }
+        if(!isContainID){
+            MessageBox.Show(context,getString(R.string.Error_notContainID)+"|"+stockInfoModel.getSerialNo());
+        }
+        return isContainID;
+    }
+
     boolean CheckBarcode(StockInfo_Model StockInfo_Model){
         if(StockInfo_Model!=null && outStockDetailInfoModels!=null) {
             //int index = -1;
             int size = outStockDetailInfoModels.size();
+            //判断条码是否重复
+            for (int i = 0; i < size; i++) {
+                if(outStockDetailInfoModels.get(i).getLstStock() == null) continue;
+                int StockIndex = outStockDetailInfoModels.get(i).getLstStock().indexOf(StockInfo_Model);
+                if (StockIndex != -1) {
+                    MessageBox.Show(context, getString(R.string.Error_BarcodeScaned) + "|" + StockInfo_Model.getSerialNo());
+                    return false;
+                }
+            }
             Float Qty=StockInfo_Model.getQty();
             Boolean hasMaterial=false;
           //  Boolean isReviewFinish=true;
@@ -435,13 +460,6 @@ public class ReviewScan extends BaseActivity {
                        // isReviewFinish=false;
                         if (outStockDetailInfoModels.get(i).getLstStock() == null)
                             outStockDetailInfoModels.get(i).setLstStock(new ArrayList<StockInfo_Model>());
-
-                        int StockIndex = outStockDetailInfoModels.get(i).getLstStock().indexOf(StockInfo_Model);
-                        if (StockIndex != -1) {
-                            MessageBox.Show(context, getString(R.string.Error_BarcodeScaned) + "|" + StockInfo_Model.getSerialNo());
-                            return false;
-                        }
-
                         try {
                             Float remainQty = ArithUtil.sub(outStockDetailInfoModels.get(i).getOutStockQty(), outStockDetailInfoModels.get(i).getScanQty());
                             Float addQty=remainQty > Qty ? Qty : remainQty;

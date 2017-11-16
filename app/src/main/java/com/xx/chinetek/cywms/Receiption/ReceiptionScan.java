@@ -144,6 +144,7 @@ public class ReceiptionScan extends BaseActivity {
             String code=edtRecScanBarcode.getText().toString().trim();
             final Map<String, String> params = new HashMap<String, String>();
             params.put("BarCode", code);
+            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
             LogUtil.WriteLog(ReceiptionScan.class, TAG_GetT_PalletDetailByBarCodeADF, code);
             RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCodeADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetT_PalletDetailByBarCode, null,  URLModel.GetURL().GetT_PalletDetailByBarCodeADF, params, null);
         }

@@ -25,8 +25,8 @@ import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.base.ToolBarTitle;
 import com.xx.chinetek.cywms.Query.Query;
 import com.xx.chinetek.cywms.R;
+import com.xx.chinetek.model.Base_Model;
 import com.xx.chinetek.model.CheckNumRefMaterial;
-import com.xx.chinetek.model.QC.QualityDetailInfo_Model;
 import com.xx.chinetek.model.ReturnMsgModel;
 import com.xx.chinetek.model.ReturnMsgModelList;
 import com.xx.chinetek.model.URLModel;
@@ -370,7 +370,7 @@ public class OffshelfScan extends BaseActivity {
     void AnalysisSaveT_OutStockTaskDetailADFJson(String result){
         try {
             LogUtil.WriteLog(OffshelfScan.class, TAG_SaveT_OutStockTaskDetailADF,result);
-            ReturnMsgModelList<QualityDetailInfo_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<QualityDetailInfo_Model>>() {}.getType());
+            ReturnMsgModelList<Base_Model> returnMsgModel = GsonUtil.getGsonUtil().fromJson(result, new TypeToken<ReturnMsgModelList<Base_Model>>() {}.getType());
             if(returnMsgModel.getHeaderStatus().equals("S")){
                 clearFrm();
                 new AlertDialog.Builder(context).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info).setMessage(returnMsgModel.getMessage())
@@ -387,6 +387,7 @@ public class OffshelfScan extends BaseActivity {
             }
         } catch (Exception ex) {
             MessageBox.Show(context, ex.getMessage());
+            LogUtil.WriteLog(OffshelfScan.class,"error",ex.getMessage());
         }
     }
 

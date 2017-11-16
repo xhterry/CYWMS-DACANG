@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.xx.chinetek.Box.Boxing;
 import com.xx.chinetek.FillPrint.FillPrint;
 import com.xx.chinetek.Pallet.CombinPallet;
+import com.xx.chinetek.Pallet.CombinPalletSupplier;
 import com.xx.chinetek.Pallet.DismantlePallet;
 import com.xx.chinetek.adapter.GridViewItemAdapter;
 import com.xx.chinetek.base.BaseActivity;
@@ -133,6 +134,8 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, LineManage.class);
         else if(textView.getText().toString().equals("制成检"))
             intent.setClass(context, Zcj.class);
+        else if(textView.getText().toString().equals("供应商组托"))
+            intent.setClass(context, CombinPalletSupplier.class);
         if(intent!=null)
             startActivityLeft(intent);
     }
@@ -252,6 +255,10 @@ public class MainActivity extends BaseActivity {
                     case 26:
                         itemIconList.add(R.drawable.qc);
                         itemNamesList.add("制成检");
+                        break;
+                    case 27:
+                        itemIconList.add(R.drawable.combinepallet);
+                        itemNamesList.add("供应商组托");
                         break;
                 }
             }

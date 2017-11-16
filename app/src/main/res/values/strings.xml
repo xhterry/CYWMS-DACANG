@@ -1,6 +1,6 @@
 <resources>
     <string name="activity_login_company">chinetek 上海辰达 @2017</string>
-    <string name="app_name">WMS</string>dffggfq
+    <string name="app_name">WMS</string>
     <string name="version_msg">当前版本：1.0</string>
 
 
@@ -314,6 +314,7 @@
     <string name="Error_materialChangenotMatch">扫描物料与单据物料不匹配！</string>
     <string name="Error_CannotReceipt">该单据未收货完成！</string>
     <string name="Error_CannotReview">该单据未复核完成！</string>
+    <string name="Error_notContainID">该条码不属于此复核单据!</string>
     <string name="Error_CannotmaterialChange">该单据未转料完成！</string>
     <string name="Error_VourcherNonotMatch">该物料所属单据与托盘单据不一致！</string>
     <string name="Error_SuppilerNoMatch">该物料所属供应商与托盘供应商不一致！</string>

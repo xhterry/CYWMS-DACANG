@@ -225,7 +225,7 @@ public class InnerMoveScan extends BaseActivity {
                 params.put("BarCode", barcode);
                 params.put("ScanType", TBMoveType.isChecked()?"1":"2");
                 params.put("MoveType", "2"); //1：下架 2:移库
-                params.put("IsEdate","2"); //1：不判断有效期 2:判断有效期
+                params.put("IsEdate",BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD09")?"1":"2"); //1：不判断有效期 2:判断有效期
                 LogUtil.WriteLog(InnerMoveScan.class, TAG_GetStockModelADF, barcode);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
             }
@@ -260,6 +260,10 @@ public class InnerMoveScan extends BaseActivity {
             }
             for (int i=0;i<stockInfoModels.size();i++) {
                 stockInfoModels.get(i).setVoucherType(9996);
+                //是AD09仓库，ERPVoucherType设置为zf1
+                if(BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD09")){
+                    stockInfoModels.get(i).setERPVoucherType("ZF1");
+                }
             }
             final Map<String, String> params = new HashMap<String, String>();
             String ModelJson = GsonUtil.parseModelToJson(stockInfoModels);

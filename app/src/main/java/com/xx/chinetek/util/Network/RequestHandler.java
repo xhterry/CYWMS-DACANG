@@ -12,6 +12,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.xx.chinetek.base.BaseApplication;
 import com.xx.chinetek.util.dialog.LoadingDialog;
+import com.xx.chinetek.util.log.LogUtil;
 
 import java.util.Map;
 
@@ -37,25 +38,30 @@ public class RequestHandler {
         }
         listener.onPreRequest();
         String para = (new org.json.JSONObject(params)).toString();
-        JsonStringRequest JsonRequest = new JsonStringRequest(method, url, para, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                onVolleyResponse(response, handler, what, bundle);
-                listener.onResponse();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                onVolleyErrorResponse(volleyError, listener, handler, bundle);
-            }
-        });
-        // 清除请求队列中的tag标记请求
-        BaseApplication.getRequestQueue().cancelAll(tag);
-        // 为当前请求添加标记
-        JsonRequest.setTag(tag);
-        //设置超时时间
-        JsonRequest.setRetryPolicy(getRetryPolicy());
-        getRequestQueue().add(JsonRequest);
+        try {
+            JsonStringRequest JsonRequest = new JsonStringRequest(method, url, para, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    onVolleyResponse(response, handler, what, bundle);
+                    listener.onResponse();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    onVolleyErrorResponse(volleyError, listener, handler, bundle);
+                }
+            });
+
+            // 清除请求队列中的tag标记请求
+            BaseApplication.getRequestQueue().cancelAll(tag);
+            // 为当前请求添加标记
+            JsonRequest.setTag(tag);
+            //设置超时时间
+            JsonRequest.setRetryPolicy(getRetryPolicy());
+            getRequestQueue().add(JsonRequest);
+        }catch (Exception ex){
+            LogUtil.WriteLog(RequestHandler.class,"error",ex.getMessage());
+        }
     }
 
     private static void onVolleyErrorResponse(VolleyError volleyError, NetWorkRequestListener listener, Handler handler, Bundle bundle) {

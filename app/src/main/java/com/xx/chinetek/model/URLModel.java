@@ -68,6 +68,7 @@ public class URLModel {
     public String SaveT_OutStockReviewPalletDetailADF=GetWCFAdress()+"SaveT_OutStockReviewPalletDetailADF";//保存组托信息
     public String SaveT_PalletDetailADF=GetWCFAdress()+"SaveT_PalletDetailADF";//保存组托信息
     public String SaveT_CPPalletDetailADF=GetWCFAdress()+"PrintForProductAndroid";//保存成品组托信息
+    public String SaveT_CPPalletDetailADFSup=GetWCFAdress()+"PrintForProductAndroidSup";//保存成品组托信息
 
     public String PrintLpkPalletAndroid=GetWCFAdress()+"PrintLpkPalletAndroid";//打印托盘标签
     public String PrintLpkApartAndroid=GetWCFAdress()+"PrintLpkApartAndroid";//打印拆零标签

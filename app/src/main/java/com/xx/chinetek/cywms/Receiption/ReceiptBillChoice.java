@@ -237,6 +237,7 @@ public class ReceiptBillChoice extends BaseActivity implements SwipeRefreshLayou
                     //扫描箱条码
                     final Map<String, String> params = new HashMap<String, String>();
                     params.put("BarCode", code);
+                    params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
                     LogUtil.WriteLog(ReceiptBillChoice.class, TAG_GetT_PalletDetailByBarCode, code);
                     RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetT_PalletDetailByBarCode, getString(R.string.Msg_GetT_InStockListADF), context, mHandler, RESULT_GetT_PalletDetailByBarCode, null,  URLModel.GetURL().GetT_PalletDetailByBarCodeADF, params, null);
                     return false;

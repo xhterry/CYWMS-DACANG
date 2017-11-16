@@ -57,6 +57,15 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
     private int InStockID ;
     private String StrTaskType;
     private String StrTaskIsSuedUser;
+    private int WareHouseID;
+
+    public int getWareHouseID() {
+        return WareHouseID;
+    }
+
+    public void setWareHouseID(int wareHouseID) {
+        WareHouseID = wareHouseID;
+    }
 
     public Date getAuditDateTime() {
         return AuditDateTime;
@@ -341,6 +350,16 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        InStockTaskInfo_Model that = (InStockTaskInfo_Model) obj;
+
+        return ErpVoucherNo.equals(that.getErpVoucherNo());
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -383,6 +402,7 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeInt(this.InStockID);
         dest.writeString(this.StrTaskType);
         dest.writeString(this.StrTaskIsSuedUser);
+        dest.writeInt(this.WareHouseID);
     }
 
     protected InStockTaskInfo_Model(Parcel in) {
@@ -426,6 +446,7 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.InStockID = in.readInt();
         this.StrTaskType = in.readString();
         this.StrTaskIsSuedUser = in.readString();
+        this.WareHouseID = in.readInt();
     }
 
     public static final Creator<InStockTaskInfo_Model> CREATOR = new Creator<InStockTaskInfo_Model>() {
@@ -439,14 +460,4 @@ public class InStockTaskInfo_Model extends Base_Model implements Parcelable {
             return new InStockTaskInfo_Model[size];
         }
     };
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        InStockTaskInfo_Model that = (InStockTaskInfo_Model) obj;
-
-        return ErpVoucherNo.equals(that.getErpVoucherNo());
-    }
 }
