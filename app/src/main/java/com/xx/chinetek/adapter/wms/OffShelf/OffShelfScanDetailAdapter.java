@@ -80,7 +80,7 @@ public class OffShelfScanDetailAdapter extends BaseAdapter {
         listItemView.txtbarcode.setText(outStockTaskDetailsInfoModel.getMaterialNo());
         listItemView.txtScanNum.setText("扫描数："+outStockTaskDetailsInfoModel.getScanQty());
         listItemView.txtRemainQty.setText("可拣数："+outStockTaskDetailsInfoModel.getRePickQty());
-        listItemView.txtreferStock.setText(outStockTaskDetailsInfoModel.getAreaNo());
+        listItemView.txtreferStock.setText(outStockTaskDetailsInfoModel.getAreaNo()+"-"+outStockTaskDetailsInfoModel.getToBatchno());
         listItemView.txtERPVoucherNo.setText(outStockTaskDetailsInfoModel.getErpVoucherNo());
         listItemView.txtMaterialDesc.setText(outStockTaskDetailsInfoModel.getMaterialDesc());
         listItemView.txtbatch.setText((outStockTaskDetailsInfoModel.getIsSpcBatch().toUpperCase().equals("Y")?

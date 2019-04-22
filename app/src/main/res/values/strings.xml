@@ -283,9 +283,11 @@
     <string name="Message_No_WhareHouse">获取仓库列表失败！</string>
     <string name="Message_No_ReceiveAreaID">收货货位未配置！</string>
     <string name="Message_No_PickAreaID">拣货货位未配置！</string>
+    <string name="Message_ERROR_MoveStock">移入库位不正确！</string>
     <string name="Message_No_SampAreaNo">取样库位不存在！</string>
     <string name="Message_No_QuanUserNo">取样人不存在！</string>
     <string name="Message_No_MenuList">菜单权限未配置！</string>
+    <string name="Message_submit_finc">是否提交盘点结果？</string>
 
     <string name="Hit_ScanBarcode">请扫描物料条码</string>
     <string name="Hit_ScanPallet">请扫描托盘条码</string>
@@ -295,6 +297,7 @@
     <string name="Error_materialnotMatch">该物料与托盘物料不一致！</string>
     <string name="Error_Contain_Barcode">该物料已扫描组托</string>
     <string name="Error_Barcode_hasScan">该物料已扫描</string>
+    <string name="Error_Barcode_stock">扫描条码仓库不匹配</string>
     <string name="Error_PalletypenotMatch">该物料所在托盘属性与组托托盘属性不一致</string>
     <string name="Error_Barcode_Instock">在库不允许拆托</string>
     <string name="Error_BartchnotMatch">该物料到货批次与托盘到货批次不一致！</string>

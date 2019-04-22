@@ -304,21 +304,21 @@ public class DismantlePallet extends BaseActivity {
                 ClearFrm();
                 MessageBox.Show(context, "拆托成功！");
 //                //供应商打印去除打印
-//                String PalletNoy=txtPalletNo.getText().toString();
-//                if(!TextUtils.isEmpty(PalletNoy)){
-//                    //打印托盘标签
-//                    ArrayList<PalletDetail_Model> palletDetailModelsLast =new ArrayList<>();
-//                    PalletDetail_Model mo = new PalletDetail_Model();
-//                    mo.setPrintIPAdress(URLModel.PrintIP);
-//                    mo.setTaskNo(PalletNoy);
-//                    palletDetailModelsLast.add(mo);
-//                    final Map<String, String> params = new HashMap<String, String>();
-//                    params.put("PalletJson", GsonUtil.parseModelToJson(palletDetailModelsLast));
-//
-////                LogUtil.WriteLog(CombinPallet.class, TAG_Print_Tlabel, modelJson);
-//                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Print_Tlabel, getString(R.string.Msg_Print), context, mHandler,RESULT_Print_Tlabel, null,  URLModel.GetURL().PrintForChaiTuoProductAndroid, params, null);
-//
-//                }
+                String PalletNoy=txtPalletNo.getText().toString();
+                if(!TextUtils.isEmpty(PalletNoy)){
+                    //打印托盘标签
+                    ArrayList<PalletDetail_Model> palletDetailModelsLast =new ArrayList<>();
+                    PalletDetail_Model mo = new PalletDetail_Model();
+                    mo.setPrintIPAdress(URLModel.PrintIP);
+                    mo.setTaskNo(PalletNoy);
+                    palletDetailModelsLast.add(mo);
+                    final Map<String, String> params = new HashMap<String, String>();
+                    params.put("PalletJson", GsonUtil.parseModelToJson(palletDetailModelsLast));
+
+//                LogUtil.WriteLog(CombinPallet.class, TAG_Print_Tlabel, modelJson);
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_Print_Tlabel, getString(R.string.Msg_Print), context, mHandler,RESULT_Print_Tlabel, null,  URLModel.GetURL().PrintForChaiTuoProductAndroid, params, null);
+
+                }
 
             }
             else{

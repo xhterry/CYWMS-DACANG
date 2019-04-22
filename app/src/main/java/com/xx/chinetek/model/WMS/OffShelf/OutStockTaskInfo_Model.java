@@ -16,8 +16,9 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
 
     }
 
-    public OutStockTaskInfo_Model(String TaskNo){
+    public OutStockTaskInfo_Model(String TaskNo,String ErpVoucherNo){
         this.TaskNo=TaskNo;
+        this.ErpVoucherNo=ErpVoucherNo;
     }
     private Float TaskType;
     private String TaskNo;
@@ -55,6 +56,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
     private String PickUserName;
     private String FloorName;
     private String HeightAreaName;
+    private String IssueType;
     private String IsEdate; //1:不检查 2：检查
     private  int  WareHouseID;
 
@@ -364,6 +366,13 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         TaskType = taskType;
     }
 
+    public String getIssueType() {
+        return IssueType;
+    }
+
+    public void setIssueType(String issueType) {
+        IssueType = issueType;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -420,6 +429,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         dest.writeString(this.PickUserName);
         dest.writeString(this.FloorName);
         dest.writeString(this.HeightAreaName);
+        dest.writeString(this.IssueType);
         dest.writeString(this.IsEdate);
         dest.writeInt(this.WareHouseID);
     }
@@ -463,6 +473,7 @@ public class OutStockTaskInfo_Model extends Base_Model implements Parcelable {
         this.PickUserName = in.readString();
         this.FloorName = in.readString();
         this.HeightAreaName = in.readString();
+        this.IssueType = in.readString();
         this.IsEdate = in.readString();
         this.WareHouseID = in.readInt();
     }

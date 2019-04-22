@@ -231,7 +231,7 @@ public class CombinPallet extends BaseActivity {
             final Map<String, String> params = new HashMap<String, String>();
 
             LogUtil.WriteLog(CombinPallet.class, TAG_SaveT_PalletDetailADF, modelJson);
-
+            InitFrm();
             if (URLModel.isWMS){
                 params.put("UserJson", userJson);
                 params.put("ModelJson", modelJson);

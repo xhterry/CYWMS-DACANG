@@ -56,6 +56,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
     private String FromErpWarehouse;
     private String ToBatchNo;
     private String ToErpWarehouse;
+    private String IsSpcBatch;
     private  Boolean IsReviewFinish=false; //行是否复核完毕
     private int OustockStatus=0;//：0：StockInfo_Model不存在未组托条码  1：StockInfo_Model存在未组托条码
 
@@ -73,6 +74,14 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
 
     public void setFromErpWarehouse(String fromErpWarehouse) {
         FromErpWarehouse = fromErpWarehouse;
+    }
+
+    public String getIsSpcBatch() {
+        return IsSpcBatch;
+    }
+
+    public void setIsSpcBatch(String isSpcBatch) {
+        IsSpcBatch = isSpcBatch;
     }
 
     public Boolean getReviewFinish() {
@@ -475,6 +484,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         dest.writeString(this.FromErpWarehouse);
         dest.writeString(this.ToBatchNo);
         dest.writeString(this.ToErpWarehouse);
+        dest.writeString(this.IsSpcBatch);
         dest.writeValue(this.IsReviewFinish);
         dest.writeInt(this.OustockStatus);
     }
@@ -522,6 +532,7 @@ public class OutStockDetailInfo_Model extends Base_Model implements Parcelable{
         this.FromErpWarehouse = in.readString();
         this.ToBatchNo = in.readString();
         this.ToErpWarehouse = in.readString();
+        this.IsSpcBatch = in.readString();
         this.IsReviewFinish = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.OustockStatus = in.readInt();
     }

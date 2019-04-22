@@ -52,6 +52,10 @@ public class RequestHandler {
                 }
             });
 
+            //清理缓存
+            BaseApplication.getRequestQueue().getCache().get(url) ; //获取单个缓存
+            BaseApplication.getRequestQueue().getCache().remove(url);  //清除单个缓存
+            BaseApplication.getRequestQueue().getCache().clear();
             // 清除请求队列中的tag标记请求
             BaseApplication.getRequestQueue().cancelAll(tag);
             // 为当前请求添加标记

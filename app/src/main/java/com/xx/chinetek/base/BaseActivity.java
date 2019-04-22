@@ -66,6 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IHandleM
     }
 
 
+
     @Override
     public void onHandleMessage(Message msg) {
 

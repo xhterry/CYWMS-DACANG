@@ -231,6 +231,7 @@ public class Login extends BaseActivity {
                             SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(which).getID();
                             txtWareHousName.setText(select_item);
                             BaseApplication.userInfo.setWarehouseID(SelectWareHouseID);
+                            BaseApplication.userInfo.setWarehouseName(select_item);
                          dialog.dismiss();
                         }
                     }).show();
@@ -238,6 +239,7 @@ public class Login extends BaseActivity {
             SelectWareHouseID = BaseApplication.userInfo.getLstWarehouse().get(0).getID();
             txtWareHousName.setText(BaseApplication.userInfo.getLstWarehouse().get(0).getWareHouseName());
             BaseApplication.userInfo.setWarehouseID(SelectWareHouseID);
+            BaseApplication.userInfo.setWarehouseName(txtWareHousName.getText().toString());
         }
     }
 

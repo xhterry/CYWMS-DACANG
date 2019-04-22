@@ -191,7 +191,6 @@ public class ReviewScan extends BaseActivity {
         params.put("ID", outStockDetailInfoModel.getID()+"");
         LogUtil.WriteLog(ReviewScan.class, TAG_GetStockByOutStockReviewByID,  outStockDetailInfoModel.getID()+"");
         RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockByOutStockReviewByID, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_GetStockByOutStockReviewByID, null, URLModel.GetURL().GetStockByOutStockReviewByID, params, null);
-
     }
 
     @Event(value =R.id.edt_ReviewScanBarcode,type = View.OnKeyListener.class)
@@ -452,6 +451,12 @@ public class ReviewScan extends BaseActivity {
             Boolean hasMaterial=false;
           //  Boolean isReviewFinish=true;
             for (int i = 0; i < size; i++) {
+                //制定批次
+                if(outStockDetailInfoModels.get(i).getIsSpcBatch().equals("Y")){
+                    if(!outStockDetailInfoModels.get(i).getFromBatchNo().equals(StockInfo_Model.getBatchNo())){
+                        continue;
+                    }
+                }
                 if(Qty<=0) break;
                 if (outStockDetailInfoModels.get(i).getMaterialNo().equals(StockInfo_Model.getMaterialNo())
                         && outStockDetailInfoModels.get(i).getStrongHoldCode().equals(StockInfo_Model.getStrongHoldCode())) {

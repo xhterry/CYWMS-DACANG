@@ -41,7 +41,6 @@ public class ReceiptDetail_Model extends Base_Model implements Parcelable,Clonea
     private String SaleName ;
     private String VoucherNo;
     private int IsSerial;
-    //private List<PalletDetail_Model> lstPallet=new ArrayList<PalletDetail_Model>();
     private String SaleCode;
     private String SupplierNo;
     private String SupplierName;

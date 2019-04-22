@@ -231,7 +231,7 @@ public class CombinPalletSupplier extends BaseActivity {
             final Map<String, String> params = new HashMap<String, String>();
 
             LogUtil.WriteLog(CombinPalletSupplier.class, TAG_SaveT_PalletDetailADF, modelJson);
-
+            InitFrm();
                 params.put("UserJson", userJson);
                 params.put("json", modelJson);
                 params.put("printtype", "1");

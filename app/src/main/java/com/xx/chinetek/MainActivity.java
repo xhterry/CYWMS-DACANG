@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
     protected void initViews() {
         super.initViews();
         BaseApplication.context = context;
-        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.app_name),false);
+        BaseApplication.toolBarTitle = new ToolBarTitle(getString(R.string.app_name)+"-"+BaseApplication.userInfo.getWarehouseName(),false);
         x.view().inject(this);
         List<Map<String, Object>> data_list = getData();
         adapter = new GridViewItemAdapter(context,data_list);
@@ -136,6 +136,10 @@ public class MainActivity extends BaseActivity {
             intent.setClass(context, Zcj.class);
         else if(textView.getText().toString().equals("供应商组托"))
             intent.setClass(context, CombinPalletSupplier.class);
+        else if(textView.getText().toString().equals("第三方移库")) {
+            intent.setClass(context, InnerMoveScan.class);
+            intent.putExtra("FunctionType",1);
+        }
         if(intent!=null)
             startActivityLeft(intent);
     }
@@ -259,6 +263,10 @@ public class MainActivity extends BaseActivity {
                     case 27:
                         itemIconList.add(R.drawable.combinepallet);
                         itemNamesList.add("供应商组托");
+                        break;
+                    case 33:
+                        itemIconList.add(R.drawable.innermove);
+                        itemNamesList.add("第三方移库");
                         break;
                 }
             }

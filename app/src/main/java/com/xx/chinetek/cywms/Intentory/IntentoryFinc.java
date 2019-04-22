@@ -1,6 +1,8 @@
 package com.xx.chinetek.cywms.Intentory;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -129,10 +131,20 @@ public class IntentoryFinc extends BaseActivity {
             if (DoubleClickCheck.isFastDoubleClick(context)) {
                 return false;
             }
-            final Map<String, String> params = new HashMap<String, String>();
-            params.put("checkno",checkModel.getCHECKNO() );
-            LogUtil.WriteLog(IntentoryFinc.class, TAG_SummitMin, checkModel.getCHECKNO());
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SummitMin, getString(R.string.Msg_SaveT_InventoryADF), context, mHandler, RESULT_SummitMin, null,  URLModel.GetURL().SummitMin, params, null);
+
+            new AlertDialog.Builder(context).setCancelable(false).setTitle("提示").setIcon(android.R.drawable.ic_dialog_info)
+                    .setMessage(getString(R.string.Message_submit_finc))
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO 自动生成的方法
+                            final Map<String, String> params = new HashMap<String, String>();
+                            params.put("checkno",checkModel.getCHECKNO() );
+                            LogUtil.WriteLog(IntentoryFinc.class, TAG_SummitMin, checkModel.getCHECKNO());
+                            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SummitMin, getString(R.string.Msg_SaveT_InventoryADF), context, mHandler, RESULT_SummitMin, null,  URLModel.GetURL().SummitMin, params, null);
+                        }
+                    }).setNegativeButton("否",null).show();
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -111,6 +111,7 @@ public class InnerMoveScan extends BaseActivity {
     InnerMoveAdapter innerMoveAdapter;
     ArrayList<StockInfo_Model> currentStockInfo;
     ArrayList<StockInfo_Model> ShowStock=new ArrayList<>();
+    int FunctionType=0;
 
     @Override
     protected void initViews() {
@@ -125,6 +126,7 @@ public class InnerMoveScan extends BaseActivity {
     protected void initData() {
         super.initData();
         stockInfoModels=new ArrayList<>();
+        FunctionType=getIntent().getIntExtra("FunctionType",0);
     }
 
     @Event(value = R.id.edt_MoveInStock,type = View.OnKeyListener.class)
@@ -221,11 +223,13 @@ public class InnerMoveScan extends BaseActivity {
             keyBoardCancle();
             String barcode=edtMoveScanBarcode.getText().toString().trim();
             if(!TextUtils.isEmpty(barcode)) {
+                String isEDate=BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD09") ||
+                        BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD04")?"1":"2";
                 final Map<String, String> params = new HashMap<String, String>();
                 params.put("BarCode", barcode);
                 params.put("ScanType", TBMoveType.isChecked()?"1":"2");
                 params.put("MoveType", "2"); //1：下架 2:移库
-                params.put("IsEdate",BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD09")?"1":"2"); //1：不判断有效期 2:判断有效期
+                params.put("IsEdate",isEDate); //1：不判断有效期 2:判断有效期
                 LogUtil.WriteLog(InnerMoveScan.class, TAG_GetStockModelADF, barcode);
                 RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetStockModelADF, getString(R.string.Msg_GetT_SerialNoByPalletADF), context, mHandler, RESULT_Msg_GetStockModelADF, null, URLModel.GetURL().GetStockModelADF, params, null);
             }
@@ -258,19 +262,25 @@ public class InnerMoveScan extends BaseActivity {
             if (DoubleClickCheck.isFastDoubleClick(context)) {
                 return false;
             }
-            for (int i=0;i<stockInfoModels.size();i++) {
+            for (int i = 0; i < stockInfoModels.size(); i++) {
                 stockInfoModels.get(i).setVoucherType(9996);
-                //是AD09仓库，ERPVoucherType设置为zf1
-                if(BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD09")){
+                //是AD09
+                // 仓库，ERPVoucherType设置为zf1
+                if (BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD09") ||
+                        BaseApplication.userInfo.getReceiveWareHouseNo().toUpperCase().trim().equals("AD04")) {
                     stockInfoModels.get(i).setERPVoucherType("ZF1");
                 }
             }
-            final Map<String, String> params = new HashMap<String, String>();
-            String ModelJson = GsonUtil.parseModelToJson(stockInfoModels);
-            params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
-            params.put("ModelJson", ModelJson);
-            LogUtil.WriteLog(InnerMoveScan.class, TAG_SaveT_StockADF, ModelJson);
-            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_StockADF), context, mHandler, RESULT_SaveT_StockADF, null,URLModel.isWMS ? URLModel.GetURL().SaveT_StockADF:URLModel.GetURL().SaveT_StockADF_Product, params, null);
+                final Map<String, String> params = new HashMap<String, String>();
+                String ModelJson = GsonUtil.parseModelToJson(stockInfoModels);
+                params.put("UserJson", GsonUtil.parseModelToJson(BaseApplication.userInfo));
+                params.put("ModelJson", ModelJson);
+                LogUtil.WriteLog(InnerMoveScan.class, TAG_SaveT_StockADF, ModelJson);
+                if(FunctionType==0)
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_StockADF), context, mHandler, RESULT_SaveT_StockADF, null, URLModel.isWMS ? URLModel.GetURL().SaveT_StockADF : URLModel.GetURL().SaveT_StockADF_Product, params, null);
+                else
+                    RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_SaveT_StockADF, getString(R.string.Msg_SaveT_StockADF), context, mHandler, RESULT_SaveT_StockADF, null,  URLModel.GetURL().SaveMoveStockToOutADF, params, null);
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -287,21 +297,45 @@ public class InnerMoveScan extends BaseActivity {
             if (returnMsgModel.getHeaderStatus().equals("S")) {
                 currentStockInfo = returnMsgModel.getModelJson();
                 if (currentStockInfo != null && currentStockInfo.size() > 0) {
+                    if(FunctionType==1){
+                        if(!currentStockInfo.get(0).getFromWareHouseNo().toUpperCase().equals("AD03")){
+                            MessageBox.Show(context,getString(R.string.Error_Barcode_stock));
+                            CommonUtil.setEditFocus(edtMoveScanBarcode);
+                            return;
+                        }
+                    }
+
                     if(this.stockInfoModels.indexOf(currentStockInfo.get(0))!=-1){
                         MessageBox.Show(context,getString(R.string.Error_Barcode_hasScan));
                         CommonUtil.setEditFocus(edtMoveScanBarcode);
                         return;
                     }
-                   // if (stockInfoModels != null && stockInfoModels.size() > 0) {
-                        String StockCode=edtMoveInStock.getText().toString().trim();
-                        final Map<String, String> params = new HashMap<String, String>();
-                        String ModelJson = GsonUtil.parseModelToJson(currentStockInfo);
-                        params.put("AreaNo", StockCode);
-                        params.put("WareHouseID", BaseApplication.userInfo.getWarehouseID()+"");
-                        params.put("ModelJson", ModelJson);
-                        LogUtil.WriteLog(InnerMoveScan.class, TAG_GetAreaModelByMoveStockADF, StockCode+"|"+ModelJson);
-                        RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreaModelByMoveStockADF, getString(R.string.Msg_GetAreaModelADF), context, mHandler, RESULT_GetAreaModelByMoveStockADF, null, URLModel.GetURL().GetAreaModelByMoveStockADF, params, null);
-                    //}
+                    String StockCode = edtMoveInStock.getText().toString().trim();
+                        if(FunctionType == 0) {
+                            final Map<String, String> params = new HashMap<String, String>();
+                            String ModelJson = GsonUtil.parseModelToJson(currentStockInfo);
+                            params.put("AreaNo", StockCode);
+                            params.put("WareHouseID", BaseApplication.userInfo.getWarehouseID() + "");
+                            params.put("ModelJson", ModelJson);
+                            LogUtil.WriteLog(InnerMoveScan.class, TAG_GetAreaModelByMoveStockADF, StockCode + "|" + ModelJson);
+                            RequestHandler.addRequestWithDialog(Request.Method.POST, TAG_GetAreaModelByMoveStockADF, getString(R.string.Msg_GetAreaModelADF), context, mHandler, RESULT_GetAreaModelByMoveStockADF, null, URLModel.GetURL().GetAreaModelByMoveStockADF, params, null);
+                        }else{
+                            for (int i = 0; i < currentStockInfo.size(); i++) {
+                                currentStockInfo.get(i).setToErpAreaNo(StockCode);
+                                currentStockInfo.get(i).setToErpWarehouse("AD03");
+                            }
+                            txtCompany.setText(currentStockInfo.get(0).getStrongHoldName());
+                            txtStatus.setText(currentStockInfo.get(0).getStrStatus());
+                            txtEDate.setText(CommonUtil.DateToString(currentStockInfo.get(0).getEDate()));
+                            txtBatch.setText(currentStockInfo.get(0).getBatchNo());
+                            txtMaterialName.setText(currentStockInfo.get(0).getMaterialDesc());
+                            txtStock.setText(currentStockInfo.get(0).getQty().toString());
+                            this.stockInfoModels.addAll(0, currentStockInfo);
+                            boolean isQCStock=stockInfoModels.get(0).getAreaType()==4;
+                            showRetrunQty(isQCStock);
+                            checkQty();
+                            BindListVIew(ShowStock);
+                        }
                 }
 
             } else {
@@ -327,7 +361,8 @@ public class InnerMoveScan extends BaseActivity {
                 BindArea();
                 checkQty();
                 BindListVIew(ShowStock);
-            } else {
+            }
+             else {
                 MessageBox.Show(context, returnMsgModel.getMessage());
                 CommonUtil.setEditFocus(edtMoveScanBarcode);
             }

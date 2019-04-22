@@ -181,7 +181,7 @@ public class OffShelfBillChoice extends BaseActivity  implements SwipeRefreshLay
             if(outStockTaskInfoModels!=null && outStockTaskInfoModels.size()>0) {
                 String code = edtfilterContent.getText().toString().trim();
                 //扫描单据号、检查单据列表
-                OutStockTaskInfo_Model outStockTaskInfoModel = new OutStockTaskInfo_Model(code);
+                OutStockTaskInfo_Model outStockTaskInfoModel = new OutStockTaskInfo_Model(code,code);
                 int index=outStockTaskInfoModels.indexOf(outStockTaskInfoModel);
                 if (index!=-1) {
                     offSehlfBillChoiceItemAdapter.modifyStates(index);

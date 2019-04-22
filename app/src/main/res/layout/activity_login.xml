@@ -171,8 +171,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         android:layout_marginTop="16dp"
         android:textAlignment="viewEnd"
         android:textColor="@color/firebrick"
@@ -181,5 +179,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline38"
         app:layout_constraintRight_toLeftOf="@+id/guideline37"
-        app:layout_constraintTop_toBottomOf="@+id/edt_Password" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_Password"
+        app:layout_constraintVertical_bias="0.2" />
 </android.support.constraint.ConstraintLayout>

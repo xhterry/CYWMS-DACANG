@@ -13,7 +13,7 @@
             android:id="@+id/txtbarcode"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
+            android:layout_weight="0.5"
             android:layout_margin="3dp"
             android:textColor="@color/blue"
             android:textSize="20sp"/>
@@ -22,7 +22,7 @@
             android:id="@+id/txtreferStock"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_weight="0.5"
             android:layout_margin="3dp"
             android:textColor="@color/red"
             android:maxLines="1"

@@ -53,6 +53,7 @@ public class URLModel {
     public String DeletePalletByErpVoucherNo = GetWCFAdress()+"DeletePalletByErpVoucherNo"; //删除复核托盘
     public String SaveT_InStockDetailADF = GetWCFAdress()+"SaveT_InStockDetailADF"; //提交收货
     public String SaveT_StockADF = GetWCFAdress()+"SaveT_StockADF"; //提交移库
+    public String SaveMoveStockToOutADF = GetWCFAdress()+"SaveMoveStockToOutADF"; //提交移库
     public String UpadteT_QualityUserADF = GetWCFAdress()+"UpadteT_QualityUserADF"; //更新取样人
     public String PrintQYAndroid = GetWCFAdress()+"PrintQYAndroid"; //打印取样标签
     public String SaveT_InStockTaskDetailADF = GetWCFAdress()+"SaveT_InStockTaskDetailADF"; //提交上架

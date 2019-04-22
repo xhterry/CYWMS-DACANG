@@ -189,7 +189,7 @@ public class OffshelfScan extends BaseActivity {
                 }
                 Float qty = checkNumRefMaterial.getCheckQty(); //输入数量
                 Float scanQty = stockInfoModels.get(0).getQty(); //箱数量
-                if (qty > scanQty) {
+                if (qty >=scanQty) {
                     MessageBox.Show(context, getString(R.string.Error_PackageQtyBiger));
                     CommonUtil.setEditFocus(edtUnboxing);
                     return true;
@@ -353,7 +353,9 @@ public class OffshelfScan extends BaseActivity {
                     if (index == -1) {
                         insertStockInfo();
                     } else {
-                        RemoveStockInfo(index);
+                        MessageBox.Show(context, getString(R.string.Error_Barcode_hasScan));
+                        CommonUtil.setEditFocus(edtOffShelfScanbarcode);
+                        //RemoveStockInfo(index);
                     }
                 }
             } else {
@@ -690,7 +692,7 @@ public class OffshelfScan extends BaseActivity {
             if(outStockTaskDetailsInfoModels.get(i).getMaterialNo().equals(MaterialNo)) {
                 if (TextUtils.isEmpty(ErpVoucherno))
                     ErpVoucherno = outStockTaskDetailsInfoModels.get(i).getErpVoucherNo();
-                if (ErpVoucherno.equals(outStockTaskDetailsInfoModels.get(i).getErpVoucherNo())) {
+                if (ErpVoucherno.equals(outStockTaskDetailsInfoModels.get(i).getErpVoucherNo())){
                     SameLineoutStockTaskDetailsInfoModels.add(outStockTaskDetailsInfoModels.get(i));
                     SumReaminQty = ArithUtil.add(SumReaminQty, ArithUtil.sub(outStockTaskDetailsInfoModels.get(i).getRePickQty(), outStockTaskDetailsInfoModels.get(i).getScanQty()));
                 }

@@ -116,7 +116,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     /// <summary>
     /// 给ERP指定的发货批次
     /// </summary>
-    private String ToBatchno;
+    private String ToBatchNo;
     /// <summary>
     /// 给ERP指定发货储位
     /// </summary>
@@ -217,11 +217,11 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
     }
 
     public String getToBatchno() {
-        return ToBatchno;
+        return ToBatchNo;
     }
 
     public void setToBatchno(String toBatchno) {
-        ToBatchno = toBatchno;
+        ToBatchNo = toBatchno;
     }
 
     public String getToErpAreaNo() {
@@ -822,7 +822,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         dest.writeString(this.FromBatchNo);
         dest.writeString(this.FromErpAreaNo);
         dest.writeString(this.FromErpWarehouse);
-        dest.writeString(this.ToBatchno);
+        dest.writeString(this.ToBatchNo);
         dest.writeString(this.ToErpAreaNo);
         dest.writeString(this.ToErpWareHouse);
         dest.writeInt(this.FloorType);
@@ -903,7 +903,7 @@ public class OutStockTaskDetailsInfo_Model extends Base_Model implements Parcela
         this.FromBatchNo = in.readString();
         this.FromErpAreaNo = in.readString();
         this.FromErpWarehouse = in.readString();
-        this.ToBatchno = in.readString();
+        this.ToBatchNo = in.readString();
         this.ToErpAreaNo = in.readString();
         this.ToErpWareHouse = in.readString();
         this.FloorType = in.readInt();
